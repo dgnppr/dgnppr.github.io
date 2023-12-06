@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 참고: https://jekyllrb.com/docs/liquid/filters/ -->
+    <title>Next JWP Study 11 - 기계인간 John Grib</title>
+
+    <meta name="description" content="DI 기반 단위 테스트">
+    <meta name="google-site-verification" content="xD2UvBTOH6xxBi9MseahHz4Nt9u2vYZbgY2wVo7Bdyc" />
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://localhost:4000/blog/2017/05/16/jwp-11/">
+    <link rel="alternate" type="application/rss+xml" title="기계인간 John Grib" href="http://localhost:4000/feed.xml" />
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Next JWP Study 11">
+    <meta property="og:description" content="DI 기반 단위 테스트">
+    <meta property="og:image" content="http://localhost:4000/resource/johngrib.png">
+    <meta property="og:url" content="http://localhost:4000/blog/2017/05/16/jwp-11/">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@John_Grib" />
+    <meta name="twitter:url" content="http://localhost:4000/blog/2017/05/16/jwp-11/" />
+    <meta name="twitter:title" content="Next JWP Study 11" />
+    <meta name="twitter:description" content="DI 기반 단위 테스트" />
+
+    <link rel="apple-touch-icon" sizes="57x57"        href="/resource/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"        href="/resource/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"        href="/resource/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"        href="/resource/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114"      href="/resource/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120"      href="/resource/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144"      href="/resource/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152"      href="/resource/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180"      href="/resource/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/resource/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"   href="/resource/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"   href="/resource/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"   href="/resource/icon/favicon-16x16.png">
+    <link rel="manifest" href="/resource/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/resource/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=SAMPLE-VALUE"></script>
+    <script>
+        // https://gist.github.com/chrisveness/43bcda93af9f646d083fad678071b90a
+        async function aesGcmDecrypt(ciphertext, password) {
+            const pwUtf8 = new TextEncoder().encode(password);
+            const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+            const iv = ciphertext.slice(0,24).match(/.{2}/g).map(byte => parseInt(byte, 16));
+            const alg = { name: 'AES-GCM', iv: new Uint8Array(iv) };
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['decrypt']);
+            const ctStr = atob(ciphertext.slice(24));
+            const ctUint8 = new Uint8Array(ctStr.match(/[\s\S]/g).map(ch => ch.charCodeAt(0)));
+            const plainBuffer = await crypto.subtle.decrypt(alg, key, ctUint8);
+            const plaintext = new TextDecoder().decode(plainBuffer);
+            return plaintext;
+        }
+        async function aesGcmEncrypt(plaintext, password) {
+            const pwUtf8 = new TextEncoder().encode(password);
+            const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const alg = { name: 'AES-GCM', iv: iv };
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']);
+            const ptUint8 = new TextEncoder().encode(plaintext);
+            const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUint8);
+            const ctArray = Array.from(new Uint8Array(ctBuffer));
+            const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join('');
+            const ctBase64 = btoa(ctStr);
+            const ivHex = Array.from(iv).map(b => ('00' + b.toString(16)).slice(-2)).join('');
+            return ivHex+ctBase64;
+        }
+
+        aesGcmDecrypt('THIS-IS-SAMPLE-VALUE', 'http://localhost:4000')
+            .then(function(ua) {
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', ua);
+                console.log('The gtag config has been finished.');
+            })
+            .catch(function(error) {
+                console.log(error);
+                console.log('The gtag id is invalid.');
+            });
+    </script>
+
+
+
+</head>
+<header class="header">
+    <div>
+        <a class="site-title" href="/">기계인간 John Grib</a>
+    </div>
+    <div>
+        <a class="site-title-right" href="/about/">me</a>
+    </div>
+    <div>
+        <a id="random-button" class="site-title-right">random</a>
+    </div>
+    <div>
+        <a class="site-title-right" href="/wiki/root-index/">index</a>
+    </div>
+</header>
+<script async src="/js/shortcut.js"></script>
+
+    <body>
+        <div class="page-content">
+            <div class="search">
+    <form role="search" method="get" action="/search/">
+         <input name="searchString" class="searchInput" placeholder=" 검색하세요" type="text">
+         <input type="submit" class="searchButton" value="Search">
+    </form>
+</div>
+            <div class="post">
+                <div class="post">
+    <header class="post-header">
+        <h1 class="page-title">
+            <a href="/blog/2017/05/16/jwp-11/"> Next JWP Study 11 </a>
+        </h1>
+        <p class="created-date">
+            2017.05.16
+        </p>
+        <div class="post-tag">
+    study jwp mockito DI
+</div>
+
+        <h2>DI 기반 단위 테스트</h2>
+    </header>
+
+
+    <div class="toc">
+    </div>
+
+    <article class="post-content">
+        <ul id="markdown-toc">
+  <li><a href="#열-한-번째-수업-이모저모" id="markdown-toc-열-한-번째-수업-이모저모">열 한 번째 수업 이모저모</a></li>
+  <li><a href="#mockito-테스트-실습" id="markdown-toc-mockito-테스트-실습">Mockito 테스트 실습</a></li>
+  <li><a href="#links" id="markdown-toc-links">Links</a></li>
+</ul>
+
+<h2 id="열-한-번째-수업-이모저모">열 한 번째 수업 이모저모</h2>
+
+<ul>
+  <li>수업은 <code class="language-plaintext highlighter-rouge">2017-05-15 19:00:00 +0900</code>에 시작.</li>
+  <li>이제 수업이 3주 남았다.
+    <ul>
+      <li>다음 주 부터는 5회에 걸쳐 Spring Boot를 학습한다.</li>
+      <li>마지막 수업엔 개발한 Spring Boot 어플리케이션의 배포를 실습한다.</li>
+    </ul>
+  </li>
+  <li>이론 수업
+    <ul>
+      <li>빈 컨테이너 설정 관리</li>
+      <li>Spring life cycle</li>
+      <li>Property Source 및 환경 변수</li>
+      <li>Java Bean Validation</li>
+      <li>DI 기반 단위 테스트</li>
+    </ul>
+  </li>
+  <li>피자/맥주 파티
+    <ul>
+      <li>약 21시부터 피자/맥주 파티를 하며 담소를 나누었다.</li>
+      <li>나는 피자/맥주/콜라 모두 안 먹는 음식들이라 생수만 마셨다.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="mockito-테스트-실습">Mockito 테스트 실습</h2>
+
+<p>Mockito를 사용하니 어렵지 않고 깔끔하게 끝낼 수 있었다.
+약간 우려스러운 점이 있긴 하지만 아직은 Mockito를 잘 모르니 좀 더 익숙해지면 생각해보도록 하자.</p>
+
+<div class="language-java highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nd">@RunWith</span><span class="o">(</span><span class="nc">MockitoJUnitRunner</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">QnaServiceTest</span> <span class="o">{</span>
+
+    <span class="nd">@Mock</span>
+    <span class="kd">private</span> <span class="nc">QuestionDao</span> <span class="n">questionDao</span><span class="o">;</span>
+
+    <span class="nd">@Mock</span>
+    <span class="kd">private</span> <span class="nc">AnswerDao</span> <span class="n">answerDao</span><span class="o">;</span>
+
+
+    <span class="kd">private</span> <span class="nc">QnaService</span> <span class="n">qnaService</span><span class="o">;</span>
+
+    <span class="nd">@Before</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setup</span><span class="o">()</span> <span class="o">{</span>
+        <span class="n">qnaService</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">QnaService</span><span class="o">(</span><span class="n">questionDao</span><span class="o">,</span> <span class="n">answerDao</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 로그인 사용자와 질문한 사람이 같아야 한다.</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">Positive_질문한_사람과_삭제하려는_사람이_같으면_삭제할_수_있다</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">CannotOperateException</span> <span class="o">{</span>
+
+        <span class="kd">final</span> <span class="nc">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"질문하는 사람 아이디"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"email"</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">Question</span> <span class="n">question</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Question</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">user</span><span class="o">.</span><span class="na">getUserId</span><span class="o">(),</span> <span class="s">"제목"</span><span class="o">,</span> <span class="s">"내용"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Date</span><span class="o">(),</span> <span class="mi">0</span><span class="o">);</span>
+
+        <span class="n">when</span><span class="o">(</span><span class="n">questionDao</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="n">question</span><span class="o">);</span>
+
+        <span class="n">qnaService</span><span class="o">.</span><span class="na">deleteQuestion</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">(),</span> <span class="n">user</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 로그인 사용자와 질문한 사람이 같아야 한다.</span>
+    <span class="nd">@Test</span><span class="o">(</span><span class="n">expected</span> <span class="o">=</span> <span class="nc">CannotOperateException</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">Negative_질문한_사람과_삭제하려는_사람이_다르면_삭제할_수_없다</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">CannotOperateException</span> <span class="o">{</span>
+
+        <span class="kd">final</span> <span class="nc">Question</span> <span class="n">question</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Question</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">"질문하는 사람 아이디"</span><span class="o">,</span> <span class="s">"제목"</span><span class="o">,</span> <span class="s">"내용"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Date</span><span class="o">(),</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">User</span> <span class="n">otherUser</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"삭제하는 사람 아이디"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"email"</span><span class="o">);</span>
+
+        <span class="n">when</span><span class="o">(</span><span class="n">questionDao</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="n">question</span><span class="o">);</span>
+
+        <span class="n">qnaService</span><span class="o">.</span><span class="na">deleteQuestion</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">(),</span> <span class="n">otherUser</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 답변이 없는 경우 삭제가 가능하다.</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">Positive_답변이_없는_경우_삭제가_가능하다</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">CannotOperateException</span> <span class="o">{</span>
+
+        <span class="kd">final</span> <span class="nc">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"질문하는 사람 아이디"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"email"</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">Question</span> <span class="n">question</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Question</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">user</span><span class="o">.</span><span class="na">getUserId</span><span class="o">(),</span> <span class="s">"제목"</span><span class="o">,</span> <span class="s">"내용"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Date</span><span class="o">(),</span> <span class="mi">0</span><span class="o">);</span>
+
+        <span class="n">when</span><span class="o">(</span><span class="n">questionDao</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="n">question</span><span class="o">);</span>
+        <span class="n">when</span><span class="o">(</span><span class="n">answerDao</span><span class="o">.</span><span class="na">findAllByQuestionId</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="nc">Collections</span><span class="o">.</span><span class="na">EMPTY_LIST</span><span class="o">);</span>
+
+        <span class="n">qnaService</span><span class="o">.</span><span class="na">deleteQuestion</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">(),</span> <span class="n">user</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 답변이 없는 경우 삭제가 가능하다.</span>
+    <span class="nd">@Test</span><span class="o">(</span><span class="n">expected</span> <span class="o">=</span> <span class="nc">CannotOperateException</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">Negative_답변이_있다면_삭제할_수_없다</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">CannotOperateException</span> <span class="o">{</span>
+
+        <span class="kd">final</span> <span class="nc">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"질문하는 사람 아이디"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"email"</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">Question</span> <span class="n">question</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Question</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">user</span><span class="o">.</span><span class="na">getUserId</span><span class="o">(),</span> <span class="s">"제목"</span><span class="o">,</span> <span class="s">"내용"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Date</span><span class="o">(),</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">Answer</span> <span class="n">answer</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Answer</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">"답변하는 사람 아이디"</span><span class="o">,</span> <span class="s">"내용"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Date</span><span class="o">(),</span> <span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">());</span>
+
+        <span class="n">when</span><span class="o">(</span><span class="n">questionDao</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="n">question</span><span class="o">);</span>
+        <span class="n">when</span><span class="o">(</span><span class="n">answerDao</span><span class="o">.</span><span class="na">findAllByQuestionId</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">answer</span><span class="o">));</span>
+
+        <span class="n">qnaService</span><span class="o">.</span><span class="na">deleteQuestion</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">(),</span> <span class="n">user</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 질문자와 답변자가 같은 경우 삭제가 가능하다.</span>
+    <span class="nd">@Test</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">Positive_답변이_있어도_질문자와_답변자가_같다면_삭제할_수_있다</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">CannotOperateException</span> <span class="o">{</span>
+
+        <span class="kd">final</span> <span class="nc">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"질문하는 사람 아이디"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"email"</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">Question</span> <span class="n">question</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Question</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">user</span><span class="o">.</span><span class="na">getUserId</span><span class="o">(),</span> <span class="s">"제목"</span><span class="o">,</span> <span class="s">"내용"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Date</span><span class="o">(),</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">Answer</span> <span class="n">answer</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Answer</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">user</span><span class="o">.</span><span class="na">getUserId</span><span class="o">(),</span> <span class="s">"내용"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Date</span><span class="o">(),</span> <span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">());</span>
+
+        <span class="n">when</span><span class="o">(</span><span class="n">questionDao</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="n">question</span><span class="o">);</span>
+        <span class="n">when</span><span class="o">(</span><span class="n">answerDao</span><span class="o">.</span><span class="na">findAllByQuestionId</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">answer</span><span class="o">));</span>
+
+        <span class="n">qnaService</span><span class="o">.</span><span class="na">deleteQuestion</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">(),</span> <span class="n">user</span><span class="o">);</span>
+    <span class="o">}</span>
+
+    <span class="c1">// 질문자와 답변자가 다른 경우 답변을 삭제할 수 없다.</span>
+    <span class="nd">@Test</span><span class="o">(</span><span class="n">expected</span> <span class="o">=</span> <span class="nc">CannotOperateException</span><span class="o">.</span><span class="na">class</span><span class="o">)</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="n">Negative_답변이_있을_때_질문자와_답변자가_다르면_삭제할_수_없다</span><span class="o">()</span> <span class="kd">throws</span> <span class="nc">CannotOperateException</span> <span class="o">{</span>
+        <span class="kd">final</span> <span class="nc">User</span> <span class="n">user</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">User</span><span class="o">(</span><span class="s">"질문하는 사람 아이디"</span><span class="o">,</span> <span class="s">"password"</span><span class="o">,</span> <span class="s">"name"</span><span class="o">,</span> <span class="s">"email"</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">Question</span> <span class="n">question</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Question</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="s">"답변하는 사람 아이디"</span><span class="o">,</span> <span class="s">"제목"</span><span class="o">,</span> <span class="s">"내용"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Date</span><span class="o">(),</span> <span class="mi">0</span><span class="o">);</span>
+        <span class="kd">final</span> <span class="nc">Answer</span> <span class="n">answer</span> <span class="o">=</span> <span class="k">new</span> <span class="nc">Answer</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">user</span><span class="o">.</span><span class="na">getUserId</span><span class="o">(),</span> <span class="s">"내용"</span><span class="o">,</span> <span class="k">new</span> <span class="nc">Date</span><span class="o">(),</span> <span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">());</span>
+
+        <span class="n">when</span><span class="o">(</span><span class="n">questionDao</span><span class="o">.</span><span class="na">findById</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="n">question</span><span class="o">);</span>
+        <span class="n">when</span><span class="o">(</span><span class="n">answerDao</span><span class="o">.</span><span class="na">findAllByQuestionId</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">())).</span><span class="na">thenReturn</span><span class="o">(</span><span class="nc">Arrays</span><span class="o">.</span><span class="na">asList</span><span class="o">(</span><span class="n">answer</span><span class="o">));</span>
+
+        <span class="n">qnaService</span><span class="o">.</span><span class="na">deleteQuestion</span><span class="o">(</span><span class="n">question</span><span class="o">.</span><span class="na">getQuestionId</span><span class="o">(),</span> <span class="n">user</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h2 id="links">Links</h2>
+
+<ul>
+  <li>과제 완료
+    <ul>
+      <li><a href="https://github.com/johngrib/jwp-spring/tree/step2-johngrib">Mockito 테스트 실습</a></li>
+    </ul>
+  </li>
+  <li>수업 자료
+    <ul>
+      <li><a href="https://nextstep.camp/courses/-KgDNT4rfavb_BzYLBXr/-Kf9qPOW42m1nnuoyvXz/lessons/-KiY-AXcRm8DhRdOy5Rv">DI 기반 단위 테스트</a></li>
+    </ul>
+  </li>
+</ul>
+
+    </article>
+    <script async src="/js/create-link.js"></script>
+
+
+    
+    <div class="giscus"></div>
+    <div class="post-comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="johngrib/johngrib.github.io"
+        data-repo-id="SAMPLE-VALUE"
+        data-category="Announcements"
+        data-category-id="SAMPLE-VALUE"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="light"
+        data-lang="ko"
+        crossorigin="anonymous"
+        data-mapping="specific"
+        data-term="D5/580E5A-7DD6-4C8E-BB55-DABCC4FA4CD0"
+        data-strict="0"
+        async>
+    </script>
+    </div>
+
+
+    <script async src="/js/toc-highlight.js"></script>
+</div>
+
+            </div>
+        </div>
+        <footer class="footer">
+    <div>
+
+    </div>
+
+    <script data-ad-client="SAMPLE-VALUE" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+</footer>
+    </body>
+</html>

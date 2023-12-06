@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 참고: https://jekyllrb.com/docs/liquid/filters/ -->
+    <title>기계인간 John Grib</title>
+
+    <meta name="description" content="">
+    <meta name="google-site-verification" content="xD2UvBTOH6xxBi9MseahHz4Nt9u2vYZbgY2wVo7Bdyc" />
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://localhost:4000/about/">
+    <link rel="alternate" type="application/rss+xml" title="기계인간 John Grib" href="http://localhost:4000/feed.xml" />
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:image" content="http://localhost:4000/resource/johngrib.png">
+    <meta property="og:url" content="http://localhost:4000/about/">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@John_Grib" />
+    <meta name="twitter:url" content="http://localhost:4000/about/" />
+    <meta name="twitter:title" content="" />
+    <meta name="twitter:description" content="" />
+
+    <link rel="apple-touch-icon" sizes="57x57"        href="/resource/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"        href="/resource/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"        href="/resource/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"        href="/resource/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114"      href="/resource/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120"      href="/resource/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144"      href="/resource/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152"      href="/resource/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180"      href="/resource/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/resource/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"   href="/resource/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"   href="/resource/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"   href="/resource/icon/favicon-16x16.png">
+    <link rel="manifest" href="/resource/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/resource/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=SAMPLE-VALUE"></script>
+    <script>
+        // https://gist.github.com/chrisveness/43bcda93af9f646d083fad678071b90a
+        async function aesGcmDecrypt(ciphertext, password) {
+            const pwUtf8 = new TextEncoder().encode(password);
+            const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+            const iv = ciphertext.slice(0,24).match(/.{2}/g).map(byte => parseInt(byte, 16));
+            const alg = { name: 'AES-GCM', iv: new Uint8Array(iv) };
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['decrypt']);
+            const ctStr = atob(ciphertext.slice(24));
+            const ctUint8 = new Uint8Array(ctStr.match(/[\s\S]/g).map(ch => ch.charCodeAt(0)));
+            const plainBuffer = await crypto.subtle.decrypt(alg, key, ctUint8);
+            const plaintext = new TextDecoder().decode(plainBuffer);
+            return plaintext;
+        }
+        async function aesGcmEncrypt(plaintext, password) {
+            const pwUtf8 = new TextEncoder().encode(password);
+            const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const alg = { name: 'AES-GCM', iv: iv };
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']);
+            const ptUint8 = new TextEncoder().encode(plaintext);
+            const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUint8);
+            const ctArray = Array.from(new Uint8Array(ctBuffer));
+            const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join('');
+            const ctBase64 = btoa(ctStr);
+            const ivHex = Array.from(iv).map(b => ('00' + b.toString(16)).slice(-2)).join('');
+            return ivHex+ctBase64;
+        }
+
+        aesGcmDecrypt('THIS-IS-SAMPLE-VALUE', 'http://localhost:4000')
+            .then(function(ua) {
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', ua);
+                console.log('The gtag config has been finished.');
+            })
+            .catch(function(error) {
+                console.log(error);
+                console.log('The gtag id is invalid.');
+            });
+    </script>
+
+
+
+</head>
+<header class="header">
+    <div>
+        <a class="site-title" href="/">기계인간 John Grib</a>
+    </div>
+    <div>
+        <a class="site-title-right" href="/about/">me</a>
+    </div>
+    <div>
+        <a id="random-button" class="site-title-right">random</a>
+    </div>
+    <div>
+        <a class="site-title-right" href="/wiki/root-index/">index</a>
+    </div>
+</header>
+<script async src="/js/shortcut.js"></script>
+
+    <body>
+        <div class="page-content">
+            <div class="search">
+    <form role="search" method="get" action="/search/">
+         <input name="searchString" class="searchInput" placeholder=" 검색하세요" type="text">
+         <input type="submit" class="searchButton" value="Search">
+    </form>
+</div>
+            <div class="post">
+                <div class="post">
+
+    <header class="post-header">
+        <h1 class="page-title"></h1>
+    </header>
+
+    <article class="post-content">
+
+        <ul id="markdown-toc">
+  <li><a href="#motto" id="markdown-toc-motto">Motto</a></li>
+  <li><a href="#about-me" id="markdown-toc-about-me">About Me</a></li>
+  <li><a href="#life" id="markdown-toc-life">Life</a></li>
+  <li><a href="#기고" id="markdown-toc-기고">기고</a></li>
+  <li><a href="#인터뷰-발표" id="markdown-toc-인터뷰-발표">인터뷰, 발표</a></li>
+  <li><a href="#job-experience" id="markdown-toc-job-experience">Job Experience</a></li>
+  <li><a href="#public-key" id="markdown-toc-public-key">Public Key</a></li>
+</ul>
+
+<div class="contact">
+
+        <a href="https://github.com/johngrib">GitHub</a>
+
+
+        <a href="https://twitter.com/John_Grib">Twitter</a>
+
+
+        <a href="mailto:johngrib82@gmail.com">Email</a>
+
+        <a href="/feed.xml">RSS</a>
+</div>
+
+<h2 id="motto">Motto</h2>
+
+<blockquote>
+  <p>Whenever you fall, pick something up. – Oswald Avery</p>
+
+  <p>넘어지면 무언가를 주워라. - 오스왈드 에이버리</p>
+</blockquote>
+
+<h2 id="about-me">About Me</h2>
+
+<ul>
+  <li>유물론자입니다.</li>
+  <li>무신론자입니다.</li>
+  <li>모르는 것이 많아 매일 공부합니다.</li>
+  <li>수학과 과학을 동경합니다.</li>
+  <li>소프트웨어 개발자입니다.</li>
+</ul>
+
+<h2 id="life">Life</h2>
+
+<ul>
+  <li>사랑하는 아내와 행복하게 살고 있습니다.</li>
+  <li>실내에 있는 것을 좋아합니다.</li>
+  <li>술과 담배를 매우 싫어합니다.</li>
+  <li>근처에 컴퓨터가 있어야 마음이 놓입니다.</li>
+  <li>항상 규칙적으로 생활하려 노력합니다.
+    <ul>
+      <li>잠은 매일 23시 ~ 24시에 잡니다.</li>
+      <li>늦어도 8시에는 일어납니다.</li>
+      <li>주말도 예외가 아닙니다.</li>
+    </ul>
+  </li>
+  <li>Vim 사용자입니다.</li>
+</ul>
+
+<h2 id="기고">기고</h2>
+
+<ul>
+  <li>2020-09-07 <a href="https://helloworld.kurly.com/blog/vsms-performance-experiment/">신규 서비스 배포 전에 실험과 개선을 반복한 이야기</a> - 컬리 기술 블로그</li>
+  <li>2020-03-09 <a href="https://helloworld.kurly.com/blog/fix-style-with-command/">새로 입사한 개발자가 프로젝트에 기여하는 방법 한 가지</a> - 컬리 기술 블로그</li>
+  <li>2020-02-10 <a href="https://helloworld.kurly.com/blog/redesign-tech-blog/">기술 블로그를 다시 디자인하며</a> - 컬리 기술 블로그</li>
+  <li>2018-02-26 <a href="https://woowabros.github.io/study/2018/02/26/mysql-char-comparison.html">MySQL에서 'a' = 'a '가 true로 평가된다?</a> - 우아한형제들 기술 블로그</li>
+  <li>2017-07-06 <a href="https://woowabros.github.io/tools/2017/07/06/vim-game-code-break.html">레거시 코드를 파괴하는 Vim 벽돌 깨기</a> - 우아한형제들 기술 블로그</li>
+  <li>2016-06-18 <a href="https://woowabros.github.io/tools/2016/06/18/ideavim-customize-00.html">IntelliJ 의 VIM 플러그인 마개조하기</a> - 우아한형제들 기술 블로그</li>
+</ul>
+
+<h2 id="인터뷰-발표">인터뷰, 발표</h2>
+
+<ul>
+  <li>2022-07-23 <a href="https://youtu.be/yWkVn4SSHn0">Vim 교정학원 (VIMRC 2022)</a></li>
+  <li>2022-06-10 <a href="https://youtu.be/BdSoNmWksuk">송파 Clojure 밋업 1회</a></li>
+  <li>2021-12-21 <a href="https://class101.net/hidden-products/wqHXxHcuEhhENRMoo8cz">스타트업 개발자, 회사와 함께 성장하기</a></li>
+  <li>2020-01-29 <a href="https://monthly-jiandson.tistory.com/49">2020릴레이인터뷰 첫 번째 주자, 마켓컬리 소프트웨어 엔지니어 "이종립"</a></li>
+  <li>2019-05-23 <a href="https://youtu.be/lNWuf48vgV4">Vim 교정학원 (VIMRC 2019)</a></li>
+  <li>2017-11-16 <a href="https://jojoldu.tistory.com/247">OKKY 미니세미나 "비전공 학원출신 SI개발자, 유명스타트업 들어간.ssul" 참석 후기</a></li>
+</ul>
+
+<h2 id="job-experience">Job Experience</h2>
+
+<ul>
+  <li>(주)그린랩스 - <em>2021-12-13 ~ 현재</em>
+    <ul>
+      <li>Clojure 백엔드 개발</li>
+    </ul>
+  </li>
+  <li>(주)컬리 - <em>2019-11-04 ~ 2021-12-10</em>
+    <ul>
+      <li>마켓컬리의 가상재고, 전시제어, 이벤트 서비스 등 개발
+        <ul>
+          <li>Java 백엔드 개발</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>(주)아티프렌즈 - <em>2018-08-22 ~ 2019-06-26</em>
+    <ul>
+      <li>Go 블록체인 엔진 개발</li>
+      <li>PHP 백엔드 개발</li>
+    </ul>
+  </li>
+  <li>(주)우아한형제들 - <em>2016-04-04 ~ 2018-08-21</em>
+    <ul>
+      <li>푸드 커머스 "배민찬" 개발
+        <ul>
+          <li>Java 백엔드 개발</li>
+          <li>PHP 프론트엔드 개발</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>(주)휘스코앤드비즈파크 - <em>2012-10-08 ~ 2016-03-07</em>
+    <ul>
+      <li>Java 웹 개발</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="public-key">Public Key</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>curl https://keybase.io/johngrib/key.asc | gpg <span class="nt">--import</span>
+</code></pre></div></div>
+
+<ul>
+  <li><a href="https://keybase.io/johngrib/key.asc ">https://keybase.io/johngrib/key.asc </a></li>
+</ul>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-----BEGIN PGP PUBLIC KEY BLOCK-----
+
+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
+Eg==
+=4GMP
+-----END PGP PUBLIC KEY BLOCK-----
+</code></pre></div></div>
+
+
+
+    </article>
+
+
+
+</div>
+
+            </div>
+        </div>
+        <footer class="footer">
+    <div>
+
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+    </div>
+
+    <script data-ad-client="SAMPLE-VALUE" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+</footer>
+    </body>
+</html>

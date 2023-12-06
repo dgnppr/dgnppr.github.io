@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 참고: https://jekyllrb.com/docs/liquid/filters/ -->
+    <title>Next JWP Study 14 - 기계인간 John Grib</title>
+
+    <meta name="description" content="ORM 및 Spring Data JPA">
+    <meta name="google-site-verification" content="xD2UvBTOH6xxBi9MseahHz4Nt9u2vYZbgY2wVo7Bdyc" />
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://localhost:4000/blog/2017/05/27/jwp-14/">
+    <link rel="alternate" type="application/rss+xml" title="기계인간 John Grib" href="http://localhost:4000/feed.xml" />
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Next JWP Study 14">
+    <meta property="og:description" content="ORM 및 Spring Data JPA">
+    <meta property="og:image" content="http://localhost:4000/resource/johngrib.png">
+    <meta property="og:url" content="http://localhost:4000/blog/2017/05/27/jwp-14/">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@John_Grib" />
+    <meta name="twitter:url" content="http://localhost:4000/blog/2017/05/27/jwp-14/" />
+    <meta name="twitter:title" content="Next JWP Study 14" />
+    <meta name="twitter:description" content="ORM 및 Spring Data JPA" />
+
+    <link rel="apple-touch-icon" sizes="57x57"        href="/resource/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"        href="/resource/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"        href="/resource/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"        href="/resource/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114"      href="/resource/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120"      href="/resource/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144"      href="/resource/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152"      href="/resource/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180"      href="/resource/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/resource/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"   href="/resource/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"   href="/resource/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"   href="/resource/icon/favicon-16x16.png">
+    <link rel="manifest" href="/resource/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/resource/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=SAMPLE-VALUE"></script>
+    <script>
+        // https://gist.github.com/chrisveness/43bcda93af9f646d083fad678071b90a
+        async function aesGcmDecrypt(ciphertext, password) {
+            const pwUtf8 = new TextEncoder().encode(password);
+            const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+            const iv = ciphertext.slice(0,24).match(/.{2}/g).map(byte => parseInt(byte, 16));
+            const alg = { name: 'AES-GCM', iv: new Uint8Array(iv) };
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['decrypt']);
+            const ctStr = atob(ciphertext.slice(24));
+            const ctUint8 = new Uint8Array(ctStr.match(/[\s\S]/g).map(ch => ch.charCodeAt(0)));
+            const plainBuffer = await crypto.subtle.decrypt(alg, key, ctUint8);
+            const plaintext = new TextDecoder().decode(plainBuffer);
+            return plaintext;
+        }
+        async function aesGcmEncrypt(plaintext, password) {
+            const pwUtf8 = new TextEncoder().encode(password);
+            const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const alg = { name: 'AES-GCM', iv: iv };
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']);
+            const ptUint8 = new TextEncoder().encode(plaintext);
+            const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUint8);
+            const ctArray = Array.from(new Uint8Array(ctBuffer));
+            const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join('');
+            const ctBase64 = btoa(ctStr);
+            const ivHex = Array.from(iv).map(b => ('00' + b.toString(16)).slice(-2)).join('');
+            return ivHex+ctBase64;
+        }
+
+        aesGcmDecrypt('THIS-IS-SAMPLE-VALUE', 'http://localhost:4000')
+            .then(function(ua) {
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', ua);
+                console.log('The gtag config has been finished.');
+            })
+            .catch(function(error) {
+                console.log(error);
+                console.log('The gtag id is invalid.');
+            });
+    </script>
+
+
+
+</head>
+<header class="header">
+    <div>
+        <a class="site-title" href="/">기계인간 John Grib</a>
+    </div>
+    <div>
+        <a class="site-title-right" href="/about/">me</a>
+    </div>
+    <div>
+        <a id="random-button" class="site-title-right">random</a>
+    </div>
+    <div>
+        <a class="site-title-right" href="/wiki/root-index/">index</a>
+    </div>
+</header>
+<script async src="/js/shortcut.js"></script>
+
+    <body>
+        <div class="page-content">
+            <div class="search">
+    <form role="search" method="get" action="/search/">
+         <input name="searchString" class="searchInput" placeholder=" 검색하세요" type="text">
+         <input type="submit" class="searchButton" value="Search">
+    </form>
+</div>
+            <div class="post">
+                <div class="post">
+    <header class="post-header">
+        <h1 class="page-title">
+            <a href="/blog/2017/05/27/jwp-14/"> Next JWP Study 14 </a>
+        </h1>
+        <p class="created-date">
+            2017.05.27
+        </p>
+        <div class="post-tag">
+    study jwp
+</div>
+
+        <h2>ORM 및 Spring Data JPA</h2>
+    </header>
+
+
+    <div class="toc">
+    </div>
+
+    <article class="post-content">
+        <ul id="markdown-toc">
+  <li><a href="#열-네-번째-수업-이모저모" id="markdown-toc-열-네-번째-수업-이모저모">열 네 번째 수업 이모저모</a></li>
+  <li><a href="#프로그래밍-단상-변화를-어떻게-만들어갈-것인가" id="markdown-toc-프로그래밍-단상-변화를-어떻게-만들어갈-것인가">프로그래밍 단상: 변화를 어떻게 만들어갈 것인가?</a></li>
+  <li><a href="#immutable-객체-메모" id="markdown-toc-immutable-객체-메모">immutable 객체 메모</a></li>
+  <li><a href="#orm---jpa" id="markdown-toc-orm---jpa">ORM - JPA</a></li>
+  <li><a href="#links" id="markdown-toc-links">Links</a></li>
+</ul>
+
+<h1 id="열-네-번째-수업-이모저모">열 네 번째 수업 이모저모</h1>
+
+<ul>
+  <li>수업은 <code class="language-plaintext highlighter-rouge">2017-05-25 19:00:00 +0900</code> 무렵에 시작했을 것으로 추측.
+    <ul>
+      <li>이번 수업엔 내가 3 분 정도 지각했다.</li>
+    </ul>
+  </li>
+  <li>오늘은 ORM을 사용해 본다.</li>
+  <li>이제 종강까지 수업 두 번 남았다.</li>
+</ul>
+
+<h1 id="프로그래밍-단상-변화를-어떻게-만들어갈-것인가">프로그래밍 단상: 변화를 어떻게 만들어갈 것인가?</h1>
+
+<p>회고를 통해 얻은 깨달음을 토대로 작은 성공을 반복해 가는 사이클.</p>
+
+<p>작은 변화들의 누적으로 인한 큰 변화의 발생을 기대하는 방식이 마음에 든다.</p>
+
+<h1 id="immutable-객체-메모">immutable 객체 메모</h1>
+
+<p>어지간한 경우엔 그냥 불변 객체를 쓰는 쪽이 좋다고 생각한다.
+자잘한 버그가 줄어들고, 읽기도 더 편하다. 사이드 이펙트를 관리하기도 좋다.</p>
+
+<p>Java에서는 불변 객체의 사용이 꽤 번거로운 편이므로
+Scala 같은 언어를 사용하는 것도 좋다고 생각한다.</p>
+
+<p>덧붙이자면 객체 뿐 아니라 변수의 사용도 자제하고,
+가능한 한 상수만을 사용해서 코딩하는 것도 좋다고 생각한다.</p>
+
+<h1 id="orm---jpa">ORM - JPA</h1>
+
+<p>이 책 한 권이면 된다.</p>
+
+<p><a href="http://www.acornpub.co.kr/book/jpa-programmig">자바 ORM 표준 JPA 프로그래밍</a></p>
+
+<h1 id="links">Links</h1>
+
+<ul>
+  <li>수업 자료
+    <ul>
+      <li><a href="https://nextstep.camp/courses/-KgDNT4rfavb_BzYLBXr/-KgqHPfpV1xrdi1_T9ne/lessons/-Kk9mNZRospN5eO7duC0">프로그래밍 단상</a></li>
+      <li><a href="https://nextstep.camp/courses/-KgDNT4rfavb_BzYLBXr/-KihchAcnJJxzb909TBT/lessons/-Kihe0w5_EXX4St6SZcT">ORM 및 Spring Data JPA</a></li>
+    </ul>
+  </li>
+</ul>
+
+    </article>
+    <script async src="/js/create-link.js"></script>
+
+
+    
+    <div class="giscus"></div>
+    <div class="post-comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="johngrib/johngrib.github.io"
+        data-repo-id="SAMPLE-VALUE"
+        data-category="Announcements"
+        data-category-id="SAMPLE-VALUE"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="light"
+        data-lang="ko"
+        crossorigin="anonymous"
+        data-mapping="specific"
+        data-term="38/90F574-7578-4942-B299-A6D54199006F"
+        data-strict="0"
+        async>
+    </script>
+    </div>
+
+
+    <script async src="/js/toc-highlight.js"></script>
+</div>
+
+            </div>
+        </div>
+        <footer class="footer">
+    <div>
+
+    </div>
+
+    <script data-ad-client="SAMPLE-VALUE" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+</footer>
+    </body>
+</html>

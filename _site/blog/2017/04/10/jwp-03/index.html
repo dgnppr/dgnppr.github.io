@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- 참고: https://jekyllrb.com/docs/liquid/filters/ -->
+    <title>Next JWP Study 03 - 기계인간 John Grib</title>
+
+    <meta name="description" content="HTTP 이해: 두 번째 시간">
+    <meta name="google-site-verification" content="xD2UvBTOH6xxBi9MseahHz4Nt9u2vYZbgY2wVo7Bdyc" />
+
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="canonical" href="http://localhost:4000/blog/2017/04/10/jwp-03/">
+    <link rel="alternate" type="application/rss+xml" title="기계인간 John Grib" href="http://localhost:4000/feed.xml" />
+
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Next JWP Study 03">
+    <meta property="og:description" content="HTTP 이해: 두 번째 시간">
+    <meta property="og:image" content="http://localhost:4000/resource/johngrib.png">
+    <meta property="og:url" content="http://localhost:4000/blog/2017/04/10/jwp-03/">
+
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:site" content="@John_Grib" />
+    <meta name="twitter:url" content="http://localhost:4000/blog/2017/04/10/jwp-03/" />
+    <meta name="twitter:title" content="Next JWP Study 03" />
+    <meta name="twitter:description" content="HTTP 이해: 두 번째 시간" />
+
+    <link rel="apple-touch-icon" sizes="57x57"        href="/resource/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60"        href="/resource/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72"        href="/resource/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76"        href="/resource/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114"      href="/resource/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120"      href="/resource/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144"      href="/resource/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152"      href="/resource/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180"      href="/resource/icon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/resource/icon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32"   href="/resource/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96"   href="/resource/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16"   href="/resource/icon/favicon-16x16.png">
+    <link rel="manifest" href="/resource/icon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/resource/icon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=SAMPLE-VALUE"></script>
+    <script>
+        // https://gist.github.com/chrisveness/43bcda93af9f646d083fad678071b90a
+        async function aesGcmDecrypt(ciphertext, password) {
+            const pwUtf8 = new TextEncoder().encode(password);
+            const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+            const iv = ciphertext.slice(0,24).match(/.{2}/g).map(byte => parseInt(byte, 16));
+            const alg = { name: 'AES-GCM', iv: new Uint8Array(iv) };
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['decrypt']);
+            const ctStr = atob(ciphertext.slice(24));
+            const ctUint8 = new Uint8Array(ctStr.match(/[\s\S]/g).map(ch => ch.charCodeAt(0)));
+            const plainBuffer = await crypto.subtle.decrypt(alg, key, ctUint8);
+            const plaintext = new TextDecoder().decode(plainBuffer);
+            return plaintext;
+        }
+        async function aesGcmEncrypt(plaintext, password) {
+            const pwUtf8 = new TextEncoder().encode(password);
+            const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const alg = { name: 'AES-GCM', iv: iv };
+            const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['encrypt']);
+            const ptUint8 = new TextEncoder().encode(plaintext);
+            const ctBuffer = await crypto.subtle.encrypt(alg, key, ptUint8);
+            const ctArray = Array.from(new Uint8Array(ctBuffer));
+            const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join('');
+            const ctBase64 = btoa(ctStr);
+            const ivHex = Array.from(iv).map(b => ('00' + b.toString(16)).slice(-2)).join('');
+            return ivHex+ctBase64;
+        }
+
+        aesGcmDecrypt('THIS-IS-SAMPLE-VALUE', 'http://localhost:4000')
+            .then(function(ua) {
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', ua);
+                console.log('The gtag config has been finished.');
+            })
+            .catch(function(error) {
+                console.log(error);
+                console.log('The gtag id is invalid.');
+            });
+    </script>
+
+
+
+</head>
+<header class="header">
+    <div>
+        <a class="site-title" href="/">기계인간 John Grib</a>
+    </div>
+    <div>
+        <a class="site-title-right" href="/about/">me</a>
+    </div>
+    <div>
+        <a id="random-button" class="site-title-right">random</a>
+    </div>
+    <div>
+        <a class="site-title-right" href="/wiki/root-index/">index</a>
+    </div>
+</header>
+<script async src="/js/shortcut.js"></script>
+
+    <body>
+        <div class="page-content">
+            <div class="search">
+    <form role="search" method="get" action="/search/">
+         <input name="searchString" class="searchInput" placeholder=" 검색하세요" type="text">
+         <input type="submit" class="searchButton" value="Search">
+    </form>
+</div>
+            <div class="post">
+                <div class="post">
+    <header class="post-header">
+        <h1 class="page-title">
+            <a href="/blog/2017/04/10/jwp-03/"> Next JWP Study 03 </a>
+        </h1>
+        <p class="created-date">
+            2017.04.10
+        </p>
+        <div class="post-tag">
+    study jwp 개발자 프로그래밍-심리학 Gerald-Weinberg
+</div>
+
+        <h2>HTTP 이해: 두 번째 시간</h2>
+    </header>
+
+
+    <div class="toc">
+    </div>
+
+    <article class="post-content">
+        <ul id="markdown-toc">
+  <li><a href="#세-번째-수업-이모저모" id="markdown-toc-세-번째-수업-이모저모">세 번째 수업 이모저모</a></li>
+  <li><a href="#단상--좋은-개발자란" id="markdown-toc-단상--좋은-개발자란">단상 : 좋은 개발자란?</a>    <ul>
+      <li><a href="#나의-생각--좋은-개발자란" id="markdown-toc-나의-생각--좋은-개발자란">나의 생각 : 좋은 개발자란?</a>        <ul>
+          <li><a href="#좋은-개발자의-이데아" id="markdown-toc-좋은-개발자의-이데아">좋은 개발자의 이데아</a></li>
+          <li><a href="#너무-뛰어난-개발자의-딜레마" id="markdown-toc-너무-뛰어난-개발자의-딜레마">너무 뛰어난 개발자의 딜레마</a></li>
+          <li><a href="#그-외-생각들-메모" id="markdown-toc-그-외-생각들-메모">그 외 생각들 메모</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#links" id="markdown-toc-links">Links</a></li>
+</ul>
+
+<h1 id="세-번째-수업-이모저모">세 번째 수업 이모저모</h1>
+
+<ul>
+  <li>수업은 <code class="language-plaintext highlighter-rouge">2017-04-10 19:00:00 +0900</code>에 시작.
+    <ul>
+      <li>이번에는 이론 수업, 실습 순으로 진행되었다.</li>
+      <li>실습 시간에 요구사항을 마저 구현하고, 리팩토링도 하는 것이 목표.</li>
+    </ul>
+  </li>
+  <li>편안하고 자유로운 분위기의 수업을 지향.
+    <ul>
+      <li>예 : 다 한 사람은 집에 가도 된다.</li>
+      <li>나는 숙제로 요구사항을 다 구현해 왔고 리팩토링도 했으므로, 교수님께 구현한 내용을 보여드리고 실습 생략하고 집에 갔음.</li>
+    </ul>
+  </li>
+  <li>이론 강의
+    <ul>
+      <li>HTTP 기본, OSI 7 계층, 콘텐츠 효율성 최적화, 보안 등.</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="단상--좋은-개발자란">단상 : 좋은 개발자란?</h1>
+
+<ul>
+  <li>박재성 교수님과 다른 사람들의 의견을 들어볼 수 있는 시간이었다.</li>
+  <li>유명한 책들을 봐도 그렇고, 좋은 개발자의 유형은 거의 뚜렷한 것 같다.</li>
+</ul>
+
+<h2 id="나의-생각--좋은-개발자란">나의 생각 : 좋은 개발자란?</h2>
+
+<h3 id="좋은-개발자의-이데아">좋은 개발자의 이데아</h3>
+<blockquote>
+  <p>"행복한 가정은 모두 모습이 비슷하고, 불행한 가정은 모두 제각각의 불행을 안고 있다."</p>
+</blockquote>
+
+<p><strong>안나 카레니나</strong>의 첫 문장이다. (레프 톨스토이, 안진희 역. [안나 카레니나] 1권, 민음사 2009)</p>
+
+<p>좋은 개발자에 대한 논의도 이와 비슷하다고 생각한다.<br />
+좋은 개발자들은 대개 비슷한 특성을 갖고 있을 것으로 <strong>예견</strong>된다.<br />
+그러나 보통 <strong>좋은 개발자와 거리가 좀 있는 개발자</strong>들은 다 나름의 독특한 이유들이 있다.<br />
+코딩을 못한다거나, 성격이 나쁘다거나, 공부를 안한다거나, …</p>
+
+<h3 id="너무-뛰어난-개발자의-딜레마">너무 뛰어난 개발자의 딜레마</h3>
+
+<p>회사에서 일하는 개발자의 조건에 한정하여 고용주 관점에서 생각해보면 어떨까.
+좋은 개발자는 1인분 이상의 일을 하는 개발자일까?
+회사의 모든 것을 알고 모든 업무에 지원이 가능한 <code class="language-plaintext highlighter-rouge">static public</code> 개발자는 어떨까?</p>
+
+<p>제럴드 와인버그는 <strong>프로그래밍 심리학</strong>에서 다음과 같이 썼다.<br />
+(제럴드 와인버그, 조상민 역. [프로그래밍 심리학] 6장. 프로그래밍 프로젝트, 인사이트 2008)</p>
+
+<blockquote>
+  <p>절대 없어서는 안 될 프로그래머가 있다면, 한시라도 빨리 그를 프로젝트에서 제거하라.</p>
+</blockquote>
+
+<p>의미는 뚜렷하다. 대체 불가능한 프로그래머는 고용주와 관리자에게 리스크가 된다.
+뛰어난 개발자이면서 동시에 핵심 인력인 사람은 회사의 대들보가 되기 마련이지만
+어느날 갑자기 그가 예상치 못한 중병에 걸려 쓰러진다면? 교통사고를 당한다면?
+회사는 위기에 처하게 된다.</p>
+
+<p>따라서 고용주 입장만 고려했을 때</p>
+<ul>
+  <li>리스크 최소화를 위해 개발자는 모듈화 되어야 한다.</li>
+  <li>개별적으로 뛰어나지만 대체 가능한 인력들로 팀을 구성해야 한다.</li>
+</ul>
+
+<p>소프트웨어 개발과 통하는 점이 있다는 생각이 든다.
+소프트웨어만 리팩토링이 필요한 것이 아니다.
+회사의 많은 인력들이 한 사람에게 의존하고 있다면,
+좋지 못한 소프트웨어에서 나는 나쁜 냄새가 조직에서도 발생한다고 말할 수 있을 것 같다.</p>
+
+<h3 id="그-외-생각들-메모">그 외 생각들 메모</h3>
+<ul>
+  <li>개발자는 훌륭한 프로그래밍 원칙을 삶에서도 실천하는 사람이 되어야 할까?
+    <ul>
+      <li>YES. 나는 일관성을 중요하게 생각한다.</li>
+    </ul>
+  </li>
+  <li>한 사람의 개발자의 POWER가 과거보다 줄어든 것은 사실이다.
+    <ul>
+      <li>그렇다면 현재 시점에서는 좋은 개발자보다 좋은 팀에 대한 논의가 좀 더 의미있지 않을까?</li>
+    </ul>
+  </li>
+</ul>
+
+<h1 id="links">Links</h1>
+
+<ul>
+  <li><a href="https://www.ntu.edu.sg/home/ehchua/programming/webprogramming/HTTP_Basics.html">In Introduction to HTTP Basics</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/Transport_Layer_Security">Transport Layer Security</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/OSI_model">OSI Model</a></li>
+  <li>강의 자료
+    <ul>
+      <li><a href="https://nextstep.camp/courses/-KgDNT4rfavb_BzYLBXr/-Kf9koDWsc8jpIgwbgR5/lessons/-KfB3f2A8L1WBm542DxB">웹 서버 구현에 따른 피드백</a></li>
+      <li><a href="https://nextstep.camp/courses/-KgDNT4rfavb_BzYLBXr/-Kf9koDWsc8jpIgwbgR5/lessons/-Kh6E1kW6zxxKIX0MPzo">HTTP 학습에 따른 활용</a></li>
+      <li><a href="https://developers.google.com/web/fundamentals/performance/optimizing-content-efficiency/">콘텐츠 효율성 최적화</a></li>
+    </ul>
+  </li>
+  <li>사이트 성능 분석 도구
+    <ul>
+      <li><a href="https://developers.google.com/speed/pagespeed/?hl=ko-KR&amp;utm_source=PSI&amp;utm_medium=incoming-link&amp;utm_campaign=PSI">PageSpeed Tools : 사이트 성능 분석</a></li>
+      <li><a href="http://yslow.org/">YSlow</a></li>
+    </ul>
+  </li>
+</ul>
+
+    </article>
+    <script async src="/js/create-link.js"></script>
+
+
+    
+    <div class="giscus"></div>
+    <div class="post-comments">
+    <script src="https://giscus.app/client.js"
+        data-repo="johngrib/johngrib.github.io"
+        data-repo-id="SAMPLE-VALUE"
+        data-category="Announcements"
+        data-category-id="SAMPLE-VALUE"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="light"
+        data-lang="ko"
+        crossorigin="anonymous"
+        data-mapping="specific"
+        data-term="CF/2BF359-6CBA-4168-AEE3-F14DD84E105C"
+        data-strict="0"
+        async>
+    </script>
+    </div>
+
+
+    <script async src="/js/toc-highlight.js"></script>
+</div>
+
+            </div>
+        </div>
+        <footer class="footer">
+    <div>
+
+    </div>
+
+    <script data-ad-client="SAMPLE-VALUE" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+</footer>
+    </body>
+</html>
