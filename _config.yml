@@ -1,16 +1,15 @@
 # Site settings
-title: 기계인간 John Grib
-url: "https://johngrib.github.io"
+title: DGPR
+url: "https://dragonappear.github.io"
 baseurl: ""
 description: >
-    기계인간 블로그
+    dragonappear
 
 # My information
-email: johngrib82@gmail.com
-author: 기계인간 John Grib
-profile: 유물론자
-twitter_username: John_Grib
-github_username: johngrib
+email: dragonappear1@gmail.com
+author: dragonappear
+profile: dgpr
+github_username: dragonappear
 comment-support: utterances
 
 # Build settings
