@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-IS_CORRECT_WORKING_DIRECTORY=`pwd | egrep "johngrib.github.io$" | wc -l`
+IS_CORRECT_WORKING_DIRECTORY=`pwd | egrep "dragonappear.github.io$" | wc -l`
 if (( "$IS_CORRECT_WORKING_DIRECTORY" != 1 )); then
-    echo "올바른 경로가 아닙니다. johngrib.github.io/ 에서 실행해 주세요."
+    echo "올바른 경로가 아닙니다. dragonappear.github.io/ 에서 실행해 주세요."
     exit;
 fi
 

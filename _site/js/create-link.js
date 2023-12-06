@@ -1,7 +1,7 @@
-;(function() {
+; (function () {
     // 화면 상단의 해시태그에 링크를 걸어준다.
     var tags = document.querySelectorAll('.post-tag');
-    if(tags == null || tags.length < 1) {
+    if (tags == null || tags.length < 1) {
         return;
     }
 
@@ -9,11 +9,11 @@
         var item = tags[i];
         var tagList = item.innerHTML.trim();
 
-        if(/^\s*$/.test(tagList)) {
+        if (/^\s*$/.test(tagList)) {
             continue;
         }
         tagList = tagList.split(/\s+/)
-            .map(function(tag) {
+            .map(function (tag) {
                 return `<a href="/tag/#${tag}">#${tag}</a>`;
             })
             .join(' ');
@@ -21,11 +21,11 @@
     }
     return;
 })();
-;(function() {
+; (function () {
     // 본문 전체의 vimwiki 링크를 html 링크로 변환한다.
     var post = document.querySelector('article.post-content');
 
-    if(post == null) {
+    if (post == null) {
         return;
     }
 
@@ -77,7 +77,7 @@
 
 })();
 
-;(function() {
+; (function () {
     // 파일 이름이 링크 텍스트로 드러난 것을 문서의 타이틀로 교체해준다.
     const list = document.querySelectorAll('.no-labeled-link');
 
@@ -101,14 +101,14 @@
                 status = response.status;
                 return response.json()
             })
-            .then(function(data) {
+            .then(function (data) {
                 if (data == null) {
                     return;
                 }
                 item.innerText = data.title;
                 return;
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 item.classList.add('broken-link');
                 item.innerHTML += `<sub class="link-${status}"></sub>`
                 console.log(target, status);
@@ -116,14 +116,14 @@
     }
 })();
 
-;(function() {
+; (function () {
     // 외부 링크에 표시를 달아준다.
     const links = document.links;
 
     for (let i = 0; i < links.length; i++) {
         const link = links[i];
         const url = link.getAttribute('href');
-        if (/^(https?:\/\/)?johngrib\.github\.io/.test(url) || /^[\/#]/.test(url)) {
+        if (/^(https?:\/\/)?dragonappear\.github\.io/.test(url) || /^[\/#]/.test(url)) {
             // inner link
         } else {
             // external link
@@ -133,7 +133,7 @@
     }
 })();
 
-;(function footnoteToolTip() {
+; (function footnoteToolTip() {
     // 주석에 툴팁을 붙인다
     const supList = document.querySelectorAll('sup[role="doc-noteref"]');
     for (let i = 0; i < supList.length; i++) {
@@ -146,9 +146,9 @@
 
         const tooltip = sup.querySelector(".tooltiptext");
 
-        sup.addEventListener('mouseover', function() {
+        sup.addEventListener('mouseover', function () {
             const supRect = sup.getBoundingClientRect();
-            const postRect =  document.querySelector('.post-content')
+            const postRect = document.querySelector('.post-content')
                 .getBoundingClientRect();
 
             tooltip.style.display = "block";
@@ -167,7 +167,7 @@
             }
         });
 
-        sup.addEventListener('mouseout', function() {
+        sup.addEventListener('mouseout', function () {
             tooltip.style.display = "none";
             tooltip.style.left = null;
             tooltip.style.right = null;

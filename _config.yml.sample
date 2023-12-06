@@ -38,7 +38,7 @@ collections:
 
 # Comment Service
 giscus:
-  repo: johngrib/johngrib.github.io
+  repo: dragonappear/dragonappear.github.io
   repo_id: SAMPLE-VALUE
   category: Announcements
   category_id: SAMPLE-VALUE
