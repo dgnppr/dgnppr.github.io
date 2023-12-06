@@ -36,11 +36,11 @@ collections:
         permalink: /:collection/:path/
 
 # Comment Service
-giscus:
-  repo: johngrib/johngrib.github.io
-  repo_id: SAMPLE-VALUE
-  category: Announcements
-  category_id: SAMPLE-VALUE
+# giscus:
+#   repo: dragonappear/dragonappear.github.io
+#   repo_id: SAMPLE-VALUE
+#   category: Announcements
+#   category_id: SAMPLE-VALUE
 
 google_analytics:
   ua: SAMPLE-VALUE
@@ -49,9 +49,9 @@ google_analytics:
 google_adsense:
   client: SAMPLE-VALUE
 
-blame: "https://github.com/johngrib/johngrib.github.io/blame/master/_wiki"
-edit: "https://github.com/johngrib/johngrib.github.io/edit/master/_wiki"
-issue: "https://github.com/johngrib/johngrib.github.io/issues/new"
+blame: "https://github.com/dragonappear/dragonappear.github.io/blame/master/_wiki"
+edit: "https://github.com/dragonappear/dragonappear.github.io/edit/master/_wiki"
+issue: "https://github.com/dragonappear/dragonappear.github.io/issues/new"
 
 timezone: "Asia/Seoul"
 
