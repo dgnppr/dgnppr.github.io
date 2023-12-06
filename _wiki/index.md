@@ -10,8 +10,4 @@ regenerate: true
 
 ### Magazine
 
-
----
-
-
-
+* [[/magazine/00_lombok]]

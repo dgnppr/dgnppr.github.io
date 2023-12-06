@@ -1,1 +1,10 @@
-[]
+[
+ {
+  "name": "lombok",
+  "size": 1
+ },
+ {
+  "name": "magazine",
+  "size": 2
+ }
+]
