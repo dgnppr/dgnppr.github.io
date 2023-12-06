@@ -6,51 +6,11 @@
 </description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml"/>
-    <pubDate>Thu, 07 Dec 2023 02:22:56 +0900</pubDate>
-    <lastBuildDate>Thu, 07 Dec 2023 02:22:56 +0900</lastBuildDate>
+    <pubDate>Thu, 07 Dec 2023 02:29:58 +0900</pubDate>
+    <lastBuildDate>Thu, 07 Dec 2023 02:29:58 +0900</lastBuildDate>
     <generator>Jekyll v4.1.1</generator>
 
 
-    
-
-    
-      <item>
-        <title>ROOT</title>
-        <description></description>
-        <pubDate>Sun, 25 Jul 2021 18:00:13 +0900</pubDate>
-        <link>http://localhost:4000/wiki/index/</link>
-        <guid isPermaLink="true">http://localhost:4000/wiki/index/</guid>
-        
-        
-      </item>
-    
-
-    
-      <item>
-        <title>MathJax로 LaTeX 사용하기</title>
-        <description></description>
-        <pubDate>Mon, 04 Nov 2019 22:13:47 +0900</pubDate>
-        <link>http://localhost:4000/wiki/mathjax-latex/</link>
-        <guid isPermaLink="true">http://localhost:4000/wiki/mathjax-latex/</guid>
-        
-        <category>latex</category>
-        
-        
-      </item>
-    
-
-    
-      <item>
-        <title>HOW TO</title>
-        <description></description>
-        <pubDate>Sun, 04 Feb 2018 15:57:05 +0900</pubDate>
-        <link>http://localhost:4000/wiki/how-to/</link>
-        <guid isPermaLink="true">http://localhost:4000/wiki/how-to/</guid>
-        
-        <category>how-to</category>
-        
-        
-      </item>
     
 
 

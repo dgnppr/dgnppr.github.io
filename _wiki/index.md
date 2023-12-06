@@ -1,11 +1,17 @@
 ---
-layout  : category
-title   : ROOT
-date    : 2017-11-26 12:42:03 +0900
+layout  : wikiindex
+title   : wiki
 toc     : true
 public  : true
 comment : false
-updated : 2021-07-25 18:00:13 +0900
+updated : 2023-12-06 23:01:03 +0900
 regenerate: true
 ---
+
+### Magazine
+
+
+---
+
+
 
