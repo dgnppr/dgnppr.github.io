@@ -5,46 +5,46 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <!-- 참고: https://jekyllrb.com/docs/liquid/filters/ -->
-    <title>Next JWP Study 11 - 기계인간 John Grib</title>
+    <title>Next JWP Study 11 - DGPR</title>
 
     <meta name="description" content="DI 기반 단위 테스트">
     <meta name="google-site-verification" content="xD2UvBTOH6xxBi9MseahHz4Nt9u2vYZbgY2wVo7Bdyc" />
 
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href=" /css/main.css">
     <link rel="canonical" href="http://localhost:4000/blog/2017/05/16/jwp-11/">
-    <link rel="alternate" type="application/rss+xml" title="기계인간 John Grib" href="http://localhost:4000/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="DGPR" href="http://localhost:4000 /feed.xml" />
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="Next JWP Study 11">
     <meta property="og:description" content="DI 기반 단위 테스트">
-    <meta property="og:image" content="http://localhost:4000/resource/johngrib.png">
+    <meta property="og:image" content="http://localhost:4000/resource/dragonappear.png">
     <meta property="og:url" content="http://localhost:4000/blog/2017/05/16/jwp-11/">
 
     <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@John_Grib" />
+    <meta name="twitter:site" content="@" />
     <meta name="twitter:url" content="http://localhost:4000/blog/2017/05/16/jwp-11/" />
     <meta name="twitter:title" content="Next JWP Study 11" />
     <meta name="twitter:description" content="DI 기반 단위 테스트" />
 
-    <link rel="apple-touch-icon" sizes="57x57"        href="/resource/icon/apple-icon-57x57.png">
-    <link rel="apple-touch-icon" sizes="60x60"        href="/resource/icon/apple-icon-60x60.png">
-    <link rel="apple-touch-icon" sizes="72x72"        href="/resource/icon/apple-icon-72x72.png">
-    <link rel="apple-touch-icon" sizes="76x76"        href="/resource/icon/apple-icon-76x76.png">
-    <link rel="apple-touch-icon" sizes="114x114"      href="/resource/icon/apple-icon-114x114.png">
-    <link rel="apple-touch-icon" sizes="120x120"      href="/resource/icon/apple-icon-120x120.png">
-    <link rel="apple-touch-icon" sizes="144x144"      href="/resource/icon/apple-icon-144x144.png">
-    <link rel="apple-touch-icon" sizes="152x152"      href="/resource/icon/apple-icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="180x180"      href="/resource/icon/apple-icon-180x180.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="/resource/icon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/resource/icon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/resource/icon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/resource/icon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/resource/icon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/resource/icon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/resource/icon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/resource/icon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/resource/icon/apple-icon-180x180.png">
     <link rel="icon" type="image/png" sizes="192x192" href="/resource/icon/android-icon-192x192.png">
-    <link rel="icon" type="image/png" sizes="32x32"   href="/resource/icon/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="96x96"   href="/resource/icon/favicon-96x96.png">
-    <link rel="icon" type="image/png" sizes="16x16"   href="/resource/icon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/resource/icon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/resource/icon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/resource/icon/favicon-16x16.png">
     <link rel="manifest" href="/resource/icon/manifest.json">
     <meta name="msapplication-TileColor" content="#ffffff">
     <meta name="msapplication-TileImage" content="/resource/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
 
-
+    
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=SAMPLE-VALUE"></script>
     <script>
@@ -52,7 +52,7 @@
         async function aesGcmDecrypt(ciphertext, password) {
             const pwUtf8 = new TextEncoder().encode(password);
             const pwHash = await crypto.subtle.digest('SHA-256', pwUtf8);
-            const iv = ciphertext.slice(0,24).match(/.{2}/g).map(byte => parseInt(byte, 16));
+            const iv = ciphertext.slice(0, 24).match(/.{2}/g).map(byte => parseInt(byte, 16));
             const alg = { name: 'AES-GCM', iv: new Uint8Array(iv) };
             const key = await crypto.subtle.importKey('raw', pwHash, alg, false, ['decrypt']);
             const ctStr = atob(ciphertext.slice(24));
@@ -73,29 +73,29 @@
             const ctStr = ctArray.map(byte => String.fromCharCode(byte)).join('');
             const ctBase64 = btoa(ctStr);
             const ivHex = Array.from(iv).map(b => ('00' + b.toString(16)).slice(-2)).join('');
-            return ivHex+ctBase64;
+            return ivHex + ctBase64;
         }
 
         aesGcmDecrypt('THIS-IS-SAMPLE-VALUE', 'http://localhost:4000')
-            .then(function(ua) {
+            .then(function (ua) {
                 window.dataLayer = window.dataLayer || [];
-                function gtag(){dataLayer.push(arguments);}
+                function gtag() { dataLayer.push(arguments); }
                 gtag('js', new Date());
                 gtag('config', ua);
                 console.log('The gtag config has been finished.');
             })
-            .catch(function(error) {
+            .catch(function (error) {
                 console.log(error);
                 console.log('The gtag id is invalid.');
             });
     </script>
-
-
+    
+    
 
 </head>
 <header class="header">
     <div>
-        <a class="site-title" href="/">기계인간 John Grib</a>
+        <a class="site-title" href="/">DGPR</a>
     </div>
     <div>
         <a class="site-title-right" href="/about/">me</a>
@@ -108,7 +108,6 @@
     </div>
 </header>
 <script async src="/js/shortcut.js"></script>
-
     <body>
         <div class="page-content">
             <div class="search">
