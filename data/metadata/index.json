@@ -3,5 +3,7 @@
  "title": "wiki",
  "url": "/wiki/index",
  "updated": "2023-12-06 23:01:03 +0900",
- "children": []
+ "children": [
+  "magazine"
+ ]
 }

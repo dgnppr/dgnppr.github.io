@@ -35,5 +35,39 @@
     </url>
     
 
+    
+    <url>
+        <loc>http://localhost:4000/wiki/magazine/</loc>
+        
+            <lastmod>2023-12-06T20:55:09+09:00</lastmod>
+        
+
+        
+            <changefreq>daily</changefreq>
+        
+
+        
+            <priority>0.5</priority>
+        
+    </url>
+    
+
+    
+    <url>
+        <loc>http://localhost:4000/wiki/magazine/00_lombok/</loc>
+        
+            <lastmod>2023-12-06T21:15:24+09:00</lastmod>
+        
+
+        
+            <changefreq>daily</changefreq>
+        
+
+        
+            <priority>0.5</priority>
+        
+    </url>
+    
+
 </urlset>
 
