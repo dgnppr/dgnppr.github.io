@@ -12,13 +12,15 @@ latex: true
 {% if site.github_username %}
         <a href="https://github.com/{{ site.github_username }}">GitHub</a>
 {% endif %}
-{% if site.twitter_username %}
-        <a href="https://twitter.com/{{ site.twitter_username }}">Twitter</a>
+        {% if site.github_username %}
+        <a href="https://{{ site.github_username }}.gitbook.io/d">Learning</a>
+        {% endif %}
+{% if site.linkedin_username %}
+        <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}">Linkedin</a>
 {% endif %}
 {% if site.email %}
         <a href="mailto:{{ site.email }}">Email</a>
 {% endif %}
-        <a href="{{ "/feed.xml" | prepend: site.baseurl }}">RSS</a>
 </div>
 
 ## About Me
