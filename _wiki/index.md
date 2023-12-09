@@ -15,3 +15,5 @@ regenerate: true
 ### Opinion
 
 ### Conference
+
+* [[/conference/00_test]]
