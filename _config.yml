@@ -46,9 +46,8 @@ utterances:
   label: Comment
   branch: master
 
-# google_analytics:
-#   ua: SAMPLE-VALUE
-#   encrypted_ua: THIS-IS-SAMPLE-VALUE
+google_analytics:
+  id: G-QC60CGBRJF
 
 # google_adsense:
 #   client: SAMPLE-VALUE
