@@ -37,11 +37,14 @@ collections:
         permalink: /:collection/:path/
 
 # Comment Service
-# giscus:
-#   repo: dragonappear/dragonappear.github.io
-#   repo_id: SAMPLE-VALUE
-#   category: Announcements
-#   category_id: SAMPLE-VALUE
+disqus:
+  id: dragonappear-github-io
+  shortname: dragonappear-github-io
+utterances:
+  repo: dragonappear/dragonappear.github.io
+  issue-term: url
+  label: Comment
+  branch: master
 
 # google_analytics:
 #   ua: SAMPLE-VALUE

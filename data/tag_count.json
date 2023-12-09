@@ -1,7 +1,7 @@
 [
  {
   "name": "conference",
-  "size": 2
+  "size": 1
  },
  {
   "name": "lombok",
@@ -9,6 +9,6 @@
  },
  {
   "name": "magazine",
-  "size": 2
+  "size": 1
  }
 ]
