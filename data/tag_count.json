@@ -1,5 +1,9 @@
 [
  {
+  "name": "conference",
+  "size": 1
+ },
+ {
   "name": "lombok",
   "size": 1
  },
