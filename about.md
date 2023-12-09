@@ -13,7 +13,7 @@ latex: true
         <a href="https://github.com/{{ site.github_username }}">GitHub</a>
 {% endif %}
         {% if site.github_username %}
-        <a href="https://{{ site.github_username }}.gitbook.io/d">Learning</a>
+        <a href="https://{{ site.github_username }}.gitbook.io/w">Docs</a>
         {% endif %}
 {% if site.linkedin_username %}
         <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}">Linkedin</a>
