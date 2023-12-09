@@ -1,7 +1,7 @@
 /* 사이트 최상단 메뉴 바 + 구글 검색 */
 
 .header {
-    background-color: #3469BE;
+    background-color: $theme_color;
 
     &:after {
         clear: both;
