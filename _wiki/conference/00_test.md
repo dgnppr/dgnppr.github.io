@@ -12,7 +12,7 @@ parent  : [[/conference]]
 latex   : true
 ---
 * TOC
-  {:toc}
+{:toc}
 
 
 ### 테스트
