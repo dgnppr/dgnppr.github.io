@@ -35,6 +35,8 @@ layout: document
         {{ content }}
     </article>
 
+    <br/>
+
     {% if page.comment != false %}
     {% include comment.html %}
     {% endif%}
@@ -43,5 +45,6 @@ layout: document
 {% include createLink.html %}
 {% include createTable.html %}
 
+<script src="/js/axios.min.js"></script>
 <script async src="/js/parent.js"></script>
 <script async src="/js/toc-highlight.js"></script>
