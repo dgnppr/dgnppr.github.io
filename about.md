@@ -10,7 +10,7 @@ latex: true
 
 <div class="contact">
 {% if site.github_username %}
-        <a href="https://{{ site.github_username }}.gitbook.io/w">Wiki</a>
+        <a href="https://docs.dgpr.me">Wiki</a>
 {% endif %}
 {% if site.github_username %}
         <a href="https://github.com/{{ site.github_username }}">GitHub</a>
