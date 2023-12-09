@@ -49,9 +49,6 @@ utterances:
 google_analytics:
   id: G-QC60CGBRJF
 
-# google_adsense:
-#   client: SAMPLE-VALUE
-
 blame: "https://github.com/dragonappear/dragonappear.github.io/blame/master/_wiki"
 edit: "https://github.com/dragonappear/dragonappear.github.io/edit/master/_wiki"
 issue: "https://github.com/dragonappear/dragonappear.github.io/issues/new"
