@@ -44,12 +44,12 @@ collections:
 #   category: Announcements
 #   category_id: SAMPLE-VALUE
 
-google_analytics:
-  ua: SAMPLE-VALUE
-  encrypted_ua: THIS-IS-SAMPLE-VALUE
+# google_analytics:
+#   ua: SAMPLE-VALUE
+#   encrypted_ua: THIS-IS-SAMPLE-VALUE
 
-google_adsense:
-  client: SAMPLE-VALUE
+# google_adsense:
+#   client: SAMPLE-VALUE
 
 blame: "https://github.com/dragonappear/dragonappear.github.io/blame/master/_wiki"
 edit: "https://github.com/dragonappear/dragonappear.github.io/edit/master/_wiki"
