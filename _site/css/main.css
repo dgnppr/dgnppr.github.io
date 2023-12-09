@@ -282,7 +282,7 @@ div.highlight { font-size: 0.9em; line-height: 1.3; }
 
 .contact { margin-top: 10px; text-align: center; }
 
-.contact a { background: #47146C; color: #FFFFFF; padding: 5px 10px; text-decoration: none; border-radius: 8px; white-space: nowrap; }
+.contact a { background: #5c8ad3; color: #FFFFFF; padding: 5px 10px; text-decoration: none; border-radius: 8px; white-space: nowrap; }
 
 .contact a:hover { transition: background 0.3s ease; background: #666; }
 
@@ -335,7 +335,7 @@ details[open] > div { opacity: 0; animation-name: slideDown; animation-duration:
 .title-summary { font-size: 1.6em; font-style: italic; color: gray; }
 
 /* 사이트 최상단 메뉴 바 + 구글 검색 */
-.header { background-color: #47146C; }
+.header { background-color: #3469BE; }
 
 .header:after { clear: both; content: ' '; display: block; }
 
