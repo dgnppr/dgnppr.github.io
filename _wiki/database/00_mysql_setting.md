@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : MySQL 시스템 변수 설정
+title   : MySQL 서버 설정
 summary : 
 date    : 2023-02-13 18:00:00 +0900
 updated : 2023-02-13 18:00:00 +0900
@@ -14,11 +14,11 @@ latex   : true
 * TOC
 {:toc}
 
+## InnoDB
 
-## MySQL 시스템 변수 설정
+### 버퍼풀 크기
 
-
-### InnoDB
+### 변수 설정
 
 #### 데드락
 
