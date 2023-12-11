@@ -2,5 +2,7 @@
  "/wiki/algorithm/00_jwt_algorithm",
  "/wiki/database/00_mysql_setting",
  "/wiki/index",
- "/wiki/magazine/00_lombok"
+ "/wiki/magazine/00_lombok",
+ "/wiki/magazine/01_redis_single_threaded",
+ "/wiki/magazine/02_db_index_btree"
 ]

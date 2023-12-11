@@ -12,7 +12,7 @@ parent  : [[/algorithm]]
 latex   : true
 ---
 * TOC
-  {:toc}
+{:toc}
 
 
-### 왜 레디스를 싱글스레드로 개발했을까?
+### JWT 알고리즘 어떤걸 사용해야하나?

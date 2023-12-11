@@ -1,3 +1,5 @@
 [
- "magazine/00_lombok"
+ "magazine/00_lombok",
+ "magazine/01_redis_single_threaded",
+ "magazine/02_db_index_btree"
 ]

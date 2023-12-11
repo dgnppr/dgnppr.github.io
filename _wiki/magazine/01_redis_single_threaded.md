@@ -7,12 +7,12 @@ updated : 2023-12-06 21:15:24 +0900
 tag     : magazine redis os
 toc     : true
 comment : true
-public  : false
+public  : true
 parent  : [[/magazine]]
 latex   : true
 ---
 * TOC
-  {:toc}
+{:toc}
 
 
 ### 왜 레디스를 싱글스레드로 개발했을까?
