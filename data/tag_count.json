@@ -4,8 +4,12 @@
   "size": 1
  },
  {
-  "name": "database",
+  "name": "data-structure",
   "size": 1
+ },
+ {
+  "name": "database",
+  "size": 2
  },
  {
   "name": "jwt",
@@ -17,7 +21,7 @@
  },
  {
   "name": "magazine",
-  "size": 2
+  "size": 3
  },
  {
   "name": "mysql",
