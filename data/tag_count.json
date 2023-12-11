@@ -1,6 +1,14 @@
 [
  {
+  "name": "algorithm",
+  "size": 1
+ },
+ {
   "name": "database",
+  "size": 1
+ },
+ {
+  "name": "jwt",
   "size": 1
  },
  {
