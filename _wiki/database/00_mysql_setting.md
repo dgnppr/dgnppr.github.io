@@ -4,7 +4,7 @@ title   : MySQL 시스템 변수 설정
 summary : 
 date    : 2023-02-13 18:00:00 +0900
 updated : 2023-02-13 18:00:00 +0900
-tag     : tech mysql
+tag     : database mysql
 toc     : true
 comment : true
 public  : true
