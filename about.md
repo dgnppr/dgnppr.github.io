@@ -8,8 +8,4 @@ latex: true
 * TOC
 {:toc}
 
-## About Me
-
-## Work Experiences
-
-## Services
+## About me
