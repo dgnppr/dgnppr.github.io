@@ -1,6 +1,10 @@
 [
  {
   "name": "algorithm",
+  "size": 2
+ },
+ {
+  "name": "conference",
   "size": 1
  },
  {
@@ -9,7 +13,7 @@
  },
  {
   "name": "database",
-  "size": 2
+  "size": 3
  },
  {
   "name": "jwt",
@@ -21,7 +25,7 @@
  },
  {
   "name": "magazine",
-  "size": 3
+  "size": 4
  },
  {
   "name": "mysql",

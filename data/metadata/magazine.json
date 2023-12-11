@@ -6,6 +6,8 @@
  "url": "/wiki/magazine",
  "updated": "2023-12-06 20:55:09 +0900",
  "children": [
-  "magazine/00_lombok"
+  "magazine/00_lombok",
+  "magazine/01_redis_single_threaded",
+  "magazine/02_db_btree"
  ]
 }
