@@ -8,12 +8,6 @@ updated : 2023-12-06 23:01:03 +0900
 regenerate: true
 ---
 
-### Magazine
+### [Magazine](/magazine)
 
-* [[/magazine/00_lombok]]
-
-### Opinion
-
-### Conference
-
-* [[/conference/00_test]]
+### [Database](/database)
