@@ -8,6 +8,6 @@ updated : 2023-12-06 23:01:03 +0900
 regenerate: true
 ---
 
-### [Magazine](/wiki/magazine)
+### [Journal](/wiki/journal)
 
 ### [Database](/wiki/database)

@@ -1,5 +1,5 @@
 [
  "database",
  "database/00_mysql_setting",
- "magazine/02_db_btree"
+ "journal/02_db_btree"
 ]

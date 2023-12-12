@@ -16,16 +16,16 @@
   "size": 3
  },
  {
+  "name": "journal",
+  "size": 4
+ },
+ {
   "name": "jwt",
   "size": 1
  },
  {
   "name": "lombok",
   "size": 1
- },
- {
-  "name": "magazine",
-  "size": 4
  },
  {
   "name": "mysql",
