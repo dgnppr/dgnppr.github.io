@@ -5,8 +5,8 @@
  "/wiki/database",
  "/wiki/database/00_mysql_setting",
  "/wiki/index",
+ "/wiki/journal",
  "/wiki/journal/00_lombok",
  "/wiki/journal/01_redis_single_threaded",
- "/wiki/journal/02_db_btree",
- "/wiki/magazine"
+ "/wiki/journal/02_db_btree"
 ]

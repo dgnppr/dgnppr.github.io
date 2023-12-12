@@ -1,12 +1,12 @@
 {
  "type": "wiki",
- "title": "wiki",
+ "title": "Posts",
  "url": "/wiki/index",
  "updated": "2023-12-06 23:01:03 +0900",
  "children": [
   "algorithm",
   "conference",
   "database",
-  "magazine"
+  "journal"
  ]
 }

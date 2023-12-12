@@ -1,6 +1,6 @@
 [
+ "journal",
  "journal/00_lombok",
  "journal/01_redis_single_threaded",
- "journal/02_db_btree",
- "magazine"
+ "journal/02_db_btree"
 ]

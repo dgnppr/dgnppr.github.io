@@ -1,6 +1,6 @@
 ---
 layout  : wikiindex
-title   : wiki
+title   : Posts
 toc     : true
 public  : true
 comment : false
