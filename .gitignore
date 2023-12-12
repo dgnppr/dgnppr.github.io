@@ -7,3 +7,4 @@ Gemfile.lock
 package-lock.json
 .jekyll-cache/
 .idea
+.obsidian
