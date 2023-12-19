@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dragonappear.github.io/sitemap.xml
+Sitemap: https://dgpr.me/sitemap.xml
