@@ -10,15 +10,15 @@ layout: document
     {% if page.summary %}
         <p class="title-summary">{{ page.summary }}</p>
     {% endif %}
-        <div class="history-button">
-            <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
-            <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>
+<!--        <div class="history-button">-->
+            <!--<p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
+            <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>-->
             <!--<p>
                 <a href="{{ site.edit }}/{{ thisName }}.md">편집하기</a>
                 /
                 <a href="{{ site.issue }}?title={{ page.title | url_encode }}&body=의견을%20남겨주세요">의견 남기기</a>
             </p>-->
-        </div>
+<!--        </div>-->
 {% raw %}
         <div id="parent-list"></div>
 {% endraw %}
