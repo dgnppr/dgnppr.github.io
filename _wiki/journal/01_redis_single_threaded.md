@@ -16,3 +16,9 @@ latex   : true
 
 
 ### 왜 레디스를 싱글스레드로 개발했을까?
+
+
+### Reference
+
+- https://redis.com/blog/diving-into-redis-6/
+- https://akasai.space/redis/about_redis_2
