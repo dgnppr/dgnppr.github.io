@@ -4,9 +4,9 @@
  "/wiki/conference",
  "/wiki/database",
  "/wiki/database/00_mysql_setting",
- "/wiki/index",
- "/wiki/journal",
- "/wiki/journal/00_lombok",
- "/wiki/journal/01_redis_single_threaded",
- "/wiki/journal/02_db_btree"
+ "/wiki/essay",
+ "/wiki/essay/00_lombok_is_necessary",
+ "/wiki/essay/01_why_redis_single_threaded",
+ "/wiki/essay/02_why_db_index_is_btree",
+ "/wiki/index"
 ]
