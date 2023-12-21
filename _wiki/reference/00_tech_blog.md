@@ -6,7 +6,7 @@ date    : 2023-12-22 00:00:00 +0900
 updated : 2023-12-22 18:00:00 +0900
 tag     : reference
 toc     : true
-comment : true
+comment : false
 public  : true
 parent  : [[/reference]]
 latex   : true
