@@ -17,7 +17,7 @@
  },
  {
   "name": "essay",
-  "size": 4
+  "size": 5
  },
  {
   "name": "jwt",
@@ -37,6 +37,10 @@
  },
  {
   "name": "redis",
+  "size": 1
+ },
+ {
+  "name": "reference",
   "size": 1
  }
 ]
