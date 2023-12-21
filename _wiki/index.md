@@ -10,6 +10,6 @@ regenerate: true
 
 ### [Essay](/wiki/essay)
 
-### [Conference](/wiki/conference)
+### [Reference](/wiki/reference)
 
 ### [Database](/wiki/database)

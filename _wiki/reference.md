@@ -11,14 +11,3 @@ comment : false
 parent  : [[/index]]
 latex   : false
 ---
-
-
-### Link
-- [Netflix](https://netflixtechblog.com)
-- [Uber](https://www.uber.com/en-KR/blog/engineering/)
-- [LinkedIn](https://engineering.linkedin.com/blog)
-- [Airbnb](https://medium.com/airbnb-engineering)
-- [Meta](https://engineering.fb.com/)
-- [NAVER](https://d2.naver.com/helloworld)
-- [Toss](https://toss.tech/)
-- [AWS](https://aws.amazon.com/ko/blogs/architecture/)

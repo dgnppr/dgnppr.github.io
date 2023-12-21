@@ -5,5 +5,8 @@
  "parent": "index",
  "url": "/wiki/reference",
  "updated": "2023-12-22 00:00:00 +0900",
- "children": []
+ "children": [
+  "reference/00_tech_blog",
+  "reference/01_conference"
+ ]
 }

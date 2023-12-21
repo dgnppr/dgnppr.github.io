@@ -1,7 +1,6 @@
 [
  "/wiki/algorithm",
  "/wiki/algorithm/00_jwt_algorithm",
- "/wiki/conference",
  "/wiki/database",
  "/wiki/database/00_mysql_setting",
  "/wiki/essay",
@@ -9,5 +8,7 @@
  "/wiki/essay/01_why_redis_single_threaded",
  "/wiki/essay/02_why_db_index_is_btree",
  "/wiki/index",
- "/wiki/reference"
+ "/wiki/reference",
+ "/wiki/reference/00_tech_blog",
+ "/wiki/reference/01_conference"
 ]

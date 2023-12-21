@@ -4,10 +4,6 @@
   "size": 2
  },
  {
-  "name": "conference",
-  "size": 1
- },
- {
   "name": "data-structure",
   "size": 1
  },
@@ -41,6 +37,6 @@
  },
  {
   "name": "reference",
-  "size": 1
+  "size": 3
  }
 ]
