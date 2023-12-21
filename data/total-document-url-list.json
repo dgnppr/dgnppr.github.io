@@ -9,6 +9,5 @@
  "/wiki/essay/01_why_redis_single_threaded",
  "/wiki/essay/02_why_db_index_is_btree",
  "/wiki/index",
- "/wiki/reference",
- "/wiki/reference/00_big_tech_blogs"
+ "/wiki/reference"
 ]

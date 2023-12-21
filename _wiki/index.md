@@ -4,10 +4,12 @@ title   : Post
 toc     : true
 public  : true
 comment : false
-updated : 2023-12-06 23:01:03 +0900
+updated : 2023-12-01 00:00:00 +0900
 regenerate: true
 ---
 
 ### [Essay](/wiki/essay)
+
+### [Conference](/wiki/conference)
 
 ### [Database](/wiki/database)

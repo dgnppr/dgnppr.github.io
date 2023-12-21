@@ -7,6 +7,7 @@ updated : 2023-12-06 20:55:09 +0900
 tag     : essay
 toc     : true
 public  : true
+comment : false
 parent  : [[/index]]
 latex   : false
 ---
