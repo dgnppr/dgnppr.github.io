@@ -14,8 +14,6 @@ latex   : true
 * TOC
 {:toc}
 
-<br>
-
 레디스는 초당 100,00 QPS 이상 처리가 가능하다고 한다. 왜 멀티쓰레드가 아닌 싱글 스레드로 개발을 했고, 어떻게 이런 성능을 낼 수 있었을까?
 
 Redis 개발자인 Salvatore Sanfilippo가 왜 싱글 스레드로 개발했는지에 대한 Git 커밋 및 인터뷰는 찾지 못했지만 그의 관점이 담긴 [인터뷰](https://venturebeat.com/dev/redis-creator)를 찾아봤다.
