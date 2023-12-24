@@ -15,6 +15,7 @@ layout: document
         <div class="history-button">
             <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
             <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>
+            <p><span class="eta"></span></p>
 <!--            <p>-->
 <!--                <a href="{{ site.issue }}?title={{ page.title | url_encode }}&body=의견을%20남겨주세요">의견 남기기</a>-->
 <!--            </p>-->
@@ -46,3 +47,6 @@ layout: document
 <script src="/js/axios.min.js"></script>
 <script async src="/js/parent.js"></script>
 <script async src="/js/toc-highlight.js"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+<script src="/js/reading-time.js"></script>
+<script src="/js/article.js"></script>
