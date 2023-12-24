@@ -19,7 +19,7 @@ latex   : true
 레디스는 초당 100,00 QPS 이상 처리가 가능하다고 한다. 왜 멀티쓰레드가 아닌 싱글 스레드로 개발을 했고, 어떻게 이런 성능을 낼 수 있었을까?
 
 Redis 개발자인 Salvatore Sanfilippo가 왜 싱글 스레드로 개발했는지에 대한 Git 커밋 및 인터뷰는 찾지 못했지만 그의 관점이 담긴 [인터뷰](https://venturebeat.com/dev/redis-creator)를 찾아봤다.
-아래와 같은 대답에서 어떤 관점에서 싱글 스레드로 개발했는지 알 수 있었다.
+아래 대답에서 어떤 관점에서 싱글 스레드로 개발했는지 알 수 있었다.
 
 > I’m very focused on keeping it small, I don’t have a good reputation for being open-minded with new features. I’m extremely conservative. Otherwise, after seven years of contributions, if I accepted most of them, it would be huge at this point. So people are happy about this point. However, there are also people who are concerned, because half of the community shares my opinion about keeping things extremely simple. It’s the point of view of the programmer who believes in [the system] not being able to cope with complexity. That’s my point of view and the point of view of many other programmers at the moment. People are realizing that complex systems — you can make whatever effort to make them work, but they have lots of unexpected side effects when you’re in production and you start to mix one complex system with another complex system. They fail in ways that you could never imagine. To keep things simple is good. The community is worried about modules starting some trend of complexity in Redis.
 
