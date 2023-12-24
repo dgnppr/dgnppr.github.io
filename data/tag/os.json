@@ -1,3 +1,4 @@
 [
- "essay/01_why_redis_single_threaded"
+ "essay/01_why_redis_single_threaded",
+ "essay/03_how_to_measure_correct_time"
 ]

@@ -37,7 +37,7 @@ Redis 개발자인 Salvatore Sanfilippo가 왜 싱글 스레드로 개발했는�
 ![https://velog.io/@mu1616/%EB%A0%88%EB%94%94%EC%8A%A4%EC%99%80-%EC%8B%B1%EA%B8%80%EC%8A%A4%EB%A0%88%EB%93%9C](https://github.com/dragonappear/dragonappear.github.io/assets/89398909/d87240a0-7a4f-4ceb-905d-0d6b7816d46a)
 
 레디스는 이벤트 루프를 사용하여 `Request`를 처리한다. 즉, 실제 명령에 대한 `Task`는 커널 레벨에서 `Multiplexing` 을 통해 처리하여 동시성을 보장한다.
-요약하면 유저 레벨에서는 싱글 스레드로 동작하지만, 커널 레벨에서는 스레드 풀로 동작한다.
+요약하면 유저 레벨에서는 싱글 스레드로 동작하고, 커널 레벨에서 멀티플렉싱을 통해 동시성을 보장한다.
 
 ```C
 void aeMain(aeEventLoop *eventLoop) {

@@ -2,5 +2,6 @@
  "essay",
  "essay/00_lombok_is_necessary",
  "essay/01_why_redis_single_threaded",
- "essay/02_why_db_index_is_btree"
+ "essay/02_why_db_index_is_btree",
+ "essay/03_how_to_measure_correct_time"
 ]
