@@ -14,4 +14,3 @@ latex   : true
 * TOC
 {:toc}
 
-
