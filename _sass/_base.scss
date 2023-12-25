@@ -231,3 +231,27 @@ sup[role=doc-noteref] {
         }
     }
 }
+
+/* 다크 모드*/
+/* https://devyoseph.tistory.com/103 */
+@media (prefers-color-scheme: dark){
+    *:not(span){
+        background-color: $dark-color;
+        border-color: $dark-color;
+    }
+    *:not(.article_view pre code.hljs span){
+        color: #F5F5F5 !important;
+    }
+    .header {
+        background-color: $dark-color !important;
+    }
+    ul#markdown-toc {
+        background-color: $dark-color !important;
+    }
+    code {
+        background-color: #1A202C !important;
+    }
+    ul li:hover {
+        background-color: #1A202C !important;
+    }
+}
