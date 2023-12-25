@@ -52,15 +52,21 @@
         gtag('config', '{{ site.google_analytics.id }}');
     </script>
     {% endif %}
+    <script>
+        // 페이지가 로드되기 전에 로컬 스토리지에서 테마를 적용합니다.
+        (function() {
+            var theme = localStorage.getItem('theme');
+            if (theme === 'dark-mode') {
+                document.documentElement.classList.add('dark-mode');
+            }
+        })();
+    </script>
 
 </head>
 <header class="header">
     <div>
         <a class="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
     </div>
-<!--    <div>-->
-<!--        <a id="random-button" class="site-title-right">Random</a>-->
-<!--    </div>-->
     <div>
         <a class="site-title-right" href="/link/">Link</a>
     </div>
@@ -70,5 +76,9 @@
     <div>
         <a class="site-title-right" href="/wiki/index/">Post</a>
     </div>
+    <button id="theme-toggle" class="site-title-right theme-toggle">
+        <svg class="icon feather feather-sun light-icon" fill="none" stroke="#F8D5EA" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"  viewBox="0 0 24 24"><defs/><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <svg class="icon feather feather-moon dark-icon" style="display: none;" fill="none" stroke="#4A6CB3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24"><defs/><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+    </button>
 </header>
-<!--<script async src="/js/shortcut.js"></script>-->
+<script src="/js/theme-toggle.js"></script>

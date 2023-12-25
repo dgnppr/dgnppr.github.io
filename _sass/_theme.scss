@@ -1,0 +1,56 @@
+/* 토글 버튼 스타일링 */
+.theme-toggle {
+    padding: 0 10px; /* 내부 여백을 조정하여 버튼 크기 변경 */
+    height: 20px; /* 상단 메뉴 바와 일치하는 높이 */
+    display: flex; /* flexbox를 사용하여 아이콘을 수직 중앙에 배치 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+/* 토글 버튼 내 아이콘 스타일링 */
+.theme-toggle .icon {
+    height: 20px; /* 아이콘의 높이 조정 */
+    width: 20px; /* 아이콘의 너비 조정 */
+}
+
+/* 아이콘 스타일링 */
+.icon {
+    width: 24px; /* 아이콘 크기 */
+    height: 24px; /* 아이콘 크기 */
+}
+
+/* 다크 모드 색상 변수 정의 */
+:root {
+    --dark-color: #343540; /* 다크 모드 배경색 */
+    --text-color: #F5F5F5; /* 다크 모드 텍스트 색상 */
+}
+
+/* 다크 모드 스타일 */
+body.dark-mode {
+    background-color: var(--dark-color);
+    color: var(--text-color);
+}
+
+/* 다크 모드에서 pre와 code 요소를 제외하고 싶을 때 */
+body.dark-mode :not(pre):not(code) {
+    background-color: var(--dark-color);
+    border-color: var(--dark-color);
+}
+
+body.dark-mode :not(pre):not(code) *,
+body.dark-mode :not(pre):not(code) *:not(span) {
+    color: var(--text-color) !important;
+}
+
+body.dark-mode .header,
+body.dark-mode ul#markdown-toc {
+    background-color: var(--dark-color) !important;
+}
+
+body.dark-mode code,
+body.dark-mode ul li:hover {
+    background-color: #1A202C !important;
+}
