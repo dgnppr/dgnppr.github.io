@@ -43,6 +43,7 @@
     <meta name="msapplication-TileImage" content="/resource/icon/ms-icon-144x144.png">
     <meta name="theme-color" content="#ffffff">
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+
     {% if site.google_analytics.id %}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics.id }}"></script>
     <script>
@@ -52,15 +53,6 @@
         gtag('config', '{{ site.google_analytics.id }}');
     </script>
     {% endif %}
-    <script>
-        // 페이지가 로드되기 전에 로컬 스토리지에서 테마를 적용합니다.
-        (function() {
-            var theme = localStorage.getItem('theme');
-            if (theme === 'dark-mode') {
-                document.documentElement.classList.add('dark-mode');
-            }
-        })();
-    </script>
 
 </head>
 <header class="header">
