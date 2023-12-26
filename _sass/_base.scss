@@ -105,6 +105,7 @@ h3 {
 }
 .post-content h3 {
     /* &:before { content:"⠃"; } */
+    padding-left: 10px;
 }
 h4 {
     font-size: 1.4em;
@@ -113,11 +114,13 @@ h4 {
 }
 .post-content h4 {
     /* &:before { content:"⠋"; } */
+    padding-left: 10px;
 }
 h5 {
     font-size: 1.2em;
     padding-left: 10px;
     font-style: roboto;
+    padding-left: 10px;
 }
 .post-content h5 {
     /* &:before { content:"⠛"; } */
@@ -130,6 +133,7 @@ h6 {
 }
 .post-content h6 {
     /* &:before { content:"⠟"; } */
+    padding-left: 10px;
 }
 
 .post-content .external-link {
