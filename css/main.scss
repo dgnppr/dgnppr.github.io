@@ -18,6 +18,7 @@ $dark-color: #343540;
 // Import from 'sass_dir' (default: _sass)
 @import
     "base",
+    "theme",
     "layout",
     "code",
     "index",
@@ -26,6 +27,5 @@ $dark-color: #343540;
     "post-table",
     "post-metadata",
     "site-menu-bar",
-    "theme",
     "toc"
 ;

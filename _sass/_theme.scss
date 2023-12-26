@@ -22,19 +22,17 @@
     height: 24px; /* 아이콘 크기 */
 }
 
-/* 다크 모드 색상 변수 정의 */
 :root {
-    --dark-color: #343540; /* 다크 모드 배경색 */
-    --text-color: #F5F5F5; /* 다크 모드 텍스트 색상 */
+    --dark-color: #343540;
+    --text-color: #F5F5F5;
+    --text-sub-color: #A9A9A9;
 }
 
-/* 다크 모드 스타일 */
 body.dark-mode {
     background-color: var(--dark-color);
     color: var(--text-color);
 }
 
-/* 다크 모드에서 pre와 code 요소를 제외하고 싶을 때 */
 body.dark-mode :not(pre):not(code) {
     background-color: var(--dark-color);
     border-color: var(--dark-color);
@@ -53,4 +51,16 @@ body.dark-mode ul#markdown-toc {
 body.dark-mode code,
 body.dark-mode ul li:hover {
     background-color: #1A202C !important;
+}
+
+body.dark-mode .post-tag a {
+    color: var(--text-sub-color) !important;
+}
+
+body.dark-mode .history-button p,
+body.dark-mode .history-button p span,
+body.dark-mode .post-content p,
+body.dark-mode .post-content ul li,
+body.dark-mode #markdown-toc li a{
+    color: #CED6DE !important;
 }
