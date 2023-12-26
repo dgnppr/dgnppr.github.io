@@ -15,4 +15,3 @@ latex   : true
 {:toc}
 
 
-### DB 인덱스에서 btree 사용하는 이유

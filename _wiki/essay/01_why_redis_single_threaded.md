@@ -23,7 +23,7 @@ Redis 개발자인 Salvatore Sanfilippo가 왜 싱글 스레드로 개발했는�
 
 <br>
 
-### 싱글 스레드인 이유
+## 싱글 스레드인 이유
 
 - 쉬운 구현 (멀티스레드에서 발생하는 동기화 문제를 해결할 필요가 없다.)
 - 동시성 보장 (이벤트 루프 패턴을 통해 동시성을 구현하였고, 컨텍스트 스위치가 없다.)
@@ -53,7 +53,7 @@ void aeMain(aeEventLoop *eventLoop) {
 
 <br>
 
-### 메인 스레드
+## 메인 스레드
 
 메인 스레드에서 실행하는 `main()` [메서드](https://github.com/redis/redis/blob/unstable/src/server.c#L6886C18-L6886C18)를 보자.
 
@@ -105,7 +105,7 @@ int main(int argc, char **argv) {
 
 <br>
 
-### 서브 스레드
+## 서브 스레드
 
 레디스가 하나의 스레드만 있을까? 그것은 아니다.
 
@@ -154,7 +154,7 @@ static pthread_t bio_threads[BIO_WORKER_NUM];
 
 <br>
 
-### 나의 생각
+## 나의 생각
 
 레디스가 싱글 스레드로도 높은 QPS를 보일 수 있는 이유는 레디스가 적용되는 범위와 자료구조 덕분이라고 생각한다. 레디스는 인메모리 기반이기 때문에 다른 RDB의 고려사항(ex: 디스크 I/O , 조인)보다 현저하게 적다고 생각한다. 그래서 네트워크, 메모리가 병목점이라고 보는 것 같다.
 
@@ -168,21 +168,21 @@ static pthread_t bio_threads[BIO_WORKER_NUM];
 
 <br>
 
-### 요약
+## 요약
 
 많은 현대 서버에서는 멀티 스레드를 통해 서빙하는데, 스레드 간 동기화 및 컨텍스트 스위치 비용은 비싸다. 레디스는 이러한 비용을 줄이기 위해 싱글 스레드로 동작한다. 왜냐하면 속도 병목 현상의 원인을 CPU가 아니라 Memory, Network 이라고 판단했기 때문이다.
 단일 스레드로 동작하는 이벤트 루프를 통해서 성능을 높혔고, 레디스의 주요 명령어는 `O(1)`의 시간 복잡도로 매우 빠르게 동작하고, Atomic 하게 유지함으로써 레디스는 현재 매우 인기 있는 캐시 솔루션이 되었다고 생각한다.
 
 <br>
 
-### 기타
+## 기타
 
 레디스는 싱글 스레드로 동작하는 것이 마음에 들지 않는 사람들이  멀티 스레드로 동작하는 `KeyDB`([A Multithreaded Fork of Redis That’s 5X Faster Than Redis](https://docs.keydb.dev/blog/2019/10/07/blog-post/))를 만들었다고 한다.
 `KeyDB` 사 벤치마크 결과 5배 빠르다고 하는데 멀티스레드 이벤트 루프 실행, 핵심 데이터 구조 최적화 등 멀티스레딩 작업과 최적화 작업을 통해서 성능을 높혔다고 한다.
 
 <br>
 
-### 참고
+## 참고
 
 - https://redis.com/blog/diving-into-redis-6/
 - https://redis.com/blog/making-redis-concurrent-with-modules/
