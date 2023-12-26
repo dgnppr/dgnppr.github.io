@@ -69,8 +69,9 @@ body.dark-mode #markdown-toc li a{
     color: #CED6DE !important;
 }
 
-body.dark-mode h2 {
+body.dark-mode .post-content h2 {
     border-bottom: 1px solid #ffffff !important;
+    padding-left: 15px;
 }
 
 body.dark-mode .header {
