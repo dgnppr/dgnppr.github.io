@@ -1,5 +1,4 @@
 [
  "database",
- "database/00_mysql_setting",
- "essay/02_why_db_index_is_btree"
+ "database/00_mysql_setting"
 ]
