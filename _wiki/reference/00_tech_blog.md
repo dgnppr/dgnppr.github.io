@@ -11,8 +11,6 @@ public  : true
 parent  : [[/reference]]
 latex   : true
 ---
-* TOC
-{:toc}
 
 ## Blogs
 

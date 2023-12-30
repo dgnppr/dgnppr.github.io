@@ -8,6 +8,6 @@
  "children": [
   "essay/00_lombok_is_necessary",
   "essay/01_why_redis_single_threaded",
-  "essay/02_how_to_measure_correct_time"
+  "essay/02_is_system_time_really_correct"
  ]
 }

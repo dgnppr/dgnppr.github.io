@@ -49,7 +49,7 @@ void aeMain(aeEventLoop *eventLoop) {
 ```
 
 `Redis`의 메인 이벤트 루프는 `aeMain()` 함수에서 구현되고, 해당 함수에서 이벤트 루프를 돌면서 `aeProcessEvents()` 함수를 호출하면서 사용자의 요청을 처리한다.
-보면 알 수 있듯이 컨텍스트 스위치 없이 메인 스레드에서 이벤트 루프를 `Spinlock`을 하고 있음을 볼 수 있다.
+보면 알 수 있듯이 컨텍스트 스위치 없이 메인 스레드에서 이벤트 루프를 `busy waiting`을 하고 있음을 볼 수 있다.
 
 <br>
 
