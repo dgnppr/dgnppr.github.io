@@ -1,10 +1,10 @@
 ---
 layout  : category
-title   : Database
+title   : Database 상위문서
 summary : 
 date    : 2023-12-18 00:00:00 +0900
 updated : 2023-12-18 00:00:00 +0900
-tag     : category database
+tag     : level-1 database
 toc     : true
 public  : true
 comment : false

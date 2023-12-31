@@ -4,7 +4,7 @@ title   : 롬복은 필수적인가
 summary : 
 date    : 2024-01-01 00:00:00 +0900
 updated : 2024-01-01 00:00:00 +0900
-tag     : post essay java
+tag     : level-2 essay java
 toc     : true
 comment : true
 public  : true
