@@ -4,7 +4,7 @@ title   : Algorithm
 summary : 
 date    : 2023-12-18 00:00:00 +0900
 updated : 2023-12-18 00:00:00 +0900
-tag     : level-1 category
+tag     : level-1 internal
 toc     : true
 public  : true
 comment : false

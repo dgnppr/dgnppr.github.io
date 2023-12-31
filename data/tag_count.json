@@ -4,15 +4,15 @@
   "size": 1
  },
  {
-  "name": "category",
-  "size": 3
- },
- {
   "name": "database",
   "size": 2
  },
  {
   "name": "essay",
+  "size": 3
+ },
+ {
+  "name": "internal",
   "size": 3
  },
  {
