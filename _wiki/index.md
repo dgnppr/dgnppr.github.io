@@ -1,6 +1,6 @@
 ---
 layout  : category
-title   : Index 최상위문서
+title   : Index
 toc     : true
 public  : true
 tag     : level-0
