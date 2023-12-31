@@ -29,6 +29,7 @@ latex   : true
 
 요약하면, 롬복은 컴파일 시점에 새로운 소스 파일을 생성하지 않고 코드를 삽입한다.
 
+<br><br><br>
 
 ## 롬복 Pitfall
 
@@ -183,6 +184,7 @@ public class Person {
 
 필드명 지정시 오타 문제
 
+<br><br><br>
 
 ## 나의 생각
 
@@ -192,6 +194,7 @@ public class Person {
 요즘은 `IDEA`에서 왠만한 코드(getter, setter, equalsHashCode 등)는 지원을 해주기 때문에 롬복을 사용하지 않아도 불편함이 크지 않다.
 보통 DTO 클래스에 어노테이션을 붙여서 코드를 작성했는데, 이것도 레코드를 사용하면 롬복이 필요없게 된다.
 
+<br><br><br>
 
 ## lombok.config 어노테이션 사용금지 및 각종 설정
 
@@ -217,7 +220,7 @@ lombok.experimental.flagUsage=error
 
 위와 같이 지정하면 `@Data`, `@Value`, `@NonNull`, `@AllArgsConstructor`, `@RequiredArgsConstructor` 등의 어노테이션을 사용하면 컴파일 에러가 발생한다.
 
-
+<br><br><br>
 
 ## Ref
 
