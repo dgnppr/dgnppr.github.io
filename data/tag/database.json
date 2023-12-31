@@ -1,5 +1,5 @@
 [
  "database",
- "database/00_mysql_setting",
+ "database/00_mysql_variable_setting",
  "database/01_redis_caution_point"
 ]
