@@ -161,9 +161,9 @@ latex   : true
 ## 결론
 
 - `Java`의 `System.currentTimeMillis()`는 `clock_gettime` 시스템 콜을 호출하여 `CLOCK_REALTIME` 시계를 사용한다.
-- 여러가지 요인에 의해 `CLOCK_REALTIME` 시계는 초정밀 시간을 요구하는 어플리케이션에는 적합하지 않다.
+- `CLOCK_REALTIME`은 OS와 하드웨어 따라 달라질 수 있다. **분산 시스템에서 같은 코드라도 서로 다른 시간을 반환할 수 있다.**
+  - 여러가지 요인에 의해 `CLOCK_REALTIME` 시계는 초정밀 시간을 요구하는 어플리케이션에는 적합하지 않다.
 - AWS 환경에서는 `NTP` 프로토콜을 사용하여 시간 동기화를 제공한다.
-- 시간을 동기화하는 방법은 정말 정말 어려운 것 같다.
 
 <br>
 
