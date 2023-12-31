@@ -44,6 +44,10 @@
   "size": 2
  },
  {
+  "name": "reference",
+  "size": 1
+ },
+ {
   "name": "root",
   "size": 1
  }

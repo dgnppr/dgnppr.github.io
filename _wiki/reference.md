@@ -2,9 +2,9 @@
 layout  : wiki
 title   : 블로그/컨퍼런스/아티클 모음
 summary : 
-date    : 2023-12-22 00:00:00 +0900
-updated : 2023-12-22 00:00:00 +0900
-tag     : level-1 leaf
+date    : 2023-12-15 00:00:00 +0900
+updated : 2023-12-15 00:00:00 +0900
+tag     : level-1 leaf reference
 toc     : true
 public  : true
 comment : false
