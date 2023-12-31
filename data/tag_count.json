@@ -1,9 +1,5 @@
 [
  {
-  "name": "algorithm",
-  "size": 1
- },
- {
   "name": "database",
   "size": 2
  },
@@ -20,12 +16,8 @@
   "size": 2
  },
  {
-  "name": "jwt",
-  "size": 1
- },
- {
   "name": "leaf",
-  "size": 7
+  "size": 6
  },
  {
   "name": "level-0",
@@ -37,7 +29,7 @@
  },
  {
   "name": "level-2",
-  "size": 6
+  "size": 5
  },
  {
   "name": "mysql",

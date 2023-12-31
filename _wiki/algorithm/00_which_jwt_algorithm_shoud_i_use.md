@@ -7,7 +7,7 @@ updated : 2024-01-01 00:00:00 +0900
 tag     : level-2 leaf algorithm jwt
 toc     : true
 comment : true
-public  : true
+public  : false
 parent  : [[/algorithm]]
 latex   : true
 ---
