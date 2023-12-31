@@ -14,3 +14,9 @@ latex   : true
 * TOC
 {:toc}
 
+## JWT 구성
+
+## Ref
+
+- https://jwt.io/
+- https://medium.com/swlh/all-you-need-to-know-about-json-web-token-jwt-8a5d6131157f
