@@ -4,7 +4,7 @@ title   : 레디스가 싱글스레드인 이유
 summary :
 date    : 2023-12-24 00:00:00 +0900
 updated : 2023-12-24 00:00:00 +0900
-tag     : level-2 wiki essay redis os
+tag     : level-2 leaf essay redis os
 toc     : true
 comment : true
 public  : true

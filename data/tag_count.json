@@ -24,6 +24,10 @@
   "size": 1
  },
  {
+  "name": "leaf",
+  "size": 7
+ },
+ {
   "name": "level-0",
   "size": 1
  },
@@ -50,9 +54,5 @@
  {
   "name": "root",
   "size": 1
- },
- {
-  "name": "wiki",
-  "size": 7
  }
 ]
