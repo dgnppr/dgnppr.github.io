@@ -1,15 +1,19 @@
 [
  {
   "name": "algorithm",
-  "size": 2
+  "size": 1
  },
  {
-  "name": "database",
+  "name": "category",
   "size": 3
  },
  {
+  "name": "database",
+  "size": 2
+ },
+ {
   "name": "essay",
-  "size": 4
+  "size": 3
  },
  {
   "name": "java",
@@ -44,7 +48,11 @@
   "size": 2
  },
  {
-  "name": "reference",
+  "name": "root",
   "size": 1
+ },
+ {
+  "name": "wiki",
+  "size": 7
  }
 ]
