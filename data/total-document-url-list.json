@@ -1,6 +1,6 @@
 [
  "/wiki/algorithm",
- "/wiki/algorithm/00_jwt_algorithm",
+ "/wiki/algorithm/00_which_jwt_algorithm_shoud_i_use",
  "/wiki/database",
  "/wiki/database/00_mysql_variable_setting",
  "/wiki/database/01_redis_caution_point",
@@ -9,5 +9,6 @@
  "/wiki/essay/01_why_redis_single_threaded",
  "/wiki/essay/02_is_system_time_really_correct",
  "/wiki/index",
+ "/wiki/java",
  "/wiki/reference"
 ]

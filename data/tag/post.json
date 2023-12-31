@@ -1,5 +1,5 @@
 [
- "algorithm/00_jwt_algorithm",
+ "algorithm/00_which_jwt_algorithm_shoud_i_use",
  "database/00_mysql_variable_setting",
  "database/01_redis_caution_point",
  "essay/00_lombok_is_necessary",

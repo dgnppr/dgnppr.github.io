@@ -17,14 +17,10 @@
  },
  {
   "name": "java",
-  "size": 1
+  "size": 3
  },
  {
   "name": "jwt",
-  "size": 1
- },
- {
-  "name": "lombok",
   "size": 1
  },
  {

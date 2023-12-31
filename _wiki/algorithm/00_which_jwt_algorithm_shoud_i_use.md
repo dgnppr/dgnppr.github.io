@@ -2,8 +2,8 @@
 layout  : wiki
 title   : JWT 알고리즘 어떤걸 사용해야하나
 summary :
-date    : 2023-12-06 20:54:32 +0900
-updated : 2023-12-06 21:15:24 +0900
+date    : 2024-01-01 00:00:00 +0900
+updated : 2024-01-01 00:00:00 +0900
 tag     : post algorithm jwt
 toc     : true
 comment : true
@@ -14,5 +14,3 @@ latex   : true
 * TOC
 {:toc}
 
-
-### JWT 알고리즘 어떤걸 사용해야하나?

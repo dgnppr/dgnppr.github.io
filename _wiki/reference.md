@@ -35,3 +35,4 @@ latex   : false
 - [NoSQL은 생각보다 쓸만하지 않다](http://eincs.com/2012/06/nosql-is-not-useful/)
 - [도움이 될수도 있는 JVM memory leak 이야기](https://techblog.woowahan.com/2628/)
 - [대규모 환경에서 레디스 캐시 성능을 높이기](https://news.hada.io/topic?id=2777)
+- [Everything Bad in Java is Good for You](https://betterprogramming.pub/everything-bad-in-java-is-good-for-you-71b8de5133b5)

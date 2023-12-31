@@ -2,9 +2,9 @@
 layout  : wiki
 title   : 롬복은 필수적인가
 summary : 
-date    : 2023-12-06 20:54:32 +0900
-updated : 2023-12-06 21:15:24 +0900
-tag     : post essay lombok
+date    : 2024-01-01 00:00:00 +0900
+updated : 2024-01-01 00:00:00 +0900
+tag     : post essay java
 toc     : true
 comment : true
 public  : true

@@ -1,16 +1,11 @@
 ---
-layout  : wikiindex
+layout  : category
 title   : Index
 toc     : true
 public  : true
-tag     : root category
+tag     : root
 comment : false
-updated : 2019-01-01 00:00:00 +0900
+date    : 2023-12-15 00:00:00 +0900
+updated : 2023-12-15 00:00:00 +0900
 regenerate: true
 ---
-
-- ### [Essay](/wiki/essay)
-
-- ### [Reference](/wiki/reference)
-
-- ### [Database](/wiki/database)

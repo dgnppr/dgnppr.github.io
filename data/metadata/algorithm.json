@@ -4,8 +4,8 @@
  "summary": "",
  "parent": "index",
  "url": "/wiki/algorithm",
- "updated": "2023-03-02 20:00:00 +0900",
+ "updated": "2023-12-18 00:00:00 +0900",
  "children": [
-  "algorithm/00_jwt_algorithm"
+  "algorithm/00_which_jwt_algorithm_shoud_i_use"
  ]
 }
