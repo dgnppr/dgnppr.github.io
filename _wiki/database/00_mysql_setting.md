@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : MySQL 서버 설정
+title   : MySQL 서버 변수 설정
 summary : 
 date    : 2023-12-19 18:00:00 +0900
 updated : 2023-12-19 18:00:00 +0900
