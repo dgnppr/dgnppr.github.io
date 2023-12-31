@@ -29,7 +29,7 @@ latex   : true
 진행 중인 프로젝트에서 `Java`의 `System.currentTimeMillis()`를 사용하고 있는데, 정말 어디서나 정확한 시간일까라는 생각이 들었다.
 왜냐하면 서버가 서로 다른 호스트나 컨테이너에 띄워질 경우에 시간이 다른 경우가 발생하면 데이터 정합성이 깨지기 때문이다.
 
-<br>
+<br><br><br>
 
 ## currentTimeMillis()
 
@@ -44,7 +44,7 @@ latex   : true
 `System.currentTimeMillis()` 에서 호출하는 native 구현체를 [깃허브](https://github.com/openjdk/jdk/blob/32d80e2caf6063b58128bd5f3dc87b276f3bd0cb/src/hotspot/os/posix/os_posix.cpp#L1382)에서 찾아봤는데
 `javaTimeMills()` 함수에서 `clock_gettime` 이라는 시스템 콜을 호출하여 `jlong`으로 반환하는 것을 볼 수 있다. 즉, `clock_gettime` 시스템 콜을 호출하여 시간을 가져오고, 밀리세컨드로 반환한다.
 
-<br>
+<br><br><br>
 
 ## clock_gettime()
 
@@ -58,7 +58,7 @@ latex   : true
 
 `clock_gettime`은 `CLOCK_REALTIME` 시계(실제 시간을 (즉 벽시계 시간을) 재는 설정 가능한 시스템 전역 클럭)를 사용한다. 그러면 `CLOCK_REALTIME` 시계는 어떻게 동작할까?  
 
-<br>
+<br><br><br>
 
 ## CLOCK_REALTIME
 
@@ -84,7 +84,7 @@ latex   : true
 > 3. 인터럽트 생성: 카운트다운이 완료될 때 마다 타이머는 시스템에 인터럽트 신호 전송
 > 4. 시간 업데이트: 커널은 인터럽트를 받아서 시간(`CLOCK_REALTIME`)을 업데이트
 
-<br>
+<br><br><br>
 
 ### RTC(Real Time Clock)
 
@@ -96,7 +96,7 @@ latex   : true
 > 타이밍 크리스탈은 일정한 주파수로 진동하여 시간을 측정하는데, 외부 요인에 영향을 않는한 일정하게 유지된다.
 > 그러나 노화, 온도, 전압, 노이즈 등 외부 요인에 의해 주파수가 변동되기 때문에, 이를 보정하기 위해 NTP와 같은 프로토콜을 사용한다.
 
-<br>
+<br><br><br>
 
 ## `CLOCK_REALTIME`이 정확한 시간이라고 할 수 있을까?
 
@@ -118,7 +118,7 @@ latex   : true
 
 일반적인 어플리케이션에는 `CLOCK_REALTIME`이 완벽하지는 않지만 어느정도 신뢰할 수 있는 시간이라고 할 수 있지만, 초정밀 시간이 필요한 경우에는 `CLOCK_REALTIME`을 사용하는 것이 적합하지 않다고 생각한다.
 
-<br>
+<br><br><br>
 
 ## 자바 시간 API
 
@@ -138,7 +138,7 @@ latex   : true
 
 성능 측정에는 `System.nanoTime()`, 시간 처리에는 `Instant.now()`, 간단하게 시간만 측정한다고 하면 `System.currentTimeMillis()`를 사용하는 것이 좋을 것 같다.
 
-<br>
+<br><br><br>
 
 ## 클라우드 시간 동기화
 
@@ -156,7 +156,7 @@ latex   : true
 
 살펴보니 클라우드에서도 시간 동기화 프로토콜을 사용하는데, 오차 범위가 발생하는 것으로 보인다. 어느 정도 오차 범위를 감수해야 하는 부분인 것 같다..
 
-<br>
+<br><br><br>
 
 ## 결론
 
@@ -165,7 +165,7 @@ latex   : true
   - 여러가지 요인에 의해 `CLOCK_REALTIME` 시계는 초정밀 시간을 요구하는 어플리케이션에는 적합하지 않다.
 - AWS 환경에서는 `NTP` 프로토콜을 사용하여 시간 동기화를 제공한다.
 
-<br>
+<br><br><br>
 
 ## 참고
 
