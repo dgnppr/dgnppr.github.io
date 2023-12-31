@@ -14,7 +14,15 @@ latex   : true
 * TOC
 {:toc}
 
-## 글을 쓰게 된 계기
+## 요약 및 글을 쓰게 된 계기
+
+### 요약
+
+- `System.currentTimeMillis()`는 시스템 콜을 호출하여 `OS`에서 제공하는 시계를 사용한다.
+- 호스트는 하드웨어 타이머로 시간을 카운트하고, 여러가지 방법으로 시간을 재조정하며 시간을 동기화한다.
+- 컴퓨터에서 시간은 오차가 발생할 수 있고, 이를 줄이기 위해서는 비싸고 복잡한 방법이 필요하다. 
+
+### 글을 쓰게 된 계기
 
 선착순 이벤트, UUID 등 시간을 활용한 시스템을 개발하는 경우가 많다. 
 
@@ -90,9 +98,7 @@ latex   : true
 
 <br>
 
-## 나의 생각
-
-`CLOCK_REALTIME`이 정확한 시간이라고 할 수 있을까?
+## `CLOCK_REALTIME`이 정확한 시간이라고 할 수 있을까?
 
 나는 `CLOCK_REALTIME`이 정확한 시간이라고 할 수 없다고 생각한다.
 
@@ -114,10 +120,50 @@ latex   : true
 
 <br>
 
+## 자바 시간 API
+
+자바에서 정밀한 시간을 사용할 때 아래 3가지 API를 사용할 수 있다.
+
+- `System.currentTimeMillis()` = 시스템 시간 참조
+- `System.nanoTime()` = 기준 시점에서 경과 시간 측정 (시스템 시간과 무관)
+- `Instant.now()` = 시스템 시간 참조
+
+`System.nanoTime()`는 시스템 시간과 무관하게 경과 시간을 측정한다. 이는 성능 측정 등에서 유용하게 사용된다.
+
+### System.currentTimeMillis() vs Instant.now()
+
+`System.currentTimeMillis()`와 `Instant.now()` 모두 시스템 시간을 기반으로 하기 때문에 근본적으로 동일한 정확도를 가진다. 둘 다 운영 체제의 시스템 시간을 기반으로 하지만, `Instant.now()`는 시간 처리(추가적인 시간 연산이나 시간대)을 제공할 수 있다.
+
+`System.currentTimeMillis()`는 객체 생성 없이 빠르게 시간을 얻을 수 있으므로 성능 면에서 이점이 있고, `Instant.now()`는 시간 처리 기능을 제공하며, `java.time` 패키지의 다른 클래스와 잘 통합된다.
+
+성능 측정에는 `System.nanoTime()`, 시간 처리에는 `Instant.now()`, 간단하게 시간만 측정한다고 하면 `System.currentTimeMillis()`를 사용하는 것이 좋을 것 같다.
+
+<br>
+
+## 클라우드 시간 동기화
+
+프로그래밍 언어에서 현재 시간(UTC)을 구하려면 호스트 OS에 의존적이고, 호스트 OS는 하드웨어 타이머에 의존적이고, 타이머는 호스트마다 오차가 발생할 수 있다. 오차가 발생하게 되면 분산 시스템에서 시간이라는 중요한 데이터가 일치하지 않게 된다.
+그러면 분산 시스템에서 시간을 동기화하는 방법은 어떤 것이 있을까?
+
+`PTP` 프로토콜이나 `GPS` 시계를 사용하여 동기화를 할 수 있다고 하는데 이는 OS 단에서 시간을 동기화하는 방법이고 실행 중인 모든 서버에 접속해서 적용하는 것은 쉽지 않을 것이라고 본다. 나에게는 실질적으로 시간을 동기화해주는 자동화 도구가 필요하다.
+
+나는 클라우드 환경에 서버를 배포하는데, 그러면 클라우드 플랫폼 차원에서 시계 동기화를 어떤식으로 관리하는지 궁금해졌다. 클라우드 환경에서 여기서는 `AWS`를 예로 들겠다. `AWS`에서는 어떤 식으로 시계 정확도 관리를 하는지 찾아보았다. 
+
+[EC2](https://aws.amazon.com/ko/blogs/mt/manage-amazon-ec2-instance-clock-accuracy-using-amazon-time-sync-service-and-amazon-cloudwatch-part-1/) 나
+[Fargate](https://aws.amazon.com/ko/about-aws/whats-new/2021/09/monitoring-clock-aws-fargate-amazon-ecs/)  둘 다 `AWS Time Sync Service`를 제공하여 클럭 정확도를 측정하고 클럭 오차 범위를 제공한다고 한다.
+`AWS Time Sync Service` 에서는 `NTP`나 `PTP`로 시간을 동기화한다고 하는데 `PTP`의 경우 지원되는 인스턴스가 제한적인데, 로컬 `PTP` 하드웨어 시계를 제공한다고 하는데 아마 원자 시계처럼 매우 정밀한 시계를 사용하여 지원하는 것 같다.
+[공식 문서](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/set-time.html)에서 인스턴스를 `AWS Time Sync Service`로 동기화하는 방법을 볼 수 있다.
+
+살펴보니 클라우드에서도 시간 동기화 프로토콜을 사용하는데, 오차 범위가 발생하는 것으로 보인다. 어느 정도 오차 범위를 감수해야 하는 부분인 것 같다..
+
+<br>
+
 ## 결론
 
 - `Java`의 `System.currentTimeMillis()`는 `clock_gettime` 시스템 콜을 호출하여 `CLOCK_REALTIME` 시계를 사용한다.
 - 여러가지 요인에 의해 `CLOCK_REALTIME` 시계는 초정밀 시간을 요구하는 어플리케이션에는 적합하지 않다.
+- AWS 환경에서는 `NTP` 프로토콜을 사용하여 시간 동기화를 제공한다.
+- 시간을 동기화하는 방법은 정말 정말 어려운 것 같다.
 
 <br>
 
@@ -129,3 +175,5 @@ latex   : true
 - https://www.baeldung.com/linux/timekeeping-clocks
 - https://en.wikipedia.org/wiki/Network_Time_Protocol
 - https://docs.oracle.com/cd/E86824_01/html/E54765/adjtime-2.html
+- https://aws.amazon.com/ko/blogs/korea/keeping-time-with-amazon-time-sync-service/
+- https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/set-time.html
