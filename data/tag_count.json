@@ -5,7 +5,7 @@
  },
  {
   "name": "database",
-  "size": 2
+  "size": 3
  },
  {
   "name": "essay",
@@ -33,10 +33,10 @@
  },
  {
   "name": "redis",
-  "size": 1
+  "size": 2
  },
  {
   "name": "reference",
-  "size": 3
+  "size": 1
  }
 ]

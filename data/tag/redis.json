@@ -1,3 +1,4 @@
 [
+ "database/01_redis_caution_point",
  "essay/01_why_redis_single_threaded"
 ]

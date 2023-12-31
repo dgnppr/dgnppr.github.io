@@ -2,8 +2,8 @@
 layout  : wiki
 title   : MySQL 서버 설정
 summary : 
-date    : 2023-02-13 18:00:00 +0900
-updated : 2023-02-13 18:00:00 +0900
+date    : 2023-12-19 18:00:00 +0900
+updated : 2023-12-19 18:00:00 +0900
 tag     : database mysql
 toc     : true
 comment : true

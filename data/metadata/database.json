@@ -6,6 +6,7 @@
  "url": "/wiki/database",
  "updated": "2023-03-02 20:00:00 +0900",
  "children": [
-  "database/00_mysql_setting"
+  "database/00_mysql_setting",
+  "database/01_redis_caution_point"
  ]
 }

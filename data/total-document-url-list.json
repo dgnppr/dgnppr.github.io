@@ -3,12 +3,11 @@
  "/wiki/algorithm/00_jwt_algorithm",
  "/wiki/database",
  "/wiki/database/00_mysql_setting",
+ "/wiki/database/01_redis_caution_point",
  "/wiki/essay",
  "/wiki/essay/00_lombok_is_necessary",
  "/wiki/essay/01_why_redis_single_threaded",
  "/wiki/essay/02_is_system_time_really_correct",
  "/wiki/index",
- "/wiki/reference",
- "/wiki/reference/00_tech_blog",
- "/wiki/reference/01_conference"
+ "/wiki/reference"
 ]
