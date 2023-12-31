@@ -4,6 +4,10 @@
   "size": 2
  },
  {
+  "name": "category",
+  "size": 4
+ },
+ {
   "name": "database",
   "size": 3
  },
@@ -32,11 +36,19 @@
   "size": 2
  },
  {
+  "name": "post",
+  "size": 7
+ },
+ {
   "name": "redis",
   "size": 2
  },
  {
   "name": "reference",
+  "size": 1
+ },
+ {
+  "name": "root",
   "size": 1
  }
 ]

@@ -3,8 +3,9 @@ layout  : wikiindex
 title   : Index
 toc     : true
 public  : true
+tag     : root category
 comment : false
-updated : 2023-12-01 00:00:00 +0900
+updated : 2019-01-01 00:00:00 +0900
 regenerate: true
 ---
 
