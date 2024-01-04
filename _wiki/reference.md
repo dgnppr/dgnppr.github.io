@@ -36,3 +36,4 @@ latex   : false
 - [도움이 될수도 있는 JVM memory leak 이야기](https://techblog.woowahan.com/2628/)
 - [대규모 환경에서 레디스 캐시 성능을 높이기](https://news.hada.io/topic?id=2777)
 - [Everything Bad in Java is Good for You](https://betterprogramming.pub/everything-bad-in-java-is-good-for-you-71b8de5133b5)
+- [CAP Theorem, 오해와 진실](http://eincs.com/2013/07/misleading-and-truth-of-cap-theorem/)

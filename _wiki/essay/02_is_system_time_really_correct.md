@@ -64,7 +64,7 @@ latex   : true
   - 실제 시간을 나타내고, 시간을 연속적인 단방향으로 항상 증가한다.
   - 시스템 관리자가 수동으로 시계를 변경할 수 있다.
 - [NTP(Network Time Protocol)](https://en.wikipedia.org/wiki/Network_Time_Protocol) 또는 [adjtime(3)](https://docs.oracle.com/cd/E86824_01/html/E54765/adjtime-2.html)과 같은 점진적인 조정에 의해 영향을 받는다.
-  - `NTP`는 요약하면 네트워크 기반 시계 동기화 프로토콜이고, 교차 알고리즘을 사용하여 시간 서버를 선택하여 시간을 동기화한다.
+  - `NTP`는 요약하면 원자시계나 GPS로 시간을 측정하는, 네트워크 기반 시계 동기화 프로토콜이고, 교차 알고리즘을 사용하여 시간 서버를 선택하여 시간을 동기화한다.
   - `adjtime(3)`은 시스템의 시간이 실제 시간과 일치하지 않을 수 있는데, 이를 보정하는 시스템 콜이다.
 
 

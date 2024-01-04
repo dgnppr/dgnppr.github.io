@@ -1,9 +1,9 @@
 {
  "type": "wiki",
- "title": "Algorithm",
+ "title": "System design",
  "summary": "",
  "parent": "index",
- "url": "/wiki/algorithm",
+ "url": "/wiki/system-design",
  "updated": "2023-12-15 00:00:00 +0900",
  "children": []
 }

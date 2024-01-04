@@ -1,6 +1,6 @@
 ---
 layout  : category
-title   : Database
+title   : System design
 summary : 
 date    : 2023-12-15 00:00:00 +0900
 updated : 2023-12-15 00:00:00 +0900
