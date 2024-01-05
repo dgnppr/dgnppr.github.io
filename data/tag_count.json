@@ -5,7 +5,7 @@
  },
  {
   "name": "essay",
-  "size": 3
+  "size": 4
  },
  {
   "name": "internal",
@@ -16,8 +16,12 @@
   "size": 2
  },
  {
+  "name": "jwt",
+  "size": 1
+ },
+ {
   "name": "leaf",
-  "size": 6
+  "size": 7
  },
  {
   "name": "level-0",
@@ -29,7 +33,7 @@
  },
  {
   "name": "level-2",
-  "size": 5
+  "size": 6
  },
  {
   "name": "mysql",
