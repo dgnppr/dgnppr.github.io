@@ -21,11 +21,13 @@ latex   : true
 진행 중인 프로젝트에서 `Java`의 `System.currentTimeMillis()`를 사용하고 있는데, 정말 어디서나 정확한 시간일까라는 생각이 들었다.
 왜냐하면 서버가 서로 다른 호스트나 컨테이너에 띄워질 경우에 시간이 다른 경우가 발생하면 데이터 정합성이 깨지기 때문이다.
 
+컴퓨터에서 시간은 어떻게 측정되고, 프로그래밍 언어에서는 어떻게 시간을 사용하는지 알아보고자 한다.
+
 <br><br><br>
 
-## currentTimeMillis()
+## System.currentTimeMillis()
 
-언어 차원에서 제공하는 시간 측정 방법이 정확한지, 어떤 방식으로 시간을 측정하는지 궁금해져서 찾아보았다.
+자바 언어 차원에서 제공하는 시간 측정 방법이 정확한지, 어떤 방식으로 시간을 측정하는지 궁금해져서 찾아보았다.
 
 ![](https://github.com/dragonappear/dragonappear.github.io/assets/89398909/21bfa163-f76f-4427-9bbc-e07b1b162036)
 
