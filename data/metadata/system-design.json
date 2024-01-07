@@ -5,5 +5,7 @@
  "parent": "index",
  "url": "/wiki/system-design",
  "updated": "2023-12-15 00:00:00 +0900",
- "children": []
+ "children": [
+  "system-design/01_url_shortener_service"
+ ]
 }
