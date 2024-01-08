@@ -193,11 +193,11 @@ ID를 기준으로 샤딩을 할 수 있다는 점에서 현재 서비스에서 
   
 ## 추가 요구 사항 
 
-### 특정 서버로의 요청 증가
+### 특정 URL로의 요청 증가
 
 <br>
 
-### Custom URL
+### Custom URL 지원
 
 <br>
 
@@ -213,3 +213,4 @@ ID를 기준으로 샤딩을 할 수 있다는 점에서 현재 서비스에서 
 
 - https://product.kyobobook.co.kr/detail/S000001033116
 - https://techblog.woowahan.com/2687/
+- https://d2.naver.com/helloworld/6070967
