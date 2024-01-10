@@ -214,3 +214,4 @@ ID를 기준으로 샤딩을 할 수 있다는 점에서 현재 서비스에서 
 - https://product.kyobobook.co.kr/detail/S000001033116
 - https://techblog.woowahan.com/2687/
 - https://d2.naver.com/helloworld/6070967
+- https://systemdesign.one/url-shortening-system-design/#how-does-a-url-shortener-work
