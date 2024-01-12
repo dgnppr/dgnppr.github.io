@@ -8,7 +8,7 @@ tag     : level-2 leaf life
 toc     : true
 comment : true
 public  : true
-parent  : [[/look-back]]
+parent  : [[/life]]
 latex   : true
 ---
 * TOC
