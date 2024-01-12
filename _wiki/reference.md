@@ -37,3 +37,4 @@ latex   : false
 - [대규모 환경에서 레디스 캐시 성능을 높이기](https://news.hada.io/topic?id=2777)
 - [Everything Bad in Java is Good for You](https://betterprogramming.pub/everything-bad-in-java-is-good-for-you-71b8de5133b5)
 - [CAP Theorem, 오해와 진실](http://eincs.com/2013/07/misleading-and-truth-of-cap-theorem/)
+- [네이버 메인 페이지의 트래픽 처리](https://d2.naver.com/helloworld/6070967)
