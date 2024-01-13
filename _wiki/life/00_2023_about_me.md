@@ -7,7 +7,7 @@ updated : 2024-01-12 00:00:00 +0900
 tag     : level-2 leaf life
 toc     : true
 comment : true
-public  : false
+public  : true
 parent  : [[/life]]
 latex   : true
 ---

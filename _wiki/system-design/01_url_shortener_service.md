@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : URL Shortener 서비스 설계
+title   : URL Shortener 서비스를 설계해보자
 summary :
 date    : 2024-01-07 00:00:00 +0900
 updated : 2024-01-13 00:00:00 +0900

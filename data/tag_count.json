@@ -21,7 +21,7 @@
  },
  {
   "name": "leaf",
-  "size": 8
+  "size": 9
  },
  {
   "name": "level-0",
@@ -33,7 +33,11 @@
  },
  {
   "name": "level-2",
-  "size": 7
+  "size": 8
+ },
+ {
+  "name": "life",
+  "size": 1
  },
  {
   "name": "mysql",
