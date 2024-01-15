@@ -1,10 +1,10 @@
 ---
 layout  : wiki
-title   : URL Shortener 서비스를 설계해보자
+title   : URL Shortener 디자인
 summary :
 date    : 2024-01-07 00:00:00 +0900
 updated : 2024-01-13 00:00:00 +0900
-tag     : level-2 leaf system-design
+tag     : leaf system-design
 toc     : true
 comment : true
 public  : true
