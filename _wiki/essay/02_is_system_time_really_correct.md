@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : System.currentTimeMillis() 정말 정확할까
+title   : Essay :: System.currentTimeMillis() 정말 정확할까
 summary :
 date    : 2023-12-31 00:00:00 +0900
 updated : 2023-12-31 00:00:00 +0900

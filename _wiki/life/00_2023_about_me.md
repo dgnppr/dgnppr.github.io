@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : 2023년의 나에 대해서
+title   : Life :: 2023년의 나에 대해서
 summary :
 date    : 2024-01-12 00:00:00 +0900
 updated : 2024-01-12 00:00:00 +0900

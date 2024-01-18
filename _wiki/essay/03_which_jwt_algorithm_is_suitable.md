@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : JWT 알고리즘 어떤 것을 사용하면 좋을까
+title   : Essay :: JWT 알고리즘 어떤 것을 사용하면 좋을까
 summary :
 date    : 2024-01-06 00:00:00 +0900
 updated : 2024-01-06 00:00:00 +0900

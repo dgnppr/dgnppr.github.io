@@ -22,6 +22,9 @@ latex   : false
 - [NAVER](https://d2.naver.com/helloworld)
 - [Toss](https://toss.tech/)
 - [AWS](https://aws.amazon.com/ko/blogs/architecture/)
+- [Woowahan](https://techblog.woowahan.com/)
+
+<br>
 
 ## Conference
 
@@ -29,6 +32,16 @@ latex   : false
 - [ElastiCache 운영을 위한 우아한 가이드: 초고속 메모리 분석 툴 개발기와 레디스 운영 노하우 소개](https://www.youtube.com/watch?v=JH07ABaRPWo)
 - [Go-성능 선착순 예매 시스템 구현: 레거시 코드에 Go 를 더해 고성능 선착순 예매 시스템을 4일 만에 구축하기](https://www.youtube.com/watch?v=94d7VnN_tp4)
 - [선착순 이벤트 서버 생존기! 47만 RPM에서 살아남다?!](https://www.youtube.com/watch?v=MTSn93rNPPE)
+- [신뢰성 있는 카프카 애플리케이션을 만드는 3가지 방법](https://www.youtube.com/watch?v=7_VdIFH6M6Q)
+- [카프카, 대규모 클러스터 운영 후기](https://www.youtube.com/watch?v=SuHtHQkRV7g)
+
+<br>
+
+## Video
+
+- [트위터 시스템 디자인 완전정복](https://www.youtube.com/watch?v=6QwqtdBx0oE)
+
+<br>
 
 ## Articles
 
@@ -38,3 +51,4 @@ latex   : false
 - [Everything Bad in Java is Good for You](https://betterprogramming.pub/everything-bad-in-java-is-good-for-you-71b8de5133b5)
 - [CAP Theorem, 오해와 진실](http://eincs.com/2013/07/misleading-and-truth-of-cap-theorem/)
 - [네이버 메인 페이지의 트래픽 처리](https://d2.naver.com/helloworld/6070967)
+- [29CM 의 이굿위크 장애대응 기록](https://medium.com/@greg.shiny82/29cm-%EC%9D%98-%EC%9D%B4%EA%B5%BF%EC%9C%84%ED%81%AC-%EC%9E%A5%EC%95%A0%EB%8C%80%EC%9D%91-%EA%B8%B0%EB%A1%9D-177b6b2f07a0)

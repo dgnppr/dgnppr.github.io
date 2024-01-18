@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : URL Shortener 디자인
+title   : System Design :: URL Shortener
 summary :
 date    : 2024-01-07 00:00:00 +0900
 updated : 2024-01-13 00:00:00 +0900

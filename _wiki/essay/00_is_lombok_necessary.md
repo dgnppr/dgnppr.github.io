@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : 롬복 꼭 사용해야 하는가
+title   : Essay :: 롬복 꼭 사용해야 하는가
 summary : 
 date    : 2023-12-21 00:00:00 +0900
 updated : 2023-12-21 00:00:00 +0900

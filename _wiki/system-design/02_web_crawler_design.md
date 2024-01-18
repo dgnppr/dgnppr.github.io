@@ -1,13 +1,13 @@
 ---
 layout  : wiki
-title   : Web Crawler 디자인
+title   : System Design :: Web Crawler
 summary :
 date    : 2024-01-15 00:00:00 +0900
 updated : 2024-01-15 00:00:00 +0900
 tag     : leaf system-design
 toc     : true
 comment : true
-public  : false
+public  : true
 parent  : [[/system-design]]
 latex   : true
 ---

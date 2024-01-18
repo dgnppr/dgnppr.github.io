@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : Redis 운영 주의사항
+title   : Database :: Redis 운영 주의사항
 summary :
 date    : 2023-12-20 00:00:00 +0900
 updated : 2023-12-20 00:00:00 +0900
