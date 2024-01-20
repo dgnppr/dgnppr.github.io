@@ -9,7 +9,7 @@ description: >
 email: dgnppr@gmail.com
 author: dragonappear
 profile: dgpr
-github_username: YonghyunYun
+github_username: dgnppr
 linkedin_username: dgpr
 comment-support: utterances
 
@@ -38,10 +38,10 @@ collections:
 
 # Comment Service
 disqus:
-  id: dragonappear-github-io
-  shortname: dragonappear-github-io
+  id: dgnppr-github-io
+  shortname: dgnppr-github-io
 utterances:
-  repo: dragonappear/dragonappear.github.io
+  repo: dgnppr/dgnppr.github.io
   issue-term: url
   label: Comment
   branch: master
@@ -49,9 +49,9 @@ utterances:
 google_analytics:
   id: G-BKH26F2YQK
 
-blame: "https://github.com/YonghyunYun/YonghyunYun.github.io/blame/master/_wiki"
-edit: "https://github.com/YonghyunYun/YonghyunYun.github.io/edit/master/_wiki"
-issue: "https://github.com/YonghyunYun/YonghyunYun.github.io/issues/new"
+blame: "https://github.com/dgnppr/dgnppr.github.io/blame/master/_wiki"
+edit: "https://github.com/dgnppr/dgnppr.github.io/edit/master/_wiki"
+issue: "https://github.com/dgnppr/dgnppr.github.io/issues/new"
 
 timezone: "Asia/Seoul"
 
