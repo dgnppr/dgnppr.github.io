@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : Essay :: 레디스가 싱글스레드인 이유
+title   : 레디스가 싱글스레드인 이유
 summary :
 date    : 2023-12-24 00:00:00 +0900
 updated : 2023-12-24 00:00:00 +0900

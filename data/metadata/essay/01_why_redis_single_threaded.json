@@ -1,6 +1,6 @@
 {
  "type": "wiki",
- "title": "Essay :: 레디스가 싱글스레드인 이유",
+ "title": "레디스가 싱글스레드인 이유",
  "parent": "essay",
  "url": "/wiki/essay/01_why_redis_single_threaded",
  "updated": "2023-12-24 00:00:00 +0900",

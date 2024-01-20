@@ -21,7 +21,7 @@
  },
  {
   "name": "leaf",
-  "size": 10
+  "size": 11
  },
  {
   "name": "life",
@@ -49,6 +49,10 @@
  },
  {
   "name": "security",
+  "size": 1
+ },
+ {
+  "name": "spring-boot",
   "size": 1
  },
  {

@@ -1,13 +1,13 @@
 ---
 layout  : wiki
-title   : SpringBoot :: 트랜잭션 롤백 마크 정리
+title   : SpringBoot 트랜잭션 롤백 마크 정리
 summary :
 date    : 2024-01-19 00:00:00 +0900
 updated : 2024-01-19 00:00:00 +0900
 tag     : leaf spring-boot
 toc     : true
 comment : true
-public  : false
+public  : true
 parent  : [[/spring]]
 latex   : true
 ---
@@ -26,7 +26,7 @@ latex   : true
 우선 스프링이 제공하는 `@Transactional`을 가볍게 짚고 넘어가자.
 
 
-스프링 트랜잭션은 AOP 기반 프록시로 동작한다. 즉, `@Transactional`이 달린 메서드는 프록시 객체로 감싸져서 동작한다.
+스프링 트랜잭션은 AOP 기반 프록시로 동작한다. 즉, `@Transactional`이 달린 메서드는 프록시 객체에서 호출되어 동작한다.
 
 <br>
 
@@ -40,7 +40,8 @@ latex   : true
 
 ![Screenshot 2024-01-19 at 01 56 03](https://github.com/dragonappear/dragonappear.github.io/assets/89398909/133930ab-ab99-4f13-b3a3-39efcb84c572)
 
-`@Transactional`의 기본 전파(`propagation`)는 `REQUIRED`이다. 즉, 트랜잭션이 없으면 새로운 트랜잭션을 생성하고, 트랜잭션이 있으면 기존 트랜잭션에 참여한다.
+`@Transactional`의 기본 전파(`propagation`)는 `REQUIRED`이다.
+트랜잭션이 없으면 새로운 트랜잭션을 생성하고, 트랜잭션이 있으면 기존 트랜잭션에 참여한다.
 
 <br><br><br>
 
@@ -52,4 +53,6 @@ latex   : true
 ## Ref
 
 - https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html
+- https://docs.spring.io/spring-framework/reference/data-access/transaction/strategies.html
 - https://techblog.woowahan.com/2606/
+- https://velog.io/@eastperson/Transactional-%EC%83%81%ED%99%A9%EB%B3%84-commit-rollback-%EC%A0%84%EB%9E%B5
