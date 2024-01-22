@@ -1,9 +1,12 @@
 [
- "algorithm/00_which_jwt_algorithm_shoud_i_use",
  "database/00_mysql_variable_setting",
  "database/01_redis_caution_point",
- "essay/00_lombok_is_necessary",
+ "essay/00_is_lombok_necessary",
  "essay/01_why_redis_single_threaded",
  "essay/02_is_system_time_really_correct",
- "reference"
+ "essay/03_which_jwt_algorithm_is_suitable",
+ "life/00_2023_about_me",
+ "spring/00_spring_transaction_rollback",
+ "system-design/01_url_shortener_design",
+ "system-design/02_web_crawler_design"
 ]

@@ -4,7 +4,7 @@ title   : MySQL 서버 변수 설정
 summary : 
 date    : 2023-12-19 00:00:00 +0900
 updated : 2023-12-19 00:00:00 +0900
-tag     : leaf database mysql
+tag     : post database mysql
 toc     : true
 comment : true
 public  : true

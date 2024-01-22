@@ -4,6 +4,10 @@
   "size": 1
  },
  {
+  "name": "category",
+  "size": 7
+ },
+ {
   "name": "database",
   "size": 2
  },
@@ -12,16 +16,8 @@
   "size": 4
  },
  {
-  "name": "internal",
-  "size": 6
- },
- {
   "name": "java",
   "size": 2
- },
- {
-  "name": "leaf",
-  "size": 11
  },
  {
   "name": "life",
@@ -34,6 +30,10 @@
  {
   "name": "os",
   "size": 2
+ },
+ {
+  "name": "post",
+  "size": 10
  },
  {
   "name": "redis",
