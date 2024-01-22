@@ -1,7 +1,7 @@
 ---
 layout  : category
 title   : Database
-summary : 카테고리
+summary : category
 date    : 2023-12-18 00:00:00 +0900
 updated : 2023-12-18 00:00:00 +0900
 tag     : 

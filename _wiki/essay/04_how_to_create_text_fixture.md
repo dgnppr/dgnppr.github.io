@@ -4,7 +4,7 @@ title   : Test Fixture 어떻게 생성해야할까
 summary :
 date    : 2024-01-23 00:00:00 +0900
 updated : 2024-01-23 00:00:00 +0900
-tag     : post essay test
+tag     : essay test java
 toc     : true
 comment : true
 public  : true

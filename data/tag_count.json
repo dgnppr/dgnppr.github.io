@@ -13,7 +13,7 @@
  },
  {
   "name": "java",
-  "size": 2
+  "size": 3
  },
  {
   "name": "life",
@@ -28,19 +28,11 @@
   "size": 2
  },
  {
-  "name": "post",
-  "size": 11
- },
- {
   "name": "redis",
   "size": 2
  },
  {
   "name": "reference",
-  "size": 1
- },
- {
-  "name": "root",
   "size": 1
  },
  {

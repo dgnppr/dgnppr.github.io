@@ -4,7 +4,7 @@ title   : SpringBoot 트랜잭션 롤백 마크 정리
 summary :
 date    : 2024-01-19 00:00:00 +0900
 updated : 2024-01-19 00:00:00 +0900
-tag     : post spring-boot
+tag     : spring-boot
 toc     : true
 comment : true
 public  : true

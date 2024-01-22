@@ -1,9 +1,10 @@
 ---
 layout  : category
 title   : Index
+summary : root
 toc     : true
 public  : true
-tag     : root
+tag     : 
 comment : false
 date    : 2023-12-14 00:00:00 +0900
 updated : 2023-12-14 00:00:00 +0900

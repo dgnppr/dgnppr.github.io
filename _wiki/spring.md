@@ -1,7 +1,7 @@
 ---
 layout  : category
 title   : Spring
-summary : 카테고리
+summary : category
 date    : 2024-01-19 00:00:00 +0900
 updated : 2024-01-19 00:00:00 +0900
 tag     : 

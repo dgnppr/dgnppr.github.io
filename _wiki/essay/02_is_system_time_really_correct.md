@@ -4,7 +4,7 @@ title   : System.currentTimeMillis() 정말 정확할까
 summary :
 date    : 2023-12-31 00:00:00 +0900
 updated : 2023-12-31 00:00:00 +0900
-tag     : post essay os java
+tag     : essay os java
 toc     : true
 comment : true
 public  : true
