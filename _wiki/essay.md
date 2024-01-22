@@ -1,10 +1,10 @@
 ---
 layout  : category
-title   : Essay 카테고리
-summary : 
+title   : Essay
+summary : 카테고리
 date    : 2023-12-20 00:00:00 +0900
 updated : 2023-12-20 00:00:00 +0900
-tag     : category
+tag     : 
 toc     : true
 public  : true
 comment : false
