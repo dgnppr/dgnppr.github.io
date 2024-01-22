@@ -13,7 +13,7 @@
  },
  {
   "name": "essay",
-  "size": 4
+  "size": 5
  },
  {
   "name": "java",
@@ -33,7 +33,7 @@
  },
  {
   "name": "post",
-  "size": 10
+  "size": 11
  },
  {
   "name": "redis",
@@ -58,5 +58,9 @@
  {
   "name": "system-design",
   "size": 2
+ },
+ {
+  "name": "test",
+  "size": 1
  }
 ]
