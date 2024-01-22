@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : Test Fixture 어떻게 생성해야할까
+title   : Test Fixture 어떻게 생성해야 할까
 summary :
 date    : 2024-01-23 00:00:00 +0900
 updated : 2024-01-23 00:00:00 +0900
