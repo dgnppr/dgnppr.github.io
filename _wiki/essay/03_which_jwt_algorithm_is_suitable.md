@@ -149,3 +149,4 @@ HMAC은 서버에서 관리하는 시크릿 키가 있어야 하고, RSA도 개�
 - https://velog.io/@ddangle/JWT-%ED%86%A0%ED%81%B0-%EC%95%94%ED%98%B8%ED%99%94-%EC%95%8C%EA%B3%A0%EB%A6%AC%EC%A6%98-HS256%EA%B3%BC-RS256
 - https://medium.com/jongho-developer/jwt-algorithm-hs256-rs256-1ab9f833c486
 - https://en.wikipedia.org/wiki/HMAC
+- https://www.youtube.com/watch?v=P2CPd9ynFLg

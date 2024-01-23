@@ -43,7 +43,8 @@ Redis 개발자인 Salvatore Sanfilippo가 왜 싱글 스레드로 개발했는�
 - 쉬운 배포 (한 개의 코어만 있어도 사용 가능하기 때문이다.)
 
 
-![https://velog.io/@mu1616/%EB%A0%88%EB%94%94%EC%8A%A4%EC%99%80-%EC%8B%B1%EA%B8%80%EC%8A%A4%EB%A0%88%EB%93%9C](https://github.com/dragonappear/dragonappear.github.io/assets/89398909/d87240a0-7a4f-4ceb-905d-0d6b7816d46a)
+![Screenshot 2024-01-23 at 14 01 31](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/02c3687d-0da2-4026-b1ea-ae43ad6264c5)
+
 
 레디스는 이벤트 루프를 사용하여 `Request`를 처리한다. 즉, 실제 명령에 대한 `Task`는 커널 레벨에서 `Multiplexing` 을 통해 처리하여 동시성을 보장한다.
 요약하면 유저 레벨에서는 싱글 스레드로 동작하고, 커널 레벨에서 멀티플렉싱을 통해 동시성을 보장한다.
@@ -152,12 +153,13 @@ static pthread_t bio_threads[BIO_WORKER_NUM];
 
 `UNLINK`, `FLUSHALL`, `FLUSHDB` 명령어가 4.0 버전부터 추가되었고, 이를 처리하기 위한 `lazy_free` 스레드가 추가되었다.
 
-![https://charsyam.wordpress.com/2020/05/05/%EC%9E%85-%EA%B0%9C%EB%B0%9C-redis-6-0-threadedio%EB%A5%BC-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90/](https://github.com/dragonappear/dragonappear.github.io/assets/89398909/b919344d-1f97-410f-80eb-4c78847b9659)
+![Screenshot 2024-01-23 at 14 05 21](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/2b912bbc-8263-460d-8520-3b0f61f37a80)
 
 위 그림은 싱글 쓰레드 형식의 이벤트 루프 방식이다. 
 
+<br>
 
-![https://charsyam.wordpress.com/2020/05/05/%EC%9E%85-%EA%B0%9C%EB%B0%9C-redis-6-0-threadedio%EB%A5%BC-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90/](https://github.com/dragonappear/dragonappear.github.io/assets/89398909/ab2f3887-eed2-4cd6-9e3d-bd83923e3586)
+![Screenshot 2024-01-23 at 14 11 05](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/dd453be0-c24c-4baf-ace2-33c57678bf6b)
 
 아래 그림은 I/O 작업을 위한 멀티 쓰레드가 도입된 버전 6.0이다. 멀티 스레드는 네트워크 데이터 read, write, parsing 을 담당하고 명령어 실행(`ProcessCommand`)은 메인 스레드에서 담당하기 때문에 레디스의 `Atomic` 특성을 유지한다.
 이렇게 네트워크 처리를 위한 멀티 스레드가 도입된 것을 보면 "CPU 는 병목 현상이 아니다." 라는 레디스의 주장을 뒷받침해준다.
@@ -203,3 +205,4 @@ static pthread_t bio_threads[BIO_WORKER_NUM];
 - https://medium.com/@jychen7/sharing-redis-single-thread-vs-multi-threads-5870bd44d153
 - https://medium.com/@john_63123/redis-should-be-multi-threaded-e28319cab744
 - https://charsyam.wordpress.com/2020/05/05/%EC%9E%85-%EA%B0%9C%EB%B0%9C-redis-6-0-threadedio%EB%A5%BC-%EC%95%8C%EC%95%84%EB%B3%B4%EC%9E%90/
+- https://www.youtube.com/watch?v=5TRFpFBccQM
