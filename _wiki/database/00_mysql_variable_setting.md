@@ -7,7 +7,7 @@ updated : 2023-12-19 00:00:00 +0900
 tag     : database mysql
 toc     : true
 comment : true
-public  : true
+public  : false
 parent  : [[/database]]
 latex   : true
 ---

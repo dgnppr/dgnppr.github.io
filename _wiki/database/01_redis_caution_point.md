@@ -7,7 +7,7 @@ updated : 2023-12-20 00:00:00 +0900
 tag     : database redis
 toc     : true
 comment : true
-public  : true
+public  : false
 parent  : [[/database]]
 latex   : true
 ---

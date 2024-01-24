@@ -7,7 +7,7 @@ updated : 2024-01-19 00:00:00 +0900
 tag     : spring-boot
 toc     : true
 comment : true
-public  : true
+public  : false
 parent  : [[/spring]]
 latex   : true
 ---

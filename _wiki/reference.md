@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : 블로그/컨퍼런스/아티클 모음
+title   : 읽어보면 좋은 것들
 summary : 
 date    : 2023-12-15 00:00:00 +0900
 updated : 2024-01-13 00:00:00 +0900
@@ -26,7 +26,7 @@ latex   : false
 
 <br>
 
-## Conference
+## Conferences
 
 - [분산 시스템에서 데이터를 전달하는 효율적인 방법](https://www.youtube.com/watch?v=uk5fRLUsBfk)
 - [ElastiCache 운영을 위한 우아한 가이드: 초고속 메모리 분석 툴 개발기와 레디스 운영 노하우 소개](https://www.youtube.com/watch?v=JH07ABaRPWo)
@@ -37,7 +37,7 @@ latex   : false
 
 <br>
 
-## Video
+## Videos
 
 - [트위터 시스템 디자인 완전정복](https://www.youtube.com/watch?v=6QwqtdBx0oE)
 - [Linux File System Explained](https://www.youtube.com/watch?v=bbmWOjuFmgA)
@@ -53,3 +53,4 @@ latex   : false
 - [CAP Theorem, 오해와 진실](http://eincs.com/2013/07/misleading-and-truth-of-cap-theorem/)
 - [네이버 메인 페이지의 트래픽 처리](https://d2.naver.com/helloworld/6070967)
 - [29CM 의 이굿위크 장애대응 기록](https://medium.com/@greg.shiny82/29cm-%EC%9D%98-%EC%9D%B4%EA%B5%BF%EC%9C%84%ED%81%AC-%EC%9E%A5%EC%95%A0%EB%8C%80%EC%9D%91-%EA%B8%B0%EB%A1%9D-177b6b2f07a0)
+- [Java Reference와 GC](https://d2.naver.com/helloworld/329631)

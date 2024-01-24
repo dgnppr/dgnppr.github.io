@@ -4,23 +4,15 @@
   "size": 1
  },
  {
-  "name": "database",
-  "size": 2
- },
- {
   "name": "essay",
-  "size": 5
+  "size": 4
  },
  {
   "name": "java",
-  "size": 3
+  "size": 2
  },
  {
   "name": "life",
-  "size": 1
- },
- {
-  "name": "mysql",
   "size": 1
  },
  {
@@ -29,7 +21,7 @@
  },
  {
   "name": "redis",
-  "size": 2
+  "size": 1
  },
  {
   "name": "reference",
@@ -40,15 +32,7 @@
   "size": 1
  },
  {
-  "name": "spring-boot",
-  "size": 1
- },
- {
   "name": "system-design",
   "size": 2
- },
- {
-  "name": "test",
-  "size": 1
  }
 ]

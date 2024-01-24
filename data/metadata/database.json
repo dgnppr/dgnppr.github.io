@@ -5,8 +5,5 @@
  "parent": "index",
  "url": "/wiki/database",
  "updated": "2023-12-18 00:00:00 +0900",
- "children": [
-  "database/00_mysql_variable_setting",
-  "database/01_redis_caution_point"
- ]
+ "children": []
 }
