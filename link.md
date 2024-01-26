@@ -8,11 +8,11 @@ latex: true
 * TOC
 {:toc}
 
-## I am interested in ___
+## Interest
 
-- server engineering using cloud computing.
-- system architecture design.
-- solving challenging technical problems.
+- Server engineering using cloud computing.
+- System architecture design.
+- Solving technically challenging problems.
 
 <br>
 
@@ -24,7 +24,7 @@ latex: true
 
 <br>
 
-## Tech archive
+## Archive
 
 - [@Active Blog](https://dgpr.me)
 - [@Active Archive](https://dgpr.notion.site/Archive-a0a8b9caa9cb46968f1d3f6963a1ede9)
