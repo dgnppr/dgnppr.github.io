@@ -23,6 +23,7 @@ latex   : false
 - [Toss](https://toss.tech/)
 - [AWS](https://aws.amazon.com/ko/blogs/architecture/)
 - [Woowahan](https://techblog.woowahan.com/)
+- [Kakao](https://tech.kakao.com/blog/)
 
 <br>
 
