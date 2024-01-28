@@ -18,7 +18,7 @@ latex   : true
 ## 참고
 
 - https://product.kyobobook.co.kr/detail/S000001033116
-- - https://blog.bytebytego.com/p/flowchart-of-how-slack-decides-to-923
+- https://blog.bytebytego.com/p/flowchart-of-how-slack-decides-to-923
 - https://slack.engineering/tracing-notifications/
 - https://d2.naver.com/helloworld/1022966
 - https://netflixtechblog.com/rapid-event-notification-system-at-netflix-6deb1d2b57d1
