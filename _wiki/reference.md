@@ -35,6 +35,7 @@ latex   : false
 - [선착순 이벤트 서버 생존기! 47만 RPM에서 살아남다?!](https://www.youtube.com/watch?v=MTSn93rNPPE)
 - [신뢰성 있는 카프카 애플리케이션을 만드는 3가지 방법](https://www.youtube.com/watch?v=7_VdIFH6M6Q)
 - [카프카, 대규모 클러스터 운영 후기](https://www.youtube.com/watch?v=SuHtHQkRV7g)
+- [알림 서비스로 시작하는 서버 개발](https://www.youtube.com/watch?v=CmTO68I2HSc)
 
 <br>
 
@@ -59,3 +60,4 @@ latex   : false
 - [LINE 소셜 네트워크 서비스의 아키텍처](https://d2.naver.com/helloworld/809802)
 - [Coupang Lessons learned from handling massive traffic with cache](https://medium.com/coupang-engineering/lessons-learned-from-operating-our-data-serving-layer-4e9e4f68fe85)
 - [LINE 소셜 네트워크 서비스의 아키텍처](https://d2.naver.com/helloworld/809802)
+- [카카오가 직접 회고한 1015 장애사태 원인과 대책](https://brunch.co.kr/@chadwick/49)
