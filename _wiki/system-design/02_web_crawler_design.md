@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : Web Crawler 시스템 디자인
+title   : 웹 크롤러 시스템 디자인
 summary :
 date    : 2024-01-15 00:00:00 +0900
 updated : 2024-01-15 00:00:00 +0900
