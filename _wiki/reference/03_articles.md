@@ -7,14 +7,14 @@ updated : 2024-01-29 00:00:00 +0900
 tag     : reference
 toc     : true
 comment : true
-public  : false
+public  : true
 parent  : [[/reference]]
 latex   : true
 ---
 * TOC
 {:toc}
 
-## Articles
+## List
 
 - [NoSQL은 생각보다 쓸만하지 않다](http://eincs.com/2012/06/nosql-is-not-useful/)
 - [도움이 될수도 있는 JVM memory leak 이야기](https://techblog.woowahan.com/2628/)

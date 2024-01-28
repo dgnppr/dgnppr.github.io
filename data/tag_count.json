@@ -24,6 +24,10 @@
   "size": 1
  },
  {
+  "name": "reference",
+  "size": 4
+ },
+ {
   "name": "security",
   "size": 1
  },
