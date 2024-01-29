@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : 테크 아티클 모음
+title   : Tech Articles
 summary :
 date    : 2024-01-29 00:00:00 +0900
 updated : 2024-01-29 00:00:00 +0900
@@ -29,3 +29,4 @@ latex   : true
 - [Coupang Lessons learned from handling massive traffic with cache](https://medium.com/coupang-engineering/lessons-learned-from-operating-our-data-serving-layer-4e9e4f68fe85)
 - [LINE 소셜 네트워크 서비스의 아키텍처](https://d2.naver.com/helloworld/809802)
 - [카카오가 직접 회고한 1015 장애사태 원인과 대책](https://brunch.co.kr/@chadwick/49)
+- [JVM Internal](https://d2.naver.com/helloworld/1230)

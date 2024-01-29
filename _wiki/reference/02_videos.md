@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : 테크 비디오 모음
+title   : Tech Videos
 summary :
 date    : 2024-01-19 00:00:00 +0900
 updated : 2024-01-19 00:00:00 +0900
