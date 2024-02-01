@@ -1,4 +1,3 @@
 [
- "springboot/00_why_rollback_marked_transaction_is_unusable",
- "springboot/01_async_processing_with_event_listener"
+ "springboot/00_why_rollback_marked_transaction_is_unusable"
 ]

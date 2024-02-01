@@ -7,7 +7,7 @@ updated : 2024-01-25 00:00:00 +0900
 tag     : springboot async
 toc     : true
 comment : true
-public  : true
+public  : false
 parent  : [[/springboot]]
 latex   : true
 ---

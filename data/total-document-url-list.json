@@ -12,7 +12,6 @@
  "/wiki/reference",
  "/wiki/springboot",
  "/wiki/springboot/00_why_rollback_marked_transaction_is_unusable",
- "/wiki/springboot/01_async_processing_with_event_listener",
  "/wiki/system-design",
  "/wiki/system-design/01_url_shortener_design",
  "/wiki/system-design/02_web_crawler_design"

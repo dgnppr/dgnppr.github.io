@@ -4,10 +4,6 @@
   "size": 1
  },
  {
-  "name": "async",
-  "size": 1
- },
- {
   "name": "essay",
   "size": 4
  },
@@ -37,7 +33,7 @@
  },
  {
   "name": "springboot",
-  "size": 2
+  "size": 1
  },
  {
   "name": "system-design",
