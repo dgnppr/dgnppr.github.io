@@ -306,8 +306,21 @@ public class InnerService {
 
 <br><br><br>
 
+## 나의 생각
+
+같은 트랜잭션에 참여하면 `TransactionStatus`를 공유한다. 왜 같은 트랜잭션에 롤백 마킹이 되면 재사용이 불가능하게 만들었을까?
+
+정말 간단하게 생각해보면 트랜잭션의 특성인 원자성을 보장하기 위함인 것 같다. 같은 트랜잭션(작업 셋)에 속하면 `All or Nothing`을 보장해줘야 하는데, 롤백 마킹이 되었다는 것은 작업 셋 중 일부가 실패했다는 것을 의미한다.
+
+DB의 SQL에서 트랜잭션을 시작했을 때 중간에 예외가 발생하는 SQL이 있다면, 해당 SQL을 실행하지 않고 롤백을 되지 않는가?
+
+어플리케이션 코드에서 동작하는 것도 동일하게 생각하면 될 것 같다.
+
+<br><br><br>
+
 ## Ref
 
+- https://github.com/spring-projects/spring-framework/blob/4560dc2818ae1d5e1bc5ceef89f1b6870700eb1f/spring-tx/src/main/java/org/springframework/transaction/support/AbstractPlatformTransactionManager.java#L265
 - https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html
 - https://docs.spring.io/spring-framework/reference/data-access/transaction/strategies.html
 - https://techblog.woowahan.com/2606/
