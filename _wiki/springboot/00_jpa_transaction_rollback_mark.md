@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : SpringBoot with JPA 트랜잭션 글로벌 롤백 마크
+title   : SpringBoot 트랜잭션 글로벌 롤백 마크
 summary :
 date    : 2024-01-25 00:00:00 +0900
 updated : 2024-01-25 00:00:00 +0900
