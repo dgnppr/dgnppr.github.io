@@ -1,14 +1,9 @@
 {
  "type": "wiki",
- "title": "Reference",
- "summary": "category",
+ "title": "보면 좋을 기술 영상과 글",
+ "summary": "",
  "parent": "index",
  "url": "/wiki/reference",
  "updated": "2024-01-14 00:00:00 +0900",
- "children": [
-  "reference/00_tech_blogs",
-  "reference/01_conferences",
-  "reference/02_videos",
-  "reference/03_articles"
- ]
+ "children": []
 }
