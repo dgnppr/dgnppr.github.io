@@ -7,7 +7,7 @@ updated : 2024-01-29 00:00:00 +0900
 tag     : essay test java
 toc     : true
 comment : true
-public  : true
+public  : false
 parent  : [[/essay]]
 latex   : true
 ---
