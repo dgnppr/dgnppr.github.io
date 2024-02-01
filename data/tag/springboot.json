@@ -1,3 +1,3 @@
 [
- "springboot/00_springboot_transaction_rollback_mark"
+ "springboot/00_why_rollback_marked_transaction_is_unusable"
 ]
