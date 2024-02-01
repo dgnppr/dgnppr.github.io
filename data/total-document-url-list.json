@@ -5,6 +5,7 @@
  "/wiki/essay/01_why_redis_single_threaded",
  "/wiki/essay/02_is_system_time_really_correct",
  "/wiki/essay/03_which_jwt_algorithm_is_suitable",
+ "/wiki/essay/04_how_to_create_text_fixture",
  "/wiki/index",
  "/wiki/java",
  "/wiki/life",
@@ -12,6 +13,7 @@
  "/wiki/reference",
  "/wiki/springboot",
  "/wiki/springboot/00_why_rollback_marked_transaction_is_unusable",
+ "/wiki/springboot/01_async_processing_with_event_listener",
  "/wiki/system-design",
  "/wiki/system-design/01_url_shortener_design",
  "/wiki/system-design/02_web_crawler_design"

@@ -6,6 +6,7 @@
  "url": "/wiki/springboot",
  "updated": "2024-01-19 00:00:00 +0900",
  "children": [
-  "springboot/00_why_rollback_marked_transaction_is_unusable"
+  "springboot/00_why_rollback_marked_transaction_is_unusable",
+  "springboot/01_async_processing_with_event_listener"
  ]
 }

@@ -1,0 +1,8 @@
+{
+ "type": "wiki",
+ "title": "이벤트 리스너로 비동기 처리하기",
+ "parent": "springboot",
+ "url": "/wiki/springboot/01_async_processing_with_event_listener",
+ "updated": "2024-01-25 00:00:00 +0900",
+ "children": []
+}

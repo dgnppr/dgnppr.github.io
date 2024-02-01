@@ -4,12 +4,16 @@
   "size": 1
  },
  {
+  "name": "async",
+  "size": 1
+ },
+ {
   "name": "essay",
-  "size": 4
+  "size": 5
  },
  {
   "name": "java",
-  "size": 2
+  "size": 3
  },
  {
   "name": "life",
@@ -33,11 +37,15 @@
  },
  {
   "name": "springboot",
-  "size": 1
+  "size": 2
  },
  {
   "name": "system-design",
   "size": 2
+ },
+ {
+  "name": "test",
+  "size": 1
  },
  {
   "name": "transaction",
