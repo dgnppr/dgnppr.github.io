@@ -16,6 +16,11 @@ latex   : true
 
 ## 글을 작성하게 된 계기
 
+<br><br><br>
+
+## 나의 생각
+
+<br><br><br>
 
 ## Ref
 
