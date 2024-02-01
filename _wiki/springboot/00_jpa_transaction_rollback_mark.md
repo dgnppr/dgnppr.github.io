@@ -1,9 +1,9 @@
 ---
 layout  : wiki
-title   : SpringBoot + JPA 트랜잭션 롤백 마크
+title   : SpringBoot with JPA 트랜잭션 롤백 마크
 summary :
-date    : 2024-01-19 00:00:00 +0900
-updated : 2024-01-19 00:00:00 +0900
+date    : 2024-02-02 00:00:00 +0900
+updated : 2024-02-02 00:00:00 +0900
 tag     : springboot transaction jpa
 toc     : true
 comment : true
