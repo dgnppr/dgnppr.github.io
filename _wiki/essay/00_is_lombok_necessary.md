@@ -49,7 +49,7 @@ latex   : true
 
 ### `@AllArgsConstructor`, `@RequiredArgsConstructor`
 
-```Java
+```java
 @AllArgsConstructor
 public class Person {
     private int age;
@@ -66,7 +66,7 @@ public class Person {
 바이트코드를 보면 아래와 같이 필드가 선언된 순서대로 생성자가 생성된 것을 확인할 수 있다.
  (Person.num -> Person.age)
 
-```Java
+```java
   public <init>(II)V
     // parameter final  num
     // parameter final  age
@@ -105,7 +105,7 @@ public class Person {
 
 위 코드는 컴파일 에러가 발생하지 않는다. 왜냐하면 롬복이 개발자가 인식하지 못하는 사이에 생성자 파라미터 순서를 필드 선언에 맞춰 생성자를 생성해준다.
 
-```Java
+```java
   public <init>(II)V
     // parameter final  age
     // parameter final  num
@@ -137,7 +137,7 @@ public class Person {
 
 Mutable 객체에 아무 파라미터 없는 `@EqualsAndHashCode`를 사용하면 문제가 발생한다.
 
-```Java
+```java
 @EqualsAndHashCode
 public class Person {
     private int num;

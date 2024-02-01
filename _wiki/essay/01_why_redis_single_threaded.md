@@ -49,7 +49,7 @@ Redis 개발자인 Salvatore Sanfilippo가 왜 싱글 스레드로 개발했는�
 레디스는 이벤트 루프를 사용하여 `Request`를 처리한다. 즉, 실제 명령에 대한 `Task`는 커널 레벨에서 `Multiplexing` 을 통해 처리하여 동시성을 보장한다.
 요약하면 유저 레벨에서는 싱글 스레드로 동작하고, 커널 레벨에서 멀티플렉싱을 통해 동시성을 보장한다.
 
-```C
+```c++
 void aeMain(aeEventLoop *eventLoop) {
     eventLoop->stop = 0;
     while (!eventLoop->stop) {
@@ -69,7 +69,7 @@ void aeMain(aeEventLoop *eventLoop) {
 
 메인 스레드에서 실행하는 `main()` [메서드](https://github.com/redis/redis/blob/unstable/src/server.c#L6886C18-L6886C18)를 보자.
 
-```C
+```c++
 int main(int argc, char **argv) {
     struct timeval tv;
     int j;
@@ -121,13 +121,13 @@ int main(int argc, char **argv) {
 
 레디스가 하나의 스레드만 있을까? 그것은 아니다.
 
-```Shell
+```sh
 ps -ef | grep redis
 ```
 
 레디스가 동작하는 환경에서 프로세스를 조회해보면 하나의 스레드만 동작하지 않는 것을 확인할 수 있다.
 
-```C
+```c++
 static char* bio_worker_title[] = {
     "bio_close_file",
     "bio_aof",
