@@ -6,6 +6,6 @@
  "url": "/wiki/springboot",
  "updated": "2024-01-19 00:00:00 +0900",
  "children": [
-  "springboot/00_jpa_transaction_rollback_mark"
+  "springboot/00_springboot_transaction_rollback_mark"
  ]
 }
