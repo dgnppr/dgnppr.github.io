@@ -2,8 +2,8 @@
 layout  : wiki
 title   : Test Fixture 어떻게 생성해야 할까
 summary :
-date    : 2024-01-23 00:00:00 +0900
-updated : 2024-01-23 00:00:00 +0900
+date    : 2024-01-29 00:00:00 +0900
+updated : 2024-01-29 00:00:00 +0900
 tag     : essay test java
 toc     : true
 comment : true

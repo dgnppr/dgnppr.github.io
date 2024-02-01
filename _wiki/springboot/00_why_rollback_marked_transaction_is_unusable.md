@@ -229,7 +229,7 @@ public class InnerService {
 
 <br><br><br>
 
-## 글로벌 전역 롤백 마킹 처리
+## 글로벌 롤백 마킹 처리
 
 예상과는 다르게 롤백 마킹이 되었기 때문에 `UnexpectedRollbackException` 예외가 발생했다. 
 그렇다면 어떻게 내가 예상한대로 롤백 마킹이 되지 않게 할 수 있을까?
