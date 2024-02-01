@@ -131,7 +131,7 @@ public class InnerService {
 
 ### 롤백 마킹 처리 과정
 
-#### 1.TransactionAspectSupport.invokeWithinTransaction
+#### 1. TransactionAspectSupport.invokeWithinTransaction
 
 아래 코드를 보면 `org.springframework.transaction.interceptor.TransactionAspectSupport`의 `invokeWithinTransaction` 메서드에서 `invocation`(`InnerService.innerMethodThrowingRuntimeException`)을 실행하고, 예외를 잡는 것을 볼 수 있다.
 
@@ -147,7 +147,7 @@ public class InnerService {
 
 <br>
 
-#### 2.AbstractPlatformTransactionManager.rollback
+#### 2. AbstractPlatformTransactionManager.rollback
 
 ![Screenshot 2024-02-02 at 01 42 59@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/7ee37e6b-a433-4f68-9204-8919c6f4389d)
 
@@ -158,7 +158,7 @@ public class InnerService {
 
 <br>
 
-#### 3.JpaTransactionManager.doSetRollbackOnly
+#### 3. JpaTransactionManager.doSetRollbackOnly
 
 마킹 처리가 되는 과정을 좀 더 자세하게 보자. 필자의 경우 JPA를 사용하고 있기 때문에 `JpaTransactionManager`가 호출된다.
 
@@ -166,7 +166,7 @@ public class InnerService {
 
 <br>
 
-#### 4.JpaTransactionManager.setRollbackOnly
+#### 4. JpaTransactionManager.setRollbackOnly
 
 ![Screenshot 2024-02-02 at 02 08 40](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/c4be72e1-099c-41b8-94b1-185571b62e52)
 
@@ -174,7 +174,7 @@ public class InnerService {
 
 <br>
 
-#### 5.TranscationImpl.setRollbackOnly
+#### 5. TransactionImpl.setRollbackOnly
 
 ![Screenshot 2024-02-02 at 02 12 43@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/70b8782e-3983-400c-881d-e353f382b88b)
 
@@ -190,7 +190,7 @@ public class InnerService {
 
 <br>
 
-#### 1.TransactionStatus.isGlobalRollbackOnly
+#### 1. TransactionStatus.isGlobalRollbackOnly
 
 우선 `outerMethod`는 예외를 잡아서 정상적으로 실행되기 때문에 `AbstractPlatformTransactionManager`의 `processCommit` 메서드가 호출된다.
 
@@ -201,7 +201,7 @@ public class InnerService {
 
 <br>
 
-#### 2.DefaultTransactionStatus.isGlobalRollbackOnly
+#### 2. DefaultTransactionStatus.isGlobalRollbackOnly
 
 공유되는 트랜잭션 상태에서 rollbackOnly가 되었는지 확인하는 것을 볼 수 있다.
 
@@ -209,7 +209,7 @@ public class InnerService {
 
 <br>
 
-#### 3.JpaTransactionManager.isRollbackOnly
+#### 3. JpaTransactionManager.isRollbackOnly
 
 `InnerService.innerMethodThrowingRuntimeException`에서 발생시킨 `RuntimeException`을 잡아서 롤백 마킹을 했기 때문에 `isRollbackOnly`는 `true`를 반환한다.
 
@@ -217,7 +217,7 @@ public class InnerService {
 
 <br>
 
-#### 4.UnexpectedRollbackException
+#### 4. UnexpectedRollbackException
 
 ![Screenshot 2024-02-02 at 02 26 05@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/b2d606ad-bd62-44d4-9602-2913d5923a0d)
 
