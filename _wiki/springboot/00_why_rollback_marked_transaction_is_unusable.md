@@ -305,7 +305,7 @@ public class InnerService {
 ![Screenshot 2024-02-02 at 03 13 16](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/8d01f04f-502b-471b-95eb-beb638e5df2a)
 
 - 스프링 트랜잭션은 `TransactionStatus`를 통해 트랜잭션의 상태(`rollbackMark`)를 관리한다.
-- 같은 트랜잭션에 속하더라도 프록시 객체로 호출되기 때문에 프록시 객체를 호출 작업은 각각 이루어진다. 즉 외부에서 프록시 객체를 호출될 때마다 `TransactionAspectSupport`에서 실제 객체를 호출한다.
+- 같은 트랜잭션에 속하더라도 프록시 객체로 호출되기 때문에 작업은 각각 완료된다. 즉 외부에서 프록시 객체를 호출될 때마다 `TransactionAspectSupport`에서 실제 객체를 호출한다.
 - 롤백 마킹을 우회하려면 트랜잭션 내에서 롤백 마킹이 되지 않도록 하거나, 다른 트랜잭션에서 동작하도록 하여야 한다.
 
 <br><br><br>
