@@ -69,13 +69,12 @@ latex   : true
 ## Ref
 
 - https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management.html
+- https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/caching.html
 - https://www.baeldung.com/java-faker
 - https://velog.io/@langoustine/%EC%98%A4%EB%B8%8C%EC%A0%9D%ED%8A%B8%EB%A7%88%EB%8D%94%ED%8C%A8%ED%84%B4%EB%8F%84%EC%9E%85%EA%B8%B0-%EA%B7%BC%EB%8D%B0Enum%EC%9D%84%EA%B3%81%EB%93%A4%EC%9D%B8
 - https://naver.github.io/fixture-monkey/
 - https://www.instancio.org/
-- https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/caching.html
 - https://velog.io/@langoustine/Test-Fixture
 - https://jojoldu.tistory.com/611
 - https://deview.kr/2021/sessions/417
-- https://jojoldu.tistory.com/611
 - https://toss.tech/article/how-to-manage-test-dependency-in-gradle

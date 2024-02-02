@@ -233,7 +233,9 @@ public class InnerService {
 
 롤백 마킹이 되었기 때문에 `UnexpectedRollbackException` 예외가 발생한다.
 
-<br><br>
+<br>
+
+#### 요약
 
 로그를 통해 일련의 과정을 살펴보았다.
 간단하게 요약하면, 같은 트랜잭션에서 동작하는 객체들은 트랜잭션을 공유하고, 각 객체에서 발생한 예외는 `AOP`에서 예외로 잡아서 롤백 마킹을 한다.
@@ -241,7 +243,7 @@ public class InnerService {
 
 <br><br><br>
 
-## 글로벌 롤백 마크 처리
+## 롤백 마크 우회하기
 
 예상과는 다르게 롤백 마킹이 되었기 때문에 `UnexpectedRollbackException` 예외가 발생했다. 
 그렇다면 어떻게 내가 예상한대로 롤백 마킹이 되지 않게 할 수 있을까?

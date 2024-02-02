@@ -3,7 +3,7 @@ layout  : wiki
 title   : 볼만한 기술 영상과 글
 summary : 
 date    : 2023-12-15 00:00:00 +0900
-updated : 2024-01-14 00:00:00 +0900
+updated : 2024-02-02 00:00:00 +0900
 tag     : reference
 toc     : true
 public  : true
