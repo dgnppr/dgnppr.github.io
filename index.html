@@ -9,7 +9,7 @@ regenerate: true
     <ul class="post-list">
         {% assign documents = site.wiki | sort: 'updated' | reverse %}
         {% for doc in documents limit: 30 %}
-        {% if doc.public == true and doc.title != 'wiki'%}
+        {% if doc.public == true and doc.title != 'wiki' and doc.layout != 'category'%}
         <li>
             <div class="post-item">
                 <a class="post-link" href="{{ doc.url | prepend: site.baseurl }}">
@@ -31,7 +31,8 @@ regenerate: true
         {% endfor %}
     </ul>
     <h4 class="indent">
-        <a href="/recent/">View all documents ({{ site.wiki | size | minus: 1 }} items)</a>
+        {% assign count = site.wiki | where: "public", true | where_exp: "item", "item.layout != 'category'" | size %}
+        <a href="/recent/">View all documents ({{ count }} items)</a>
     </h4>
 </div>
 {% include createLink.html %}
