@@ -62,7 +62,7 @@ latex   : true
 
 ## 트랜잭션 롤백 마크 과정
 
-로그를 따라서 트랜잭션 롤백 마킹 과정을 알아볼 것이다. 테스트 코드는 아래와 같다.
+로그를 따라서 트랜잭션 롤백 마크 과정을 알아볼 것이다. 예제 코드는 아래와 같다.
 
 <br>
 
@@ -135,6 +135,12 @@ public class InnerService {
 
 ### 롤백 마크 과정
 
+![Screenshot 2024-02-02 at 12 24 59@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/c715a7bb-6f97-47cf-9b9b-db99745c4fc1)
+
+전반적인 흐름은 위 그림과 같다. 호출되는 트랜잭션에서 다른 트랜잭션으로 시작하지 않는 이상 같은 트랜잭션을 공유하고, 롤백 마킹이 되면 다음 호출되는 트랜잭션에서도 롤백 마킹이 된다.
+
+<br>
+
 #### 1. TransactionAspectSupport.invokeWithinTransaction
 
 아래 코드를 보면 `org.springframework.transaction.interceptor.TransactionAspectSupport`의 `invokeWithinTransaction` 메서드에서 `invocation`(`InnerService.innerMethodThrowingRuntimeException`)을 실행하고, 예외를 잡는 것을 볼 수 있다.
@@ -164,7 +170,7 @@ public class InnerService {
 
 #### 3. JpaTransactionManager.doSetRollbackOnly
 
-마킹 처리가 되는 과정을 좀 더 자세하게 보자. 필자의 경우 JPA를 사용하고 있기 때문에 `JpaTransactionManager`가 호출된다.
+마크 처리가 되는 과정을 좀 더 자세하게 보자. 필자의 경우 JPA를 사용하고 있기 때문에 `JpaTransactionManager`가 호출된다.
 
 ![Screenshot 2024-02-02 at 02 05 46](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/6e0c9cbf-aead-4318-ab09-9965c9f1dab1)
 
@@ -200,8 +206,8 @@ public class InnerService {
 
 ![Screenshot 2024-02-02 at 02 17 29@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/1d9c0794-9d2c-4a89-8d57-7c1cf0135e97)
 
-하지만 내부에서 `TransactionStatus`가 롤백 마킹 처리되었는지 확인하는 코드를 볼 수 있다. 
-내부 메서드인 `innerMethodThrowingRuntimeException`에서 발생시킨 `RuntimeException`을 잡아서 롤백 마킹을 했기 때문에 `TransactionStatus`가 롤백 마킹이 되었다.
+하지만 내부에서 `TransactionStatus`가 롤백 마크되었는지 체크하는 코드를 볼 수 있다. 
+내부 메서드인 `innerMethodThrowingRuntimeException`에서 발생시킨 `RuntimeException`을 잡아서 롤백 마킹을 했기 때문에 이미 `TransactionStatus`가 롤백 마크 되었다.
 
 <br>
 
@@ -227,9 +233,15 @@ public class InnerService {
 
 롤백 마킹이 되었기 때문에 `UnexpectedRollbackException` 예외가 발생한다.
 
+<br><br>
+
+로그를 통해 일련의 과정을 살펴보았다.
+간단하게 요약하면, 같은 트랜잭션에서 동작하는 객체들은 트랜잭션을 공유하고, 각 객체에서 발생한 예외는 `AOP`에서 예외로 잡아서 롤백 마킹을 한다.
+그래서 트랜잭션에 참여하는 객체가 커밋이 되는 정상 코드일지라도, 전에 트랜잭션에 참여했던 다른 객체에 의해 롤백 마킹이 되었다면 `UnexpectedRollbackException` 예외가 발생한다.
+
 <br><br><br>
 
-## 글로벌 롤백 마킹 처리
+## 글로벌 롤백 마크 처리
 
 예상과는 다르게 롤백 마킹이 되었기 때문에 `UnexpectedRollbackException` 예외가 발생했다. 
 그렇다면 어떻게 내가 예상한대로 롤백 마킹이 되지 않게 할 수 있을까?
@@ -238,15 +250,15 @@ public class InnerService {
 
 <br>
 
-### 1. 내부 메서드는 트랜잭션에 참여하지 않도록 한다.
+### 1. 호출되는 메서드가 트랜잭션에 참여하지 않도록 한다.
 
 가장 간단하게는 내부 메서드에서 외부 메서드의 트랜잭션에 참여하지 않도록 하면 된다.
 
 <br>
 
-### 2. 내부 메서드에서 예외 처리를 하도록 한다.
+### 2. 호출되는 메서드가 예외 처리를 하도록 한다.
 
-내부 메서드에서 예외를 잡아서 처리하면 롤백 마킹이 되지 않을 것이다.
+호출되는 메서드에서 예외를 잡아서 처리하면 롤백 마킹이 되지 않을 것이다.
 
 ```java
 @Service
@@ -275,9 +287,9 @@ public class InnerService {
 
 <br>
 
-### 3. 내부 메서드에서 새로운 트랜잭션으로 시작한다.
+### 3. 호출되는 메서드가 새로운 트랜잭션으로 시작한다.
 
-외부 메서드와 내부 메서드에서 처리하는 트랜잭션을 다르게 설정한다.
+호출되는 메서드가 트랜잭션 전파 설정을 다르게 하면 롤백 마킹이 되지 않을 것이다.
 
 ```java
 @Service
@@ -301,8 +313,6 @@ public class InnerService {
 <br><br><br>
 
 ## 결론
-
-![Screenshot 2024-02-02 at 03 13 16](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/8d01f04f-502b-471b-95eb-beb638e5df2a)
 
 - 스프링 트랜잭션은 `TransactionStatus`를 통해 트랜잭션의 상태(`rollbackMark`)를 관리한다.
 - 같은 트랜잭션에 속하더라도 프록시 객체로 호출되기 때문에 작업은 각각 완료된다. 즉 외부에서 프록시 객체를 호출될 때마다 `TransactionAspectSupport`에서 실제 객체를 호출한다.
