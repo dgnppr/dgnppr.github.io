@@ -1,6 +1,6 @@
 {
  "type": "wiki",
- "title": "왜 롤백 마킹된 트랜잭션은 재사용할 수 없을까",
+ "title": "왜 롤백 마크된 트랜잭션은 재사용할 수 없을까",
  "parent": "springboot",
  "url": "/wiki/springboot/00_why_rollback_marked_transaction_is_unusable",
  "updated": "2024-01-25 00:00:00 +0900",

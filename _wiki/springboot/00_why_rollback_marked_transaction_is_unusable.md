@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : 왜 롤백 마킹된 트랜잭션은 재사용할 수 없을까
+title   : 왜 롤백 마크된 트랜잭션은 재사용할 수 없을까
 summary :
 date    : 2024-01-25 00:00:00 +0900
 updated : 2024-01-25 00:00:00 +0900
@@ -60,13 +60,13 @@ latex   : true
 
 <br><br><br>
 
-## 트랜잭션 롤백 마킹 과정
+## 트랜잭션 롤백 마크 과정
 
 로그를 따라서 트랜잭션 롤백 마킹 과정을 알아볼 것이다. 테스트 코드는 아래와 같다.
 
 <br>
 
-### 테스트 코드
+### 예제 코드
 
 ```java
 @RestController
@@ -133,7 +133,7 @@ public class InnerService {
 
 <br>
 
-### 롤백 마킹 처리 과정
+### 롤백 마크 과정
 
 #### 1. TransactionAspectSupport.invokeWithinTransaction
 
@@ -188,7 +188,7 @@ public class InnerService {
 
 <br><br>
 
-### 롤백 마킹이 되었을 때 예외가 발생하는 이유
+### 롤백 마크 되었을 때 예외가 발생하는 이유
 
 `outerMethod`에서는 `RuntimeException`을 잡았는데, 왜 예외가 발생할까?
 
@@ -310,7 +310,7 @@ public class InnerService {
 
 <br><br><br>
 
-## 나의 생각
+## 필자의 생각
 
 왜 같은 트랜잭션에 롤백 마킹이 되면 재사용이 불가능하게 만들었을까?
 
