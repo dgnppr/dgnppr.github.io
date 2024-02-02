@@ -38,6 +38,7 @@ latex   : false
 - [신뢰성 있는 카프카 애플리케이션을 만드는 3가지 방법](https://www.youtube.com/watch?v=7_VdIFH6M6Q)
 - [카프카, 대규모 클러스터 운영 후기](https://www.youtube.com/watch?v=SuHtHQkRV7g)
 - [알림 서비스로 시작하는 서버 개발](https://www.youtube.com/watch?v=CmTO68I2HSc)
+- [1통의 재난 문자로 시작한 SRE 도전기 - 40배 이상 트래픽도 막아라!](https://tv.naver.com/v/23652569?playlistNo=753227)
 
 <br><br>
 

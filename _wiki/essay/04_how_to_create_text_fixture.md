@@ -145,6 +145,9 @@ class TransferBankTest {
 
         //Assert
         assertThat(result).isInstanceOf(Failure.class);
+        Failure failure = (Failure) result;
+        assertThat(failure.throwable()).isInstanceOf(RuntimeException.class)
+                .hasMessage("동일 계좌로 송금할 수 없음");
     }
 }
 ```
@@ -205,10 +208,13 @@ public record BankAccount(
 
         //Assert
         assertThat(result).isInstanceOf(Failure.class);
+        Failure failure = (Failure) result;
+        assertThat(failure.throwable()).isInstanceOf(RuntimeException.class)
+                .hasMessage("동일 계좌로 송금할 수 없음");
     }
 ```
 
-해당 테스트 메서드는 비교적 간단해서 stub 같은 것도 없고, 빌더 패턴으로 만들지도 않고, 테스트 픽스쳐 개수도 적어서 필드 추가를 해도 길지는 않다.
+해당 테스트 메서드는 비교적 간단해서 stub 같은 것도 없고, 빌더로 만들지도 않고, 테스트 픽스쳐 개수도 적어서 필드 추가를 해도 길지는 않다.
 
 하지만 만약에 테스트에 필요한 계좌 개수가 4개라면 혹은 그 이상이라면 코드가 엄청 길어질 것이다. 그리고 은행 계좌는 다른 테스트에서도 반복적으로 사용될 것이고 테스트 메서드마다 계좌를 생성하는 코드가 중복될 것이다.
 
@@ -233,6 +239,9 @@ public record BankAccount(
 
         //Assert
         assertThat(result).isInstanceOf(Failure.class);
+        Failure failure = (Failure) result;
+        assertThat(failure.throwable()).isInstanceOf(RuntimeException.class)
+                .hasMessage("동일 계좌로 송금할 수 없음");
     }
 
     private BankAccount createBankAccount(String accountNumber, String bankCode) {
@@ -303,6 +312,9 @@ class TransferBankTest {
 
         //Assert
         assertThat(result).isInstanceOf(Failure.class);
+        Failure failure = (Failure) result;
+        assertThat(failure.throwable()).isInstanceOf(RuntimeException.class)
+                .hasMessage("동일 계좌로 송금할 수 없음");
     }
 }
 ```
@@ -358,6 +370,9 @@ public enum BankAccountTexture {
 
         //Assert
         assertThat(result).isInstanceOf(Failure.class);
+        Failure failure = (Failure) result;
+        assertThat(failure.throwable()).isInstanceOf(RuntimeException.class)
+                .hasMessage("동일 계좌로 송금할 수 없음");
     }
 ```
 
@@ -394,9 +409,69 @@ public enum BankAccountFixture {
 
 ## 라이브러리 사용하기
 
-### Instancio
+### [Fixture Monkey](https://naver.github.io/fixture-monkey/)
 
-https://github.com/instancio/instancio
+```kotlin
+implementation("com.navercorp.fixturemonkey:fixture-monkey:1.0.13")
+```
+
+```java
+@ExtendWith(MockitoExtension.class)
+@DisplayNameGeneration(DisplayNameGenerator.ReplaceUnderscores.class)
+class TransferBankTest {
+
+    FixtureMonkey fm = FixtureMonkey.builder()
+            .objectIntrospector(ConstructorPropertiesArbitraryIntrospector.INSTANCE)
+            .build();
+
+    @Mock
+    BankPort bankPort;
+
+    @Mock
+    EmailPort emailPort;
+
+    @InjectMocks
+    TransferBank sut;
+
+    @Test
+    void 동일_계좌로_송금할_경우_실패한다() {
+        //Arrange
+        BankAccount fromAccount = fm.giveMeBuilder(BankAccount.class)
+                .set(javaGetter(BankAccount::accountNumber), "1234567890")
+                .set(javaGetter(BankAccount::bankCode), "1234")
+                .sample();
+
+        BankAccount toAccount = fm.giveMeBuilder(BankAccount.class)
+                .set(javaGetter(BankAccount::accountNumber), "1234567890")
+                .set(javaGetter(BankAccount::bankCode), "1234")
+                .sample();
+
+        long amount = 100_000L;
+
+        //Act
+        Result result = sut.invoke(fromAccount, toAccount, amount);
+
+        //Assert
+        assertThat(result).isInstanceOf(Failure.class);
+        Failure failure = (Failure) result;
+        assertThat(failure.throwable()).isInstanceOf(RuntimeException.class)
+                .hasMessage("동일 계좌로 송금할 수 없음");
+    }
+
+}
+```
+
+공식 문서를 보고 사용해보니, 테스트 픽스쳐를 생성하는데 매우 편리한 것 같다.
+네이버에서 만든 라이브러리로, [deview 영상](https://deview.kr/2021/sessions/417)을 봤는데, 아주 훌륭하다..
+~~나도 이런 라이브러리 얼른 만들고싶다.~~
+
+<br>
+
+### [Instancio](https://github.com/instancio/instancio)
+
+```kotlin
+testImplementation("org.instancio:instancio-junit:4.1.0")
+```
 
 ```java
 BankAccount fromAccount = Instancio.create(BankAccount.class);
@@ -451,20 +526,19 @@ Person marge = Instancio.of(simpsons)
     .create();
 ```
 
-템플릿을 따로 만들어서 사용할 수 도 있는데, 재사용성에 있어서 매우 좋은 것 같다. 
+템플릿을 따로 만들어서 사용할 수도 있는데, 재사용성에 있어서 매우 좋은 것 같다. 
 
 <br><br><br>
 
 ## 필자의 생각
 
-명확한 기준은 없지만, 필자는 테스트 메서드 안에서 테스트 픽스쳐를 정의하는 것을 선호한다. 
-그리고 테스트는 외부 의존성을 최대한 줄이는 것이 좋다고 생각한다. 
-
-중복 코드가 너무 많거나 테스트의 의도를 명확하게 만들어줄 수 있다면 테스트 픽스쳐를 테스트 메서드 외부에서 만들어서 사용하는 것도 좋은 방법이라고 생각한다. 
+왠만하면 의존성 없이 테스트 메서드 안에 테스트 픽스쳐를 정의하는 것이 좋다고 생각한다.
+그것이 어렵다면 테스트 픽스쳐 생성 로직을 내부 메서드 -> 외부 메서드 순으로 리팩토링하고,
+그것마저도 관리가 어려워진다면 FixtureMonkey와 같은 라이브러리를 사용하는 것이 좋을 것 같다.
 
 <br><br><br>
 
-## Ref
+## 참고
 
 - https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management.html
 - https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/caching.html
