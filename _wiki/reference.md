@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : 볼만한 기술 영상과 글
+title   : 기술 비디오/아티클 모음
 summary : 
 date    : 2023-12-15 00:00:00 +0900
 updated : 2024-02-02 00:00:00 +0900
@@ -21,11 +21,14 @@ latex   : false
 - [LinkedIn](https://engineering.linkedin.com/blog)
 - [Airbnb](https://medium.com/airbnb-engineering)
 - [Instagram](https://instagram-engineering.com/)
-- [NAVER](https://d2.naver.com/helloworld)
-- [Toss](https://toss.tech/)
 - [AWS](https://aws.amazon.com/ko/blogs/architecture/)
-- [Woowahan](https://techblog.woowahan.com/)
+- [NAVER](https://d2.naver.com/helloworld)
+- [Line](https://techblog.lycorp.co.jp/ko/)
 - [Kakao](https://tech.kakao.com/blog/)
+- [Coupang](https://medium.com/coupang-engineering/kr/home)
+- [Toss](https://toss.tech/)
+- [Daangn](https://medium.com/daangn)
+- [Woowahan](https://techblog.woowahan.com/)
 
 <br><br>
 
