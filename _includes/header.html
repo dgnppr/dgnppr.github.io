@@ -8,7 +8,7 @@
     <meta name="description" content="{{ site.summary }}">
     <meta name="google-site-verification" content="xD2UvBTOH6xxBi9MseahHz4Nt9u2vYZbgY2wVo7Bdyc" />
 
-    <link rel="stylesheet" href="{{ " /css/main.css" | prepend: site.baseurl }}">
+    <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
     <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.baseurl | prepend: site.url }}">
     <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend:
         site.baseurl | prepend: site.url }}" />
@@ -18,12 +18,7 @@
     <meta property="og:description" content="{{ site.summary }}" />
     <meta property="og:image" content="{{ site.url }}/resource/dragonappear.png">
     <meta property="og:url" content="{{ site.url }}{{ page.url }}">
-
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:site" content="@{{ site.twitter_username }}" />
-    <meta name="twitter:url" content="{{ site.url }}{{ page.url }}" />
-    <meta name="twitter:title" content="{{ page.title }}" />
-    <meta name="twitter:description" content="{{ page.summary }}" />
+    <meta property="og:locale" content="ko_KR" />
 
     <link rel="apple-touch-icon" sizes="57x57" href="/resource/icon/apple-icon-57x57.png">
     <link rel="apple-touch-icon" sizes="60x60" href="/resource/icon/apple-icon-60x60.png">
