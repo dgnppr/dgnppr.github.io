@@ -28,6 +28,5 @@ latex: true
 
 - [@Active Blog](https://dgpr.me)
 - [@Active Archive](https://dgpr.notion.site/Archive-a0a8b9caa9cb46968f1d3f6963a1ede9)
-- [~~@Deprecated Archive~~](https://docs.dgpr.me)
-- [~~@Deprecated Blog~~](https://velog.io/@dragonappear)
-- [~~@Deprecated Blog~~](https://velog.io/@yyong3519)
+- [@Deprecated Archive](https://docs.dgpr.me)
+- [@Deprecated Blog](https://velog.io/@yyong3519)
