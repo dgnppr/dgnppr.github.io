@@ -2,10 +2,8 @@
 title: DGPR
 url: "https://dgpr.me"
 baseurl: ""
-description: >
-    dragonappear
-summary: >
-    DGPR 기술 블로그
+description: dragonappear
+summary: DGPR 기술 블로그
 
 # My information
 email: dgnppr@gmail.com
