@@ -86,8 +86,7 @@ class Client {
 필자는 좀 더 넓은 의미에서 전략 패턴에 대해서 예시를 들고자 한다.
 해당 예시는 정의에 부합하는 예시는 아니다. 
 
-하지만, 전략 패턴을 사용하는 것이 좋은 예시라고 생각해서 가져왔다.
-
+하지만, 전략 패턴의 핵심에 부합하는 좋은 예시라고 생각해서 가져왔다.
 **집중해서 봐야할 부분은 바뀌는 부분(전략)을 런타임에 바꿔서 컨텍스트를 실행하는 것이다**
 
 <br>
@@ -298,7 +297,9 @@ class Main {
 
 <br><br><br>
 
-## 템플릿 메서드 패턴과의 차이
+## 전략 패턴과 다른 디자인 패턴과의 차이
+
+### 템플릿 메서드 패턴과의 차이
 
 - **전략 패턴은 합성, 템플릿 메서드 패턴은 상속**을 통해 알고리즘을 변경한다.
 - 전략 패턴은 인터페이스 합성을 통해 클라이언트와 객체 간의 결합도를 낮출 수 있는 반면, 템플릿 메서드 패턴에서는 부모/자식 관계이기 때문에 더 밀접하게 결합한다.
@@ -308,7 +309,7 @@ class Main {
 
 <br><br><br>
 
-## 템플릿 콜백 패턴과의 차이
+### 템플릿 콜백 패턴과의 차이
 
 전략 패턴은 별도의 전략 클래스가 필요하지만, 템플릿 콜백 패턴은 별도의 구현체가 필요하지 않다. 전략을 사용하는 메서드에 매개변수 값으로 전략 로직을 넘겨 주기만 하면된다.
 
@@ -381,6 +382,9 @@ class Client {
 ## 참고
 
 - https://product.kyobobook.co.kr/detail/S000000935358
+- https://kdohyeon.tistory.com/45
+- https://minjoon950425.tistory.com/210
+- https://tecoble.techcourse.co.kr/post/2021-10-04-strategy-command-pattern/
 - https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-%EC%A0%84%EB%9E%B5Strategy-%ED%8C%A8%ED%84%B4-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EB%B0%B0%EC%9B%8C%EB%B3%B4%EC%9E%90
 - https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-Template-Callback-%EB%B3%80%ED%98%95-%ED%8C%A8%ED%84%B4-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0
 - https://engineering.linecorp.com/ko/blog/templete-method-pattern
