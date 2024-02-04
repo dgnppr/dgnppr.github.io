@@ -252,33 +252,15 @@ public class PaymentProcessor {
 
 `java.util.Comparator` 인터페이스는 전략 패턴을 사용한다.
 
-```java
-class Main {
-    public static void main(String[] args) {
-        List<Integer> numbers = new ArrayList<>();
-        numbers.add(2);
-        numbers.add(1);
-        numbers.add(3);
-        numbers.add(5);
-        numbers.add(4);
+![Screenshot 2024-02-04 at 12 06 51@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/72f97c33-405c-458f-9c4e-ba59f043928e)
 
-        // 익명 클래스로 전략을 구현
-        Collections.sort(numbers, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer o1, Integer o2) {
-                return o1 - o2;
-            }
-        });
-    }
-}
-```
+![Screenshot 2024-02-04 at 12 07 01@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/4dc5e960-b3ed-4809-8b89-af7e73edbbfa)
 
 <br>
 
 ### Spring Security
 
-- `ProviderManager`(컨텍스트)는 `AuthenticationProvider`(전략)를 사용하여 인증을 처리한다.
-  - `AbstractUserDetailsAuthenticationProvider`, `DaoAuthenticationProvider` 등등이 있다.
+`ProviderManager`(컨텍스트)는 `AuthenticationProvider`(전략)를 사용하여 인증을 처리한다.
 
 ![Screenshot 2024-02-04 at 11 50 09@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/8c10e2cc-4fd6-4507-ba9d-99bd0e467305)
 
@@ -294,10 +276,11 @@ class Main {
 - 전략 패턴은 인터페이스 합성을 통해 클라이언트와 객체 간의 결합도를 낮출 수 있는 반면, 템플릿 메서드 패턴에서는 부모/자식 관계이기 때문에 더 밀접하게 결합한다.
 - 전략 패턴은 알고리즘 전체를 교체할 수 있지만, 템플릿 메서드 패턴은 알고리즘의 일부만을 교체할 수 있다.
 
-**- 단일 상속만을 지원하는 자바에서 템플릿 메서드 패턴은 상속 제한이 있을 수 밖에 없고, 컨텍스트에서 다양한 전략이 필요로 하다면 인터페이스 합성을 통해 전략 패턴을 사용하는 것이 좋다.**
+**단일 상속만을 지원하는 자바에서 템플릿 메서드 패턴은 상속 제한이 있을 수 밖에 없고, 컨텍스트에서 다양한 전략이 필요로 하다면 인터페이스 합성을 통해 전략 패턴을 사용하는 것이 좋다.**
 
 <br><br><br>
 
 ## 참고
 
 - https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-%EC%A0%84%EB%9E%B5Strategy-%ED%8C%A8%ED%84%B4-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EB%B0%B0%EC%9B%8C%EB%B3%B4%EC%9E%90
+- https://engineering.linecorp.com/ko/blog/templete-method-pattern
