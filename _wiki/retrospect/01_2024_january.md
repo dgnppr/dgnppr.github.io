@@ -8,7 +8,7 @@ tag     : retrospect
 toc     : true
 comment : true
 public  : true
-parent  : [[/life]]
+parent  : [[/retrospect]]
 latex   : true
 ---
 * TOC
