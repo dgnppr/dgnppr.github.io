@@ -4,7 +4,7 @@ title   : 2024년 1월 회고
 summary :
 date    : 2024-02-04 00:00:00 +0900
 updated : 2024-02-04 00:00:00 +0900
-tag     : life
+tag     : retrospect
 toc     : true
 comment : true
 public  : true

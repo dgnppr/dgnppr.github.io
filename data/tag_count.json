@@ -16,10 +16,6 @@
   "size": 3
  },
  {
-  "name": "life",
-  "size": 2
- },
- {
   "name": "os",
   "size": 2
  },
@@ -30,6 +26,10 @@
  {
   "name": "reference",
   "size": 1
+ },
+ {
+  "name": "retrospect",
+  "size": 2
  },
  {
   "name": "security",
