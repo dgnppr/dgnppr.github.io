@@ -1,7 +1,7 @@
 {
  "type": "wiki",
  "title": "전략 패턴을 언제, 어떻게 사용할 것인가",
- "parent": "essay",
+ "parent": "design-pattern",
  "url": "/wiki/design-pattern/00_strategy_pattern",
  "updated": "2024-01-31 00:00:00 +0900",
  "children": []

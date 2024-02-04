@@ -8,7 +8,7 @@ tag     : design-pattern
 toc     : true
 comment : true
 public  : true
-parent  : [[/essay]]
+parent  : [[/design-pattern]]
 latex   : true
 ---
 * TOC

@@ -5,5 +5,7 @@
  "parent": "index",
  "url": "/wiki/design-pattern",
  "updated": "2024-01-31 00:00:00 +0900",
- "children": []
+ "children": [
+  "design-pattern/00_strategy_pattern"
+ ]
 }
