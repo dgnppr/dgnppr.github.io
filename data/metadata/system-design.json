@@ -7,6 +7,7 @@
  "updated": "2024-01-12 00:00:00 +0900",
  "children": [
   "system-design/00_url_shortener_design",
-  "system-design/01_web_crawler_design"
+  "system-design/01_web_crawler_design",
+  "system-design/02_notification_system_design"
  ]
 }

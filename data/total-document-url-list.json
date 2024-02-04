@@ -18,5 +18,6 @@
  "/wiki/springboot/00_why_rollback_marked_transaction_is_unusable",
  "/wiki/system-design",
  "/wiki/system-design/00_url_shortener_design",
- "/wiki/system-design/01_web_crawler_design"
+ "/wiki/system-design/01_web_crawler_design",
+ "/wiki/system-design/02_notification_system_design"
 ]
