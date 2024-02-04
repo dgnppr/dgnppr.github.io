@@ -298,7 +298,7 @@ class Main {
 
 <br><br><br>
 
-## 전략 패턴과 템플릿 메서드 패턴의 차이
+## 템플릿 메서드 패턴과의 차이
 
 - **전략 패턴은 합성, 템플릿 메서드 패턴은 상속**을 통해 알고리즘을 변경한다.
 - 전략 패턴은 인터페이스 합성을 통해 클라이언트와 객체 간의 결합도를 낮출 수 있는 반면, 템플릿 메서드 패턴에서는 부모/자식 관계이기 때문에 더 밀접하게 결합한다.
@@ -308,11 +308,77 @@ class Main {
 
 <br><br><br>
 
-## 템플릿 콜백 패턴
+## 템플릿 콜백 패턴과의 차이
+
+전략 패턴은 별도의 전략 클래스가 필요하지만, 템플릿 콜백 패턴은 별도의 구현체가 필요하지 않다. 전략을 사용하는 메서드에 매개변수 값으로 전략 로직을 넘겨 주기만 하면된다.
+
+> 전략 패턴 예시
+```java
+// 전략
+interface Strategy {
+    int operation(int x, int y);
+}
+
+class ConcreteStrategyA implements Strategy {
+    public void operation(int x, int y) {
+       return x + y; 
+    }
+}
+
+class ConcreteStrategyB implements Strategy {
+    public void operation(int x, int y) {
+       return x - y; 
+    }
+}
+
+// 컨텍스트
+class Context {
+    public int executeStrategy(Strategy strategy, int x, int y) {
+        return strategy.operation(x, y);
+    }
+}
+
+// 클라이언트
+class Client {
+    public static void main(String[] args) {
+        Context context = new Context();
+        context.executeStrategy(new ConcreteStrategyA(), 3, 4); // 7
+        context.executeStrategy(new ConcreteStrategyB(), 3, 4); // -1
+    }
+}
+```
+
+<br>
+
+> 템플릿 콜백 패턴 예시
+```java
+// 콜백
+interface Callback {
+    int execute(int x, int y);
+}
+
+// 템플릿
+class Template {
+    public int execute(Callback callback, int x, int y) {
+        return callback.execute(x, y);
+    }
+}
+
+// 클라이언트
+class Client {
+    public static void main(String[] args) {
+        Template template = new Template();
+        template.execute((x, y) -> x + y, 3, 4); // 7
+        template.execute((x, y) -> x - y, 3, 4); // -1
+    }
+}
+```
 
 <br><br><br>
 
 ## 참고
 
+- https://product.kyobobook.co.kr/detail/S000000935358
 - https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-%EC%A0%84%EB%9E%B5Strategy-%ED%8C%A8%ED%84%B4-%EC%A0%9C%EB%8C%80%EB%A1%9C-%EB%B0%B0%EC%9B%8C%EB%B3%B4%EC%9E%90
+- https://inpa.tistory.com/entry/GOF-%F0%9F%92%A0-Template-Callback-%EB%B3%80%ED%98%95-%ED%8C%A8%ED%84%B4-%EC%95%8C%EC%95%84%EB%B3%B4%EA%B8%B0
 - https://engineering.linecorp.com/ko/blog/templete-method-pattern
