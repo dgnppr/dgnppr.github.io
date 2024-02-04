@@ -313,6 +313,7 @@ class Main {
 전략 패턴은 별도의 전략 클래스가 필요하지만, 템플릿 콜백 패턴은 별도의 구현체가 필요하지 않다. 전략을 사용하는 메서드에 매개변수 값으로 전략 로직을 넘겨 주기만 하면된다.
 
 > 전략 패턴 예시
+
 ```java
 // 전략
 interface Strategy {
@@ -351,6 +352,7 @@ class Client {
 <br>
 
 > 템플릿 콜백 패턴 예시
+
 ```java
 // 콜백
 interface Callback {
