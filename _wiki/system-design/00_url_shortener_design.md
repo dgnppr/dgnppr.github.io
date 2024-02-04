@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : URL 단축 시스템 디자인
+title   : URL 단축기 시스템 디자인
 summary :
 date    : 2024-01-07 00:00:00 +0900
 updated : 2024-01-13 00:00:00 +0900
