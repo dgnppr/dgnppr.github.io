@@ -96,7 +96,7 @@ class Client {
 
 위 사진은 블라인드(직장인 커뮤니티) 웹 메인 페이지이고, 카테고리 별로 게시글을 보여준다.
 
-바뀌는 부분과 바뀌지 않는 부분은 아래와 같을 것이다 (구체적인 내부 API 구조는 블라인드 개발자는 아니니 차치하자)
+바뀌는 부분과 바뀌지 않는 부분은 아래와 같을 것이다 (구체적인 내부 API 로직은 차치하자)
 
 - 바뀌는 부분(전략) = SQL
 - 바뀌지 않는 부분(컨텍스트) = 게시글을 가져오는 로직
@@ -190,16 +190,21 @@ public class PaymentClient {
 3. 전략 구현체를 만든다.
 4. 클라이언트에서 런타임에 컨텍스트에 전략을 주입한다.
 
-<br>
+<br><br><br>
 
-하지만 아래와 같은 고민이 들 수 있다.
+## 전략 패턴 사용 고민 상황
+
+아래와 같은 고민이 들 수 있다.
 
 - 전략 패턴 구현체(알고리즘)이 엄청나게 많다면 전략 패턴을 사용하는 것이 좋을까? 
 - 알고리즘이 많지 않고 자주 변경되지 않아도 매번 새로운 구현체를 생성하는게 좋을까?
 
-알고리즘이 많다면 시스템 복잡도를 높이고 유지보수성이 떨어질 수 있다. 이러한 상황이라면 팩토리 패턴과 같은 다른 디자인 패턴을 결합해서 사용하는 것을 고려해보면 좋다.
+알고리즘이 많다면 시스템 복잡도를 높이고 유지보수성이 떨어질 수 있다. 
+이러한 상황이라면 팩토리 패턴과 같은 다른 디자인 패턴을 결합해서 사용하는 것을 고려해보면 좋다.
+객체 생성을 캡슐화하여, 생성 로직을 한 곳에서 관리하는 것이다. 이렇게 되면 새로운 전략이 추가되더라도, 생성 로직만 수정하면 된다.
 
 ```java
+// 팩토리 패턴
 public class PaymentFactory {
     private HashMap<String, PaymentStrategy> strategies;
     
@@ -258,6 +263,29 @@ public class PaymentProcessor {
 
 <br>
 
+```java
+class Main {
+    public static void main(String[] args) {
+        List<String> list = new ArrayList<>();
+        list.add("A");
+        list.add("C");
+        list.add("B");
+
+        // 정렬 전략을 주입
+        list.sort(new Comparator<String>() {
+            @Override
+            public int compare(String o1, String o2) {
+                return o1.compareTo(o2);
+            }
+        });
+
+        System.out.println(list); // [A, B, C]
+    }
+}
+```
+
+<br>
+
 ### Spring Security
 
 `ProviderManager`(컨텍스트)는 `AuthenticationProvider`(전략)를 사용하여 인증을 처리한다.
@@ -277,6 +305,10 @@ public class PaymentProcessor {
 - 전략 패턴은 알고리즘 전체를 교체할 수 있지만, 템플릿 메서드 패턴은 알고리즘의 일부만을 교체할 수 있다.
 
 **단일 상속만을 지원하는 자바에서 템플릿 메서드 패턴은 상속 제한이 있을 수 밖에 없고, 컨텍스트에서 다양한 전략이 필요로 하다면 인터페이스 합성을 통해 전략 패턴을 사용하는 것이 좋다.**
+
+<br><br><br>
+
+## 템플릿 콜백 패턴
 
 <br><br><br>
 
