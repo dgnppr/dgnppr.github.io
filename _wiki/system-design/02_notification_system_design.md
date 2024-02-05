@@ -210,6 +210,7 @@ APNS나 FCM 같은 경우에는 클라이언트 단에서 중복된 알림을 �
 
 <img src="https://github.com/dgnppr/dgnppr.github.io/assets/89398909/64ee0b58-dfb2-4ace-8e7f-d27fe326e986" height="800">
 
+[슬랙](https://slack.engineering/tracing-notifications/)에서 알림을 추적하는 구조를 참고하였다.
 알림 서버, 작업 서버에서는 알림 전송 단계마다 `OpenSearch`나 분석 DB에 로그를 전송하여 알림을 분석할 수 있게 구성할 수 있다.
 
 <br>
