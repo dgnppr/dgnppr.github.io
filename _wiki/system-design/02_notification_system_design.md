@@ -228,8 +228,8 @@ APNS나 FCM 같은 경우에는 클라이언트 단에서 중복된 알림을 �
 
 알림을 보내줘야하는 클라이언트가 많아질수록 알림 Provider에게 보내줘야 하는 요청이 많아질 수 있는데, 다행스럽게 알림 Provider는 벌크성 알림을 지원한다.
 
-- [FCN](https://firebase.google.com/docs/cloud-messaging/android/send-multiple?hl=ko)
-- [APNS](https://developer.apple.com/library/archive/technotes/tn2265/_index.html#//apple_ref/doc/uid/DTS40010376-CH1-TNTAG44)
+- [FCM 공식문서](https://firebase.google.com/docs/cloud-messaging/android/send-multiple?hl=ko)
+- [APNS 공식문서](https://developer.apple.com/library/archive/technotes/tn2265/_index.html#//apple_ref/doc/uid/DTS40010376-CH1-TNTAG44)
 
 <br><br><br>
 
