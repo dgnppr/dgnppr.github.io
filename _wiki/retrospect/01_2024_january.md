@@ -19,18 +19,18 @@ latex   : true
 ### 무엇을 했나
 
 - System Design
-  - URL 단축기
-  - 웹 크롤러
-  - 알림 서비스
+  - [URL 단축기](https://dgpr.me/wiki/system-design/00_url_shortener_design/)
+  - [웹 크롤러](https://dgpr.me/wiki/system-design/01_web_crawler_design/)
+  - [알림 서비스](https://dgpr.me/wiki/system-design/02_notification_system_design/)
 - 코드에 대한 고민
-  - SpringBoot transaction 분석
-  - 디자인 패턴
-  - Text Fixture 생성
+  - [SpringBoot transaction 분석](https://dgpr.me/wiki/springboot/00_why_rollback_marked_transaction_is_unusable/)
+  - [디자인 패턴](https://dgpr.me/wiki/design-pattern/00_how_to_use_strategy_pattern/)
+  - [Text Fixture 생성](https://dgpr.me/wiki/essay/04_how_to_create_text_fixture/)
 - 책 리뷰 스터디 참여
-  - [데이터 중심 어플리케이션 데이터 질의 파트 발표](https://youtu.be/PhWu9m_tOyE)
-  - [이펙티브 자바 1,2,3,4장 발표](https://app.gitbook.com/o/XUDkicTQ2tvATJ72mIyR/s/7P6hIl9JnYdnzGC5nQrx/java/effective-java-3-edition/chapter-2/01_static_factory_method)
-  - [가상 면접 사례로 배우는 시스템 디자인](https://dgpr.me/tag/#system-design)
-  - [토비의 스프링 템플릿, 예외 발표](https://dgpr.notion.site/3-1-Vol-1-58e9aef2c3914ba288f899b501fad23a)
+  - [데이터 중심 어플리케이션 스터디 및 데이터 질의 파트 발표](https://youtu.be/PhWu9m_tOyE)
+  - [이펙티브 자바 스터디 및 1,2,3,4장 발표](https://app.gitbook.com/o/XUDkicTQ2tvATJ72mIyR/s/7P6hIl9JnYdnzGC5nQrx/java/effective-java-3-edition/chapter-2/01_static_factory_method)
+  - [가상 면접 사례로 배우는 시스템 디자인 스터디](https://dgpr.notion.site/System-Design-3b1eae2410d14806a8f6eea008e1d7c6)
+  - [토비의 스프링 스터디 및 템플릿, 예외 발표](https://dgpr.notion.site/3-1-Vol-1-58e9aef2c3914ba288f899b501fad23a)
 
 <br>
 
