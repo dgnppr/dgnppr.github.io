@@ -5,16 +5,6 @@ permalink: /link/
 comment: false
 latex: true
 ---
-* TOC
-{:toc}
-
-## Interest
-
-- Server engineering using cloud computing.
-- System architecture design.
-- Solving technically challenging problems.
-
-<br>
 
 ## Contact
 
@@ -27,7 +17,7 @@ latex: true
 ## Archive
 
 - [@Active Blog](https://dgpr.me)
-- [@Active Archive](https://dgpr.notion.site/Archive-a0a8b9caa9cb46968f1d3f6963a1ede9)
+- [@Active Archive](https://archive.dgpr.me)
 - [@Deprecated Archive](https://docs.dgpr.me)
 - [@Deprecated Blog](https://velog.io/@dragonappear)
 - [@Deprecated Blog](https://velog.io/@yyong3519)
