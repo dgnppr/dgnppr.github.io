@@ -14,5 +14,10 @@ latex   : true
 * TOC
 {:toc}
 
-
+  
 ## Ref
+
+- https://www.youtube.com/watch?v=vQP6Rs-ywlQ
+- https://www.youtube.com/watch?v=UVoGE0GZZPI
+- https://techblog.woowahan.com/15398/
+- https://findstar.pe.kr/2023/04/17/java-virtual-threads-1/
