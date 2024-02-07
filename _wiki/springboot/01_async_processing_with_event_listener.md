@@ -21,3 +21,4 @@ latex   : true
 - https://brunch.co.kr/@springboot/422
 - https://www.baeldung.com/spring-modulith-event-externalization
 - https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html
+- https://lenditkr.github.io/spring/transactional-event-listener/index.html

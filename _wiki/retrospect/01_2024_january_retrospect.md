@@ -16,7 +16,7 @@ latex   : true
 
 ## 2024년 1월
 
-### 무엇을 했나
+### 무엇을 공부했나
 
 - System Design
   - [URL 단축기](https://dgpr.me/wiki/system-design/00_url_shortener_design/)
@@ -60,41 +60,37 @@ latex   : true
 
 ## 2024년 2월
 
-### 무엇을 할 것인가
+### 무엇을 공부할 것인가
 
-- Java Deep Dive
-  - JVM
-  - NIO
+> **목표는 Deep Dive이다.**
+
+- Java
+  - JVM:: GC, 실행 엔진
   - Virtual Thread
-- OS Deep Dive
+  - NIO
+- OS
   - Context switching 
-  - Process
-  - Thread
-- MySQL Deep Dive
-  - Index
+  - Process, Thread
+- MySQL
   - Architecture
   - Optimization
 - HTTP
     - Connection
-    - HTTP version
-    - HTTPS
 - System Design
   - 뉴스 피드
   - 채팅 서비스
   - 검색어 자동 완성
-- 책 리뷰 스터디 참여
-    - 데이터 중심 어플리케이션 설계
-    - 이펙티브 자바
-    - 가상 면접 사례로 배우는 시스템 디자인
-    - 토비의 스프링
+- 책 리뷰 스터디
+    - 데이터 중심 어플리케이션 설계:: 복제
+    - 이펙티브 자바:: 모든 객체의 공통 메서드
+    - 토비의 스프링:: 추상화, AOP
     
 <br>
 
 ### 무엇을 얻을 것 인가
 
 나의 관심사는 공부한 내용을 어떻게 실무에서 잘 사용할지이다. 
-도구를 잘 사용하려면 로우 레벨까지 다시 공부할 필요가 있다고 느꼈다.
-
+도구를 잘 사용하려면 로우 레벨까지 다시 공부할 필요가 있다고 느꼈다. 
 2월에는 CS(Java,Spring,OS, MySQL) 에서 조금 더 깊게 공부하고, 시스템 디자인 학습을 할 것이다.
 
 

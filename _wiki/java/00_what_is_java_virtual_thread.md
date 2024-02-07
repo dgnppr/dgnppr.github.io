@@ -1,9 +1,9 @@
 ---
 layout  : wiki
-title   : Java Virtual Thread
+title   : JDK 21 Virtual Thread
 summary :
-date    : 2024-02-02 00:00:00 +0900
-updated : 2024-02-02 00:00:00 +0900
+date    : 2024-02-07 00:00:00 +0900
+updated : 2024-02-07 00:00:00 +0900
 tag     : java thread
 toc     : true
 comment : true
