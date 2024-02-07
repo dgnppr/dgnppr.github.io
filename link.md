@@ -6,7 +6,7 @@ comment: false
 latex: true
 ---
 
-## Contact
+## Channel
 
 - [@Github](https://github.com/{{ site.github_username }})
 - [@Linkedin](https://www.linkedin.com/in/{{ site.linkedin_username }})
