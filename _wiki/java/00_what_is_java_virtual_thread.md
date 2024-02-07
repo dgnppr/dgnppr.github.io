@@ -4,7 +4,7 @@ title   : JDK 21 Virtual Thread
 summary :
 date    : 2024-02-07 00:00:00 +0900
 updated : 2024-02-07 00:00:00 +0900
-tag     : java thread
+tag     : os java thread
 toc     : true
 comment : true
 public  : false
