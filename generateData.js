@@ -111,7 +111,7 @@ function lexicalOrderingBy(property) {
 */
 
 function saveTagFiles(tagMap, pageMap) {
-    fs.mkdirSync('./data/tag', { recursive: true }, (err) => {
+    fs.mkdirSync('./data/tags', { recursive: true }, (err) => {
         if (err) {
             return console.log(err);
         }
