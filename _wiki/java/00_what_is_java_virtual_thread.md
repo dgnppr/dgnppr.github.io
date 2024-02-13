@@ -247,7 +247,7 @@ private static final ReentrantLock lock = new ReentrantLock();
 ## 참고
 
 - [Oracle Docs - Virtual Threads](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html#GUID-DC4306FC-D6C1-4BCC-AECE-48C32C1A8DAA)
-- [java official video - Java 21 new feature: Virtual Threads ](https://www.youtube.com/watch?v=5E0LU85EnTI)
+- [Java official video - Java 21 new feature: Virtual Threads ](https://www.youtube.com/watch?v=5E0LU85EnTI)
 - [kakao tech meet - JDK 21의 신기능 Virtual Thread 알아보기](https://www.youtube.com/watch?v=vQP6Rs-ywlQ)
 - [우아한 기술블로그 - Java의 미래, Virtual Thread](https://techblog.woowahan.com/15398/)
 - [Virtual Thread란 무엇일까? (1)](https://findstar.pe.kr/2023/04/17/java-virtual-threads-1/)
