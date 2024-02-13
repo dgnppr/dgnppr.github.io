@@ -140,7 +140,7 @@ function saveTagFiles(tagMap, pageMap) {
             collection.push(documentId);
         }
 
-        saveToFile(`./data/tag/${tag}.json`, JSON.stringify(collection, null, 1), NO_PRINT);
+        saveToFile(`./data/tags/${tag}.json`, JSON.stringify(collection, null, 1), NO_PRINT);
     }
 }
 

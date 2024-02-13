@@ -41,7 +41,7 @@ public: true
      * 주어진 태그에 해당하는 모든 문서의 목록을 보여줍니다.
      */
     function showTag(tagName) {
-        fetch(`/data/tag/${tagName}.json`)
+        fetch(`/data/tags/${tagName}.json`)
             .then(response => response.json())
             .then((data) => createLinks(data, tagName))
             .catch(function(error) {
