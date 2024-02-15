@@ -12,11 +12,6 @@
         <changefreq>daily</changefreq>
         <priority>0.5</priority>
     </url>
-    <url>
-        <loc>{{ site.url }}/blog/</loc>
-        <changefreq>weekly</changefreq>
-        <priority>0.5</priority>
-    </url>
 {% for post in site.posts %}
     <url>
         <loc>{{ site.url }}{{ post.url }}</loc>
