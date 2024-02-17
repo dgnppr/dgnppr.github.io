@@ -1,10 +1,10 @@
 ---
 layout  : wiki
-title   : 이벤트 리스너로 비동기 처리하기
+title   : "@EventListener, @TransactionalEventListener"
 summary :
-date    : 2024-01-25 00:00:00 +0900
-updated : 2024-01-25 00:00:00 +0900
-tag     : springboot async
+date    : 2024-02-17 00:00:00 +0900
+updated : 2024-02-17 00:00:00 +0900
+tag     : springboot event
 toc     : true
 comment : true
 public  : false
@@ -17,8 +17,4 @@ latex   : true
   
 ## Ref
 
-- https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/event/EventListener.html
-- https://brunch.co.kr/@springboot/422
-- https://www.baeldung.com/spring-modulith-event-externalization
-- https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html
 - https://lenditkr.github.io/spring/transactional-event-listener/index.html
