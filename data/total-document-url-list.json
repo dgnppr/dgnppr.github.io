@@ -11,7 +11,6 @@
  "/wiki/java",
  "/wiki/java/00_what_is_java_virtual_thread",
  "/wiki/jpa",
- "/wiki/jpa/00_jpa_dirty_checking_and_save_and_flush",
  "/wiki/reference",
  "/wiki/retrospect",
  "/wiki/retrospect/00_2023_year_retrospect",
@@ -21,5 +20,6 @@
  "/wiki/system-design",
  "/wiki/system-design/00_url_shortener_design",
  "/wiki/system-design/01_web_crawler_design",
- "/wiki/system-design/02_notification_system_design"
+ "/wiki/system-design/02_notification_system_design",
+ "/wiki/system-design/03_sns_feed_system_design"
 ]
