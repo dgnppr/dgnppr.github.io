@@ -1,0 +1,11 @@
+{
+ "type": "wiki",
+ "title": "SpringBoot",
+ "summary": "topic",
+ "parent": "index",
+ "url": "/wiki/spring-boot",
+ "updated": "2024-01-19 00:00:00 +0900",
+ "children": [
+  "springboot/00_why_rollback_marked_transaction_is_unusable"
+ ]
+}
