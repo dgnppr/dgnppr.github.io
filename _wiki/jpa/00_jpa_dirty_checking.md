@@ -1,13 +1,13 @@
 ---
 layout  : wiki
-title   : JPA Dirty Checking, saveAndFlush()
+title   : JPA Dirty Checking 해부하기
 summary :
 date    : 2024-02-16 00:00:00 +0900
 updated : 2024-02-16 00:00:00 +0900
 tag     : spring-boot jpa
 toc     : true
 comment : true
-public  : false
+public  : true
 parent  : [[/jpa]]
 latex   : true
 ---
@@ -39,6 +39,10 @@ latex   : true
 
 
 ## save(), saveAndFlush()
+
+<br><br><br>
+
+## 필자의 생각
 
 <br><br><br>
 
