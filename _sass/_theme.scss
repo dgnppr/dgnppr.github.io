@@ -73,6 +73,10 @@ body.dark-mode .post-meta {
     color: #D5DDE6 !important;
 }
 
+body.dark-mode .progress-bar {
+    background-color: #4ECCA3; /* 다크 모드에서의 프로그레스바 테마 색상 */
+}
+
 body.dark-mode .history-button p,
 body.dark-mode .history-button p span,
 body.dark-mode .post-content p,
