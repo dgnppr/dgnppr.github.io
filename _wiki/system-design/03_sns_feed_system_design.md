@@ -183,6 +183,7 @@ WHERE follow.follower_id = {user_id}
 
 ## 참고
 
+- https://d2.naver.com/helloworld/551588
 - https://engineering.fb.com/2020/12/10/web/how-instagram-suggests-new-content/
 - https://engineering.fb.com/2023/12/19/core-infra/how-meta-built-the-infrastructure-for-threads/
 - https://nikhilgupta1.medium.com/instagram-system-design-f62772649f90
