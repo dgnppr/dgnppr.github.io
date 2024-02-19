@@ -3,7 +3,7 @@ layout  : wiki
 title   : 기술 비디오/아티클 모음
 summary : 
 date    : 2023-12-15 00:00:00 +0900
-updated : 2024-02-02 00:00:00 +0900
+updated : 2024-02-10 00:00:00 +0900
 tag     : reference
 toc     : true
 public  : true
@@ -42,6 +42,7 @@ latex   : false
 - [카프카, 대규모 클러스터 운영 후기](https://www.youtube.com/watch?v=SuHtHQkRV7g)
 - [알림 서비스로 시작하는 서버 개발](https://www.youtube.com/watch?v=CmTO68I2HSc)
 - [1통의 재난 문자로 시작한 SRE 도전기 - 40배 이상 트래픽도 막아라!](https://tv.naver.com/v/23652569?playlistNo=753227)
+- [JVM warm up / if(kakao)2022](https://www.youtube.com/watch?v=CQi3SS2YspY)
 
 <br><br>
 
@@ -50,6 +51,7 @@ latex   : false
 - [트위터 시스템 디자인 완전정복](https://www.youtube.com/watch?v=6QwqtdBx0oE)
 - [Linux File System Explained](https://www.youtube.com/watch?v=bbmWOjuFmgA)
 - [카카오톡 시스템 디자인 (WebSocket,메시지 큐,SQL vs NoSQL)](https://www.youtube.com/watch?v=VODXNECZOBQ)
+- [스프링캠프 2023 [Session 6] 구현부터 테스트까지 - 대용량 트래픽 처리 시스템](https://www.youtube.com/watch?v=XBXmHCy1EBA)
 
 <br><br>
 

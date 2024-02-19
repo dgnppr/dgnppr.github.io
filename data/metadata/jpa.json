@@ -2,8 +2,10 @@
  "type": "wiki",
  "title": "JPA",
  "summary": "topic",
- "parent": "index",
+ "parent": "spring-boot",
  "url": "/wiki/jpa",
  "updated": "2024-02-05 00:00:00 +0900",
- "children": []
+ "children": [
+  "jpa/00_jpa_dirty_checking"
+ ]
 }

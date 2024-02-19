@@ -8,6 +8,6 @@ tag     :
 toc     : true
 public  : true
 comment : false
-parent  : [[/index]]
+parent  : [[/spring-boot]]
 latex   : false
 ---

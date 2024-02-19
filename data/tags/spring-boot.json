@@ -1,0 +1,4 @@
+[
+ "jpa/00_jpa_dirty_checking",
+ "springboot/00_why_rollback_marked_transaction_is_unusable"
+]
