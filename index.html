@@ -30,9 +30,9 @@ regenerate: true
         {% endif %}
         {% endfor %}
     </ul>
-    <h4 class="indent">
+    <h3 class="indent">
         {% assign count = site.wiki | where: "public", true | where_exp: "item", "item.layout != 'category'" | size %}
         <a href="/recent/">View all documents ({{ count }} items)</a>
-    </h4>
+    </h3>
 </div>
 {% include createLink.html %}

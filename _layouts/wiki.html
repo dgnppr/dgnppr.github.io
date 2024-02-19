@@ -3,7 +3,10 @@ layout: document
 ---
 
 {% assign thisName = page.id | remove: '/wiki/' %}
-<input type="hidden" id="thisName" value="{{ thisName }}" />
+<input type="hidden" id="thisName" value="{{ thisName }}"/>
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+</div>
 <div class="post">
     <header class="post-header">
         <h1 class="page-title">
@@ -50,3 +53,4 @@ layout: document
 <script async src="/js/toc-highlight.js"></script>
 <script src="/js/reading-time.js"></script>
 <script src="/js/article.js"></script>
+<script src="/js/scroll.js"></script>
