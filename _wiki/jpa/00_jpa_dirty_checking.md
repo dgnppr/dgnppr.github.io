@@ -1,9 +1,9 @@
 ---
 layout  : wiki
-title   : JPA Dirty Checking 해부하기
+title   : JPA Dirty Checking 동작 해부하기
 summary :
-date    : 2024-02-16 00:00:00 +0900
-updated : 2024-02-16 00:00:00 +0900
+date    : 2024-02-18 00:00:00 +0900
+updated : 2024-02-18 00:00:00 +0900
 tag     : spring-boot jpa
 toc     : true
 comment : true
@@ -14,19 +14,40 @@ latex   : true
 * TOC
 {:toc}
 
-## 서론
+## 본 글에 앞서
+
+`JPA`에서 `Entity`의 변경을 감지하고 쓰기 쿼리를 날리는 것을 더티 체킹이라고 한다. 
+이번 글에서는 `EntityManager`에서 어떤 식으로 더티 체킹을 하는지 디버거를 통해 알아보고, 더티 체킹의 단점과 대안에 대해서 정리해보고자 한다.
+
+우선 더티 체킹의 동작에 앞서 JPA 주요 개념을 정리하고, 더티 체킹의 동작을 알아보자.
 
 <br><br><br>
 
-## 구성 환경
+## JPA 주요 개념
 
-- JDK
-- Spring Boot
-- JPA
+### EntityManager, EntityManagerFactory
+
+- 같은 트랜잭션이면 같은 엔티티 매니저인지 확인
+- 다른 트랜잭션이면 다른 엔티티 매니저인지 확인
+
+<br>
+
+### PersistenceContext
+
+- 같은 트랜잭션이면 같은 영속성 컨텍스트인지 확인
+- 다른 트랜잭션이면 다른 영속성 컨텍스트인지 확인
+
+<br>
+
+### Entity Status
 
 <br><br><br>
 
-## 더티 체킹
+## Dirty Checking 동작
+
+<br><br><br>
+
+## 더티 체킹 장점/단점
 
 - 성능 이슈
 - 예측하지 못한 데이터베이스 쓰기 작업
@@ -34,18 +55,17 @@ latex   : true
 - 트랜잭션 관리 복잡성
 - 테스트 어려움
 
-
 <br><br><br>
 
+## 업데이트 명시하기
 
-## save(), saveAndFlush()
+save(), saveAndFlush()
 
 <br><br><br>
 
 ## 필자의 생각
 
 <br><br><br>
-
   
 ## Ref
 
