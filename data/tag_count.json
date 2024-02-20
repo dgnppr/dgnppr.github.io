@@ -8,6 +8,10 @@
   "size": 1
  },
  {
+  "name": "eda",
+  "size": 1
+ },
+ {
   "name": "essay",
   "size": 5
  },
@@ -41,7 +45,7 @@
  },
  {
   "name": "spring-boot",
-  "size": 2
+  "size": 3
  },
  {
   "name": "system-design",
