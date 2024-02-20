@@ -34,7 +34,7 @@ latex   : true
 `EntityManager`는 `Entity`의 영속성을 관리하는 인터페이스이다. `EntityManager`는 내부에서 `PersistenceContext`를 가지고 있으며, 이 객체를 통해 `Entity`의
 영속성을 관리한다.
 
-![Screenshot 2024-02-19 at 19 29 03](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/ecca7512-39d8-4497-83c4-4e110fd2821d)
+![Screenshot 2024-02-20 at 20 28 31@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/17e49a31-8230-4d85-a820-7cb10914eb95)
 
 `SessionImpl`은 `EntityManager`의 구현체이다. 위 코드를 보면 내부에 `private transient StatefulPersistenceContext persistenceContext;`가
 존재하는 것을 확인할 수 있다.
@@ -78,7 +78,7 @@ latex   : true
 
 ### PersistenceContext
 
-![Screenshot 2024-02-19 at 19 48 46](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/4e2e7c47-13b5-46bf-bc9e-be750a4566ff)
+![Screenshot 2024-02-20 at 20 23 21@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/94331c28-869a-4875-8b01-e75e124d1a6e)
 
 `PersistenceContext` 구현체 `StatefulPersistenceContext` 내부 코드를 보면 `HashMap`을 사용하여 `Entity`를 관리한다.
 
@@ -129,7 +129,7 @@ latex   : true
 
 아래 `DirtyHelper` 코드를 보면 `findDirty()`에서 `currentState`와 `previousState`를 하나하나 비교하여 변경된 속성을 찾아냄을 볼 수 있다.
 
-![Screenshot 2024-02-20 at 02 08 04](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/2691b7c0-9c45-4713-b383-e702784ec7f2)
+![Screenshot 2024-02-20 at 20 25 42@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/5c1d3044-a013-4181-94a3-d15746413955)
 
 
 <br>
@@ -147,7 +147,7 @@ latex   : true
 
 `Session`에 정의된 즉, 쓰기 지연 SQL이 정의된 `ActionQueue`를 통해 `Entity`의 변화를 데이터베이스에 반영한다.
 
-![Screenshot 2024-02-20 at 02 37 14](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/2370936b-ffcf-4300-b703-df5de3d3d78b)
+![Screenshot 2024-02-20 at 20 27 34@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/c000be0b-4e10-42b6-be9c-92ef2d1f6f21)
 
 ![Screenshot 2024-02-20 at 02 39 09](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/e1b77449-722c-4984-a45c-50fcb3716c89)
 
