@@ -1,6 +1,6 @@
 {
  "type": "wiki",
- "title": "레디스가 싱글스레드인 이유",
+ "title": "왜 레디스를 싱글 스레드로 만들었을까",
  "parent": "essay",
  "url": "/wiki/essay/01_why_redis_single_threaded",
  "updated": "2023-12-24 00:00:00 +0900",
