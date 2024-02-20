@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : JDK 21 Virtual Thread를 알아보자
+title   : "JDK 21 Virtual Thread는 무엇인가"
 summary :
 date    : 2024-02-13 00:00:00 +0900
 updated : 2024-02-13 00:00:00 +0900
@@ -11,6 +11,7 @@ public  : true
 parent  : [[/java]]
 latex   : true
 ---
+
 * TOC
 {:toc}
 
@@ -19,15 +20,17 @@ latex   : true
 ![Screenshot 2024-02-13 at 13 41 41](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/0f7ad51a-2013-4c5e-82b8-ab557bb62bd3)
 
 기존 자바의 스레드 모델은 `OS 스레드`를 1:1로 래핑한 `Platform` 쓰레드를 사용하고 있다.
-이 모델은 `OS 스레드`를 사용하는 것이기 때문에, 생성 개수가 제한적이고, `OS 스레드`를 생성하고 관리하는데 비용이 많이 들어가는데다가, `OS 스레드`의 수가 많아지면 `Context Switching` 비용이 많이 들어가는 문제가 있었다.
+이 모델은 `OS 스레드`를 사용하는 것이기 때문에, 생성 개수가 제한적이고, `OS 스레드`를 생성하고 관리하는데 비용이 많이 들어가는데다가, `OS 스레드`의 수가 많아지면 `Context Switching`
+비용이 많이 들어가는 문제가 있었다.
 이 때문에 어플리케이션에서는 쓰레드풀을 사용하여 스레드를 관리했다.
 
 <br>
 
-기존 자바 스레드 모델은 처리량과 I/O 처리에 있어서 한계가 있었다. 
+기존 자바 스레드 모델은 처리량과 I/O 처리에 있어서 한계가 있었다.
 기본적인 웹 요청 처리 방식은 하나의 요청에 하나의 스레드가 된다. 높은 처리량이 필요한 시스템에서는 스레드가 더 많이 필요하지만, OS 스레드의 생성 개수 제약으로 인해 스레드를 무한히 늘릴 수 없다.
 또한, 플랫폼 쓰레드에서는 I/O 작업을 처리할 때 블로킹이 되는데, CPU 사용 시간보다 I/O 대기 시간이 더 길어지는 경우가 많다.
-webflux를 도입하여 논블로킹으로 다른 작업을 처리할 수 있으나 코드를 작성하고 이해하는 비용이 높을 뿐만 아니라, JDBC 등의 라이브러리가 reactive 지원을 하지 않으면 동기적으로 작동하는 것과 동일하게 된다.
+webflux를 도입하여 논블로킹으로 다른 작업을 처리할 수 있으나 코드를 작성하고 이해하는 비용이 높을 뿐만 아니라, JDBC 등의 라이브러리가 reactive 지원을 하지 않으면 동기적으로 작동하는 것과 동일하게
+된다.
 
 <br>
 
@@ -94,7 +97,8 @@ spring:
 
 ![Screenshot 2024-02-13 at 14 21 15@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/67ccd427-9651-47cb-abea-141c34c1a717)
 
-가상 쓰레드는 내부에 `scheduler`라는 `ForkJoinPool`을 사용한다. `ForkJoinPool`은 `carrier thread`(`platform thread`)의 쓰레드풀 역할을 하고, 가상 쓰레드의 작업 스케줄링을 담당한다.
+가상 쓰레드는 내부에 `scheduler`라는 `ForkJoinPool`을 사용한다. `ForkJoinPool`은 `carrier thread`(`platform thread`)의 쓰레드풀 역할을 하고, 가상
+쓰레드의 작업 스케줄링을 담당한다.
 
 <br>
 
@@ -126,7 +130,8 @@ spring:
 
 ![Screenshot 2024-02-13 at 15 01 57@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/84dd8cc0-dd94-409d-a62a-0a51b67eba70)
 
-`submitRunContinuation()` 메서드를 통해 `scheduler`에게 작업을 넘겨주고, 실행되는 것을 볼 수 있다. 이렇게 실행된 `runContinuation`은 `work queue`에 push 되어, 스케줄링 되어 실행된다.
+`submitRunContinuation()` 메서드를 통해 `scheduler`에게 작업을 넘겨주고, 실행되는 것을 볼 수 있다. 이렇게 실행된 `runContinuation`은 `work queue`에 push
+되어, 스케줄링 되어 실행된다.
 
 <br>
 
@@ -146,7 +151,8 @@ carrier thread 에서 실행되는 가상 스레드를 `unmount()` 하는 동작
 
 ![Screenshot 2024-02-13 at 15 13 44@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/567e158a-2a13-43a5-a706-b271f3e6e38f)
 
-JDK 21에서 `NIOSocketImpl.park` 메서드 내부를 보면 가상 쓰레드 판단하여, 현재 스레드가 가상 스레드이면 `Poller.poll`를 통해 내부적으로 가상 스레드의 `park`를 수행하여 컨텍스트 스위칭이 가능해진다.
+JDK 21에서 `NIOSocketImpl.park` 메서드 내부를 보면 가상 쓰레드 판단하여, 현재 스레드가 가상 스레드이면 `Poller.poll`를 통해 내부적으로 가상 스레드의 `park`를 수행하여 컨텍스트
+스위칭이 가능해진다.
 
 <br>
 
@@ -174,10 +180,10 @@ JDK 21에서 `NIOSocketImpl.park` 메서드 내부를 보면 가상 쓰레드 �
 ![Screenshot 2024-02-13 at 15 38 05](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/8d2760f6-4be1-417b-be30-b4838caa4b14)
 
 IO 바운드 작업에서는 가상 스레드가 플랫폼 스레드 방식보다 더 좋은 TPS를 보여준다. 하지만 항상 좋은 성능을 보여주는 것은 아니다.
-기존 플랫폼 스레드 방식으로 동작하는 톰캣의 경우, 가용 쓰레드가 없으면 톰캣 스레드풀 워크 큐에 넣고 대기한다. 
+기존 플랫폼 스레드 방식으로 동작하는 톰캣의 경우, 가용 쓰레드가 없으면 톰캣 스레드풀 워크 큐에 넣고 대기한다.
 가상 스레드로 동작할 경우에는 throughput을 모두 소화하게 되는데, 이 때 DB 커넥션을 가져올 때 DB 커넥션 수를 넘어서는 경우 타임아웃이 발생할 수 있는 상황이 발생할 수 있다.
 
-CPU 바운드 작업에서는 플랫폼 스레드가 더 나은 성능을 보여준다. 
+CPU 바운드 작업에서는 플랫폼 스레드가 더 나은 성능을 보여준다.
 가상 스레드도 결국에는 플랫폼 스레드 위에서 동작하는데, CPU 바운드 작업에서는 플랫폼 스레드 사용 비용 뿐만 아니라 가상 스레드 생성 및 스케줄링 비용까지 포함되기 때문이다.
 <br><br><br>
 
@@ -208,7 +214,8 @@ Spring MVC 기반이면 편리하게 사용 가능하다. 단, 여러가지 라�
 
 ### Pinning
 
-**`synchroinzed`이나 `parallelStream` 혹은 네이티브 메서드 사용시 `Virutal Thead`에 매핑된 `Carrier Thread`가 블로킹 될 수 있다 (이를 `Pinning이`라고 함).**
+**`synchroinzed`이나 `parallelStream` 혹은 네이티브 메서드 사용시 `Virutal Thead`에 매핑된 `Carrier Thread`가 블로킹 될 수 있다 (이를 `Pinning이`라고
+함).**
 가상 스레드가 `carrier thread`에 park 될 수 없는 상태가 되어버려서, 사용 중인 내부 라이브러리나 코드가 해당 키워드를 사용하지 않는지 확인해야 한다.
 블로킹을 피하기 위해 `ReentrantLock`을 사용하자.
 
@@ -235,14 +242,13 @@ private static final ReentrantLock lock = new ReentrantLock();
 
 ## 정리
 
-**가상 스레드는 도입한다고 무조건 처리량이 높아지는 것은 아니다.** 
+**가상 스레드는 도입한다고 무조건 처리량이 높아지는 것은 아니다.**
 
 특정 상황(I/O 바운드 작업 등)에 대해서는 더 좋은 성능을 보여주지만, 항상 좋은 성능을 보여주는 것은 아니다. 따라서, 가상 스레드를 도입할 때에는 어플리케이션의 특성에 맞게 사용해야 한다.
 
 그리고 가상 스레드는 결국에 플랫폼 쓰레드 위에서 동작하기 때문에 플랫폼 쓰레드가 blocking 되는 상황을 주의해야 한다. 외부 라이브러리에서 blocking 상태를 만드는지 확인하면서 사용해야 한다.
 
 <br><br><br>
-
 
 ## 참고
 

@@ -1,6 +1,6 @@
 {
  "type": "wiki",
- "title": "JPA Dirty Checking 동작 해부하기",
+ "title": "JPA Dirty Checking 어떻게 동작할까",
  "parent": "jpa",
  "url": "/wiki/jpa/00_jpa_dirty_checking",
  "updated": "2024-02-18 00:00:00 +0900",
