@@ -8,6 +8,6 @@
  "children": [
   "jpa",
   "springboot/00_why_rollback_marked_transaction_is_unusable",
-  "springboot/01_what_is_event_listener"
+  "springboot/01_how_to_use_transactional_event_listener"
  ]
 }
