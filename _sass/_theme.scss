@@ -60,9 +60,8 @@ body.dark-mode ul#markdown-toc {
     background-color: var(--dark-color) !important;
 }
 
-body.dark-mode code,
-body.dark-mode ul li:hover {
-    background-color: #1A202C !important;
+body.dark-mode code {
+    background-color: #000000 !important;
 }
 
 body.dark-mode .post-tag a {
