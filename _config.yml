@@ -22,9 +22,13 @@ permalink: /blog/:year/:month/:day/:title/
 
 markdown: kramdown
 highlighter: rouge
+
+# https://kramdown.gettalong.org/rdoc/Kramdown/Options.html - smart_quotes
 kramdown:
   input: GFM
   syntax_highlighter: rouge
+  autolink: true
+  smart_quotes: ["apos", "apos", "quot", "quot"]
 
 paginate: 10
 paginator_path: "/blog"
@@ -55,6 +59,3 @@ issue: "https://github.com/dgnppr/dgnppr.github.io/issues/new"
 
 timezone: "Asia/Seoul"
 
-# https://kramdown.gettalong.org/rdoc/Kramdown/Options.html - smart_quotes
-kramdown:
-    smart_quotes: ["apos", "apos", "quot", "quot"]
