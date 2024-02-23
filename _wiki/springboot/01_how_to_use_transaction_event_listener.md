@@ -89,7 +89,9 @@ public class MyEventListenerB {
 `@EventListener`가 붙은 메서드는 `ApplicationEventPublisher`에 의해 발행된 이벤트를 구독하여 처리한다.
 
 `MyService`가 호출되면 아래와 같이 로그가 찍힌다.
-```console
+
+
+```sh
 MyEventListener A Received event: MyEvent[id=1]
 MyEventListener B Received event: MyEvent[id=1]
 ```
@@ -337,12 +339,6 @@ public class MoneyService {
         moneyRepository.deposit(toId, amount);
         notificationClient.sendMoneySentNotification(fromId, toId, amount);
     }
-}
-
-@Transactional
-public void sendMoney(long fromId, long toId, long amount) {
-    // 송금 로직
-    // 알림 발송
 }
 ```
 
