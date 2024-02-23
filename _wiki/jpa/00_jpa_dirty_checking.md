@@ -4,7 +4,7 @@ title   : JPA Dirty Checking 어떻게 동작할까
 summary :
 date    : 2024-02-18 00:00:00 +0900
 updated : 2024-02-18 00:00:00 +0900
-tag     : spring-boot jpa
+tag     : spring-boot jpa code-analysis
 toc     : true
 comment : true
 public  : true
