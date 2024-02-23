@@ -50,18 +50,18 @@ body.dark-mode :not(pre):not(code) {
     border-color: var(--dark-color);
 }
 
-body.dark-mode :not(pre):not(code) *,
-body.dark-mode :not(pre):not(code) *:not(span) {
+body.dark-mode :not(pre):not(code):not(code *) {
     color: var(--text-color) !important;
+}
+
+body.dark-mode code.language-plaintext.highlighter-rouge {
+    background-color: var(--dark-color);
+    border-color: var(--dark-color);
 }
 
 body.dark-mode .header,
 body.dark-mode ul#markdown-toc {
     background-color: var(--dark-color) !important;
-}
-
-body.dark-mode code {
-    background-color: #000000 !important;
 }
 
 body.dark-mode .post-tag a {

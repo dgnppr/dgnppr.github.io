@@ -1,7 +1,6 @@
 ---
 layout  : category
 title   : System Design
-summary : topic
 date    : 2024-01-12 00:00:00 +0900
 updated : 2024-01-12 00:00:00 +0900
 tag     : 

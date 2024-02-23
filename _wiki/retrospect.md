@@ -1,7 +1,6 @@
 ---
 layout  : category
 title   : Retrospect
-summary : topic
 date    : 2024-01-11 00:00:00 +0900
 updated : 2024-01-11 00:00:00 +0900
 tag     : 

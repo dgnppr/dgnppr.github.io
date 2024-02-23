@@ -1,7 +1,6 @@
 ---
 layout  : wiki
 title   : 기술 비디오/아티클 모음
-summary : 
 date    : 2023-12-15 00:00:00 +0900
 updated : 2024-02-10 00:00:00 +0900
 tag     : reference

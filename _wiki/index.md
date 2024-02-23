@@ -1,7 +1,6 @@
 ---
 layout  : category
 title   : Index
-summary : root
 toc     : true
 public  : true
 tag     : 
