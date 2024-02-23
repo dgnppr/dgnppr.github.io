@@ -1,0 +1,431 @@
+---
+layout  : wiki
+title   : TransactionalEventListener을 알아보자
+summary :
+date    : 2024-02-20 00:00:00 +0900
+updated : 2024-02-20 00:00:00 +0900
+tag     : spring-boot code-analysis
+toc     : true
+comment : true
+public  : true
+parent  : [[/spring-boot]]
+latex   : true
+---
+* TOC
+{:toc}
+
+## 본 글에 앞서
+
+`Spring`에서 트랜잭션 관련 이벤트를 처리하는 방법에는 [`@TransactionalEventListener`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/event/TransactionalEventListener.html)가 있다.
+이 어노테이션은 [`@EventListener`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/event/EventListener.html)와 비슷해 보이지만, `TransactionalEventListener`는 더 복잡하게 동작한다.
+이번 글에서는 이 두 어노테이션의 동작과 `@TransactionalEventListener`를 사용시 알아야 할 점과 언제 사용하면 좋을지에 대해 작성해보려고 한다.
+
+<br><br><br>
+
+## @EventListener
+
+우선 `@EventListener`가 어떻게 동작하는지 간단하게 살펴보자.
+
+<br>
+
+```java
+// 이벤트
+public record MyEvent(
+        Long id
+) {
+
+}
+
+// 이벤트 발행자
+@Service
+public class MyService {
+
+    private final MyRepository myRepository;
+    private final ApplicationEventPublisher publisher;
+
+    public MyService(
+            final MyRepository myRepository,
+            final ApplicationEventPublisher publisher
+    ) {
+        this.myRepository = myRepository;
+        this.publisher = publisher;
+    }
+
+    @Transactional
+    public Long createMyEntity() {
+        var myId = myRepository.save(new MyEntity()).getId();
+        publisher.publishEvent(new MyEvent(myId));
+        return myId;
+    }
+}
+
+
+// 이벤트 리스너 A
+@Component
+public class MyEventListenerA {
+
+    private static final Logger log = LoggerFactory.getLogger(MyEventListenerA.class);
+
+    @EventListener
+    public void handleMyEvent(MyEvent event) {
+        log.info("MyEventListener A Received event: {}", event);
+    }
+}
+
+// 이벤트 리스너 B
+@Component
+public class MyEventListenerB {
+
+    private static final Logger log = LoggerFactory.getLogger(MyEventListenerB.class);
+
+    @EventListener
+    public void handleMyEvent(MyEvent event) {
+        log.info("MyEventListener B Received event: {}", event);
+    }
+}
+```
+
+위 코드와 같이 동작할 때, `MyService`에서 `MyEvent`를 발행하면, `MyEventListenerA`와 `MyEventListenerB`가 이벤트를 구독하여 처리한다.
+`@EventListener`가 붙은 메서드는 `ApplicationEventPublisher`에 의해 발행된 이벤트를 구독하여 처리한다.
+
+`MyService`가 호출되면 아래와 같이 로그가 찍힌다.
+```console
+MyEventListener A Received event: MyEvent[id=1]
+MyEventListener B Received event: MyEvent[id=1]
+```
+
+<br>
+
+좀 더 간략화해보면 아래 그림과 같다.
+
+![Screenshot 2024-02-23 at 17 56 08](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/af9ad62c-a821-4212-98ef-60d77430c94c)
+
+스프링 빈으로 등록된 [`ApplicationEventPublisher`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/ApplicationEventPublisher.html)에 이벤트를 발행하고, 
+`@EventListener`가 붙은 메서드들이 이벤트를 구독하여 처리하는 방식으로 동작한다.
+**`ApplicationEventMulicaster`는 모든 일치하는 리스너에게 이벤트에게 알림을 전송한다.**
+
+<br>
+
+이벤트 리스너를 사용한다는 것은 이벤트를 발행하는 객체와 이벤트를 처리하는 객체를 분리하는 것이다. 즉, 동기화된 작업 셋을 분리하는 것이기 때문에, 비동기로 실행해야하는 작업을 처리할 때 유용하다.
+`@Async`를 사용하거나 또는 `ApplicationEventMulticaster`에 별도의 `executor`를 설정하여 비동기로 실행할 수 있다.
+
+```java
+// @Async를 사용하여 비동기로 실행하는 방법
+@Component
+public class MyEventListenerA {
+
+    private static final Logger log = LoggerFactory.getLogger(MyEventListenerA.class);
+
+    @Async("threadPoolTaskExecutor") // Async로 설정한 executor 이름을 명시 또는 AsyncConfigurer 구현체를 사용하여 설정
+    @EventListener
+    public void handleMyEvent(MyEvent event) {
+        log.info("MyEventListener A Received event: {}", event);
+    }
+}
+
+@EnableAsync
+@Configuration
+public class AsyncConfig implements AsyncConfigurer {
+
+    private static final Logger log = LoggerFactory.getLogger(AsyncConfig.class);
+
+    @Override
+    public Executor getAsyncExecutor() {
+        ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+        int processors = Runtime.getRuntime().availableProcessors();
+
+        log.info("Initializing async executor");
+        log.info("Available processors count: {}", processors);
+
+        executor.setCorePoolSize(processors);
+        log.info("Setting core pool size: {}", processors);
+
+        executor.setMaxPoolSize(processors * 2);
+        log.info("Setting max pool size: {}", processors * 2);
+
+        executor.setQueueCapacity(50);
+        log.info("Setting queue capacity: 50");
+
+        executor.setKeepAliveSeconds(60);
+        log.info("Setting keep alive seconds: 60");
+
+        executor.setThreadNamePrefix("AsyncExecutor-");
+        log.info("Setting thread name prefix: AsyncExecutor-");
+
+        executor.initialize();
+        log.info("Async executor initialized");
+
+        return executor;
+    }
+}
+
+
+// Custom ApplicationEventMulticaster를 사용하여 비동기로 실행하는 방법
+@Configuration
+public class AsynchronousSpringEventsConfig {
+
+    @Bean(name = "applicationEventMulticaster")
+    public ApplicationEventMulticaster simpleApplicationEventMulticaster() {
+        SimpleApplicationEventMulticaster eventMulticaster =
+          new SimpleApplicationEventMulticaster();
+        
+        eventMulticaster.setTaskExecutor(new SimpleAsyncTaskExecutor());
+        return eventMulticaster;
+    }
+}
+```
+
+
+<br><br><br>
+
+## @TransactionalEventListener
+
+`@TransactionalEventListener`는 `@EventListener`와 비슷해 보이지만, 동작 방식이 다르다.
+
+<br>
+
+![Screenshot 2024-02-23 at 20 53 42](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/1b211b19-42ce-48d3-b484-84ee8706c6c0)
+
+- **`@TransactionalEventListener`는 트랜잭션 내에서 동작하고, [`TransactionPhase`](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/event/TransactionPhase.html)에 따라 호출되는 이벤트 리스너이다.**
+- **트랜잭션 내에서 발행된 이벤트가 아니면, fallbackExecution()을 명시적으로 활성화하지 않은 경우, 이벤트를 처리하지 않는다.** 
+- `Event`가 발행되면 `TransactionApplicationListenerMethodAdapter`에 의해서 해당 이벤트가 트랜잭션의 지정된 단계(`TransactionPhase`)에 따라 호출된다.
+
+
+<br>
+
+### TransactionPhase
+
+![Screenshot 2024-02-23 at 20 06 25](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/2fe3758c-7c59-4072-a2e7-ae1adc1f05c2)
+
+트랜잭션 단계는 총 4개로 구성됨을 볼 수 있다.
+
+- `BEFORE_COMMIT`: 트랜잭션이 커밋되기 전에 호출된다.
+- `AFTER_COMMIT`: 트랜잭션이 커밋된 후에 호출된다.
+- `AFTER_ROLLBACK`: 트랜잭션이 롤백된 후에 호출된다.
+- `AFTER_COMPLETION`: 트랜잭션이 완료된 후에 호출된다. **커밋, 롤백 상관없이 실행시킬 phase**
+  - **`AFTER_COMMIT`과 `AFTER_ROLLBACK`은 `AFTER_COMPLETION`의 `special case`이다.**
+
+<br>
+
+![Screenshot 2024-02-23 at 20 03 50](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/4a3f1277-b71f-42bb-8cd6-09b3eb8ca9c4)
+
+디폴트 값은 `AFTER_COMMIT`이다. **`fallbackExecution()`을 명시적으로 활성화하지 않은 경우, 트랜잭션이 진행 중이 아닌 경우 이벤트를 처리하지 않는다**
+
+<br>
+
+### 전반적인 흐름
+
+![Screenshot 2024-02-24 at 00 54 42](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/345c1c16-66d1-46f9-aa6f-d291b0f65276)
+
+<br>
+
+- 트랜잭션이 커밋될 때, `AbstractionPlatformTxManager`에 정의된 `trigger*` 메서드 시리즈들이 실행되고 `TransactionSynchronizationUtils`에 `invoke*` 메서드 시리즈들이 실행된다.
+- `triggerAfterCompletion()`을 실행할 때 현재 트랜잭션에 등록된 `TransactionSynchronization` 객체들을 조회하여 `TranscationSynchronizationUtils.invokeAfterCompletion()`을 실행한다.
+  - **스프링은 트랜잭션 커밋 시 등록된 모든 `TransactionSynchronization`를 순회하면서 `beforeCommit`, `afterCompletion` 메서드를 실행하는 것을 아래 코드에서 볼 수 있다.**
+  - `TransactionSynchronization` 객체 내부에는 이벤트 리스너, 이벤트 객체가 저장되어 있다. (`TransactionSynchronization` 인터페이스는 트랜잭션 커밋 전후(`beforeCommit`, `afterCompletion`) 작업을 실행한다.)
+
+<br>
+
+![Screenshot 2024-02-24 at 01 05 42@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/68be9307-fb96-4184-8973-4698988ff2d1)
+![Screenshot 2024-02-24 at 01 05 22@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/56bcfc82-117e-4202-8314-08a4b070989d)
+
+<br>
+
+- `TransactionSynchronizationUtils`에서 전달받은 `TransactionSynchronization` 객체 리스트를 순회하면서 이벤트를 처리하도록 한다.
+
+<br><br>
+
+![Screenshot 2024-02-23 at 20 32 06](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/f6370622-12ce-4385-aaac-b6c22017dd80)
+
+
+### TransactionSynchronization 등록 과정
+
+`@TransactionalEventListener`를 사용하여 이벤트를 발행하는 과정은 아래와 같다.
+
+1. 이벤트를 발행한다. (`ApplicationEventPublisher.publishEvent()`)
+2. `ApplicationEventMulticaster`에서 리스너를 읽는다.  (`listener.onApplicationEvent(event);`)
+3. `TranscationalApplicationListenerMethodAdapter`에서 `TransactionSynchronization` 구현체를 등록한다. (`TransactionalApplicationListenerSynchronization.register(event, this, this.callbacks)`)
+
+<br>
+
+`ApplicationEventMulticaster`
+![Screenshot 2024-02-24 at 01 31 21@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/224e4124-c8b3-46fc-97ed-4f5a5bdf5cef)
+
+`TranscationalApplicationListenerMethodAdapter`
+![Screenshot 2024-02-24 at 01 32 30@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/bde03e36-c3da-4b41-8df7-a8dbade6bf18)
+
+`TransactionalApplicationListenerSynchronization`
+![Screenshot 2024-02-24 at 01 34 58@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/88482973-a846-4beb-b00f-0fc4e0bac4d6)
+
+<br>
+
+### TransactionSynchronization 인터페이스 메서드
+
+#### `beforeCommit()`, `afterCommit()`
+
+![Screenshot 2024-02-24 at 01 42 40](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/7c1de267-1459-4b92-bfd9-eb8858b7794c)
+
+[공식 문서](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionSynchronization.html)를 보면 `beforeCommit()`, `afterCommit()`는 `caller`로 예외가 전파됨을 볼 수 있다.
+
+<br>
+
+#### `beforeCompletion()`, `afterCompletion()`
+
+![Screenshot 2024-02-24 at 01 44 09](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/de988619-f39d-468a-b9ff-bab023f030e6)
+
+반면에 `beforeCompletion()`, `afterCompletion()`의 경우 로깅만 찍고 전파는 되지 않는다고 한다.
+
+<br><br><br>
+
+
+### afterCommit(), afterCompletion()
+
+#### 빈 껍데기
+
+`TransactionSynchronization`의 `afterCompletion()`에서 예외를 던지면 예외는 어떻게 될까? 위에서 언급하였지만 로그만 찍는다.
+
+![Screenshot 2024-02-24 at 01 51 12@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/7da8125a-9aae-4f60-9d1c-3e5384720c87)
+
+<br>
+
+`TransactionSynchronization`를 호출하는 `TransactionSynchronizationUtils`에서 발생한 예외를 잡고 에러 로그만 남기는 것을 볼 수 있다.
+
+`@TransactionalEventListener`를 사용할 때는 `TransactionPhase` 디폴트 값이 `AFTER_COMMIT`인데, 
+`PlatformSynchorization`의 `afterCommit()`은 없고 `afterCompletion()`에서 `TransactionPhase`를 처리하도록 구현되어있다.
+
+![Screenshot 2024-02-24 at 02 03 54@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/7a251377-47cc-47ec-81a6-05b580528eb9)
+
+더 정확히 말하자면 `afterCommit()`이 정의되어 있는 `TransactionSynchronization`는 `afterCommit`을 default 메서드로 실행하고, 메서드 바디에는 아무것도 구현되이 있지 않다.
+
+<br>
+
+#### 왜 이렇게 만들었을까?
+
+스프링에서 기본적으로 사용하는 `TransactionSynchronization` 구현체는 모든 `after` 구체 동작을 `afterCompletion`에서 처리하도록 구현하였다. 뿐만 아니라, 예외 전파에 있어서 `afterCompletion`에서는 예외를 먹어버린다.
+
+사용자가 구현한 `TransactionSynchronization`을 `afterCommit`할 때는 `afterCompletion`에서 처리하도록 하여 확장성을 높이려고 한걸까?
+
+~~왜 이렇게 설계한건지는 모르겠지만..~~ `afterCommit`을 사용하려면 `TransactionSynchronization`를 상속받아 `afterCommit`을 구현해야한다.
+
+> 트랜잭션에 TransactionSynchronization 를 등록하는 방법
+> `TransactionSynchronizationManager.registerSynchronization(TransactionSynchronization synchronization)`
+
+<br><br><br>
+
+## UseCase
+
+간단한 코드 예시로 언제 사용하면 좋을지 살펴보자.
+
+```java
+@Service
+public class MoneyService {
+
+    private final MoneyRepository moneyRepository;
+    private final NotificationClient notificationClient;
+
+    public MoneyService(
+            final MoneyRepository moneyRepository,
+            final NotificationClient notificationClient
+    ) {
+        this.moneyRepository = moneyRepository;
+        this.notificationClient = notificationClient;
+    }
+
+    @Transactional
+    public void sendMoney(long fromId, long toId, long amount) {
+        moneyRepository.withdraw(fromId, amount);
+        moneyRepository.deposit(toId, amount);
+        notificationClient.sendMoneySentNotification(fromId, toId, amount);
+    }
+}
+
+@Transactional
+public void sendMoney(long fromId, long toId, long amount) {
+    // 송금 로직
+    // 알림 발송
+}
+```
+
+<br>
+
+해당 예시는 송금 로직을 수행하고, 송금 로직이 성공적으로 수행되면 알림을 발송하는 로직이다. 
+
+돈을 인출하여 돈을 보내는 로직은 같은 트랜잭션으로 동작해야한다. 그런데 알림 발송도 같은 트랜잭션으로 동작해야할까?
+
+좀 더 일반적으로 말하자면 DB 트랜잭션 작업과 외부 API 호출이 같은 트랜잭션에서 동작해야할까? 물론 어떠한 경우에는 같은 트랜잭션에서 동작해야할수도 있다. 
+
+같은 트랜잭션에서 동작할 필요가 없다면 무조건 트랜잭션 범위를 줄여야 한다. 
+왜냐하면 외부 API 호출은 트랜잭션 범위에 큰 영향을 줄 수 잇다. 뿐만 아니라 만약 외부 API 호출이 실패하면, 트랜잭션도 롤백되어야 할 수도 있다.
+
+이런 경우에 아래와 같이 `@TransactionalEventListener`를 사용하여 알림 발송 로직을 분리할 수 있다.
+
+<br>
+
+```java
+@Service
+public class MoneyService {
+
+    private final MoneyRepository moneyRepository;
+    private final ApplicationEventPublisher publisher;
+
+    public MoneyService(
+            final MoneyRepository moneyRepository,
+            final ApplicationEventPublisher publisher
+    ) {
+        this.moneyRepository = moneyRepository;
+        this.publisher = publisher;
+    }
+
+    @Transactional
+    public void sendMoney(long fromId, long toId, long amount) {
+        // 송금 로직
+        moneyRepository.withdraw(fromId, amount);
+        moneyRepository.deposit(toId, amount);
+        publisher.publishEvent(new MoneySentNoficationEvent(fromId, toId, amount));
+    }
+}
+
+@Component
+public class MoneySentNoficationEventListener {
+
+    private final NotificationClient notificationClient;
+
+    public MoneySentNoficationEventListener(NotificationClient notificationClient) {
+        this.notificationClient = notificationClient;
+    }
+
+    @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
+    public void handleMoneySentNoficationEvent(MoneySentNoficationEvent event) {
+        notificationClient.sendMoneySentNotification(event.getFromId(), event.getToId(), event.getAmount());
+    }
+}
+```
+
+<br>
+
+다른 스레드로 동작하게 하고 비동기로 호출하면 트랜잭션 범위을 줄이는 것에 도움이 될 것이다.
+
+<br>
+
+## 정리
+
+이번글에서는 스프링의 `@EventListener`, `@TransactionEventListener`이 어떤식으로 동작하는지 알아보고, 각 컴포넌트의 대해서 코드를 보며 분석하였다.
+
+`@TransactionEventListener`이 실행될 때 `TransactionPhase`에 따라 호출되는 것을 보았는데, `afterCompletion`의 경우에는 예외를 먹어버리는 것을 볼 수 있었다.
+예외를 전파할 것이라면 `TransactionalApplicationListenerSynchronization`를 새로운 구현체로 등록해줘서 예외를 던지게 할 수 있다.
+
+**`TransactionSynchronization.afterCompletion`에서 예외를 먹어버리는 것을 항상 인지하고 있어야한다.**
+
+
+
+
+<br><br><br>
+  
+## Ref
+
+- https://docs.oracle.com/cd/E23095_01/Platform.93/ATGProgGuide/html/s1204transactionsynchronization01.html
+- https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/event/EventListener.html
+- https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/event/TransactionalEventListener.html
+- https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/support/TransactionSynchronization.html
+- https://www.baeldung.com/spring-events
+- https://lenditkr.github.io/spring/transactional-event-listener/index.html

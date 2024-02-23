@@ -4,7 +4,7 @@ title   : 왜 롤백 마크된 트랜잭션은 재사용할 수 없을까
 summary :
 date    : 2024-01-25 00:00:00 +0900
 updated : 2024-01-25 00:00:00 +0900
-tag     : spring-boot transaction
+tag     : spring-boot transaction code-analysis
 toc     : true
 comment : true
 public  : true
