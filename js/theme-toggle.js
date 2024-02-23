@@ -3,24 +3,28 @@
     function applyTheme(theme) {
         const body = document.body;
         const themeToggle = document.getElementById('theme-toggle');
-        const lightIcon = themeToggle.querySelector('.light-icon');
-        const darkIcon = themeToggle.querySelector('.dark-icon');
+        const lightIcon = themeToggle ? themeToggle.querySelector('.light-icon') : null;
+        const darkIcon = themeToggle ? themeToggle.querySelector('.dark-icon') : null;
 
-        // 페이지에 이미 적용된 테마를 중복 적용하지 않습니다.
         if (theme === 'dark-mode' && !body.classList.contains('dark-mode')) {
             body.classList.add('dark-mode');
-            lightIcon.style.display = 'none';
-            darkIcon.style.display = 'block';
+            if (lightIcon && darkIcon) {
+                lightIcon.style.display = 'none';
+                darkIcon.style.display = 'block';
+            }
         } else if (theme !== 'dark-mode' && body.classList.contains('dark-mode')) {
             body.classList.remove('dark-mode');
-            lightIcon.style.display = 'block';
-            darkIcon.style.display = 'none';
+            if (lightIcon && darkIcon) {
+                lightIcon.style.display = 'block';
+                darkIcon.style.display = 'none';
+            }
         }
     }
 
-    // 로컬 스토리지에서 테마를 로드하고 적용하는 함수
-    function loadTheme() {
-        const currentTheme = localStorage.getItem('theme') || '';
+    // 시스템 설정을 확인하고 초기 테마를 적용하는 함수
+    function initializeTheme() {
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
+        const currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark-mode' : '');
         applyTheme(currentTheme);
     }
 
@@ -35,18 +39,15 @@
         themeToggle.addEventListener('click', () => {
             const isDarkMode = document.body.classList.contains('dark-mode');
             const newTheme = isDarkMode ? '' : 'dark-mode';
-
-            // 테마 적용
             applyTheme(newTheme);
-            // 새 테마를 로컬 스토리지에 저장
             localStorage.setItem('theme', newTheme);
         });
     }
 
-    // 페이지 로드가 끝나기를 기다리지 않고 바로 테마를 적용합니다.
-    loadTheme();
+    // 시스템 설정에 따른 초기 테마 적용
+    initializeTheme();
 
-    // `DOMContentLoaded` 이벤트가 이미 발생했는지 검사합니다.
+    // `DOMContentLoaded` 이벤트가 이미 발생했는지 검사하고, 필요한 설정을 진행합니다.
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', setupThemeToggleButton);
     } else {
