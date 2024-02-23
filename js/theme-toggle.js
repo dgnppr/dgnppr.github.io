@@ -21,11 +21,20 @@
         }
     }
 
-    // 시스템 설정을 확인하고 초기 테마를 적용하는 함수
+    // 사용자의 선택 또는 시스템 설정에 따라 초기 테마를 적용하는 함수
     function initializeTheme() {
+        const storedTheme = localStorage.getItem('theme');
         const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)');
-        const currentTheme = localStorage.getItem('theme') || (prefersDarkScheme.matches ? 'dark-mode' : '');
-        applyTheme(currentTheme);
+        const defaultTheme = prefersDarkScheme.matches ? 'dark-mode' : '';
+
+        // 사용자가 테마를 명시적으로 선택한 경우, 그 선택을 우선적으로 적용
+        if (storedTheme) {
+            applyTheme(storedTheme);
+        } else {
+            applyTheme(defaultTheme);
+            // 사용자가 테마를 선택하지 않았다면, 시스템 설정을 기반으로 테마를 적용하고 저장
+            localStorage.setItem('theme', defaultTheme);
+        }
     }
 
     // 토글 버튼 클릭 이벤트 리스너를 추가하는 함수
@@ -44,13 +53,7 @@
         });
     }
 
-    // 시스템 설정에 따른 초기 테마 적용
+    // 초기화
     initializeTheme();
-
-    // `DOMContentLoaded` 이벤트가 이미 발생했는지 검사하고, 필요한 설정을 진행합니다.
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', setupThemeToggleButton);
-    } else {
-        setupThemeToggleButton();
-    }
+    setupThemeToggleButton();
 })();
