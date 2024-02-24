@@ -295,9 +295,9 @@ public class AsynchronousSpringEventsConfig {
 `@TransactionalEventListener`를 사용할 때는 `TransactionPhase` 디폴트 값이 `AFTER_COMMIT`인데, 
 `PlatformSynchorization`의 `afterCommit()`은 없고 `afterCompletion()`에서 `TransactionPhase`를 처리하도록 구현되어있다.
 
-![Screenshot 2024-02-24 at 02 03 54@2x](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/7a251377-47cc-47ec-81a6-05b580528eb9)
+![Screenshot 2024-02-24 at 10 26 27](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/ac930020-288a-4685-9d43-4a4e752987ea)
 
-더 정확히 말하자면 `afterCommit()`이 정의되어 있는 `TransactionSynchronization`는 `afterCommit`을 default 메서드로 실행하고, 메서드 바디에는 아무것도 구현되이 있지 않다.
+더 정확히 말하자면 `afterCommit()`이 정의되어 있는 `TransactionSynchronization`는 `afterCommit`을 `default` 메서드로 실행하고, 메서드 바디에는 아무것도 구현되이 있지 않다.
 
 <br>
 
