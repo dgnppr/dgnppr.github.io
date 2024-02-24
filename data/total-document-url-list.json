@@ -19,7 +19,7 @@
  "/wiki/retrospect/01_2024_january_retrospect",
  "/wiki/spring-boot",
  "/wiki/springboot/00_why_rollback_marked_transaction_is_unusable",
- "/wiki/springboot/01_how_to_use_transaction_event_listener",
+ "/wiki/springboot/01_how_to_handle_transaction_event_listener_exception",
  "/wiki/system-design",
  "/wiki/system-design/00_url_shortener_design",
  "/wiki/system-design/01_web_crawler_design",

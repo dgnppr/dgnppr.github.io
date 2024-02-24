@@ -1,6 +1,6 @@
 ---
 layout  : wiki
-title   : "@TransactionalEventListener 예외 처리는 어떤식으로 해야할까" 
+title   : "@TransactionalEventListener 예외처리 어떻게 해야할까" 
 summary :
 date    : 2024-02-21 00:00:00 +0900
 updated : 2024-02-24 00:00:00 +0900
@@ -296,7 +296,7 @@ public class AsynchronousSpringEventsConfig {
 
 <br><br><br>
 
-## TransactionSynchronization afterCompletion 예외 전파하기
+## TransactionSynchronization 예외 전파하기
 
 `afterCommit`, `afterRollback` , `afterCompletion`은 `afterCompletion`에서 처리되기 때문에, 예외를 전파하려면 `afterCompletion`에서 예외를 던져야한다.
 위에서 `TransactionSynchronizationUtils`가  `afterCompletion` 예외를 잡아서 `log.error()`만 찍는 것을 볼 수 있다.

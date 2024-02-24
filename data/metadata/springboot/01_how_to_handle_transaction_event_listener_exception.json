@@ -1,0 +1,8 @@
+{
+ "type": "wiki",
+ "title": "\"@TransactionalEventListener 예외처리 어떻게 해야할까\"",
+ "parent": "spring-boot",
+ "url": "/wiki/springboot/01_how_to_handle_transaction_event_listener_exception",
+ "updated": "2024-02-24 00:00:00 +0900",
+ "children": []
+}
