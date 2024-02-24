@@ -1,9 +1,9 @@
 ---
 layout  : wiki
-title   : TransactionalEventListener을 알아보자
+title   : "@TransactionalEventListener 동작 방식과 주의점" 
 summary :
-date    : 2024-02-20 00:00:00 +0900
-updated : 2024-02-20 00:00:00 +0900
+date    : 2024-02-21 00:00:00 +0900
+updated : 2024-02-21 00:00:00 +0900
 tag     : spring-boot code-analysis
 toc     : true
 comment : true
