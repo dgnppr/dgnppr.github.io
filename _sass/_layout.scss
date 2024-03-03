@@ -10,25 +10,24 @@
   body {
     width: 800px;
     margin: auto;
-    border: 1px solid #d0d0d0;
+    // border: 0.1px solid #d0d0d0;
   }
 
-    .progress-container {
-      width: 800px; /* 너비를 800px로 고정 */
-      position: fixed; /* 항상 상단에 고정되도록 유지 */
-      top: 0;
-      left: 50%; /* 부모 요소 기준으로 왼쪽에서 50% */
-      transform: translateX(-50%); /* 자신의 너비의 50%만큼 왼쪽으로 이동하여 중앙 정렬 */
-      z-index: 1;
-      background-color: #ffffff; /* 배경색 유지 */
-    }
+  .progress-container {
+    width: 100%; /* 화면 전체 너비로 설정 */
+    position: fixed;
+    top: 0;
+    left: 0; /* 화면 왼쪽 끝에서 시작하도록 설정 */
+    z-index: 1;
+    background-color: #ffffff;
+  }
 
-    .progress-bar {
-      height: 5px; /* 높이 유지 */
-      background-color: #4994EC; /* 배경색 유지 */
-      width: 0; /* 초기 너비 설정 */
-      transition: 0.15s; /* 전환 효과 유지 */
-    }
+  .progress-bar {
+    height: 5px;
+    background-color: #4994EC;
+    width: 0;
+    transition: 0.15s;
+  }
 }
 
 .page-content {
