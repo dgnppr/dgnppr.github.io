@@ -11,7 +11,7 @@ author: dragonappear
 profile: dgpr
 github_username: dgnppr
 linkedin_username: dgpr
-comment-support: utterances
+comment-support: giscus
 
 # Build settings
 plugins:
@@ -49,6 +49,9 @@ utterances:
   issue-term: url
   label: Comment
   branch: master
+giscus:
+  repo: dgnppr/dgnppr.github.io
+  repo_id: R_kgDOK2XgUg
 
 google_analytics:
   id: G-BKH26F2YQK
