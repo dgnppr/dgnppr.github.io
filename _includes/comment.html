@@ -24,5 +24,25 @@
             async>
     </script>
     {% endif %}
+    {% if site.comment-support == "giscus" %}
+    <br>
+    <hr>
+    <script src="https://giscus.app/client.js"
+            data-repo="{{ site.giscus.repo }}"
+            data-repo-id="{{ site.giscus.repo-id }}"
+            data-category="Comments"
+            data-category-id="DIC_kwDOK2XgUs4Cdrot"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="light"
+            data-lang="en"
+            data-loading="lazy"
+            crossorigin="anonymous"
+            async>
+    </script>
+    {% endif %}
 </div>
 {% endif %}

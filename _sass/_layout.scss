@@ -10,25 +10,24 @@
   body {
     width: 800px;
     margin: auto;
-    border: 1px solid #d0d0d0;
+    // border: 0.1px solid #d0d0d0;
   }
 
-    .progress-container {
-      width: 800px; /* 너비를 800px로 고정 */
-      position: fixed; /* 항상 상단에 고정되도록 유지 */
-      top: 0;
-      left: 50%; /* 부모 요소 기준으로 왼쪽에서 50% */
-      transform: translateX(-50%); /* 자신의 너비의 50%만큼 왼쪽으로 이동하여 중앙 정렬 */
-      z-index: 1;
-      background-color: #ffffff; /* 배경색 유지 */
-    }
+  .progress-container {
+    width: 100%; /* 화면 전체 너비로 설정 */
+    position: fixed;
+    top: 0;
+    left: 0; /* 화면 왼쪽 끝에서 시작하도록 설정 */
+    z-index: 1;
+    background-color: #ffffff;
+  }
 
-    .progress-bar {
-      height: 5px; /* 높이 유지 */
-      background-color: #4994EC; /* 배경색 유지 */
-      width: 0; /* 초기 너비 설정 */
-      transition: 0.15s; /* 전환 효과 유지 */
-    }
+  .progress-bar {
+    height: 3px;
+    background-color: #4994EC;
+    width: 0;
+    transition: 0.15s;
+  }
 }
 
 .page-content {
@@ -52,7 +51,25 @@
 }
 
 .footer {
-    text-align:center;
+    text-align: center; /* 링크를 중앙에 정렬 */
+    padding: 20px; /* 상단 여백 추가 */
+    margin-top: 40px; /* footer 위의 여백 추가 */
+}
+
+.social-media-links a {
+    margin: 0 10px; /* 아이콘 사이의 간격 */
+    color: #000; /* 아이콘 색상 */
+    font-size: 16px; /* 텍스트와 아이콘의 크기 */
+    display: inline-block;
+    text-decoration: none; /* 링크 밑줄 제거 */
+}
+
+.social-media-links a:hover {
+    color: #555; /* 마우스 오버 시 아이콘 색상 변경 */
+}
+
+.social-media-links i {
+    margin-right: 5px; /* 아이콘과 텍스트 사이 간격 */
 }
 
 ul.tag-list {

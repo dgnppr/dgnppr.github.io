@@ -14,7 +14,7 @@ regenerate: true
             <div class="post-item">
                 <a class="post-link" href="{{ doc.url | prepend: site.baseurl }}">
                     <div class="post-meta">
-                        {{ doc.updated | date: "%Y.%m.%d" }}
+                        {{ doc.updated | date: "%b %d, %Y" }}
                         -
                         {{ doc.title }}
                     </div>
