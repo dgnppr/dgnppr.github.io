@@ -12,22 +12,22 @@
     margin: auto;
     // border: 0.1px solid #d0d0d0;
   }
+}
 
-  .progress-container {
+.progress-container {
     width: 100%; /* 화면 전체 너비로 설정 */
     position: fixed;
     top: 0;
     left: 0; /* 화면 왼쪽 끝에서 시작하도록 설정 */
     z-index: 1;
     background-color: #ffffff;
-  }
+}
 
-  .progress-bar {
+.progress-bar {
     height: 5px;
     background-color: #4994EC;
     width: 0;
     transition: 0.15s;
-  }
 }
 
 .page-content {
