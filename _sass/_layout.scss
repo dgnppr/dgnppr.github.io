@@ -58,7 +58,7 @@
 
 .social-media-links a {
     margin: 0 10px; /* 아이콘 사이의 간격 */
-    color: #000; /* 아이콘 색상 */
+    color: $main-font-color; /* 아이콘 색상 */
     font-size: 16px; /* 텍스트와 아이콘의 크기 */
     display: inline-block;
     text-decoration: none; /* 링크 밑줄 제거 */
