@@ -9,12 +9,14 @@ layout: document
 </div>
 <div class="post">
     <header class="post-header">
+        <br>
         <h1 class="page-title">
             <a href="{{ page.url }}"> {{ page.title }} </a>
         </h1>
         {% if page.summary %}
         <p class="title-summary">{{ page.summary }}</p>
         {% endif %}
+        <br>
         <div class="history-button">
             <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
             <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>
