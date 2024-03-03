@@ -3,8 +3,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let isScrolling;
 
   function updateProgressBar() {
-    // document.documentElement.scrollHeight 대신 document.body.scrollHeight 사용
-    const scrollHeight = document.body.scrollHeight - window.innerHeight;
+    // document.documentElement.scrollHeight 사용
+    const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
     const scrolled = (window.scrollY / scrollHeight) * 100;
     progressBar.style.width = scrolled + "%";
   }
