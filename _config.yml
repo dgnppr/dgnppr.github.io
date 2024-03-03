@@ -51,7 +51,8 @@ utterances:
   branch: master
 giscus:
   repo: dgnppr/dgnppr.github.io
-  repo_id: R_kgDOK2XgUg
+  repo-id: R_kgDOK2XgUg
+  category-id: DIC_kwDOK2XgUs4Cdrot
 
 google_analytics:
   id: G-BKH26F2YQK
