@@ -1,7 +1,13 @@
 <footer class="footer">
 <div>
-{% if page.latex %}
-    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-{% endif %}
+    <div class="social-media-links">
+        <a href="mailto:dgnppr@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
+        <a href="https://linkedin.com/in/dgpr" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+        <a href="https://github.com/dgnppr" target="_blank"><i class="fab fa-github"></i></a>
+        <a href="/feed.xml" target="_blank"><i class="fas fa-rss"></i></a>
+    </div>
+    {% if page.latex %}
+        <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    {% endif %}
 </div>
 </footer>

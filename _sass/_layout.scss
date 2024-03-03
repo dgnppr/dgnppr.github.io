@@ -51,7 +51,25 @@
 }
 
 .footer {
-    text-align:center;
+    text-align: center; /* 링크를 중앙에 정렬 */
+    padding: 20px; /* 상단 여백 추가 */
+    margin-top: 40px; /* footer 위의 여백 추가 */
+}
+
+.social-media-links a {
+    margin: 0 10px; /* 아이콘 사이의 간격 */
+    color: #000; /* 아이콘 색상 */
+    font-size: 16px; /* 텍스트와 아이콘의 크기 */
+    display: inline-block;
+    text-decoration: none; /* 링크 밑줄 제거 */
+}
+
+.social-media-links a:hover {
+    color: #555; /* 마우스 오버 시 아이콘 색상 변경 */
+}
+
+.social-media-links i {
+    margin-right: 5px; /* 아이콘과 텍스트 사이 간격 */
 }
 
 ul.tag-list {
