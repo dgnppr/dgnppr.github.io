@@ -3,6 +3,9 @@ layout: home
 adsense: false
 ---
 {% assign documents = site.wiki | sort: 'updated' | reverse %}
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+</div>
 <div id="app">
     <H3 class="indent">Recently Changed Documents</H3>
     <ul class="post-list">
@@ -24,3 +27,4 @@ adsense: false
     </ul>
 </div>
 {% include createLink.html %}
+<script src="/js/scroll.js"></script>
