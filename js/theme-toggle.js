@@ -10,6 +10,7 @@
             lightIcon.style.display = theme === 'dark-mode' ? 'none' : 'block';
             darkIcon.style.display = theme === 'dark-mode' ? 'block' : 'none';
         }
+        toggleSlider(theme);
     }
 
     function initializeTheme() {
@@ -23,6 +24,17 @@
             applyTheme(storedTheme);
         }
     }
+
+    function toggleSlider(theme) {
+        const sliderCircle = document.querySelector('.theme-toggle .slider-circle');
+        // 'dark-mode'일 때 슬라이더의 위치를 변경
+        if (theme === 'dark-mode') {
+            sliderCircle.style.left = '22px'; // 슬라이더의 오른쪽 끝으로 이동
+        } else {
+            sliderCircle.style.left = '2px'; // 원래 위치로 이동
+        }
+    }
+
 
     function setupThemeToggleButton() {
         const themeToggle = document.getElementById('theme-toggle');
