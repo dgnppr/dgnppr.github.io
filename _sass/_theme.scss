@@ -45,6 +45,8 @@
 
 .theme-toggle .feather-sun {
     right: 5px; /* 슬라이더 왼쪽에 해 아이콘 위치 조정 */
+    fill: none; /* SVG 아이콘 내부 색상을 검정색으로 채움 */
+    stroke: #ec5353;
 }
 
 .theme-toggle .feather-moon {
