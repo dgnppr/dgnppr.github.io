@@ -1,37 +1,37 @@
 /* 토글 버튼 스타일링 */
 .theme-toggle {
-    padding: 5px 10px;
-    /* 상하 여백을 추가하여 버튼의 높이를 조정 */
-    /* 내부 여백을 조정하여 버튼 크기 변경 */
-    height: 20px;
-    /* 상단 메뉴 바와 일치하는 높이 */
-    line-height: 20px;
-    /* 버튼 높이와 동일하게 설정 */
-    /* flexbox를 사용하여 아이콘을 수직 중앙에 배치 */
-    align-items: center;
-    /* 수직 중앙 정렬 */
-    justify-content: center;
-    /* 수평 중앙 정렬 */
+    display: flex; /* Flex container 설정 */
+    align-items: center; /* 수직 중앙 정렬 */
+    justify-content: start; /* 아이템을 시작점(왼쪽)으로 정렬 */
+    padding: 6px; /* 상하 여백 조정 */
+    height: auto; /* 높이를 자동으로 설정하여 내용물에 맞춤 */
+    line-height: normal; /* 기본 라인 높이 설정 */
     background: transparent;
     border: none;
     outline: none;
     cursor: pointer;
 }
 
-/* 토글 버튼 내 아이콘 스타일링 */
-.theme-toggle .icon {
-    height: 20px;
-    /* 아이콘의 높이 조정 */
-    width: 20px;
-    /* 아이콘의 너비 조정 */
+/* 슬라이더 스타일링 */
+.theme-toggle .slider {
+    position: relative;
+    width: 40px; /* 슬라이더의 길이 */
+    height: 20px; /* 슬라이더의 높이 */
+    background-color: #4E5566; /* 슬라이더 바의 배경색 */
+    border-radius: 10px; /* 둥근 모서리 */
+    margin-left: 3px; /* 아이콘과의 간격을 줄임 */
 }
 
-/* 아이콘 스타일링 */
-.icon {
-    width: 24px;
-    /* 아이콘 크기 */
-    height: 24px;
-    /* 아이콘 크기 */
+.theme-toggle .slider-circle {
+    position: absolute;
+    top: 50%; /* 원을 슬라이더 바의 중앙으로 이동 */
+    left: 2px; /* 왼쪽 여백 */
+    transform: translateY(-50%); /* 원을 수직으로 중앙 정렬 */
+    width: 16px; /* 원의 크기 */
+    height: 16px; /* 원의 크기 */
+    background-color: white; /* 원의 배경색 */
+    border-radius: 50%; /* 원형 모양 */
+    transition: 0.4s; /* 애니메이션 효과 */
 }
 
 :root {
@@ -70,6 +70,11 @@ body.dark-mode .post-tag a {
 
 body.dark-mode .post-meta {
     color: #D5DDE6 !important;
+}
+
+/* 다크 모드일 때 슬라이더 바 배경색 변경 */
+body.dark-mode .theme-toggle .slider {
+    background-color: #5C5F66;
 }
 
 body.dark-mode .progress-bar {
