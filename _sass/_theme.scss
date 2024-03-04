@@ -19,7 +19,7 @@
     height: 20px; /* 슬라이더의 높이 */
     background-color: #D2D2D2; /* 슬라이더 바의 배경색 */
     border-radius: 10px; /* 둥근 모서리 */
-    margin-left: 3px; /* 아이콘과의 간격을 줄임 */
+    margin-left: 2px; /* 아이콘과의 간격을 줄임 */
 }
 
 .theme-toggle .slider-circle {
@@ -45,14 +45,15 @@
 
 .theme-toggle .feather-sun {
     right: 5px; /* 슬라이더 왼쪽에 해 아이콘 위치 조정 */
-    fill: none; /* SVG 아이콘 내부 색상을 검정색으로 채움 */
+    fill: none;
     stroke: #ec5353;
+    stroke-width: 3;
 }
 
 .theme-toggle .feather-moon {
     left: 5px; /* 슬라이더 오른쪽에 달 아이콘 위치 조정 */
     display: none; /* 기본 상태에서 달 아이콘 숨김 */
-    fill: #000000; /* SVG 아이콘 내부 색상을 검정색으로 채움 */
+    fill: black; /* SVG 아이콘 내부 색상을 검정색으로 채움 */
 }
 
 /* 다크 모드일 때 스타일 */
@@ -66,7 +67,7 @@ body.dark-mode .theme-toggle .feather-sun {
 
 body.dark-mode .theme-toggle .feather-moon {
     display: block; /* 다크 모드에서 달 아이콘 표시 */
-    stroke: #000000; /* 달 아이콘의 선 색상을 검정색으로 설정 */
+    stroke: black; /* 달 아이콘의 선 색상을 검정색으로 설정 */
 }
 
 /* 다크 모드일 때 스타일 */
@@ -128,7 +129,7 @@ body.dark-mode .theme-toggle .slider {
 
 body.dark-mode .progress-bar {
     height: 4px;
-    background-color: #4ECCA3; /* 다크 모드에서의 프로그레스바 테마 색상 */
+    background-color: #669DFD; /* 다크 모드에서의 프로그레스바 테마 색상 */
 }
 
 body.dark-mode .post {
