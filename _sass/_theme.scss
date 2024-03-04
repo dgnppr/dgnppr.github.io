@@ -22,16 +22,18 @@
     margin-left: 2px; /* 아이콘과의 간격을 줄임 */
 }
 
+/* 슬라이더 원 스타일링 */
 .theme-toggle .slider-circle {
     position: absolute;
-    top: 50%; /* 원을 슬라이더 바의 중앙으로 이동 */
-    left: 2px; /* 왼쪽 여백 */
-    transform: translateY(-50%); /* 원을 수직으로 중앙 정렬 */
-    width: 15px; /* 원의 크기 */
-    height: 15px; /* 원의 크기 */
-    background-color: white; /* 원의 배경색 */
-    border-radius: 50%; /* 원형 모양 */
-    transition: 0.4s; /* 애니메이션 효과 */
+    top: 50%;
+    left: 2px;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    background-color: white;
+    border-radius: 50%;
+    transition: 0.4s;
+    z-index: 2; /* 더 높은 z-index 값을 부여하여 위로 올림 */
 }
 
 /* 슬라이더 내 SVG 아이콘 스타일링 */
@@ -47,13 +49,14 @@
     right: 5px; /* 슬라이더 왼쪽에 해 아이콘 위치 조정 */
     fill: none;
     stroke: #ec5353;
-    stroke-width: 3;
+    stroke-width: 2.5;
 }
 
 .theme-toggle .feather-moon {
     left: 5px; /* 슬라이더 오른쪽에 달 아이콘 위치 조정 */
     display: none; /* 기본 상태에서 달 아이콘 숨김 */
-    fill: black; /* SVG 아이콘 내부 색상을 검정색으로 채움 */
+    stroke-width: 1;
+    z-index: 1;
 }
 
 /* 다크 모드일 때 스타일 */
