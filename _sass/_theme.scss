@@ -106,6 +106,12 @@ body.dark-mode :not(pre):not(code):not(code *) {
     color: var(--text-color) !important;
 }
 
+body.dark-mode #topBtn {
+    background-color: #313539 !important;
+    color: white !important;
+    border: 1.5px solid black;
+}
+
 body.dark-mode code.language-plaintext.highlighter-rouge {
     background-color: var(--dark-color);
     border-color: var(--dark-color);
