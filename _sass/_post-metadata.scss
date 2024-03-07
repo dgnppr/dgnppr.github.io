@@ -20,6 +20,7 @@
     align-items: center;
     padding-top: 5px; /* 위쪽 패딩 추가 */
     padding-bottom: 5px; /* 아래쪽 패딩 추가 */
+    font-size: clamp(0.8rem, 2vw, 1.0rem); /* 최소 0.8rem, 뷰포트 너비의 2%, 최대 1.0rem */
 }
 
 // 글의 해시태그
