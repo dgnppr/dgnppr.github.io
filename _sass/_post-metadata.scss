@@ -1,5 +1,4 @@
 /* 글 본문 상단의 메타데이터 */
-
 .post-header {
     h2 {
         border: 0px;
@@ -14,10 +13,23 @@
     }
 }
 
+/* 글 본문 상단의 메타데이터 */
+.post-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 5px; /* 위쪽 패딩 추가 */
+    padding-bottom: 5px; /* 아래쪽 패딩 추가 */
+}
+
 // 글의 해시태그
 .post-tag a {
     color: #888888;
     text-decoration: none;
+}
+
+.post-date {
+    font-size: 0.9em;
 }
 
 // 글 이력 버튼 (created, updated)

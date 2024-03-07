@@ -5,7 +5,7 @@ regenerate: true
 ---
 
 <div class="home">
-    <H3 class="indent">Recently Changed Documents</H3>
+    <h3 class="indent">Recently Changed Documents</h3>
     <ul class="post-list">
         {% assign documents = site.wiki | sort: 'updated' | reverse %}
         {% for doc in documents limit: 30 %}
@@ -14,16 +14,15 @@ regenerate: true
             <div class="post-item">
                 <a class="post-link" href="{{ doc.url | prepend: site.baseurl }}">
                     <div class="post-meta">
-                        {{ doc.updated | date: "%b %d, %Y" }}
-                        -
-                        {{ doc.title }}
+                        <div class="title">{{ doc.title }}</div>
+                        <div class="updated post-date">{{ doc.updated | date: "%b %d, %Y" }}</div>
                     </div>
 <!--                    <div class="post-excerpt">{{ doc.summary }}</div>-->
-                    <ul class="tag-list">
-                        <li class="post-tag">
-                            {{ doc. tag }}
-                        </li>
-                    </ul>
+<!--                    <ul class="tag-list">-->
+<!--                        <li class="post-tag">-->
+<!--                            {{ doc. tag }}-->
+<!--                        </li>-->
+<!--                    </ul>-->
                 </a>
             </div>
         </li>
