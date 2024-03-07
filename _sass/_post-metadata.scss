@@ -24,9 +24,16 @@
 }
 
 // 글의 해시태그
-.post-tag a {
-    color: #888888;
-    text-decoration: none;
+.post-tag {
+
+    a {
+        color: #888888;
+        text-decoration: none;
+    }
+}
+
+.post-tag-size {
+    font-size: clamp(0.7rem, 2vw, 0.9rem);
 }
 
 .post-date {

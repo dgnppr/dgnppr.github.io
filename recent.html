@@ -13,10 +13,10 @@ adsense: false
         <li>
             <div>
                 <a class="post-link" href="{{ doc.url }}">
-                    <div class="post-meta">{{ doc.updated | date: "%Y.%m.%d" }} - {{ doc.title }}</div>
+                    <div class="post-meta">{{ doc.updated | date: "%b %d, %Y" }} - {{ doc.title }}</div>
 <!--                    <div class="post-excerpt">{{ doc.summary }}</div>-->
                     {% if doc.tags %}
-                    <ul class="tag-list">
+                    <ul class="tag-list post-tag-size">
                         <li class="post-tag">{{ doc. tag }}</li>
                     </ul>
                     {% endif %}
