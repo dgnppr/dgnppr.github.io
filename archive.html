@@ -17,7 +17,10 @@ adsense: false
         <li>
             <div>
                 <a class="post-link" href="{{ doc.url }}">
-                    <div class="post-meta">{{ doc.date | date: "%b.%d" }} - {{ doc.title }}</div>
+                    <div class="post-meta">
+                        <div class="title">{{ doc.title }}</div>
+                        <div class="updated post-date">{{ doc.updated | date: "%b %d, %Y" }}</div>
+                    </div>
                 </a>
             </div>
         </li>

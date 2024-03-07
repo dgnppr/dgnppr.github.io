@@ -7,7 +7,7 @@ adsense: false
     <div class="progress-bar" id="myBar"></div>
 </div>
 <div id="app">
-    <H3 class="indent">Recently Changed Documents</H3>
+    <H3 class="indent">All Documents</H3>
     <ul class="post-list">
         {% for doc in documents %}{% if doc.public != false and doc.title != 'wiki' and doc.layout != 'category'%}
         <li>
