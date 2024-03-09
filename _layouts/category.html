@@ -1,42 +1,32 @@
 ---
 layout: document
 ---
-
 {% assign thisName = page.id | remove: '/wiki/' %}
 <input type="hidden" id="thisName" value="{{ thisName }}"/>
 <div class="post">
     <br>
     <header class="post-header">
         <h1 class="page-title">{{ page.title }}</h1>
-    {% if page.summary %}
-        <p class="title-summary">{{ page.summary }}</p>
-    {% endif %}
+        {% if page.summary %}
+            <p class="title-summary">{{ page.summary }}</p>
+        {% endif %}
         <div class="history-button">
             <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
             <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>
         </div>
-{% raw %}
-        <div id="parent-list"></div>
-{% endraw %}
-
-{% if page.tags %}
-    {% include post-tags.html %}
-{% endif %}
-
+        {% raw %}
+            <div id="parent-list"></div>
+        {% endraw %}
         <hr>
         <br>
-
-
     </header>
+
     <article class="post-content">
         {{ content }}
         <div id="document-list"></div>
     </article>
-{% if page.comment != false %}
-    {% include comment.html %}
-{% endif%}
 </div>
-{% include createLink.html %}
 
+{% include createLink.html %}
 <script async src="/js/parent.js"></script>
 <script async src="/js/category.js"></script>
