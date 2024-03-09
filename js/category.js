@@ -49,7 +49,7 @@
 
                     const updated = data.updated.replace(/^(\d{4}-\d{2}-\d{2}).*/, '$1');
                     const title = `<span>${data.title}</span>`
-                    const date = `<div class="post-meta" style="float: right;">${updated}</div>`;
+                    const date = `<div style="float: right;">${updated}</div>`;
                     const summary = (data.summary) ? `<div class="post-excerpt"> - ${data.summary}</div>` : '';
 
                     // 서브 문서들의 정보
