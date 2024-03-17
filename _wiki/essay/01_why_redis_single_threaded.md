@@ -49,8 +49,7 @@ Redis 개발자인 Salvatore Sanfilippo가 왜 싱글 스레드로 개발했는�
 
 - 쉬운 구현 (멀티스레드에서 발생하는 동기화 문제를 해결할 필요가 없다.)
 - 동시성 보장 (이벤트 루프 패턴을 통해 동시성을 구현하였고, 컨텍스트 스위치가 없다.)
-- **CPU 는 병목 현상이 아니다.
-  ** [병목 현상은 Memory, Network Bound 이다.](https://redis.io/docs/get-started/faq/#how-can-redis-use-multiple-cpus-or-cores)
+- **CPU 는 병목 현상이 아니다.** [병목 현상은 Memory, Network Bound 이다.](https://redis.io/docs/get-started/faq/#how-can-redis-use-multiple-cpus-or-cores)
 - 쉬운 배포 (한 개의 코어만 있어도 사용 가능하기 때문이다.)
 
 ![Screenshot 2024-01-23 at 14 01 31](https://github.com/dgnppr/dgnppr.github.io/assets/89398909/02c3687d-0da2-4026-b1ea-ae43ad6264c5)
