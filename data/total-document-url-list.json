@@ -10,6 +10,7 @@
  "/wiki/index",
  "/wiki/java",
  "/wiki/java/00_what_is_java_virtual_thread",
+ "/wiki/java/01_producer_extends_consumer_super",
  "/wiki/jpa",
  "/wiki/jpa/00_jpa_dirty_checking",
  "/wiki/jvm",

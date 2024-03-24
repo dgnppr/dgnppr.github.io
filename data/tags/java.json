@@ -2,5 +2,6 @@
  "essay/00_is_lombok_necessary",
  "essay/02_is_system_time_really_correct",
  "essay/04_how_to_create_text_fixture",
- "java/00_what_is_java_virtual_thread"
+ "java/00_what_is_java_virtual_thread",
+ "java/01_producer_extends_consumer_super"
 ]

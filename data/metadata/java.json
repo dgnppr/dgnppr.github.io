@@ -5,6 +5,7 @@
  "url": "/wiki/java",
  "updated": "2023-12-30 00:00:00 +0900",
  "children": [
-  "java/00_what_is_java_virtual_thread"
+  "java/00_what_is_java_virtual_thread",
+  "java/01_producer_extends_consumer_super"
  ]
 }
