@@ -1,0 +1,11 @@
+{
+ "type": "wiki",
+ "title": "Kafka",
+ "parent": "index",
+ "url": "/wiki/kafka",
+ "updated": "2024-07-06 00:00:00 +0900",
+ "children": [
+  "kafka/00_kafka_producer_summary",
+  "kafka/01_kafka_consumer_summary"
+ ]
+}
