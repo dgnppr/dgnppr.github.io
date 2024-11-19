@@ -24,6 +24,10 @@
   "size": 1
  },
  {
+  "name": "msa",
+  "size": 1
+ },
+ {
   "name": "os",
   "size": 3
  },

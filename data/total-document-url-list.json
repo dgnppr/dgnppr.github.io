@@ -14,6 +14,8 @@
  "/wiki/jpa",
  "/wiki/jpa/00_jpa_dirty_checking",
  "/wiki/jvm",
+ "/wiki/msa",
+ "/wiki/msa/00_circuit_breaker",
  "/wiki/reference",
  "/wiki/retrospect",
  "/wiki/retrospect/00_2023_year_retrospect",
