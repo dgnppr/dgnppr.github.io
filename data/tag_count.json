@@ -24,6 +24,14 @@
   "size": 1
  },
  {
+  "name": "kafka",
+  "size": 2
+ },
+ {
+  "name": "msa",
+  "size": 1
+ },
+ {
   "name": "os",
   "size": 3
  },
