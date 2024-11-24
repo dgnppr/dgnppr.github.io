@@ -166,6 +166,10 @@ body.dark-mode blockquote {
 }
 
 body.dark-mode .post-content h2 {
+    border-bottom: 0.3px solid #ffffff !important;
+}
+
+body.dark-mode .post-content h1 {
     border-bottom: 1px solid #ffffff !important;
 }
 
