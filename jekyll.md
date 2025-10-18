@@ -1,19 +1,18 @@
 xcode-select --install
 
-# 나열된 네이티브 gem을 재컴파일
-gem pristine eventmachine --version 1.2.7
-gem pristine ffi --version 1.16.3
-gem pristine http_parser.rb --version 0.8.0
-gem pristine sassc --version 2.4.0
+brew install rbenv ruby-build
+rbenv install 3.2.5
+rbenv local 3.2.5
+ruby -v   # 3.2.5 확인
 
-# 그래도 안 되면 직접 재설치
-gem install eventmachine -v 1.2.7 --platform=ruby
-gem install ffi -v 1.16.3
-gem install http_parser.rb -v 0.8.0
-gem install sassc -v 2.4.0
+gem install bundler
+# Apple Silicon이라면 잠재적 플랫폼 불일치 해소
+bundle lock --add-platform arm64-darwin-23 || true
 
+# 혹시 Gemfile.lock이 x86_64로 굳어 있으면 한 번 재생성
+rm -rf vendor/bundle .bundle
+bundle config set path 'vendor/bundle'
 bundle add faraday-retry
 bundle install
 
-# 실행은 가급적
 bundle exec jekyll serve
