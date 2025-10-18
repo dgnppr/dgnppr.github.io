@@ -1,0 +1,9 @@
+{
+ "type": "wiki",
+ "title": "LLM은 왜 Encoder+Decoder 구조가 아닐까?",
+ "summary": "",
+ "parent": "ai-agent",
+ "url": "/wiki/ai-agent/00_what_is_transformers",
+ "updated": "2025-05-19 00:00:00 +0900",
+ "children": []
+}
