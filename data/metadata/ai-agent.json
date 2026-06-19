@@ -4,6 +4,7 @@
  "parent": "index",
  "url": "/wiki/ai-agent",
  "updated": "2025-04-21 00:00:00 +0900",
+ "tags": [],
  "children": [
   "ai-agent/00_what_is_transformers",
   "ai-agent/01_how_to_chunk_effectively"

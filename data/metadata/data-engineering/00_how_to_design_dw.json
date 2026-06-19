@@ -5,5 +5,8 @@
  "parent": "data-engineering",
  "url": "/wiki/data-engineering/00_how_to_design_dw",
  "updated": "2025-07-03 00:00:00 +0900",
+ "tags": [
+  "data-warehouse"
+ ],
  "children": []
 }

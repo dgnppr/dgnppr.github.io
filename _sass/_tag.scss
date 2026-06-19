@@ -1,9 +1,211 @@
 
+// ── Tag page ──────────────────────────────────────────────
+
+.tag-page-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #1F303C;
+    margin: 1.8rem 0 1.2rem;
+    letter-spacing: -0.01em;
+}
+
+.tag-cloud {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 0;
+    list-style: none;
+    margin: 0 0 2.4rem;
+}
+
 .tag-item {
-    padding: 1px;
-    padding-right: 2px;
-    :hover {
-        background-color: gold;
+    padding: 0;
+
+    a {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 5px 12px;
+        background: #f5f0f8;
+        border: 1px solid #e0d5eb;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        color: #3d1160;
+        text-decoration: none;
+        transition: background 0.15s, border-color 0.15s;
+
+        &:link, &:visited {
+            color: #3d1160;
+        }
+
+        &:hover {
+            background: #ede5f7;
+            border-color: #b89fd4;
+        }
+
+        .tag-count {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 18px;
+            height: 18px;
+            padding: 0 5px;
+            background: #d8c8ec;
+            border-radius: 9px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #5a2090;
+            line-height: 1;
+        }
+    }
+
+    &.active a {
+        background: $theme-color;
+        border-color: $theme-color;
+        color: #fff;
+
+        &:link, &:visited {
+            color: #fff;
+        }
+
+        .tag-count {
+            background: rgba(255, 255, 255, 0.22);
+            color: #fff;
+        }
     }
 }
 
+// ── Document list (scoped to tag collection only) ──────────
+
+#tag-collection {
+    .tag-section h3 {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: $theme-color;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        margin: 0 0 0.6rem;
+        padding-bottom: 0.5rem;
+        border-bottom: 1.5px solid #ece5f5;
+    }
+
+    .post-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .post-item {
+        border-bottom: 1px solid #f3eef8;
+
+        &:last-child {
+            border-bottom: none;
+        }
+    }
+
+    .post-link {
+        display: block;
+        padding: 11px 4px;
+        text-decoration: none;
+
+        &:link, &:visited {
+            color: inherit;
+        }
+
+        &:hover .post-title {
+            color: $theme-color;
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            gap: 12px;
+        }
+
+        .post-title {
+            font-size: 0.93rem;
+            font-weight: 500;
+            color: #1F303C;
+            transition: color 0.15s;
+        }
+
+        .post-date {
+            font-size: 0.78rem;
+            color: #aaa5b8;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .post-excerpt {
+            margin-top: 3px;
+            font-size: 0.8rem;
+            color: #808094;
+            line-height: 1.5;
+        }
+
+        .post-sub-document {
+            font-size: 0.75rem;
+            color: #b5b0c8;
+            margin-top: 2px;
+        }
+    }
+}
+
+// ── Dark mode ──────────────────────────────────────────────
+
+body.dark-mode {
+    .tag-item a {
+        background: #28203a !important;
+        border-color: #3e2e5a !important;
+        color: #c9a6e8 !important;
+
+        &:hover {
+            background: #342850 !important;
+            border-color: #6040a0 !important;
+        }
+
+        .tag-count {
+            background: #4a3570 !important;
+            color: #d4b8f0 !important;
+        }
+    }
+
+    .tag-item.active a {
+        background: darken(#47146C, 5%) !important;
+        border-color: #7040b8 !important;
+        color: #fff !important;
+
+        .tag-count {
+            background: rgba(255, 255, 255, 0.18) !important;
+            color: #fff !important;
+        }
+    }
+
+    #tag-collection {
+        .tag-section h3 {
+            color: #c9a6e8 !important;
+            border-bottom-color: #3e2e5a !important;
+        }
+
+        .post-item {
+            border-bottom-color: #2a2040 !important;
+        }
+
+        .post-link .post-title {
+            color: #e8e0f5 !important;
+        }
+
+        .post-link:hover .post-title {
+            color: #c9a6e8 !important;
+        }
+
+        .post-link .post-date {
+            color: #6a6080 !important;
+        }
+
+        .post-link .post-excerpt {
+            color: #8a8098 !important;
+        }
+    }
+}

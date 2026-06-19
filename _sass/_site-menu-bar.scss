@@ -1,32 +1,35 @@
 /* 사이트 최상단 메뉴 바 + 구글 검색 */
 
 .header {
-    // background-color: $theme_color;
+    display: flex;
+    align-items: center;
     border-bottom: 1px solid #d0d0d0;
 
-    &:after {
-        clear: both;
-        content: ' ';
-        display: block;
+    .header-left {
+        flex: 1;
+        display: flex;
+        align-items: center;
     }
 
-    // 사이트 이름 (왼쪽)
+    .header-right {
+        display: flex;
+        align-items: center;
+    }
+
     .site-title {
-        float: left;
+        display: block;
         text-decoration: none;
         color: #000000;
-        line-height: 2.0;
-        padding-left: 10px;
+        padding: 6px 10px;
         font-style: 'Noto Sans';
     }
 
-    // 사이트 이름 (오른쪽: index, random, me)
     .site-title-right {
-        float: right;
+        display: flex;
+        align-items: center;
         text-decoration: none;
         color: #4D5667;
-        line-height: 2.0;
-        padding-right: 10px;
+        padding: 6px 10px;
         font-style: 'Noto Sans';
     }
 }
@@ -35,53 +38,230 @@
     cursor: pointer;
 }
 
-// 최상단 구글 검색 입력창
+// 검색 토글 버튼
+.header-search-toggle {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: inherit;
+    color: #4D5667;
+    padding: 6px 10px;
+    display: flex;
+    align-items: center;
+}
+
+// 오버레이 backdrop
+.searchbox-wrapper {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 72px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+
+    &.is-open {
+        opacity: 1;
+        visibility: visible;
+    }
+}
+
+// 검색 카드
 div.search {
-    background-color: #f6f5ea;
-    width: 100%;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22);
+    width: calc(100% - 32px);
+    max-width: 560px;
+    overflow: hidden;
     position: relative;
-    border-bottom: 1px solid $theme-color;
-    line-height: 1;
+    transform: translateY(-10px);
+    transition: transform 0.2s ease;
+
+    .searchbox-wrapper.is-open & {
+        transform: translateY(0);
+    }
+}
+
+.search-input-row {
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+}
+
+.search-icon {
+    color: #bbb;
+    font-size: 14px;
+    flex-shrink: 0;
 }
 
 .searchInput {
     box-sizing: border-box;
-    background-color: transparent;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    position: relative;
-    padding: 0px;
-    padding-left: 5px;
-    border: 0px;
-    margin: 0px;
-    font-size: 13px;
-    direction: ltr;
-    -webkit-appearance: textfield;
-    border-radius: 0px;
+    background: transparent;
+    flex: 1;
+    padding: 16px 0;
+    border: none;
+    font-size: 16px;
+    outline: none;
+    color: #1F303C;
+    -webkit-appearance: none;
+    min-width: 0;
+
+    &::placeholder {
+        color: #bbb;
+    }
 }
 
-// 검색 버튼
-.searchButton {
-    border: 0px;
-    border-radius: 0px;
-    background-color: transparent;
-    position: absolute;
-    top: 0;
-    right: 0;
-    height: 100%;
-    z-index: 2;
+.search-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px 6px;
+    color: #bbb;
+    font-size: 14px;
+    flex-shrink: 0;
+    border-radius: 4px;
+    line-height: 1;
+    transition: color 0.15s ease, background 0.15s ease;
+
+    &:hover {
+        color: #555;
+        background: #f0f0f0;
+    }
 }
 
-// 구글 검색 결과
-div.gsc-control-cse {
-    padding: 0;
+// 검색 결과
+.search-results {
+    display: none;
+    max-height: 360px;
+    overflow-y: auto;
+    border-top: 1px solid #f0f0f0;
+
+    &.is-open {
+        display: block;
+    }
 }
 
-.search form.gsc-search-box {
-    margin: 0;
+.search-result-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 20px;
+    text-decoration: none;
+    color: #1F303C;
+    border-bottom: 1px solid #f5f5f5;
+    font-size: 14px;
+    transition: background 0.1s ease;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &:hover {
+        background: #f8f6ff;
+    }
 }
 
-table.gsc-search-box {
-    margin: 0px;
+.search-result-type {
+    font-size: 10px;
+    font-weight: 600;
+    color: #fff;
+    background-color: #999;
+    border-radius: 4px;
+    padding: 2px 6px;
+    flex-shrink: 0;
+    letter-spacing: 0.02em;
+
+    &.type-index { background-color: #a78bfa; }
+    &.type-wiki { background-color: #669DFD; }
+    &.type-blog { background-color: #82b782; }
+    &.type-tag { background-color: #f59e0b; }
+}
+
+.search-result-main {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+    flex: 1;
+}
+
+.search-result-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.search-result-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.search-result-tag {
+    font-size: 10px;
+    color: #888;
+    background: #f0f0f0;
+    border-radius: 3px;
+    padding: 1px 5px;
+    flex-shrink: 0;
+}
+
+.search-no-result {
+    padding: 20px;
+    font-size: 14px;
+    color: #aaa;
+    text-align: center;
+}
+
+// 다크 모드
+body.dark-mode .searchbox-wrapper {
+    background: rgba(0, 0, 0, 0.6) !important;
+}
+
+body.dark-mode div.search {
+    background: #2b2d30 !important;
+    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-mode .searchInput {
+    color: #e8e8e8 !important;
+}
+
+body.dark-mode .search-results {
+    border-top-color: #3a3d42 !important;
+}
+
+body.dark-mode .search-result-item {
+    color: #e8e8e8 !important;
+    border-bottom-color: #3a3d42 !important;
+
+    &:hover {
+        background: #35373b !important;
+    }
+}
+
+body.dark-mode .search-result-tag {
+    color: #aaa !important;
+    background: #3a3d42 !important;
+}
+
+body.dark-mode .search-icon {
+    color: #666 !important;
+}
+
+body.dark-mode .search-close {
+    color: #666 !important;
+
+    &:hover {
+        color: #ccc !important;
+        background: #3a3d42 !important;
+    }
 }

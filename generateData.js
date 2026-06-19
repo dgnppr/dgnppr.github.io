@@ -52,6 +52,7 @@ function main() {
                     url: page.url,
                     updated: page.updated || page.date,
                     resource: page.resource,
+                    tags: page.tag || [],
                     children: [],
                 };
         });
@@ -71,6 +72,7 @@ function main() {
     saveTagCount(tagMap);
     saveMetaDataFiles(pageMap);
     saveDocumentUrlList(pageMap);
+    saveSearchIndex(pageMap, tagMap);
 }
 
 function lexicalOrderingBy(property) {
@@ -178,6 +180,32 @@ function saveDocumentUrlList(pageMap) {
         urlList.push(data.url);
     }
     saveToFile("./data/total-document-url-list.json", JSON.stringify(urlList, null, 1), PRINT);
+}
+
+/**
+ * 클라이언트 사이드 검색을 위한 인덱스 파일을 생성합니다.
+ */
+function saveSearchIndex(pageMap, tagMap) {
+    const pageIndex = Object.values(pageMap).map(data => ({
+        title: data.title || '',
+        url: data.url,
+        type: data.type,
+        summary: data.summary || '',
+        tags: data.tags || []
+    }));
+
+    const tagIndex = Object.keys(tagMap).map(tag => ({
+        title: tag,
+        url: '/tags/#' + tag,
+        type: 'tag',
+        summary: '',
+        tags: []
+    }));
+
+    const index = [...pageIndex, ...tagIndex]
+        .sort((a, b) => a.title.localeCompare(b.title, 'ko'));
+
+    saveToFile('./data/search-index.json', JSON.stringify(index), PRINT);
 }
 
 /**

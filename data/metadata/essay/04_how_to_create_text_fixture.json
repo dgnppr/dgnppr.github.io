@@ -4,5 +4,10 @@
  "parent": "essay",
  "url": "/wiki/essay/04_how_to_create_text_fixture",
  "updated": "2024-01-29 00:00:00 +0900",
+ "tags": [
+  "essay",
+  "test",
+  "java"
+ ],
  "children": []
 }

@@ -4,129 +4,105 @@ title: Tags
 permalink: /tags/
 public: true
 ---
-<div>
-    <br>
-    <h1>All Tags</h1>
-    <br>
-    <ul id="tag-list" class="tag-list"></ul>
+<div class="post">
+    <h1 class="tag-page-title">All Tags</h1>
+    <ul id="tag-list" class="tag-cloud"></ul>
 </div>
 
-<hr>
-<br>
-<div id="tag-collection"></div>
+<div class="post" id="tag-collection"></div>
 
 <script>
-    ;(function() {
-        fetch(`/data/tag_count.json`)
-            .then(response => response.json())
-            .then(function(data) {
-                if (data == null) {
-                    return;
-                }
-                const tags = data;
+    var activeTagName = null;
 
-                let template = '';
-                for (let i = 0; i < tags.length; i++) {
-                    const tag = tags[i];
-                    template += `
-                    <li class="tag-item">
-                        <a href="#${tag.name}" onclick="showTag('${tag.name}')">${tag.name}<sup>${tag.size}</sup></a>
-                    </li>`
+    (function() {
+        fetch('/data/tag_count.json')
+            .then(function(r) { return r.json(); })
+            .then(function(data) {
+                if (data == null) return;
+
+                var template = '';
+                for (var i = 0; i < data.length; i++) {
+                    var tag = data[i];
+                    template += '<li class="tag-item" id="tag-pill-' + tag.name + '">' +
+                        '<a href="#' + tag.name + '" onclick="showTag(\'' + tag.name + '\')">' +
+                        tag.name + '<span class="tag-count">' + tag.size + '</span>' +
+                        '</a></li>';
                 }
                 document.getElementById('tag-list').innerHTML = template;
-
                 showInitTag();
             })
-            .catch(function(error) {
-                console.error(error);
-            });
+            .catch(console.error);
     })();
 
-    /*
-     * 주어진 태그에 해당하는 모든 문서의 목록을 보여줍니다.
-     */
     function showTag(tagName) {
-        fetch(`/data/tags/${tagName}.json`)
-            .then(response => response.json())
-            .then((data) => createLinks(data, tagName))
-            .catch(function(error) {
-                console.error(error);
-            });
+        if (activeTagName) {
+            var prev = document.getElementById('tag-pill-' + activeTagName);
+            if (prev) prev.classList.remove('active');
+        }
+        activeTagName = tagName;
+        var current = document.getElementById('tag-pill-' + tagName);
+        if (current) current.classList.add('active');
+
+        fetch('/data/tags/' + tagName + '.json')
+            .then(function(r) { return r.json(); })
+            .then(function(data) { createLinks(data, tagName); })
+            .catch(console.error);
     }
 
-    /*
-     * 주어진 태그에 해당하는 모든 문서의 링크를 만들어 줍니다.
-     */
     function createLinks(data, tagName) {
-        if (data == null) {
-            return;
+        if (data == null) return;
+
+        var listItems = '';
+        for (var i = 0; i < data.length; i++) {
+            listItems += '<li id="' + getDocumentElementId(tagName, data[i]) + '" class="post-item"></li>';
         }
+        document.getElementById('tag-collection').innerHTML =
+            '<div class="tag-section"><h3>' + tagName + '</h3>' +
+            '<ul class="post-list">' + listItems + '</ul></div>';
 
-        const documents = [];
-
-        let listItems = '';
-        for (let i = 0; i < data.length; i++) {
-            const idText = getDocumentElementId(tagName, data[i]);
-            listItems += `<li id="${idText}" class="post-item"></li>`;
-        }
-        const template = `
-            <h3>${tagName}</h3>
-            <ul class="post-list"> ${listItems} </ul>`;
-
-        document.getElementById('tag-collection').innerHTML = template;
-
-        for (let i = 0; i < data.length; i ++) {
-            setTimeout(() => insertDocumentLink(data[i], tagName), 0);
+        for (var i = 0; i < data.length; i++) {
+            (function(docId) {
+                setTimeout(function() { insertDocumentLink(docId, tagName); }, 0);
+            })(data[i]);
         }
     }
 
-    /*
-     * 문서 하나의 링크를 생성합니다.
-     */
     function insertDocumentLink(documentId, tagName) {
-        fetch(`/data/metadata/${documentId}.json`)
-            .then(response => response.json())
-            .then(function(data) {
-                if (data == null) {
-                    return;
-                }
-                const d = data;
+        fetch('/data/metadata/' + documentId + '.json')
+            .then(function(r) { return r.json(); })
+            .then(function(d) {
+                if (d == null) return;
 
-                const updatedDate = d.updated.replace(/^(\d{4}-\d{2}-\d{2}).*$/, '$1')
-                const summaryText = (d.summary == null || /^\s*$/.test(d.summary))
-                    ? ('')
-                    : ('-' + d.summary);
-                const subDocument = (d.children && d.children.length > 0)
-                    ? `- 서브 문서: ${d.children.length} 개`
+                var updatedDate = d.updated.replace(/^(\d{4}-\d{2}-\d{2}).*$/, '$1');
+                var excerpt = (d.summary == null || /^\s*$/.test(d.summary))
+                    ? ''
+                    : '<div class="post-excerpt">' + d.summary + '</div>';
+                var sub = (d.children && d.children.length > 0)
+                    ? '<div class="post-sub-document">서브 문서 ' + d.children.length + '개</div>'
                     : '';
 
-                const link = `
-                <a class="post-link" href="${d.url}">
-                    <span>${d.title}</span>
-                    <div style="float: right;" title="${d.updated}">${updatedDate}</div>
-                    <div class="post-excerpt">${summaryText}</div>
-                    <div class="post-sub-document">${subDocument}</div>
-                </a>`;
+                var link =
+                    '<a class="post-link" href="' + d.url + '">' +
+                        '<div class="post-header">' +
+                            '<span class="post-title">' + d.title + '</span>' +
+                            '<span class="post-date" title="' + d.updated + '">' + updatedDate + '</span>' +
+                        '</div>' +
+                        excerpt + sub +
+                    '</a>';
 
-                const idText = getDocumentElementId(tagName, documentId);
-                document.getElementById(idText).innerHTML = link;
+                document.getElementById(getDocumentElementId(tagName, documentId)).innerHTML = link;
             })
-            .catch(function(error) {
-                console.error(error);
-            });
+            .catch(console.error);
     }
 
     function getDocumentElementId(tagName, documentId) {
-        return `tag-${tagName}-${documentId}`;
+        return 'tag-' + tagName + '-' + documentId;
     }
 
     function showInitTag() {
-        const url = window.location.href;
-        const req = /#([^\s]+)$/.exec(url);
-        if(Array.isArray(req)) {
-            let tagName = decodeURI(req.pop());
-            showTag(tagName);
+        var req = /#([^\s]+)$/.exec(window.location.href);
+        if (Array.isArray(req)) {
+            showTag(decodeURI(req.pop()));
         }
     }
 </script>
-

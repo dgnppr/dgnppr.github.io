@@ -1,88 +1,43 @@
-/* 토글 버튼 스타일링 */
+/* 테마 토글 버튼 */
 .theme-toggle {
-    display: flex; /* Flex container 설정 */
-    align-items: center; /* 수직 중앙 정렬 */
-    justify-content: start; /* 아이템을 시작점(왼쪽)으로 정렬 */
-    padding: 6px; /* 상하 여백 조정 */
-    height: auto; /* 높이를 자동으로 설정하여 내용물에 맞춤 */
-    line-height: normal; /* 기본 라인 높이 설정 */
-    background: transparent;
+    background: none;
     border: none;
     outline: none;
     cursor: pointer;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
 }
 
-/* 슬라이더 스타일링 */
-.theme-toggle .slider {
+.toggle-track {
     position: relative;
-    width: 40px; /* 슬라이더의 길이 */
-    height: 20px; /* 슬라이더의 높이 */
-    background-color: #D2D2D2; /* 슬라이더 바의 배경색 */
-    border-radius: 10px; /* 둥근 모서리 */
+    width: 28px;
+    height: 16px;
+    background: #bbb;
+    border-radius: 8px;
+    transition: background 0.25s ease;
+    flex-shrink: 0;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
 }
 
-/* 슬라이더 원 스타일링 */
-.theme-toggle .slider-circle {
+.toggle-thumb {
     position: absolute;
-    top: 50%;
+    top: 2px;
     left: 2px;
-    transform: translateY(-50%);
-    width: 15px;
-    height: 15px;
-    background-color: white;
+    width: 12px;
+    height: 12px;
+    background: #fff;
     border-radius: 50%;
-    transition: 0.4s;
-    z-index: 2; /* 더 높은 z-index 값을 부여하여 위로 올림 */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    transition: transform 0.25s ease;
 }
 
-/* 슬라이더 내 SVG 아이콘 스타일링 */
-.theme-toggle .feather {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 15px; /* SVG 아이콘 크기 */
-    height: 15px; /* SVG 아이콘 크기 */
+body.dark-mode .toggle-track {
+    background: #3b82f6;
 }
 
-.theme-toggle .feather-sun {
-    right: 5px; /* 슬라이더 왼쪽에 해 아이콘 위치 조정 */
-    fill: none;
-    stroke: #ec5353;
-    stroke-width: 2.5;
-}
-
-.theme-toggle .feather-moon {
-    left: 5px; /* 슬라이더 오른쪽에 달 아이콘 위치 조정 */
-    display: none; /* 기본 상태에서 달 아이콘 숨김 */
-    stroke-width: 1;
-    z-index: 1;
-}
-
-/* 다크 모드일 때 스타일 */
-body.dark-mode .theme-toggle .slider .feather-moon {
-    background-color: #F1C846; /* 다크 모드에서 슬라이더 바의 배경색 */
-}
-
-body.dark-mode .theme-toggle .feather-sun {
-    display: none; /* 다크 모드에서 해 아이콘 숨김 */
-}
-
-body.dark-mode .theme-toggle .feather-moon {
-    display: block; /* 다크 모드에서 달 아이콘 표시 */
-    stroke: black; /* 달 아이콘의 선 색상을 검정색으로 설정 */
-}
-
-/* 다크 모드일 때 스타일 */
-body.dark-mode .theme-toggle .slider {
-    background-color: #F1C846; /* 다크 모드에서 슬라이더 바의 배경색 */
-}
-
-body.dark-mode .theme-toggle .light-icon {
-    display: none; /* 다크 모드에서 해 SVG 아이콘을 숨김 */
-}
-
-body.dark-mode .theme-toggle .dark-icon {
-    display: block; /* 다크 모드에서 달 FontAwesome 아이콘을 표시 */
+body.dark-mode .toggle-thumb {
+    transform: translateX(12px);
 }
 
 
@@ -130,11 +85,6 @@ body.dark-mode .post-meta {
     color: #D5DDE6 !important;
 }
 
-/* 다크 모드일 때 슬라이더 바 배경색 변경 */
-body.dark-mode .theme-toggle .slider {
-    background-color: #F1C846;
-}
-
 body.dark-mode .progress-bar {
     background-color: #669DFD; /* 다크 모드에서의 프로그레스바 테마 색상 */
 }
@@ -156,9 +106,23 @@ body.dark-mode .post {
 body.dark-mode .history-button p,
 body.dark-mode .history-button p span,
 body.dark-mode .post-content p,
-body.dark-mode .post-content ul li,
-body.dark-mode #markdown-toc li a {
+body.dark-mode .post-content ul li {
     color: #CED6DE !important;
+}
+
+// 전역 !important color 규칙(:60-62)을 우회하기 위해 TOC 링크는 별도 규칙으로 분리
+body.dark-mode #markdown-toc li a {
+    color: #8A93A5 !important;              // muted (라이트와 동일 톤)
+    border-left-color: transparent !important;
+}
+body.dark-mode #markdown-toc li a:hover {
+    color: var(--text-color) !important;   // #F5F5F5
+}
+
+body.dark-mode #markdown-toc li a.active-toc,
+body.dark-mode #markdown-toc li a.active-toc:visited {
+    color: #669DFD !important;
+    border-left-color: #669DFD !important;
 }
 
 body.dark-mode blockquote {
@@ -175,4 +139,11 @@ body.dark-mode .post-content h1 {
 
 body.dark-mode .header {
     border-bottom: 1px solid #636e72 !important;
+}
+
+body.dark-mode .post-content a:link {
+    color: #C9A6E8 !important;
+}
+body.dark-mode .post-content a:visited {
+    color: #9d8aab !important; /* muted plum-gray — visited 구분용 */
 }

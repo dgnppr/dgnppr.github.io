@@ -35,3 +35,4 @@ gem 'kramdown-parser-gfm'
 
 
 gem "faraday-retry", "~> 2.3"
+gem "webrick", "~> 1.8"

@@ -5,5 +5,11 @@
  "parent": "ai-agent",
  "url": "/wiki/ai-agent/00_what_is_transformers",
  "updated": "2025-05-19 00:00:00 +0900",
+ "tags": [
+  "agent",
+  "llm",
+  "gpt",
+  "bert"
+ ],
  "children": []
 }

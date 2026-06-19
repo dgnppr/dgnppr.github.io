@@ -5,5 +5,9 @@
  "parent": "data-engineering",
  "url": "/wiki/data-engineering/01_airflow_and_dbt",
  "updated": "2025-07-15 00:00:00 +0900",
+ "tags": [
+  "airflow",
+  "dbt"
+ ],
  "children": []
 }
