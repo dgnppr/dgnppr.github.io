@@ -1,0 +1,12 @@
+{
+ "type": "wiki",
+ "title": "Data Engineering",
+ "parent": "index",
+ "url": "/wiki/data-engineering",
+ "updated": "2025-04-21 00:00:00 +0900",
+ "tags": [],
+ "children": [
+  "data-engineering/00_how_to_design_dw",
+  "data-engineering/01_airflow_and_dbt"
+ ]
+}

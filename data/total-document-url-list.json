@@ -1,4 +1,10 @@
 [
+ "/wiki/ai-agent",
+ "/wiki/ai-agent/00_what_is_transformers",
+ "/wiki/ai-agent/01_how_to_chunk_effectively",
+ "/wiki/data-engineering",
+ "/wiki/data-engineering/00_how_to_design_dw",
+ "/wiki/data-engineering/01_airflow_and_dbt",
  "/wiki/design-pattern",
  "/wiki/design-pattern/00_how_to_use_strategy_pattern",
  "/wiki/essay",

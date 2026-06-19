@@ -41,7 +41,11 @@
 
 .post {
     overflow-x: auto;
-    padding: 5px;
+    padding: 16px; /* 모바일 기본: 좌우 충분한 여백 */
+}
+
+@media (min-width: 800px) {
+    .post { padding: 5px; } /* body가 800px 고정폭이라 큰 여백 불필요 */
 }
 
 @media (max-width: 1120px) {
@@ -56,12 +60,13 @@
     margin-top: 40px; /* footer 위의 여백 추가 */
 }
 
-.social-media-links a {
-    margin: 0 10px; /* 아이콘 사이의 간격 */
-    color: $main-font-color; /* 아이콘 색상 */
-    font-size: 16px; /* 텍스트와 아이콘의 크기 */
+.social-media-links a,
+.social-media-links a:visited {
+    margin: 0 10px;
+    color: $main-font-color;
+    font-size: 16px;
     display: inline-block;
-    text-decoration: none; /* 링크 밑줄 제거 */
+    text-decoration: none;
 }
 
 .social-media-links a:hover {
@@ -118,7 +123,8 @@ ul.tag-list {
 .pagination {
     text-align:center;
 
-    a {
+    a,
+    a:visited {
         font-size: 1em;
         margin: 2px;
         padding: 2px;
@@ -129,7 +135,8 @@ ul.tag-list {
         color: #FFFFFF;
     }
 
-    a.active {
+    a.active,
+    a.active:visited {
         border: 0px solid transparent;
         background-color: transparent;
         color: #000000;

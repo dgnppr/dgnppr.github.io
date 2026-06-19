@@ -4,5 +4,8 @@
  "parent": "design-pattern",
  "url": "/wiki/design-pattern/00_how_to_use_strategy_pattern",
  "updated": "2024-01-31 00:00:00 +0900",
+ "tags": [
+  "design-pattern"
+ ],
  "children": []
 }

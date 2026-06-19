@@ -49,33 +49,116 @@
 
 </head>
 <header class="header">
-    <div>
+    <div class="header-left">
         <a class="site-title" href="{{ site.baseurl }}/">{{ site.title }}</a>
     </div>
-    <button id="theme-toggle" class="site-title theme-toggle">
-        <div class="slider">
-            <!-- SVG 해 아이콘 -->
-            <svg class="icon feather feather-sun light-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24">
-                <circle cx="12" cy="12" r="5"/>
-                <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
-            </svg>
-            <!-- 슬라이더 원 -->
-            <div class="slider-circle"></div>
-            <!-- SVG 달 아이콘 -->
-            <svg class="icon feather feather-moon dark-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewBox="0 0 24 24" style="display: none;">
-                <path d="M21 12.79A9 9 0 1112.21 3 6 6 0 0021 12.79z"/>
-            </svg>
-        </div>
-    </button>
-    <div>
-        <a class="site-title-right" href="/archives"><i class="fas fa-archive"></i></a>
-    </div>
-    <div>
-        <a class="site-title-right" href="/tags"><i class="fas fa-tags"></i></a>
-    </div>
-    <div>
-        <a class="site-title-right" href="/wiki/index"><i class="fas fa-list"></i></a>
+    <div class="header-right">
+        <button id="theme-toggle" class="theme-toggle" aria-label="테마 전환">
+            <span class="toggle-track">
+                <span class="toggle-thumb"></span>
+            </span>
+        </button>
+        <button id="search-toggle" class="header-search-toggle" aria-label="검색">
+            <i class="fas fa-search"></i>
+        </button>
     </div>
 </header>
+<div id="searchbox-wrapper" class="searchbox-wrapper" aria-hidden="true">
+    {% include searchbox.html %}
+</div>
 <script src="/js/top.js"></script>
 <script src="/js/theme-toggle.js"></script>
+<script>
+(function () {
+    var toggle = document.getElementById('search-toggle');
+    var wrapper = document.getElementById('searchbox-wrapper');
+    var searchIndex = null;
+
+    function openSearch() {
+        wrapper.classList.add('is-open');
+        wrapper.setAttribute('aria-hidden', 'false');
+        wrapper.querySelector('.searchInput').focus();
+    }
+
+    function closeSearch() {
+        wrapper.classList.remove('is-open');
+        wrapper.setAttribute('aria-hidden', 'true');
+        var results = document.getElementById('search-results');
+        if (results) { results.classList.remove('is-open'); results.innerHTML = ''; }
+        var input = document.getElementById('local-search-input');
+        if (input) { input.value = ''; }
+    }
+
+    toggle.addEventListener('click', function () {
+        wrapper.classList.contains('is-open') ? closeSearch() : openSearch();
+    });
+
+    var closeBtn = document.getElementById('search-close');
+    if (closeBtn) { closeBtn.addEventListener('click', closeSearch); }
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') { closeSearch(); }
+    });
+
+    wrapper.addEventListener('click', function (e) {
+        var card = wrapper.querySelector('.search');
+        if (card && !card.contains(e.target)) { closeSearch(); }
+    });
+
+    function loadIndex(callback) {
+        if (searchIndex) { callback(); return; }
+        fetch('/data/search-index.json')
+            .then(function (r) { return r.json(); })
+            .then(function (data) { searchIndex = data; callback(); })
+            .catch(function () { searchIndex = []; });
+    }
+
+    function getDisplayType(item) {
+        if (item.type === 'wiki' && /^\/wiki\/[^/]+$/.test(item.url)) { return 'index'; }
+        return item.type;
+    }
+
+    function renderResults(matches) {
+        var results = document.getElementById('search-results');
+        if (!matches.length) {
+            results.innerHTML = '<div class="search-no-result">결과 없음</div>';
+        } else {
+            results.innerHTML = matches.map(function (item) {
+                var displayType = getDisplayType(item);
+                var typeBadge = displayType
+                    ? '<span class="search-result-type type-' + displayType + '">' + displayType + '</span>'
+                    : '';
+                var tagsHtml = '';
+                if (item.tags && item.tags.length) {
+                    tagsHtml = '<span class="search-result-tags">' +
+                        item.tags.map(function (t) { return '<span class="search-result-tag">#' + t + '</span>'; }).join('') +
+                        '</span>';
+                }
+                return '<a class="search-result-item" href="' + item.url + '">' +
+                    typeBadge +
+                    '<span class="search-result-main">' +
+                    '<span class="search-result-title">' + item.title + '</span>' +
+                    tagsHtml +
+                    '</span>' +
+                    '</a>';
+            }).join('');
+        }
+        results.classList.add('is-open');
+    }
+
+    document.addEventListener('input', function (e) {
+        if (e.target.id !== 'local-search-input') { return; }
+        var query = e.target.value.trim().toLowerCase();
+        var results = document.getElementById('search-results');
+        if (!query) { results.classList.remove('is-open'); results.innerHTML = ''; return; }
+        loadIndex(function () {
+            var matches = searchIndex.filter(function (item) {
+                return item.title.toLowerCase().includes(query) ||
+                    (item.summary && item.summary.toLowerCase().includes(query)) ||
+                    (item.tags && item.tags.some(function (t) { return t.toLowerCase().includes(query); }));
+            }).slice(0, 10);
+            renderResults(matches);
+        });
+    });
+})();
+</script>

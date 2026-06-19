@@ -4,5 +4,8 @@
  "parent": "index",
  "url": "/wiki/reference",
  "updated": "2024-02-10 00:00:00 +0900",
+ "tags": [
+  "reference"
+ ],
  "children": []
 }

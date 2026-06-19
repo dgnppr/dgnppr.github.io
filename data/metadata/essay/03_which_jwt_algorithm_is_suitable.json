@@ -4,5 +4,10 @@
  "parent": "essay",
  "url": "/wiki/essay/03_which_jwt_algorithm_is_suitable",
  "updated": "2024-01-06 00:00:00 +0900",
+ "tags": [
+  "essay",
+  "algorithm",
+  "security"
+ ],
  "children": []
 }
