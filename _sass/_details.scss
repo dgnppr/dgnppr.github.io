@@ -5,11 +5,11 @@
 <details><summary> 접는 내용 </summary></div></details>
  */
 summary {
-    color: gray;
+    color: var(--color-text-tertiary);
 }
 
 details {
-    border: 1px dashed gray;
+    border: 1px dashed var(--color-border);
     padding: 2px;
     margin-bottom:5px;
 }

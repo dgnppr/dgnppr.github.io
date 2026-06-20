@@ -4,7 +4,7 @@
 .tag-page-title {
     font-size: 1.3rem;
     font-weight: 600;
-    color: #1F303C;
+    color: var(--color-text-heading);
     margin: 1.8rem 0 1.2rem;
     letter-spacing: -0.01em;
 }
@@ -25,21 +25,21 @@
         display: inline-flex;
         align-items: center;
         gap: 6px;
-        padding: 5px 12px;
-        background: #eff6ff;
-        border: 1px solid #dbeafe;
+        padding: 4px 12px;
+        background: var(--color-tag-bg);
+        border: 1px solid var(--color-tag-border);
         border-radius: 20px;
         font-size: 0.85rem;
-        color: #1e3a8a;
+        color: var(--color-tag-text);
         text-decoration: none;
         transition: background 0.15s, border-color 0.15s;
 
         &:link, &:visited {
-            color: #1e3a8a;
+            color: var(--color-tag-text);
         }
 
         &:hover {
-            background: #dbeafe;
+            background: var(--color-tag-border);
             border-color: #93c5fd;
         }
 
@@ -49,19 +49,19 @@
             justify-content: center;
             min-width: 18px;
             height: 18px;
-            padding: 0 5px;
-            background: #bfdbfe;
+            padding: 0 4px;
+            background: var(--color-tag-count-bg);
             border-radius: 9px;
             font-size: 0.7rem;
             font-weight: 600;
-            color: #1d4ed8;
+            color: var(--color-tag-active);
             line-height: 1;
         }
     }
 
     &.active a {
-        background: #1d4ed8;
-        border-color: #1d4ed8;
+        background: var(--color-tag-active);
+        border-color: var(--color-tag-active);
         color: #fff;
 
         &:link, &:visited {
@@ -81,12 +81,12 @@
     .tag-section h3 {
         font-size: 0.78rem;
         font-weight: 600;
-        color: #1d4ed8;
+        color: var(--color-tag-active);
         text-transform: uppercase;
         letter-spacing: 0.07em;
         margin: 0 0 0.6rem;
         padding-bottom: 0.5rem;
-        border-bottom: 1.5px solid #dbeafe;
+        border-bottom: 1.5px solid var(--color-tag-border);
     }
 
     .post-list {
@@ -100,7 +100,7 @@
 
     .post-link {
         display: block;
-        padding: 11px 4px;
+        padding: 12px 4px;
         text-decoration: none;
 
         &:link, &:visited {
@@ -108,7 +108,7 @@
         }
 
         &:hover .post-title {
-            color: #1d4ed8;
+            color: var(--color-interactive);
         }
 
         .post-header {
@@ -121,82 +121,35 @@
         .post-title {
             font-size: 0.93rem;
             font-weight: 500;
-            color: #1F303C;
+            color: var(--color-text-heading);
             transition: color 0.15s;
         }
 
         .post-date {
             font-size: 0.78rem;
-            color: #94a3b8;
+            color: var(--color-text-tertiary);
             white-space: nowrap;
             flex-shrink: 0;
         }
 
         .post-excerpt {
-            margin-top: 3px;
+            margin-top: 4px;
             font-size: 0.8rem;
-            color: #64748b;
+            color: var(--color-text-secondary);
             line-height: 1.5;
         }
 
         .post-sub-document {
             font-size: 0.75rem;
-            color: #93c5fd;
+            color: var(--color-accent);
             margin-top: 2px;
         }
     }
 }
 
-// ── Dark mode ──────────────────────────────────────────────
+// ── Dark mode (hover overrides only) ──────────────────────
 
-html.dark-mode {
-    .tag-item a {
-        background: #1a2a40 !important;
-        border-color: #253a5e !important;
-        color: #93c5fd !important;
-
-        &:hover {
-            background: #1e3355 !important;
-            border-color: #3b6daa !important;
-        }
-
-        .tag-count {
-            background: #2a4a7a !important;
-            color: #bfdbfe !important;
-        }
-    }
-
-    .tag-item.active a {
-        background: darken(#1d4ed8, 5%) !important;
-        border-color: #3b82f6 !important;
-        color: #fff !important;
-
-        .tag-count {
-            background: rgba(255, 255, 255, 0.18) !important;
-            color: #fff !important;
-        }
-    }
-
-    #tag-collection {
-        .tag-section h3 {
-            color: #93c5fd !important;
-            border-bottom-color: #1e3a5f !important;
-        }
-
-        .post-link .post-title {
-            color: #e2e8f0 !important;
-        }
-
-        .post-link:hover .post-title {
-            color: #93c5fd !important;
-        }
-
-        .post-link .post-date {
-            color: #4a6080 !important;
-        }
-
-        .post-link .post-excerpt {
-            color: #64748b !important;
-        }
-    }
+html.dark-mode .tag-item a:hover {
+    background: #1e3355;
+    border-color: #3b6daa;
 }

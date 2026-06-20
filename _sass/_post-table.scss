@@ -8,17 +8,17 @@
         max-width: 100%;
         border-collapse: collapse;
         border-spacing: 0;
-        border-color: #000000;
+        border-color: var(--color-text-primary);
         margin-bottom: 10px;
 
         td, th {
-            border: 1px solid $third-font-color;
-            padding: 5px 5px;
+            border: 1px solid var(--color-border-table);
+            padding: 8px;
         }
         th {
             font-weight:normal;
-            color: #000000;
-            background: #E6E6E6;
+            color: var(--color-text-heading);
+            background: var(--color-surface-code);
         }
     }
 }
