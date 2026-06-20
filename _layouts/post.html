@@ -9,7 +9,7 @@ layout: default
         <p class="created-date">
             {{ page.date | date: "%Y.%m.%d" }}
         </p>
-        {% include post-tags.html %}
+        {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
         <h2>{{ page.summary }}</h2>
     </header>
 

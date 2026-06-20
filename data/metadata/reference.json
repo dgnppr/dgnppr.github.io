@@ -7,5 +7,7 @@
  "tags": [
   "reference"
  ],
+ "series": null,
+ "snippet": "TOC {:toc} Blogs - Netflix - Uber - LinkedIn - Airbnb - Instagram - AWS - NAVER - Line - Kakao - Coupang - Toss - Daangn - Woowahan <br<br Conferences - 분산 시스템에서 데이터를 전달하는 효율적인 방법 - ElastiCache 운영을 위한 우아한 가이드: 초고속 메모리 분석 툴 개발기와 레디스 운영 노하우 소개 - Go-성능 선착순 예매 시스템 구현: 레거시 코드에 Go 를 더해 고성능 선착순 예매 시스템을 4일 만에 구축하기 - 선착순 이벤트 서버 생존기! 47만 RPM에서 살아남다?! - 신뢰성 있는 카프카 애플리케이션을 만드는 3가지 방법 - 카프카, 대규모 클러스터 운영 후기 - 알",
  "children": []
 }

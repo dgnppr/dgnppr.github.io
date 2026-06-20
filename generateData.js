@@ -53,6 +53,8 @@ function main() {
                     updated: page.updated || page.date,
                     resource: page.resource,
                     tags: page.tag || [],
+                    series: page.series || null,
+                    snippet: page.snippet || '',
                     children: [],
                 };
         });
@@ -73,6 +75,9 @@ function main() {
     saveMetaDataFiles(pageMap);
     saveDocumentUrlList(pageMap);
     saveSearchIndex(pageMap, tagMap);
+    saveRelatedPosts(pageMap);
+    saveSeries(pageMap);
+    saveHubData(pageMap);
 }
 
 function lexicalOrderingBy(property) {
@@ -191,7 +196,8 @@ function saveSearchIndex(pageMap, tagMap) {
         url: data.url,
         type: data.type,
         summary: data.summary || '',
-        tags: data.tags || []
+        tags: data.tags || [],
+        snippet: data.snippet || ''
     }));
 
     const tagIndex = Object.keys(tagMap).map(tag => ({
@@ -322,5 +328,79 @@ function getFiles(path, type, array, testFileList = null) {
 
 function collectData(file) {
     const data = fs.readFileSync(file.path, 'utf8');
-    return parseInfo(file, data.split('---')[1]);
+    const parts = data.split('---');
+    const parsed = parseInfo(file, parts[1]);
+    if (parsed && parts.length > 2) {
+        const body = parts.slice(2).join('---')
+            .replace(/```[\s\S]*?```/g, '')
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+            .replace(/[#*_`\[\]>]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 400);
+        parsed.snippet = body;
+    }
+    return parsed;
+}
+
+function saveRelatedPosts(pageMap) {
+    var entries = Object.entries(pageMap);
+    var related = {};
+    entries.forEach(function(entry) {
+        var slug = entry[0];
+        var page = entry[1];
+        if (!page.tags || page.tags.length === 0) return;
+        var scored = entries
+            .filter(function(e) { return e[0] !== slug; })
+            .map(function(e) {
+                var s = e[0];
+                var p = e[1];
+                var overlap = (p.tags || []).filter(function(t) { return page.tags.includes(t); }).length;
+                return { slug: s, score: overlap, title: p.title, url: p.url };
+            })
+            .filter(function(r) { return r.score > 0; })
+            .sort(function(a, b) { return b.score - a.score; })
+            .slice(0, 3)
+            .map(function(r) { return { slug: r.slug, title: r.title, url: r.url }; });
+        if (scored.length > 0) related[slug] = scored;
+    });
+    saveToFile('./data/related.json', JSON.stringify(related), PRINT);
+}
+
+function saveSeries(pageMap) {
+    var seriesMap = {};
+    Object.entries(pageMap).forEach(function(entry) {
+        var slug = entry[0];
+        var page = entry[1];
+        if (!page.series) return;
+        var name = page.series;
+        if (!seriesMap[name]) seriesMap[name] = [];
+        seriesMap[name].push({ slug: slug, title: page.title, url: page.url, updated: page.updated || '' });
+    });
+    Object.keys(seriesMap).forEach(function(name) {
+        seriesMap[name].sort(function(a, b) { return a.updated.localeCompare(b.updated); });
+    });
+    saveToFile('./data/series.json', JSON.stringify(seriesMap), PRINT);
+}
+
+function saveHubData(pageMap) {
+    var categories = {};
+    Object.values(pageMap).forEach(function(page) {
+        if (page.type !== 'wiki') return;
+        var match = page.url.match(/^\/wiki\/([^/]+)\/[^/]+$/);
+        if (!match) return;
+        var cat = match[1];
+        if (!categories[cat]) categories[cat] = { name: cat, docs: [] };
+        categories[cat].docs.push({
+            title: page.title,
+            url: page.url,
+            summary: page.summary || '',
+            updated: page.updated || '',
+            tags: page.tags || []
+        });
+    });
+    Object.keys(categories).forEach(function(cat) {
+        categories[cat].docs.sort(function(a, b) { return b.updated.localeCompare(a.updated); });
+    });
+    saveToFile('./data/hub.json', JSON.stringify(categories), PRINT);
 }

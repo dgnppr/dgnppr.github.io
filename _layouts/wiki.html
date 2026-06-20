@@ -18,16 +18,10 @@ layout: document
         <div class="history-button">
             <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
             <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>
-            <p>Author: <a href="https://github.com/{{ site.github_username}}">{{ site.author }}</a></p>
+            <p>Author: <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}/" target="_blank" rel="noopener">Yonghyun Yoon</a></p>
             <p><span class="eta"></span></p>
+            {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
         </div>
-        {% raw %}
-        <div id="parent-list"></div>
-        {% endraw %}
-
-        {% if page.tags %}
-        {% include post-tags.html %}
-        {% endif %}
         <hr>
         <br>
 
@@ -70,18 +64,107 @@ layout: document
     </nav>
     {% endif %}
 
+    <div id="reading-cta" class="reading-cta"></div>
+    <div id="series-nav-container"></div>
+    <script>
+    (function() {
+        var nameEl = document.getElementById('thisName');
+        if (!nameEl) return;
+        var slug = nameEl.value;
+        fetch('/data/series.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
+                if (!data) return;
+                var seriesName = null;
+                var items = null;
+                Object.keys(data).forEach(function(name) {
+                    data[name].forEach(function(item) {
+                        if (item.slug === slug) { seriesName = name; items = data[name]; }
+                    });
+                });
+                if (!seriesName || !items) return;
+                var idx = items.findIndex(function(i) { return i.slug === slug; });
+                var prev = idx > 0 ? items[idx - 1] : null;
+                var next = idx < items.length - 1 ? items[idx + 1] : null;
+                if (!prev && !next) return;
+                var html = '<nav class="series-nav" aria-label="시리즈 내비게이션">' +
+                    '<div class="series-nav__header"><span class="series-nav__label">시리즈: ' + seriesName + '</span>' +
+                    '<span class="series-nav__progress">' + (idx + 1) + ' / ' + items.length + '</span></div>' +
+                    '<div class="series-nav__links">' +
+                    (prev ? '<a class="series-nav__link series-nav__prev" href="' + prev.url + '">← ' + prev.title + '</a>' : '<span></span>') +
+                    (next ? '<a class="series-nav__link series-nav__next" href="' + next.url + '">' + next.title + ' →</a>' : '') +
+                    '</div></nav>';
+                document.getElementById('series-nav-container').innerHTML = html;
+            }).catch(function() {});
+    })();
+    </script>
+
+    <div id="related-posts-container"></div>
+    <script>
+    (function() {
+        var nameEl = document.getElementById('thisName');
+        if (!nameEl) return;
+        var slug = nameEl.value;
+        fetch('/data/related.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
+                if (!data || !data[slug] || !data[slug].length) return;
+                var html = '<section class="related-posts"><h3 class="related-posts__heading">관련 글</h3><div class="related-posts__list">' +
+                    data[slug].map(function(r) {
+                        return '<a class="related-posts__item" href="' + r.url + '">' + r.title + '</a>';
+                    }).join('') + '</div></section>';
+                document.getElementById('related-posts-container').innerHTML = html;
+            }).catch(function() {});
+    })();
+    </script>
+
     {% if page.comment != false %}
     {% include comment.html %}
     {% endif%}
 
+    <script src="/js/reading-cta.js"></script>
 </div>
 {% include createLink.html %}
 {% include createTable.html %}
 
 <script src="/js/axios.min.js"></script>
-<script async src="/js/parent.js"></script>
 <script async src="/js/toc-highlight.js"></script>
 <script src="/js/reading-time.js"></script>
 <script src="/js/scroll.js"></script>
-<script src="/js/article.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+(function() {
+  function initMermaid() {
+    var isDark = document.documentElement.classList.contains('dark-mode');
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: isDark ? 'dark' : 'default',
+      securityLevel: 'loose',
+    });
+    document.querySelectorAll('code.language-mermaid').forEach(function(el) {
+      var pre = el.parentElement;
+      var code = el.textContent;
+      var div = document.createElement('div');
+      div.className = 'mermaid-diagram';
+      div.textContent = code;
+      pre.parentNode.replaceChild(div, pre);
+    });
+    mermaid.run({ nodes: document.querySelectorAll('.mermaid-diagram') });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    if (document.querySelector('code.language-mermaid')) initMermaid();
+
+    // 다크모드 전환 시 재렌더링
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'class' && document.querySelector('.mermaid-diagram')) {
+          initMermaid();
+        }
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  });
+})();
+</script>
 

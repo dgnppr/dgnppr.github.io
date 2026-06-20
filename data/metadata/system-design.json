@@ -5,6 +5,8 @@
  "url": "/wiki/system-design",
  "updated": "2024-01-12 00:00:00 +0900",
  "tags": [],
+ "series": null,
+ "snippet": "",
  "children": [
   "system-design/00_url_shortener_design",
   "system-design/01_web_crawler_design",

@@ -4,6 +4,8 @@
  "url": "/wiki/index",
  "updated": "2023-12-14 00:00:00 +0900",
  "tags": [],
+ "series": null,
+ "snippet": "",
  "children": [
   "ai-agent",
   "data-engineering",

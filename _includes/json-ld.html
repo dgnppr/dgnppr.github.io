@@ -1,0 +1,24 @@
+{% if page.title %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "{% if page.layout == 'wiki' %}TechArticle{% else %}BlogPosting{% endif %}",
+  "headline": {{ page.title | jsonify }},
+  "description": {{ page.summary | default: site.description | default: "" | jsonify }},
+  "datePublished": "{{ page.date | date: '%Y-%m-%dT%H:%M:%S+09:00' }}",
+  "dateModified": "{{ page.updated | default: page.date | date: '%Y-%m-%dT%H:%M:%S+09:00' }}",
+  "author": {
+    "@type": "Person",
+    "name": {{ site.author | jsonify }},
+    "url": "https://github.com/{{ site.github_username }}"
+  },
+  "publisher": {
+    "@type": "Person",
+    "name": {{ site.author | jsonify }}
+  },
+  "url": "{{ site.url }}{{ page.url }}",
+  "inLanguage": "ko-KR"{% if page.tag %},
+  "keywords": {{ page.tag | join: ", " | jsonify }}{% endif %}
+}
+</script>
+{% endif %}
