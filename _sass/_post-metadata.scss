@@ -24,11 +24,18 @@
 
 // 글의 해시태그
 .post-tag {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 4px;
+    margin-top: 2px;
+}
 
-    a {
-        color: var(--color-text-tertiary);
-        text-decoration: none;
-    }
+.post-tag-item {
+    font-size: 0.75rem;
+    color: var(--color-text-tertiary);
+    text-decoration: none;
+    &:hover { color: var(--color-interactive); }
 }
 
 .post-tag-size {

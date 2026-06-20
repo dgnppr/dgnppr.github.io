@@ -196,3 +196,38 @@ html.dark-mode div.highlight {
     /* 공백 */
     .w { color: #A9B7C6 }
 }
+
+.code-lang-label {
+    position: absolute;
+    top: 0;
+    right: 44px; /* 복사 버튼(right:8px + padding:8px + icon:~14px = ~30px) 바로 왼쪽 */
+    height: 36px;
+    line-height: 36px;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    color: var(--color-text-secondary);
+    opacity: 0.55;
+    pointer-events: none;
+    font-family: Consolas, "Courier New", monospace;
+    white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+    .code-lang-label {
+        right: 44px;
+        height: 30px;
+        line-height: 30px;
+    }
+}
+
+.mermaid-diagram {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 8px;
+  padding: 1.5em;
+  margin: 1.5em 0;
+  overflow-x: auto;
+  text-align: center;
+  svg { max-width: 100%; height: auto; }
+}

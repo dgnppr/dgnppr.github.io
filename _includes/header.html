@@ -86,10 +86,32 @@
     var fuseInstance = null;
     var allItems = null;
 
+    var QUICK_ACTIONS = [
+        { label: 'Topics', sub: '/topics/', url: '/topics/' },
+        { label: '태그 목록', sub: '/tags/', url: '/tags/' },
+    ];
+
+    function showQuickActions() {
+        var results = document.getElementById('search-results');
+        if (!results) return;
+        results.innerHTML =
+            '<div class="search-quick-label">바로가기</div>' +
+            QUICK_ACTIONS.map(function(a) {
+                return '<a class="search-result-item" href="' + a.url + '">' +
+                    '<span class="search-result-main">' +
+                    '<span class="search-result-title">' + a.label + '</span>' +
+                    '<span class="search-result-snippet">' + a.sub + '</span>' +
+                    '</span>' +
+                    '</a>';
+            }).join('');
+        results.classList.add('is-open');
+    }
+
     function openSearch() {
         wrapper.classList.add('is-open');
         wrapper.setAttribute('aria-hidden', 'false');
         wrapper.querySelector('.searchInput').focus();
+        showQuickActions();
     }
 
     function closeSearch() {
@@ -145,7 +167,8 @@
                     keys: [
                         { name: 'title', weight: 2 },
                         { name: 'tags', weight: 1.5 },
-                        { name: 'summary', weight: 1 }
+                        { name: 'summary', weight: 1 },
+                        { name: 'snippet', weight: 0.5 }
                     ],
                     threshold: 0.35,
                     minMatchCharLength: 2,
@@ -171,6 +194,11 @@
                 var typeBadge = displayType
                     ? '<span class="search-result-type type-' + displayType + '">' + displayType + '</span>'
                     : '';
+                var snippetHtml = '';
+                if (item.snippet) {
+                    var snip = item.snippet.slice(0, 120);
+                    snippetHtml = '<span class="search-result-snippet">' + hlText(snip, item._si) + '...</span>';
+                }
                 var tagsHtml = '';
                 if (item.tags && item.tags.length) {
                     tagsHtml = '<span class="search-result-tags">' +
@@ -181,6 +209,7 @@
                     typeBadge +
                     '<span class="search-result-main">' +
                     '<span class="search-result-title">' + hlText(item.title, item._ti) + '</span>' +
+                    snippetHtml +
                     tagsHtml +
                     '</span>' +
                     '</a>';
@@ -193,7 +222,7 @@
         if (e.target.id !== 'local-search-input') { return; }
         var raw = e.target.value.trim();
         var results = document.getElementById('search-results');
-        if (!raw) { results.classList.remove('is-open'); results.innerHTML = ''; return; }
+        if (!raw) { showQuickActions(); return; }
         loadIndex(function () {
             var q = raw.toLowerCase();
             var matches;
@@ -211,12 +240,13 @@
                 // 제목/태그/요약 퍼지 검색 (Fuse.js)
                 var fuseRes = fuseInstance.search(raw, { limit: 10 });
                 matches = fuseRes.map(function (r) {
-                    var ti = null, tm = {};
+                    var ti = null, tm = {}, si = null;
                     if (r.matches) r.matches.forEach(function (m) {
                         if (m.key === 'title') ti = m.indices;
                         if (m.key === 'tags') tm[m.value] = m.indices;
+                        if (m.key === 'snippet') si = m.indices;
                     });
-                    return Object.assign({}, r.item, { _ti: ti, _tm: tm });
+                    return Object.assign({}, r.item, { _ti: ti, _tm: tm, _si: si });
                 });
             }
             renderResults(matches);
@@ -224,6 +254,11 @@
     });
 
     document.addEventListener('keydown', function (e) {
+        if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+            e.preventDefault();
+            wrapper.classList.contains('is-open') ? closeSearch() : openSearch();
+            return;
+        }
         if (e.key === '/' &&
             document.activeElement.tagName !== 'INPUT' &&
             document.activeElement.tagName !== 'TEXTAREA' &&

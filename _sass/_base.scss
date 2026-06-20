@@ -367,3 +367,21 @@ html.dark-mode mark.search-highlight {
   background: #854d0e;
   color: #fef9c3;
 }
+
+.heading-anchor {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+  opacity: 0;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  vertical-align: middle;
+  transition: opacity 0.15s, color 0.15s;
+  &:hover, &.copied { color: var(--color-interactive); opacity: 1; }
+}
+h1:hover .heading-anchor,
+h2:hover .heading-anchor,
+h3:hover .heading-anchor,
+h4:hover .heading-anchor,
+h5:hover .heading-anchor,
+h6:hover .heading-anchor { opacity: 1; }

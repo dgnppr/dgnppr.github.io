@@ -54,6 +54,7 @@ function main() {
                     resource: page.resource,
                     tags: page.tag || [],
                     series: page.series || null,
+                    snippet: page.snippet || '',
                     children: [],
                 };
         });
@@ -195,7 +196,8 @@ function saveSearchIndex(pageMap, tagMap) {
         url: data.url,
         type: data.type,
         summary: data.summary || '',
-        tags: data.tags || []
+        tags: data.tags || [],
+        snippet: data.snippet || ''
     }));
 
     const tagIndex = Object.keys(tagMap).map(tag => ({
@@ -326,7 +328,19 @@ function getFiles(path, type, array, testFileList = null) {
 
 function collectData(file) {
     const data = fs.readFileSync(file.path, 'utf8');
-    return parseInfo(file, data.split('---')[1]);
+    const parts = data.split('---');
+    const parsed = parseInfo(file, parts[1]);
+    if (parsed && parts.length > 2) {
+        const body = parts.slice(2).join('---')
+            .replace(/```[\s\S]*?```/g, '')
+            .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+            .replace(/[#*_`\[\]>]/g, '')
+            .replace(/\s+/g, ' ')
+            .trim()
+            .slice(0, 400);
+        parsed.snippet = body;
+    }
+    return parsed;
 }
 
 function saveRelatedPosts(pageMap) {

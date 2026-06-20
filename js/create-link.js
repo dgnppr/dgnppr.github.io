@@ -1,27 +1,4 @@
 ; (function () {
-    // 화면 상단의 해시태그에 링크를 걸어준다.
-    var tags = document.querySelectorAll('.post-tag');
-    if (tags == null || tags.length < 1) {
-        return;
-    }
-
-    for (var i = 0; i < tags.length; i++) {
-        var item = tags[i];
-        var tagList = item.innerHTML.trim();
-
-        if (/^\s*$/.test(tagList)) {
-            continue;
-        }
-        tagList = tagList.split(/\s+/)
-            .map(function (tag) {
-                return `<a href="/tags/#${tag}">#${tag}</a>`;
-            })
-            .join(' ');
-        tags[i].innerHTML = tagList;
-    }
-    return;
-})();
-; (function () {
     // 본문 전체의 vimwiki 링크를 html 링크로 변환한다.
     var post = document.querySelector('article.post-content');
 

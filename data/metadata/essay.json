@@ -6,6 +6,7 @@
  "updated": "2023-12-20 00:00:00 +0900",
  "tags": [],
  "series": null,
+ "snippet": "",
  "children": [
   "essay/00_is_lombok_necessary",
   "essay/01_why_redis_single_threaded",

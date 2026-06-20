@@ -2,12 +2,30 @@
     const TOC_ID = '#markdown-toc';
     const ACTIVE_CLASS = 'active-toc';
     const SCROLL_OFFSET = 80;
+    const TOC_MIN_SPACE = 240; // px available to the right of content
 
     const tocEl = document.querySelector(TOC_ID);
     if (!tocEl) return;
 
     const contentEl = document.querySelector('.post-content');
     if (!contentEl) return;
+
+    function updateTocVisibility() {
+        var rect = contentEl.getBoundingClientRect();
+        var spaceRight = window.innerWidth - rect.right;
+        if (spaceRight >= TOC_MIN_SPACE) {
+            tocEl.classList.add('toc-visible');
+            tocEl.style.left = (rect.right + 16) + 'px';
+        } else {
+            tocEl.classList.remove('toc-visible');
+        }
+    }
+
+    updateTocVisibility();
+    if (window.ResizeObserver) {
+        new ResizeObserver(updateTocVisibility).observe(contentEl);
+    }
+    window.addEventListener('resize', updateTocVisibility, { passive: true });
 
     const tocMap = {};
     tocEl.querySelectorAll('a').forEach(n => {
