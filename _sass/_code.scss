@@ -1,6 +1,6 @@
-/* 기본 색상 설정 */
-$background-color: #1E1E1E; /* 어두운 배경색 */
-$default-font-color: #fafafa; /* 밝은 기본 글꼴 색상 */
+/* 기본 색상 설정 — JetBrains Darcula */
+$background-color: #2B2B2B;
+$default-font-color: #A9B7C6;
 $coding-font: "Menlo", "Monaco", "Consolas", "Courier New", monospace;
 
 /* 코드 블록 스타일링 */
@@ -78,6 +78,32 @@ div.highlight {
         border: 0;
         border-radius: 0;
     }
+
+    /* 복사 버튼: 헤더 영역(36px) 우측에 absolute 배치 */
+    .code-copy-btn {
+        position: absolute;
+        top: 0;
+        right: 8px;
+        height: 36px;
+        padding: 0 8px;
+        background: transparent;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        font-size: 0.78em;
+        transition: color 0.15s ease;
+        z-index: 1;
+
+        &:hover { color: #555; }
+        &.copied { color: #28C840; }
+    }
+}
+
+html.dark-mode div.highlight .code-copy-btn {
+    color: #888;
+    &:hover { color: #ccc; }
 }
 
 html.dark-mode div.highlight {
@@ -111,6 +137,8 @@ html.dark-mode div.highlight {
         }
 
         pre { padding: 12px; }
+
+        .code-copy-btn { height: 30px; }
     }
 
     html.dark-mode div.highlight::before {
@@ -123,64 +151,48 @@ html.dark-mode div.highlight {
     }
 }
 
-/* 코드 내부 하이라이팅 */
+/* 코드 내부 하이라이팅 — JetBrains Darcula */
 .highlight {
-    .bp { color: #D4D4D4 } /* 내장 의사 이름 */
-    .c { color: #6A9955 } /* 주석 */
-    .k { color: #C586C0 } /* 키워드 */
-    .o { color: #D4D4D4 } /* 연산자 */
-    .ch { color: #6A9955 } /* 주석 해시뱅 */
-    .cm { color: #6A9955 } /* 주석 멀티라인 */
-    .cp { color: #6A9955 } /* 주석 준비문 */
-    .c1 { color: #6A9955 } /* 주석 싱글라인 */
-    .cs { color: #6A9955 } /* 주석 특별 */
-    .gd { color: #D16969 } /* 제네릭 삭제 */
-    .ge { font-style: italic } /* 제네릭 강조 */
-    .gh { color: #D4D4D4 } /* 제네릭 헤더 */
-    .gi { color: #B5CEA8 } /* 제네릭 삽입 */
-    .gp { color: #D4D4D4 } /* 제네릭 프롬프트 */
-    .gs { font-weight: bold } /* 제네릭 강조 */
-    .gu { color: #CC99CD } /* 제네릭 하위헤더 */
-    .kc { color: #D4D4D4 } /* 키워드 상수 */
-    .kd { color: #569CD6 } /* 키워드 선언 */
-    .kn { color: #D4D4D4 } /* 키워드 네임스페이스 */
-    .kp { color: #D4D4D4 } /* 키워드 의사 */
-    .kr { color: #D4D4D4 } /* 키워드 예약 */
-    .kt { color: #4EC9B0 } /* 키워드 타입 */
-    .m { color: #B5CEA8 } /* 리터럴 숫자 */
-    .s { color: #CE9178 } /* 리터럴 문자열 */
-    .na { color: #9CDCFE } /* 이름 속성 */
-    .nb { color: #D4D4D4 } /* 이름 내장 */
-    .nc { color: #4EC9B0 } /* 이름 클래스 */
-    .no { color: #D4D4D4 } /* 이름 상수 */
-    .nd { color: #4EC9B0 } /* 이름 데코레이터 */
-    .ni { color: #D4D4D4 } /* 이름 엔티티 */
-    .ne { color: #D4D4D4 } /* 이름 예외 */
-    .nf { color: #D4D4D4 } /* 이름 함수 */
-    .nl { color: #D4D4D4 } /* 이름 라벨 */
-    .nn { color: #D4D4D4 } /* 이름 네임스페이스 */
-    .nt { color: #569CD6 } /* 이름 태그 */
-    .nv { color: #9CDCFE } /* 이름 변수 */
-    .ow { color: #C586C0 } /* 연산자 단어 */
-    .w { color: #D4D4D4 } /* 텍스트 공백 */
-    .mf { color: #B5CEA8 } /* 리터럴 숫자 부동소수점 */
-    .mh { color: #B5CEA8 } /* 리터럴 숫자 16진수 */
-    .mi { color: #B5CEA8 } /* 리터럴 숫자 정수 */
-    .mo { color: #B5CEA8 } /* 리터럴 숫자 8진수 */
-    .sb { color: #CE9178 } /* 리터럴 문자열 백틱 */
-    .sc { color: #CE9178 } /* 리터럴 문자열 캐릭터 */
-    .sd { color: #CE9178; font-style: italic } /* 리터럴 문자열 문서 */
-    .s2 { color: #CE9178 } /* 리터럴 문자열 더블 */
-    .se { color: #D7BA7D } /* 리터럴 문자열 이스케이프 */
-    .sh { color: #CE9178 } /* 리터럴 문자열 헤로닥 */
-    .si { color: #CE9178; font-weight: bold } /* 리터럴 문자열 인터폴 */
-    .sx { color: #D4D4D4 } /* 리터럴 문자열 기타 */
-    .sr { color: #CE9178 } /* 리터럴 문자열 정규표현식 */
-    .s1 { color: #CE9178 } /* 리터럴 문자열 싱글 */
-    .ss { color: #D4D4D4 } /* 리터럴 문자열 기호 */
-    .bp { color: #D4D4D4 } /* 이름 내장 의사 */
-    .vc { color: #9CDCFE } /* 이름 변수 클래스 */
-    .vg { color: #9CDCFE } /* 이름 변수 글로벌 */
-    .vi { color: #9CDCFE } /* 이름 변수 인스턴스 */
-    .il { color: #B5CEA8 } /* 리터럴 숫자 긴 정수 */
+    /* 주석 */
+    .c, .ch, .cm, .cp, .c1, .cs { color: #808080; font-style: italic }
+    /* 키워드 */
+    .k, .kd, .kn, .kp, .kr, .kc { color: #CC7832; font-weight: bold }
+    /* 타입 키워드 */
+    .kt { color: #6897BB }
+    /* 연산자 */
+    .o { color: #A9B7C6 }
+    .ow { color: #CC7832; font-weight: bold }
+    /* 문자열 */
+    .s, .s1, .s2, .sb, .sc, .sh, .sx { color: #6A8759 }
+    .sr { color: #6A8759 }
+    .ss { color: #6A8759 }
+    .sd { color: #629755; font-style: italic }
+    .si { color: #CC7832; font-weight: bold }
+    .se { color: #CC7832; font-weight: bold }
+    /* 숫자 */
+    .m, .mf, .mh, .mi, .mo, .il { color: #6897BB }
+    /* 이름 */
+    .na { color: #BABABA }
+    .nb { color: #8888C6 }
+    .nc { color: #A9B7C6; font-weight: bold }
+    .nd { color: #BBB529 }
+    .ne { color: #A9B7C6 }
+    .nf { color: #FFC66D }
+    .ni { color: #A9B7C6 }
+    .nl { color: #A9B7C6 }
+    .nn { color: #A9B7C6 }
+    .no { color: #9876AA }
+    .nt { color: #E8BF6A }
+    .nv, .vc, .vg, .vi { color: #A9B7C6 }
+    .bp { color: #8888C6 }
+    /* 제네릭 (diff 등) */
+    .gd { color: #D25252 }
+    .ge { font-style: italic }
+    .gh { color: #A9B7C6; font-weight: bold }
+    .gi { color: #A5C261 }
+    .gp { color: #808080 }
+    .gs { font-weight: bold }
+    .gu { color: #9876AA }
+    /* 공백 */
+    .w { color: #A9B7C6 }
 }
