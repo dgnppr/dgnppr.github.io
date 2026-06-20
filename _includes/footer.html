@@ -1,48 +1,60 @@
 <footer class="footer">
 <div id="topWidget" class="top-widget">
-  <!-- 공유 행: 공유 버튼 클릭 시 좌측으로 LinkedIn·X·복사 패널 펼쳐짐 -->
-  <div class="top-widget__actions">
-    <div class="top-widget__share-panel" id="sharePanel">
-      <button type="button" class="top-widget__share-item" id="shareCopy" aria-label="링크 복사">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
-          <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
-        </svg>
-      </button>
-      <a class="top-widget__share-item" id="shareTwitter" href="#"
-         target="_blank" rel="noopener noreferrer" aria-label="X로 공유">
-        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
-          <path fill="currentColor"
-                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-        </svg>
-      </a>
-      <a class="top-widget__share-item" id="shareLinkedIn" href="#"
-         target="_blank" rel="noopener noreferrer" aria-label="LinkedIn으로 공유">
-        <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
-             stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-          <rect x="2" y="9" width="4" height="12"/>
-          <circle cx="4" cy="4" r="2"/>
-        </svg>
-      </a>
-    </div>
-    <button type="button" class="top-widget__action" id="shareBtn"
-            aria-label="공유하기" aria-expanded="false">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
-           stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-           aria-hidden="true" focusable="false">
-        <path d="M4 12v7a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-7M16 6l-4-4-4 4M12 2v13"/>
+  <!-- 공유 패널: 공유 버튼 클릭 시 좌측으로 펼쳐짐 -->
+  <div class="top-widget__share-panel" id="sharePanel">
+    <!-- 링크 복사 -->
+    <button type="button" class="top-widget__share-item" id="shareCopy" aria-label="링크 복사">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+        <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
       </svg>
     </button>
+    <!-- Facebook -->
+    <a class="top-widget__share-item" id="shareFacebook" href="#"
+       target="_blank" rel="noopener noreferrer" aria-label="Facebook으로 공유">
+      <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+        <path fill="currentColor"
+              d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+      </svg>
+    </a>
+    <!-- X / Twitter -->
+    <a class="top-widget__share-item" id="shareTwitter" href="#"
+       target="_blank" rel="noopener noreferrer" aria-label="X로 공유">
+      <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true">
+        <path fill="currentColor"
+              d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+      </svg>
+    </a>
+    <!-- LinkedIn -->
+    <a class="top-widget__share-item" id="shareLinkedIn" href="#"
+       target="_blank" rel="noopener noreferrer" aria-label="LinkedIn으로 공유">
+      <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+           stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+        <rect x="2" y="9" width="4" height="12"/>
+        <circle cx="4" cy="4" r="2"/>
+      </svg>
+    </a>
   </div>
 
-  <!-- 메인 TOP 버튼 -->
-  <button type="button"
-          onclick="topFunction()"
-          id="topBtn"
-          class="top-widget__top"
-          aria-label="맨 위로 이동">
+  <!-- 공유 토글 -->
+  <button type="button" class="top-widget__action" id="shareBtn"
+          aria-label="공유하기" aria-expanded="false">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor"
+         stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+         aria-hidden="true" focusable="false">
+      <circle cx="18" cy="5" r="3"/>
+      <circle cx="6" cy="12" r="3"/>
+      <circle cx="18" cy="19" r="3"/>
+      <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/>
+      <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+    </svg>
+  </button>
+
+  <!-- TOP 버튼 (공유 버튼과 동일 행) -->
+  <button type="button" onclick="topFunction()" id="topBtn"
+          class="top-widget__top" aria-label="맨 위로 이동">
     <svg class="top-widget__arrow" viewBox="0 0 24 24" width="20" height="20"
          aria-hidden="true" focusable="false">
       <path fill="none" stroke="currentColor" stroke-width="2.2"

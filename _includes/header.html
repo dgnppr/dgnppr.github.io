@@ -83,6 +83,7 @@
     var toggle = document.getElementById('search-toggle');
     var wrapper = document.getElementById('searchbox-wrapper');
     var fuseInstance = null;
+    var allItems = null;
 
     function openSearch() {
         wrapper.classList.add('is-open');
@@ -120,12 +121,12 @@
         fetch('/data/search-index.json')
             .then(function (r) { return r.json(); })
             .then(function (data) {
-                var items = data.filter(function (item) {
+                allItems = data.filter(function (item) {
                     if (item.type === 'tag') { return false; }
                     if (item.type === 'wiki' && /^\/wiki\/[^/]+$/.test(item.url)) { return false; }
                     return true;
                 });
-                fuseInstance = new Fuse(items, {
+                fuseInstance = new Fuse(allItems, {
                     keys: [
                         { name: 'title', weight: 2 },
                         { name: 'tags', weight: 1.5 },
@@ -174,12 +175,27 @@
 
     document.addEventListener('input', function (e) {
         if (e.target.id !== 'local-search-input') { return; }
-        var query = e.target.value.trim().toLowerCase();
+        var raw = e.target.value.trim();
         var results = document.getElementById('search-results');
-        if (!query) { results.classList.remove('is-open'); results.innerHTML = ''; return; }
+        if (!raw) { results.classList.remove('is-open'); results.innerHTML = ''; return; }
         loadIndex(function () {
-            var results = fuseInstance.search(query, { limit: 10 });
-            renderResults(results.map(function (r) { return r.item; }));
+            var q = raw.toLowerCase();
+            var matches;
+            if (q.charAt(0) === '#') {
+                // 태그 검색: # 이후 문자열과 태그가 일치하는 항목
+                var tag = q.slice(1);
+                matches = tag
+                    ? allItems.filter(function (item) {
+                        return item.tags && item.tags.some(function (t) {
+                            return t.toLowerCase().indexOf(tag) !== -1;
+                        });
+                    }).slice(0, 10)
+                    : [];
+            } else {
+                // 제목/태그/요약 퍼지 검색 (Fuse.js)
+                matches = fuseInstance.search(raw, { limit: 10 }).map(function (r) { return r.item; });
+            }
+            renderResults(matches);
         });
     });
 })();

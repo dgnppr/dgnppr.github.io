@@ -42,10 +42,15 @@ function shareFunction() {
     if (isOpen) {
         var url = encodeURIComponent(window.location.href);
         var title = encodeURIComponent(document.title);
-        var li = document.getElementById('shareLinkedIn');
-        var tw = document.getElementById('shareTwitter');
-        if (li) li.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + url;
-        if (tw) tw.href = 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+
+        var el = {
+            linkedin: document.getElementById('shareLinkedIn'),
+            twitter:  document.getElementById('shareTwitter'),
+            facebook: document.getElementById('shareFacebook'),
+        };
+        if (el.linkedin) el.linkedin.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + url;
+        if (el.twitter)  el.twitter.href  = 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+        if (el.facebook) el.facebook.href = 'https://www.facebook.com/sharer/sharer.php?u=' + url;
     }
 }
 
