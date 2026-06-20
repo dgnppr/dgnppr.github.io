@@ -165,7 +165,7 @@ div.search {
     }
 
     &:hover {
-        background: #f8f6ff;
+        background: #f5f5f5;
     }
 }
 
@@ -179,7 +179,7 @@ div.search {
     flex-shrink: 0;
     letter-spacing: 0.02em;
 
-    &.type-index { background-color: #a78bfa; }
+    &.type-index { background-color: #669DFD; }
     &.type-wiki { background-color: #669DFD; }
     &.type-blog { background-color: #82b782; }
     &.type-tag { background-color: #f59e0b; }
@@ -222,24 +222,24 @@ div.search {
 }
 
 // 다크 모드
-body.dark-mode .searchbox-wrapper {
+html.dark-mode .searchbox-wrapper {
     background: rgba(0, 0, 0, 0.6) !important;
 }
 
-body.dark-mode div.search {
+html.dark-mode div.search {
     background: #2b2d30 !important;
     box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5) !important;
 }
 
-body.dark-mode .searchInput {
+html.dark-mode .searchInput {
     color: #e8e8e8 !important;
 }
 
-body.dark-mode .search-results {
+html.dark-mode .search-results {
     border-top-color: #3a3d42 !important;
 }
 
-body.dark-mode .search-result-item {
+html.dark-mode .search-result-item {
     color: #e8e8e8 !important;
     border-bottom-color: #3a3d42 !important;
 
@@ -248,16 +248,16 @@ body.dark-mode .search-result-item {
     }
 }
 
-body.dark-mode .search-result-tag {
+html.dark-mode .search-result-tag {
     color: #aaa !important;
     background: #3a3d42 !important;
 }
 
-body.dark-mode .search-icon {
+html.dark-mode .search-icon {
     color: #666 !important;
 }
 
-body.dark-mode .search-close {
+html.dark-mode .search-close {
     color: #666 !important;
 
     &:hover {

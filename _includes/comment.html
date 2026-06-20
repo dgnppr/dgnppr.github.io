@@ -28,21 +28,32 @@
     <br>
     <hr>
     <br>
-    <script src="https://giscus.app/client.js"
-            data-repo="{{ site.giscus.repo }}"
-            data-repo-id="{{ site.giscus.repo-id }}"
-            data-category="Comments"
-            data-category-id="{{ site.giscus.category-id }}"
-            data-mapping="pathname"
-            data-strict="0"
-            data-reactions-enabled="1"
-            data-emit-metadata="0"
-            data-input-position="bottom"
-            data-theme="light"
-            data-lang="en"
-            data-loading="lazy"
-            crossorigin="anonymous"
-            async>
+    <div class="giscus"></div>
+    <script>
+    (function () {
+        var stored = localStorage.getItem('theme');
+        var isDark = stored !== null
+            ? stored === 'dark-mode'
+            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        var s = document.createElement('script');
+        s.src = 'https://giscus.app/client.js';
+        s.setAttribute('data-repo', '{{ site.giscus.repo }}');
+        s.setAttribute('data-repo-id', '{{ site.giscus.repo-id }}');
+        s.setAttribute('data-category', 'Comments');
+        s.setAttribute('data-category-id', '{{ site.giscus.category-id }}');
+        s.setAttribute('data-mapping', 'pathname');
+        s.setAttribute('data-strict', '0');
+        s.setAttribute('data-reactions-enabled', '1');
+        s.setAttribute('data-emit-metadata', '0');
+        s.setAttribute('data-input-position', 'bottom');
+        s.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        s.setAttribute('data-lang', 'en');
+        s.setAttribute('data-loading', 'lazy');
+        s.setAttribute('crossorigin', 'anonymous');
+        s.async = true;
+        document.currentScript.parentNode.replaceChild(s, document.currentScript);
+    })();
     </script>
     {% endif %}
 </div>

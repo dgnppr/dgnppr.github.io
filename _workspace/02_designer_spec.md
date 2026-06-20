@@ -1,80 +1,312 @@
-# Designer Spec — visited 링크 색상 개선
+# Designer Spec: /wiki/index/ 카드/피드 리디자인
 
-> 입력: `_workspace/00_input.md`
-> 대상: `_sass/_base.scss` (라이트), `_sass/_theme.scss` (다크모드 오버라이드)
-> 원칙: 브랜드 보라 패밀리(`$theme-color #47146C`) 유지. 신규 클래스 0개. 색상 값만 교체.
+## 1. 목표 요약
 
----
-
-## 목표
-파스텔한 visited 색상(`#8c8c9e`, `#8899b0`)을 테크 블로그 톤에 맞는 묵직한 보라 계열로 교체. 읽은 상태를 명확히 구분하되 브랜드 컬러와 같은 색상 패밀리를 유지한다.
-
-## 선정 색상
-
-| 모드 | 대상 | 기존 | 신규 | 색상명 |
-|------|------|------|------|--------|
-| Light | `a:visited` (`_sass/_base.scss:38`) | `#8c8c9e` | **`#6B4A7A`** | Muted Plum (묵직한 자두빛 보라) |
-| Dark | `body.dark-mode .post-content a:visited` (`_sass/_theme.scss:148`) | `#8899b0` | **`#9E84B0`** | Dusty Mauve (탁한 모브) |
+`#document-list` 영역을 깔끔한 카드/피드 형태로 리디자인한다. 각 카드는 **제목 + 날짜 + 하위 문서 수 badge**를 노출하고, 호버 시 visual feedback과 다크모드 완전 대응을 제공한다. 기존 `.home-feed` / 태그 페이지(`#tag-collection`)의 시각 언어(system font, slate 메타 컬러, 0.9rem 타이틀)와 일관성을 유지한다.
 
 ---
 
-## 선택 근거
+## 2. category.js HTML 구조 개선안
 
-### Light mode — `#6B4A7A`
-- **톤 방향**: `a:link`의 `$theme-color #47146C`(deep purple)와 동일 hue 패밀리. 명도를 올리고 채도를 낮춘 형제 색으로, "이미 읽음"을 시각적으로 전달하면서 브랜드 정체성 유지.
-- **파스텔 탈피**: 기존 `#8c8c9e`는 회색에 가까운 무채색 파스텔이라 보라 테마와 단절됨. `#6B4A7A`는 보라 채도를 유지해 묵직하고 전문적.
-- **대비비**:
-  - 흰 배경 대비 **7.28:1** → WCAG AA(4.5:1) 통과, AAA(7:1)도 충족.
-  - `a:link #47146C` 대비 **1.82:1** → 동일 hue 후보 중 link와 구분이 가장 명확.
+기존 인라인 `style="float: right;"`와 `<span>` 직접 삽입 방식을 시맨틱 클래스 구조로 교체한다. **클래스명은 `wiki-card-*` 네임스페이스로 신규 도입** (기존 `.post-list`/`.post-item`/`.post-link`는 태그 페이지와 공유되므로 충돌 방지).
 
-### Dark mode — `#9E84B0`
-- **톤 방향**: `a:link #C9A6E8`(light purple)에서 명도·채도를 낮춘 dusty mauve. 같은 violet 계열을 유지해 라이트와 일관된 "보라 패밀리" 경험.
-- **파스텔 탈피**: 기존 `#8899b0`는 blue-gray라 보라 링크와 색상 패밀리가 어긋남. `#9E84B0`는 모브 톤으로 통일성 확보.
-- **대비비**:
-  - `#1E1F22` 배경 대비 **5.01:1** → WCAG AA 통과.
-  - `a:link #C9A6E8` 대비 **1.58:1** → 밝은 링크 대비 충분히 가라앉아 visited 구분 명확.
+### 변경 전 (현재 `category.js`)
+
+```js
+const title = `<span>${data.title}</span>`
+const date = `<div style="float: right;">${updated}</div>`;
+const subDoc = (data.children && data.children.length > 0)
+  ? `<div class="post-sub-document"> ▸ 하위 문서: ${data.children.length} 개</div>` : '';
+const html = `<a href="${data.url}" class="post-link">${title}${date}${subDoc}</a>`;
+```
+
+### 변경 후 (요청)
+
+리스트 컨테이너 (현재 L25):
+
+```js
+document.getElementById('document-list').innerHTML =
+  `<ul class="wiki-card-list">${html}</ul>`;
+```
+
+아이템 placeholder (현재 L23):
+
+```js
+html += `<li id="child-document-${i}" class="wiki-card-item"></li>`;
+```
+
+카드 내부 (현재 L51~60):
+
+```js
+const count = (data.children && data.children.length > 0) ? data.children.length : 0;
+const badge = count > 0
+  ? `<span class="wiki-card-badge" aria-label="하위 문서 ${count}개">${count}</span>`
+  : '';
+
+const html =
+  `<a href="${data.url}" class="wiki-card-link">` +
+    `<div class="wiki-card-main">` +
+      `<span class="wiki-card-title">${data.title}</span>` +
+      badge +
+    `</div>` +
+    `<time class="wiki-card-date" datetime="${updated}">${updated}</time>` +
+  `</a>`;
+document.getElementById(`child-document-${i}`).innerHTML = html;
+```
+
+> 인라인 `style` 전면 제거. badge는 "N 개" 텍스트 대신 숫자만 노출하고 의미는 CSS `::before`(↳) + `aria-label`로 보강. `<time>` 시맨틱 태그로 접근성 향상.
+
+### 최종 DOM 구조
+
+```html
+<ul class="wiki-card-list">
+  <li class="wiki-card-item">
+    <a href="..." class="wiki-card-link">
+      <div class="wiki-card-main">
+        <span class="wiki-card-title">문서 제목</span>
+        <span class="wiki-card-badge" aria-label="하위 문서 3개">3</span>
+      </div>
+      <time class="wiki-card-date" datetime="2026-06-20">2026-06-20</time>
+    </a>
+  </li>
+</ul>
+```
 
 ---
 
-## WCAG AA 검증 요약
+## 3. 기존 SCSS 정리 (Frontend 작업 지시)
 
-| 색상 | 배경 | 대비비 | AA(4.5:1) | AAA(7:1) |
-|------|------|--------|-----------|----------|
-| `#6B4A7A` | `#FFFFFF` | 7.28 | 통과 | 통과 |
-| `#9E84B0` | `#1E1F22` | 5.01 | 통과 | — |
+`_sass/_layout.scss:99-107`의 아래 블록은 **제거**한다 (신규 클래스로 대체):
 
-> 두 색 모두 link 대비 명도가 충분히 떨어져 visited 상태가 한눈에 구분되며, 보라 hue를 유지해 테마 통일감 확보.
-
----
-
-## SCSS 변경 명세 (Frontend 전달)
-
-### 1. `_sass/_base.scss:37-39`
 ```scss
-a:visited {
-    color: #6B4A7A; /* Muted Plum — visited 상태, 브랜드 보라 패밀리 */
+#document-list .post-list { list-style: none; padding: 0; margin: 0; }
+#document-list .post-item { border-bottom: none; }
+```
+
+신규 스타일은 **`_sass/_index.scss` 하단에 추가**(홈 피드와 동일 계열이라 응집도 높음). `main.scss`에 이미 `@import`되어 있으므로 추가 import 불필요.
+
+---
+
+## 4. SCSS 명세 (라이트)
+
+> 변수: `$theme-color: #47146C`(딥 퍼플). 홈/태그 페이지는 호버 강조에 블루(`#1d4ed8`, `#669DFD`)를 써왔으므로 **호버 텍스트 강조는 블루 유지**, 카드 좌측 액센트만 테마 퍼플을 절제해서 사용한다.
+
+### 4-1. 리스트 & 아이템
+
+```scss
+.wiki-card-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.wiki-card-item {
+    // gap으로 간격 처리 — 마진/보더 없음
 }
 ```
 
-### 2. `_sass/_theme.scss:147-149`
+### 4-2. 카드 링크 (본체)
+
 ```scss
-body.dark-mode .post-content a:visited {
-    color: #9E84B0 !important; /* Dusty Mauve — visited 구분, link #C9A6E8와 명확히 구분 */
+.wiki-card-link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 14px;
+    background: #fff;
+    border: 1px solid #eef0f4;
+    border-left: 3px solid transparent;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
+
+    &:link, &:visited {
+        color: inherit;
+    }
+
+    &:hover {
+        background: #f8f9fc;
+        border-left-color: $theme-color;   // 좌측 퍼플 액센트 점등
+        transform: translateX(2px);
+
+        .wiki-card-title {
+            color: #1d4ed8;                 // 홈/태그 페이지와 동일 블루 강조
+        }
+    }
+
+    &:focus-visible {
+        outline: 2px solid #1d4ed8;
+        outline-offset: 2px;
+    }
+}
+```
+
+### 4-3. 제목 + 메인 영역
+
+```scss
+.wiki-card-main {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;                           // ellipsis 동작 보장
+}
+
+.wiki-card-title {
+    font-size: 0.92rem;
+    font-weight: 500;
+    color: #1F303C;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: color 0.15s ease;
+}
+```
+
+### 4-4. 하위 문서 수 badge (태그 페이지 `.tag-count` 패턴 차용)
+
+```scss
+.wiki-card-badge {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 6px;
+    background: #eef2ff;
+    border-radius: 9px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: $theme-color;
+    line-height: 1;
+
+    &::before {
+        content: "↳";
+        margin-right: 3px;
+        font-size: 0.65rem;
+        opacity: 0.7;
+    }
+}
+```
+
+### 4-5. 날짜
+
+```scss
+.wiki-card-date {
+    flex-shrink: 0;
+    font-size: 0.78rem;
+    color: #94a3b8;
+    white-space: nowrap;
 }
 ```
 
 ---
 
-## Frontend 구현 체크리스트
-1. `_sass/_base.scss:38` 색상값 `#8c8c9e` → `#6B4A7A` 교체.
-2. `_sass/_theme.scss:148` 색상값 `#8899b0` → `#9E84B0` 교체 (`!important` 유지).
-3. 빌드 후 라이트/다크 양쪽에서 (a) visited 링크가 link와 명확히 구분되는지, (b) 파스텔하지 않고 보라 톤인지 확인.
+## 5. 다크모드 명세 (필수)
 
-## 변경 파일 요약
+> **중요 제약**: `_sass/_theme.scss:60-62`에 `html.dark-mode :not(pre):not(code):not(code *) { color: ... !important; }` 전역 규칙이 존재한다. 다크모드에서 **글자색을 지정하려면 반드시 `!important`** 를 붙여야 전역 규칙을 이긴다. 배경/보더는 `!important` 불필요.
 
-| 파일 | 변경 내용 |
-|------|-----------|
-| `_sass/_base.scss` | `a:visited` 색상 `#8c8c9e` → `#6B4A7A` |
-| `_sass/_theme.scss` | `body.dark-mode .post-content a:visited` 색상 `#8899b0` → `#9E84B0` |
+```scss
+html.dark-mode {
+    .wiki-card-link {
+        background: #232428;
+        border-color: #303136;
+        border-left-color: transparent;
 
-신규 CSS 클래스: **0개** (기존 선택자 색상값만 수정).
+        &:hover {
+            background: #2a2b30;
+            border-left-color: #669DFD;     // 다크모드 액센트는 블루(퍼플은 어두워 대비 부족)
+
+            .wiki-card-title {
+                color: #669DFD !important;
+            }
+        }
+    }
+
+    .wiki-card-title {
+        color: #F5F5F5 !important;
+    }
+
+    .wiki-card-date {
+        color: #6b7685 !important;
+    }
+
+    .wiki-card-badge {
+        background: #1a2a40;
+        color: #93c5fd !important;
+    }
+}
+```
+
+---
+
+## 6. 모바일 반응형
+
+기본 레이아웃이 이미 모바일 친화적(flex + ellipsis). `@media (max-width: 800px)` 미세 조정:
+
+```scss
+@media (max-width: 800px) {
+    .wiki-card-link {
+        padding: 11px 12px;
+        gap: 8px;
+    }
+    .wiki-card-title { font-size: 0.9rem; }
+    .wiki-card-date  { font-size: 0.74rem; }
+}
+```
+
+- 제목이 길면 ellipsis로 잘리고 날짜/badge는 우측 고정 → 375px에서도 줄바꿈 없이 한 줄 유지.
+- 카드 패딩 포함 터치 타겟 높이 약 44px 충족(WCAG 2.5.5).
+
+---
+
+## 7. 접근성 (WCAG AA)
+
+| 항목 | 처리 |
+|------|------|
+| 색 대비 | 제목 `#1F303C` on `#fff` ≈ 13:1 ✓ / 다크 `#F5F5F5` on `#232428` ≈ 14:1 ✓ |
+| badge 의미 전달 | 시각은 `↳N`, 스크린리더는 JS `aria-label="하위 문서 N개"` 부여 |
+| 시맨틱 | `<time datetime>` 사용, 링크는 `<a>` 유지 |
+| 포커스 | `.wiki-card-link:focus-visible`에 outline 명시(섹션 4-2) |
+| prefers-reduced-motion | 아래 규칙 추가 |
+
+```scss
+@media (prefers-reduced-motion: reduce) {
+    .wiki-card-link {
+        transition: none;
+        &:hover { transform: none; }
+    }
+}
+```
+
+---
+
+## 8. UI 변경 요청 요약 (Frontend 작업 목록)
+
+| 항목 | 파일 | 변경 | 이유 |
+|------|------|------|------|
+| HTML 구조 교체 | `js/category.js` (L23,25,51-60) | `wiki-card-*` 시맨틱 구조로 재작성, 인라인 style 제거 | 카드 레이아웃 + 접근성 |
+| 구 스타일 제거 | `_sass/_layout.scss:99-107` | `#document-list .post-list/.post-item` 블록 삭제 | 신규 클래스로 대체 |
+| 신규 카드 스타일 | `_sass/_index.scss` 하단 | 섹션 4 SCSS 추가 | 홈 피드와 응집 |
+| 다크모드 | `_sass/_index.scss` 하단 | 섹션 5 SCSS 추가 (`!important` 필수) | 전역 color 규칙 우회 |
+| 반응형/접근성 | 동상 | 섹션 6·7 미디어쿼리 추가 | 모바일/WCAG |
+| 빌드 검증 | — | `bundle exec jekyll build` 성공 확인 | 배포 가능 상태 |
+
+---
+
+## 9. 디자인 토큰
+
+| 토큰 | 라이트 | 다크 | 용도 |
+|------|--------|------|------|
+| Card BG | `#fff` | `#232428` | 카드 배경 |
+| Card Border | `#eef0f4` | `#303136` | 카드 테두리 |
+| Accent (hover) | `$theme-color` `#47146C` | `#669DFD` | 좌측 액센트 |
+| Title | `#1F303C` | `#F5F5F5` | 제목 |
+| Title Hover | `#1d4ed8` | `#669DFD` | 제목 강조 |
+| Date | `#94a3b8` | `#6b7685` | 날짜 메타 |
+| Badge BG / FG | `#eef2ff` / `#47146C` | `#1a2a40` / `#93c5fd` | 하위 문서 수 |

@@ -32,11 +32,11 @@
     transition: transform 0.25s ease;
 }
 
-body.dark-mode .toggle-track {
+html.dark-mode .toggle-track {
     background: #3b82f6;
 }
 
-body.dark-mode .toggle-thumb {
+html.dark-mode .toggle-thumb {
     transform: translateX(12px);
 }
 
@@ -47,49 +47,49 @@ body.dark-mode .toggle-thumb {
     --text-sub-color: #A9A9A9;
 }
 
-body.dark-mode {
+html.dark-mode {
     background-color: var(--dark-color);
     color: var(--text-color);
 }
 
-body.dark-mode :not(pre):not(code) {
+html.dark-mode :not(pre):not(code) {
     background-color: var(--dark-color);
     border-color: var(--dark-color);
 }
 
-body.dark-mode :not(pre):not(code):not(code *) {
+html.dark-mode :not(pre):not(code):not(code *) {
     color: var(--text-color) !important;
 }
 
-body.dark-mode #topBtn {
+html.dark-mode #topBtn {
     background-color: #313539 !important;
     color: white !important;
     border: 1.5px solid black;
 }
 
-body.dark-mode code.language-plaintext.highlighter-rouge {
+html.dark-mode code.language-plaintext.highlighter-rouge {
     background-color: var(--dark-color);
     border-color: var(--dark-color);
 }
 
-body.dark-mode .header,
-body.dark-mode ul#markdown-toc {
+html.dark-mode .header,
+html.dark-mode ul#markdown-toc {
     background-color: var(--dark-color) !important;
 }
 
-body.dark-mode .post-tag a {
+html.dark-mode .post-tag a {
     color: var(--text-sub-color) !important;
 }
 
-body.dark-mode .post-meta {
+html.dark-mode .post-meta {
     color: #D5DDE6 !important;
 }
 
-body.dark-mode .progress-bar {
+html.dark-mode .progress-bar {
     background-color: #669DFD; /* 다크 모드에서의 프로그레스바 테마 색상 */
 }
 
-body.dark-mode .post {
+html.dark-mode .post {
     table {
         border-collapse: collapse;
         border-spacing: 0;
@@ -103,47 +103,41 @@ body.dark-mode .post {
     }
 }
 
-body.dark-mode .history-button p,
-body.dark-mode .history-button p span,
-body.dark-mode .post-content p,
-body.dark-mode .post-content ul li {
+html.dark-mode .history-button p,
+html.dark-mode .history-button p span,
+html.dark-mode .post-content p,
+html.dark-mode .post-content ul li {
     color: #CED6DE !important;
 }
 
 // 전역 !important color 규칙(:60-62)을 우회하기 위해 TOC 링크는 별도 규칙으로 분리
-body.dark-mode #markdown-toc li a {
+html.dark-mode #markdown-toc li a {
     color: #8A93A5 !important;              // muted (라이트와 동일 톤)
     border-left-color: transparent !important;
 }
-body.dark-mode #markdown-toc li a:hover {
+html.dark-mode #markdown-toc li a:hover {
     color: var(--text-color) !important;   // #F5F5F5
 }
 
-body.dark-mode #markdown-toc li a.active-toc,
-body.dark-mode #markdown-toc li a.active-toc:visited {
+html.dark-mode #markdown-toc li a.active-toc,
+html.dark-mode #markdown-toc li a.active-toc:visited {
     color: #669DFD !important;
     border-left-color: #669DFD !important;
 }
 
-body.dark-mode blockquote {
+html.dark-mode blockquote {
     border-left: 4px solid #CCCCCC !important;
 }
 
-body.dark-mode .post-content h2 {
+html.dark-mode .post-content h2 {
     border-bottom: 0.3px solid #ffffff !important;
 }
 
-body.dark-mode .post-content h1 {
+html.dark-mode .post-content h1 {
     border-bottom: 1px solid #ffffff !important;
 }
 
-body.dark-mode .header {
+html.dark-mode .header {
     border-bottom: 1px solid #636e72 !important;
 }
 
-body.dark-mode .post-content a:link {
-    color: #C9A6E8 !important;
-}
-body.dark-mode .post-content a:visited {
-    color: #9d8aab !important; /* muted plum-gray — visited 구분용 */
-}

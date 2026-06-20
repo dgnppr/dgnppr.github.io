@@ -26,21 +26,21 @@
         align-items: center;
         gap: 6px;
         padding: 5px 12px;
-        background: #f5f0f8;
-        border: 1px solid #e0d5eb;
+        background: #eff6ff;
+        border: 1px solid #dbeafe;
         border-radius: 20px;
         font-size: 0.85rem;
-        color: #3d1160;
+        color: #1e3a8a;
         text-decoration: none;
         transition: background 0.15s, border-color 0.15s;
 
         &:link, &:visited {
-            color: #3d1160;
+            color: #1e3a8a;
         }
 
         &:hover {
-            background: #ede5f7;
-            border-color: #b89fd4;
+            background: #dbeafe;
+            border-color: #93c5fd;
         }
 
         .tag-count {
@@ -50,18 +50,18 @@
             min-width: 18px;
             height: 18px;
             padding: 0 5px;
-            background: #d8c8ec;
+            background: #bfdbfe;
             border-radius: 9px;
             font-size: 0.7rem;
             font-weight: 600;
-            color: #5a2090;
+            color: #1d4ed8;
             line-height: 1;
         }
     }
 
     &.active a {
-        background: $theme-color;
-        border-color: $theme-color;
+        background: #1d4ed8;
+        border-color: #1d4ed8;
         color: #fff;
 
         &:link, &:visited {
@@ -81,12 +81,12 @@
     .tag-section h3 {
         font-size: 0.78rem;
         font-weight: 600;
-        color: $theme-color;
+        color: #1d4ed8;
         text-transform: uppercase;
         letter-spacing: 0.07em;
         margin: 0 0 0.6rem;
         padding-bottom: 0.5rem;
-        border-bottom: 1.5px solid #ece5f5;
+        border-bottom: 1.5px solid #dbeafe;
     }
 
     .post-list {
@@ -96,11 +96,6 @@
     }
 
     .post-item {
-        border-bottom: 1px solid #f3eef8;
-
-        &:last-child {
-            border-bottom: none;
-        }
     }
 
     .post-link {
@@ -113,7 +108,7 @@
         }
 
         &:hover .post-title {
-            color: $theme-color;
+            color: #1d4ed8;
         }
 
         .post-header {
@@ -132,7 +127,7 @@
 
         .post-date {
             font-size: 0.78rem;
-            color: #aaa5b8;
+            color: #94a3b8;
             white-space: nowrap;
             flex-shrink: 0;
         }
@@ -140,13 +135,13 @@
         .post-excerpt {
             margin-top: 3px;
             font-size: 0.8rem;
-            color: #808094;
+            color: #64748b;
             line-height: 1.5;
         }
 
         .post-sub-document {
             font-size: 0.75rem;
-            color: #b5b0c8;
+            color: #93c5fd;
             margin-top: 2px;
         }
     }
@@ -154,26 +149,26 @@
 
 // ── Dark mode ──────────────────────────────────────────────
 
-body.dark-mode {
+html.dark-mode {
     .tag-item a {
-        background: #28203a !important;
-        border-color: #3e2e5a !important;
-        color: #c9a6e8 !important;
+        background: #1a2a40 !important;
+        border-color: #253a5e !important;
+        color: #93c5fd !important;
 
         &:hover {
-            background: #342850 !important;
-            border-color: #6040a0 !important;
+            background: #1e3355 !important;
+            border-color: #3b6daa !important;
         }
 
         .tag-count {
-            background: #4a3570 !important;
-            color: #d4b8f0 !important;
+            background: #2a4a7a !important;
+            color: #bfdbfe !important;
         }
     }
 
     .tag-item.active a {
-        background: darken(#47146C, 5%) !important;
-        border-color: #7040b8 !important;
+        background: darken(#1d4ed8, 5%) !important;
+        border-color: #3b82f6 !important;
         color: #fff !important;
 
         .tag-count {
@@ -184,28 +179,24 @@ body.dark-mode {
 
     #tag-collection {
         .tag-section h3 {
-            color: #c9a6e8 !important;
-            border-bottom-color: #3e2e5a !important;
-        }
-
-        .post-item {
-            border-bottom-color: #2a2040 !important;
+            color: #93c5fd !important;
+            border-bottom-color: #1e3a5f !important;
         }
 
         .post-link .post-title {
-            color: #e8e0f5 !important;
+            color: #e2e8f0 !important;
         }
 
         .post-link:hover .post-title {
-            color: #c9a6e8 !important;
+            color: #93c5fd !important;
         }
 
         .post-link .post-date {
-            color: #6a6080 !important;
+            color: #4a6080 !important;
         }
 
         .post-link .post-excerpt {
-            color: #8a8098 !important;
+            color: #64748b !important;
         }
     }
 }

@@ -31,11 +31,8 @@ p, li {
     color: $main-font-color;
 }
 
-a:link {
-    color: $theme-color; /* #47146C */
-}
-a:visited {
-    color: #6b5a78; /* muted plum — visited 상태 */
+a:link, a:visited {
+    color: inherit;
 }
 
 .post-content {
@@ -153,7 +150,7 @@ h6 {
 
 .link-checked {
     color: #FFFFFF;
-    background-color: #BA55D3;
+    background-color: #3b82f6;
     border-radius: 3px;
 
     &:visited {
@@ -246,7 +243,7 @@ sup[role=doc-noteref] {
     display: none; /* 버튼은 기본적으로 숨겨져 있습니다 */
     position: fixed; /* 페이지에 고정되어 있습니다 */
     bottom: 20px; /* 하단에서 20px 위에 위치합니다 */
-    right: 40px; /* 우측에서 30px 왼쪽에 위치합니다 */
+    right: 20px; /* 우측에서 20px 왼쪽에 위치합니다 */
     z-index: 99; /* 다른 요소들 위에 위치합니다 */
     border: none; /* 테두리는 없습니다 */
     outline: none; /* 외곽선도 없습니다 */
