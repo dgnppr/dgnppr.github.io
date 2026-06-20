@@ -1,53 +1,18 @@
-// Scroll Progress Ring + Smart Action Widget
-// - 첫 1 viewport 이후 등장(.is-visible 토글)
+// Scroll Progress Ring + Share Widget
+// - 페이지 로드 시 바로 노출 (스크롤 임계값 없음)
 // - SVG progress ring를 스크롤 진행률로 갱신
+// - 공유 버튼 클릭 시 LinkedIn·X·복사 패널 토글
 // - rAF throttle로 scroll 핸들러 부하 완화
-
-var RING_CIRCUMFERENCE = 125.66; // 2π·20 (r=20)
 
 var prefersReducedMotion =
     window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 var ticking = false;
 
-// 스크롤 상태를 위젯에 반영
 function scrollFunction() {
-    var widget = document.getElementById('topWidget');
-    var btn = document.getElementById('topBtn');
-    if (!btn) return;
-
-    var doc = document.documentElement;
-    var body = document.body;
-
-    var scrollTop = doc.scrollTop || body.scrollTop;
-    var scrollHeight = doc.scrollHeight || body.scrollHeight;
-    var clientHeight = doc.clientHeight || window.innerHeight;
-
-    var scrollable = scrollHeight - clientHeight;
-    var p = scrollable > 0 ? scrollTop / scrollable : 0; // 0~1 진행률
-    if (p < 0) p = 0;
-    if (p > 1) p = 1;
-
-    // progress ring 갱신
-    var ringFill = btn.querySelector('.top-widget__ring-fill');
-    if (ringFill) {
-        ringFill.style.strokeDashoffset = (RING_CIRCUMFERENCE * (1 - p)).toFixed(2);
-    }
-
-    // aria-label 진행률 동기 갱신
-    var percent = Math.round(p * 100);
-    btn.setAttribute('aria-label', '맨 위로 이동 (읽은 비율 ' + percent + '%)');
-    btn.setAttribute('aria-valuenow', String(percent));
-
-    // 첫 1 viewport 이후 등장
-    var visible = scrollTop > window.innerHeight;
-    if (widget) {
-        widget.classList.toggle('is-visible', visible);
-        widget.setAttribute('aria-hidden', visible ? 'false' : 'true');
-    }
+    // ring 제거됨 — 스크롤 이벤트는 향후 확장을 위해 유지
 }
 
-// rAF throttle wrapper
 function onScroll() {
     if (ticking) return;
     ticking = true;
@@ -60,49 +25,87 @@ function onScroll() {
 window.addEventListener('scroll', onScroll, { passive: true });
 window.addEventListener('resize', onScroll, { passive: true });
 
-// 페이지 상단으로 스크롤
 function topFunction() {
     window.scrollTo({ top: 0, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
 }
 
-// 공유 동작 (P1): navigator.share 우선, 미지원 시 클립보드 복사 fallback
+// 공유 패널 토글
 function shareFunction() {
-    var url = window.location.href;
-    var title = document.title;
+    var panel = document.getElementById('sharePanel');
+    var shareBtn = document.getElementById('shareBtn');
+    if (!panel) return;
 
-    if (navigator.share) {
-        navigator.share({ title: title, url: url }).catch(function () {});
-        return;
+    var isOpen = !panel.classList.contains('is-open');
+    panel.classList.toggle('is-open', isOpen);
+    if (shareBtn) shareBtn.setAttribute('aria-expanded', String(isOpen));
+
+    if (isOpen) {
+        var url = encodeURIComponent(window.location.href);
+        var title = encodeURIComponent(document.title);
+        var li = document.getElementById('shareLinkedIn');
+        var tw = document.getElementById('shareTwitter');
+        if (li) li.href = 'https://www.linkedin.com/sharing/share-offsite/?url=' + url;
+        if (tw) tw.href = 'https://twitter.com/intent/tweet?url=' + url + '&text=' + title;
+    }
+}
+
+// 링크 복사
+function copyLink() {
+    var url = window.location.href;
+    var copyBtn = document.getElementById('shareCopy');
+
+    function showFeedback() {
+        if (!copyBtn) return;
+        copyBtn.classList.add('copied');
+        var prev = copyBtn.getAttribute('aria-label');
+        copyBtn.setAttribute('aria-label', '복사 완료!');
+        setTimeout(function () {
+            copyBtn.classList.remove('copied');
+            copyBtn.setAttribute('aria-label', prev || '링크 복사');
+        }, 1500);
     }
 
     if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(url).then(function () {
-            flashShareFeedback('링크가 복사되었습니다');
-        }).catch(function () {});
+        navigator.clipboard.writeText(url).then(showFeedback).catch(function () {});
         return;
     }
 
-    // 구형 브라우저 fallback
     var input = document.createElement('input');
     input.value = url;
     document.body.appendChild(input);
     input.select();
-    try { document.execCommand('copy'); flashShareFeedback('링크가 복사되었습니다'); } catch (e) {}
+    try { document.execCommand('copy'); showFeedback(); } catch (e) {}
     document.body.removeChild(input);
-}
-
-function flashShareFeedback(message) {
-    var shareBtn = document.getElementById('shareBtn');
-    if (!shareBtn) return;
-    var original = shareBtn.getAttribute('aria-label');
-    shareBtn.setAttribute('aria-label', message);
-    setTimeout(function () {
-        shareBtn.setAttribute('aria-label', original || '이 글 공유하기');
-    }, 2000);
 }
 
 document.addEventListener('DOMContentLoaded', function () {
     scrollFunction();
+
     var shareBtn = document.getElementById('shareBtn');
-    if (shareBtn) shareBtn.addEventListener('click', shareFunction);
+    if (shareBtn) {
+        shareBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            shareFunction();
+        });
+    }
+
+    var copyBtn = document.getElementById('shareCopy');
+    if (copyBtn) {
+        copyBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            copyLink();
+        });
+    }
+
+    // 위젯 외부 클릭 시 패널 닫기
+    document.addEventListener('click', function (e) {
+        var panel = document.getElementById('sharePanel');
+        var widget = document.getElementById('topWidget');
+        if (panel && panel.classList.contains('is-open') &&
+            widget && !widget.contains(e.target)) {
+            panel.classList.remove('is-open');
+            var btn = document.getElementById('shareBtn');
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+        }
+    });
 });

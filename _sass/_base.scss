@@ -60,6 +60,10 @@ a:link, a:visited {
     color: inherit;
 }
 
+a:hover {
+    color: var(--color-interactive);
+}
+
 h1 {
     font-weight: 700;
 }
@@ -237,17 +241,6 @@ sup[role=doc-noteref] {
     flex-direction: column-reverse;   // 액션이 TOP 버튼 위로 펼쳐짐
     align-items: center;
     gap: 10px;
-    opacity: 0;
-    transform: translateY(8px) scale(0.9);
-    pointer-events: none;
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-
-    &.is-visible {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        pointer-events: auto;
-    }
 }
 
 .top-widget__top {
@@ -273,25 +266,6 @@ sup[role=doc-noteref] {
     }
 }
 
-.top-widget__ring {
-    position: absolute;
-    inset: 0;
-    transform: rotate(-90deg);
-    transform-origin: 50% 50%;
-}
-.top-widget__ring-track,
-.top-widget__ring-fill {
-    fill: none;
-    stroke-width: 3;
-}
-.top-widget__ring-track { stroke: var(--color-border); }
-.top-widget__ring-fill {
-    stroke: var(--color-interactive);
-    stroke-linecap: round;
-    stroke-dasharray: 125.66;     // 2π·20
-    stroke-dashoffset: 125.66;    // 초기 0%
-    transition: stroke-dashoffset 0.1s linear;
-}
 
 .top-widget__arrow {
     position: relative;
@@ -300,22 +274,55 @@ sup[role=doc-noteref] {
 }
 .top-widget__top:hover .top-widget__arrow { color: var(--color-interactive); }
 
-/* 펼침 액션 (P1: 공유) — 기본 숨김, 위젯 hover/focus-within 시 노출 */
+/* 공유 행 — TOP 버튼 위, 공유 버튼 + 펼침 패널 수평 배치 */
 .top-widget__actions {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
+    align-items: center;
     gap: 8px;
-    opacity: 0;
-    transform: translateY(6px) scale(0.9);
-    pointer-events: none;
-    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.top-widget:hover .top-widget__actions,
-.top-widget:focus-within .top-widget__actions {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
+
+/* 공유 패널: 공유 버튼 좌측에 수평 전개 */
+.top-widget__share-panel {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(10px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+
+    &.is-open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0);
+    }
+}
+
+.top-widget__share-item {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        background: var(--color-surface-hover);
+        color: var(--color-interactive);
+    }
+
+    &:link, &:visited { color: var(--color-text-secondary); }
+
+    &.copied { color: #22c55e; }
 }
 
 .top-widget__action {
@@ -354,10 +361,6 @@ html.dark-mode {
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .top-widget,
-    .top-widget__top,
-    .top-widget__ring-fill,
-    .top-widget__actions {
-        transition: none !important;
-    }
+    .top-widget__top { transition: none !important; }
+    .top-widget__share-panel { transition: none !important; }
 }

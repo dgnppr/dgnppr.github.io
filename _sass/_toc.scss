@@ -37,14 +37,13 @@
     transition: color 0.15s ease;
 }
 
-// 호버: 비활성보다 진하게
+// 호버: 활성 색상(#2563eb)과 다른 파란색
 #markdown-toc li a:hover {
-    color: var(--color-text-secondary);
+    color: #3b82f6;
 }
 
-// dark mode hover — secondary가 dark에서 충분히 밝으므로 별도 명시
 html.dark-mode #markdown-toc li a:hover {
-    color: var(--color-text-primary);
+    color: #93c5fd;
 }
 
 // 중첩 ul/li 마커 제거 + 들여쓰기
