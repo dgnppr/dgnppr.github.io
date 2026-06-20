@@ -174,7 +174,7 @@
                 var tagsHtml = '';
                 if (item.tags && item.tags.length) {
                     tagsHtml = '<span class="search-result-tags">' +
-                        item.tags.map(function (t) { return '<span class="search-result-tag">#' + t + '</span>'; }).join('') +
+                        item.tags.map(function (t) { return '<span class="search-result-tag">#' + hlText(t, item._tm && item._tm[t]) + '</span>'; }).join('') +
                         '</span>';
                 }
                 return '<a class="search-result-item" href="' + item.url + '">' +
@@ -211,9 +211,12 @@
                 // 제목/태그/요약 퍼지 검색 (Fuse.js)
                 var fuseRes = fuseInstance.search(raw, { limit: 10 });
                 matches = fuseRes.map(function (r) {
-                    var ti = null;
-                    if (r.matches) r.matches.forEach(function (m) { if (m.key === 'title') ti = m.indices; });
-                    return Object.assign({}, r.item, { _ti: ti });
+                    var ti = null, tm = {};
+                    if (r.matches) r.matches.forEach(function (m) {
+                        if (m.key === 'title') ti = m.indices;
+                        if (m.key === 'tags') tm[m.value] = m.indices;
+                    });
+                    return Object.assign({}, r.item, { _ti: ti, _tm: tm });
                 });
             }
             renderResults(matches);
