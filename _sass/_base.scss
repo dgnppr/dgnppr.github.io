@@ -250,7 +250,7 @@ sup[role=doc-noteref] {
     display: flex;
     align-items: center;
     justify-content: center;
-    border: none;
+    border: 1px solid var(--color-border);
     outline: none;
     border-radius: 50%;
     background: var(--color-surface);
