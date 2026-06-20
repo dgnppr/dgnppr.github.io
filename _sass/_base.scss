@@ -356,3 +356,14 @@ html.dark-mode {
     .top-widget__top { transition: none !important; }
     .top-widget__share-panel { transition: none !important; }
 }
+
+mark.search-highlight {
+  background: #fef08a;
+  color: inherit;
+  border-radius: 2px;
+  padding: 0 1px;
+}
+html.dark-mode mark.search-highlight {
+  background: #854d0e;
+  color: #fef9c3;
+}

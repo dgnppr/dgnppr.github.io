@@ -5,11 +5,13 @@
  "url": "/wiki/retrospect",
  "updated": "2024-01-11 00:00:00 +0900",
  "tags": [],
+ "series": null,
  "children": [
   "retrospect/00_2023_year_retrospect",
   "retrospect/01_2024_january_retrospect",
   "retrospect/02_2024_march_3rd_retrospect",
   "retrospect/04_2024_september_retrospect",
-  "retrospect/05_2025_goodbye_kyobobook_retrospect"
+  "retrospect/05_2025_goodbye_kyobobook_retrospect",
+  "retrospect/06_2026_code_is_cheap"
  ]
 }

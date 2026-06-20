@@ -4,10 +4,6 @@
   "size": 2
  },
  {
-  "name": "airflow",
-  "size": 1
- },
- {
   "name": "algorithm",
   "size": 1
  },
@@ -18,14 +14,6 @@
  {
   "name": "code-analysis",
   "size": 3
- },
- {
-  "name": "data-warehouse",
-  "size": 1
- },
- {
-  "name": "dbt",
-  "size": 1
  },
  {
   "name": "design-pattern",
@@ -73,7 +61,7 @@
  },
  {
   "name": "retrospect",
-  "size": 5
+  "size": 6
  },
  {
   "name": "security",

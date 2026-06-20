@@ -5,6 +5,7 @@
  "url": "/wiki/jpa",
  "updated": "2024-02-05 00:00:00 +0900",
  "tags": [],
+ "series": null,
  "children": [
   "jpa/00_jpa_dirty_checking"
  ]

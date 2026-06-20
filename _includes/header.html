@@ -57,6 +57,7 @@
     </script>
     {% endif %}
 
+    {% include json-ld.html %}
 </head>
 <header class="header">
     <div class="header-left">
@@ -116,6 +117,20 @@
         if (card && !card.contains(e.target)) { closeSearch(); }
     });
 
+    function escHtml(s) {
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+    function hlText(text, indices) {
+        if (!indices || !indices.length) return escHtml(text);
+        var r = '', last = 0;
+        indices.forEach(function(p) {
+            r += escHtml(text.slice(last, p[0]));
+            r += '<mark class="search-highlight">' + escHtml(text.slice(p[0], p[1] + 1)) + '</mark>';
+            last = p[1] + 1;
+        });
+        return r + escHtml(text.slice(last));
+    }
+
     function loadIndex(callback) {
         if (fuseInstance) { callback(); return; }
         fetch('/data/search-index.json')
@@ -133,7 +148,8 @@
                         { name: 'summary', weight: 1 }
                     ],
                     threshold: 0.35,
-                    minMatchCharLength: 2
+                    minMatchCharLength: 2,
+                    includeMatches: true
                 });
                 callback();
             })
@@ -164,7 +180,7 @@
                 return '<a class="search-result-item" href="' + item.url + '">' +
                     typeBadge +
                     '<span class="search-result-main">' +
-                    '<span class="search-result-title">' + item.title + '</span>' +
+                    '<span class="search-result-title">' + hlText(item.title, item._ti) + '</span>' +
                     tagsHtml +
                     '</span>' +
                     '</a>';
@@ -193,10 +209,26 @@
                     : [];
             } else {
                 // 제목/태그/요약 퍼지 검색 (Fuse.js)
-                matches = fuseInstance.search(raw, { limit: 10 }).map(function (r) { return r.item; });
+                var fuseRes = fuseInstance.search(raw, { limit: 10 });
+                matches = fuseRes.map(function (r) {
+                    var ti = null;
+                    if (r.matches) r.matches.forEach(function (m) { if (m.key === 'title') ti = m.indices; });
+                    return Object.assign({}, r.item, { _ti: ti });
+                });
             }
             renderResults(matches);
         });
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.key === '/' &&
+            document.activeElement.tagName !== 'INPUT' &&
+            document.activeElement.tagName !== 'TEXTAREA' &&
+            document.activeElement.tagName !== 'SELECT' &&
+            !document.activeElement.isContentEditable) {
+            e.preventDefault();
+            openSearch();
+        }
     });
 })();
 </script>
