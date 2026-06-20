@@ -2,28 +2,23 @@
 layout: home
 adsense: false
 ---
-{% assign documents = site.wiki | sort: 'updated' | reverse %}
 <div class="progress-container">
     <div class="progress-bar" id="myBar"></div>
 </div>
-<div id="app">
-    <H3 class="indent">All Documents</H3>
-    <ul class="post-list">
-        {% for doc in documents %}{% if doc.public != false and doc.title != 'wiki' and doc.layout != 'category'%}
-        <li>
-            <div>
-                <a class="post-link" href="{{ doc.url }}">
-                    <div class="post-meta">{{ doc.updated | date: "%b %d, %Y" }} - {{ doc.title }}</div>
-<!--                    <div class="post-excerpt">{{ doc.summary }}</div>-->
-                    {% if doc.tags %}
-                    <ul class="tag-list post-tag-size">
-                        <li class="post-tag">{{ doc. tag }}</li>
-                    </ul>
-                    {% endif %}
-                </a>
-            </div>
+<div class="home">
+    <p class="home-section-title">All Documents</p>
+    <ul class="home-feed">
+        {% assign documents = site.wiki | sort: 'updated' | reverse %}
+        {% for doc in documents %}
+        {% if doc.public != false and doc.title != 'wiki' and doc.layout != 'category' %}
+        <li class="home-feed-item">
+            <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
+                <span class="home-feed-title">{{ doc.title }}</span>
+                <time class="home-feed-date">{{ doc.updated | date: "%b %d, %Y" }}</time>
+            </a>
         </li>
-        {% endif %}{% endfor %}
+        {% endif %}
+        {% endfor %}
     </ul>
 </div>
 {% include createLink.html %}

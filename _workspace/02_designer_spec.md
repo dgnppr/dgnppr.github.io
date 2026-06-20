@@ -1,312 +1,372 @@
-# Designer Spec: /wiki/index/ 카드/피드 리디자인
+# Designer Spec: TOP 버튼 → Scroll Progress Ring + Smart Action Widget
 
-## 1. 목표 요약
+## 0. 범위 결정 (MVP)
 
-`#document-list` 영역을 깔끔한 카드/피드 형태로 리디자인한다. 각 카드는 **제목 + 날짜 + 하위 문서 수 badge**를 노출하고, 호버 시 visual feedback과 다크모드 완전 대응을 제공한다. 기존 `.home-feed` / 태그 페이지(`#tag-collection`)의 시각 언어(system font, slate 메타 컬러, 0.9rem 타이틀)와 일관성을 유지한다.
+TPO Brief의 권장 MVP를 채택한다: **P0(1 진행률 ring, 2 조기 TOP) + P1(4 공유)**.
+- P1-3(섹션 점프)은 데스크탑 TOC와 기능 중복 + H2 `id` 검증 의존성이 있어 **이번 디자인에서는 펼침 슬롯만 예약**하고 비주얼은 공유 액션 우선.
+- 기존 `#topBtn` button 태그는 **유지**하되, ring SVG를 담기 위해 `<div id="topWidget">` 래퍼로 감싼다. `top.js` 호환을 위해 `#topBtn` ID와 `topFunction()`/`scrollFunction()` 시그니처는 보존한다.
+
+핵심 변경 3가지:
+1. 원형 버튼 테두리를 **SVG progress ring**으로 교체 (텍스트 "Top" → ↑ 아이콘)
+2. 등장 임계값 **80% → 첫 1 viewport(약 1×innerHeight)** 로 완화
+3. 표시 전환을 `display:none/block` → **`.is-visible` 클래스 + opacity/scale 트랜지션** 으로 교체
 
 ---
 
-## 2. category.js HTML 구조 개선안
+## 1. 컴포넌트 구조 (HTML — `_includes/footer.html`)
 
-기존 인라인 `style="float: right;"`와 `<span>` 직접 삽입 방식을 시맨틱 클래스 구조로 교체한다. **클래스명은 `wiki-card-*` 네임스페이스로 신규 도입** (기존 `.post-list`/`.post-item`/`.post-link`는 태그 페이지와 공유되므로 충돌 방지).
-
-### 변경 전 (현재 `category.js`)
-
-```js
-const title = `<span>${data.title}</span>`
-const date = `<div style="float: right;">${updated}</div>`;
-const subDoc = (data.children && data.children.length > 0)
-  ? `<div class="post-sub-document"> ▸ 하위 문서: ${data.children.length} 개</div>` : '';
-const html = `<a href="${data.url}" class="post-link">${title}${date}${subDoc}</a>`;
-```
-
-### 변경 후 (요청)
-
-리스트 컨테이너 (현재 L25):
-
-```js
-document.getElementById('document-list').innerHTML =
-  `<ul class="wiki-card-list">${html}</ul>`;
-```
-
-아이템 placeholder (현재 L23):
-
-```js
-html += `<li id="child-document-${i}" class="wiki-card-item"></li>`;
-```
-
-카드 내부 (현재 L51~60):
-
-```js
-const count = (data.children && data.children.length > 0) ? data.children.length : 0;
-const badge = count > 0
-  ? `<span class="wiki-card-badge" aria-label="하위 문서 ${count}개">${count}</span>`
-  : '';
-
-const html =
-  `<a href="${data.url}" class="wiki-card-link">` +
-    `<div class="wiki-card-main">` +
-      `<span class="wiki-card-title">${data.title}</span>` +
-      badge +
-    `</div>` +
-    `<time class="wiki-card-date" datetime="${updated}">${updated}</time>` +
-  `</a>`;
-document.getElementById(`child-document-${i}`).innerHTML = html;
-```
-
-> 인라인 `style` 전면 제거. badge는 "N 개" 텍스트 대신 숫자만 노출하고 의미는 CSS `::before`(↳) + `aria-label`로 보강. `<time>` 시맨틱 태그로 접근성 향상.
-
-### 최종 DOM 구조
-
+### 변경 전
 ```html
-<ul class="wiki-card-list">
-  <li class="wiki-card-item">
-    <a href="..." class="wiki-card-link">
-      <div class="wiki-card-main">
-        <span class="wiki-card-title">문서 제목</span>
-        <span class="wiki-card-badge" aria-label="하위 문서 3개">3</span>
-      </div>
-      <time class="wiki-card-date" datetime="2026-06-20">2026-06-20</time>
-    </a>
-  </li>
-</ul>
+<button onclick="topFunction()" id="topBtn">Top</button>
 ```
+
+### 변경 후
+```html
+<div id="topWidget" class="top-widget" aria-hidden="true">
+  <!-- 펼침 보조 액션 (P1: 공유). 기본 숨김, 위젯 hover/focus 시 노출 -->
+  <div class="top-widget__actions">
+    <button type="button"
+            class="top-widget__action"
+            id="shareBtn"
+            aria-label="이 글 공유하기">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+        <path fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              d="M18 8a3 3 0 1 0-2.83-4M6 12a3 3 0 1 0 0 .01M18 16a3 3 0 1 0-2.83 4M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 메인 TOP 버튼 + progress ring. #topBtn / topFunction() 유지 -->
+  <button type="button"
+          onclick="topFunction()"
+          id="topBtn"
+          class="top-widget__top"
+          aria-label="맨 위로 이동 (읽은 비율 0%)">
+    <svg class="top-widget__ring" viewBox="0 0 44 44" width="44" height="44"
+         aria-hidden="true" focusable="false">
+      <circle class="top-widget__ring-track" cx="22" cy="22" r="20"/>
+      <circle class="top-widget__ring-fill"  cx="22" cy="22" r="20"/>
+    </svg>
+    <svg class="top-widget__arrow" viewBox="0 0 24 24" width="20" height="20"
+         aria-hidden="true" focusable="false">
+      <path fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"
+            d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </button>
+</div>
+```
+
+> 기존 `#topBtn` ID·`onclick="topFunction()"` 유지로 `top.js` 회귀 없음. ring/arrow는 SVG로 토큰 `currentColor` 상속. 공유 버튼은 P1 — JS 미구현 시 마크업만 두고 `display:none` 처리 가능(JS에서 토글).
 
 ---
 
-## 3. 기존 SCSS 정리 (Frontend 작업 지시)
+## 2. 비주얼 스펙
 
-`_sass/_layout.scss:99-107`의 아래 블록은 **제거**한다 (신규 클래스로 대체):
-
-```scss
-#document-list .post-list { list-style: none; padding: 0; margin: 0; }
-#document-list .post-item { border-bottom: none; }
-```
-
-신규 스타일은 **`_sass/_index.scss` 하단에 추가**(홈 피드와 동일 계열이라 응집도 높음). `main.scss`에 이미 `@import`되어 있으므로 추가 import 불필요.
-
----
-
-## 4. SCSS 명세 (라이트)
-
-> 변수: `$theme-color: #47146C`(딥 퍼플). 홈/태그 페이지는 호버 강조에 블루(`#1d4ed8`, `#669DFD`)를 써왔으므로 **호버 텍스트 강조는 블루 유지**, 카드 좌측 액센트만 테마 퍼플을 절제해서 사용한다.
-
-### 4-1. 리스트 & 아이템
-
-```scss
-.wiki-card-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.wiki-card-item {
-    // gap으로 간격 처리 — 마진/보더 없음
-}
-```
-
-### 4-2. 카드 링크 (본체)
-
-```scss
-.wiki-card-link {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 14px;
-    background: #fff;
-    border: 1px solid #eef0f4;
-    border-left: 3px solid transparent;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
-
-    &:link, &:visited {
-        color: inherit;
-    }
-
-    &:hover {
-        background: #f8f9fc;
-        border-left-color: $theme-color;   // 좌측 퍼플 액센트 점등
-        transform: translateX(2px);
-
-        .wiki-card-title {
-            color: #1d4ed8;                 // 홈/태그 페이지와 동일 블루 강조
-        }
-    }
-
-    &:focus-visible {
-        outline: 2px solid #1d4ed8;
-        outline-offset: 2px;
-    }
-}
-```
-
-### 4-3. 제목 + 메인 영역
-
-```scss
-.wiki-card-main {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-    min-width: 0;                           // ellipsis 동작 보장
-}
-
-.wiki-card-title {
-    font-size: 0.92rem;
-    font-weight: 500;
-    color: #1F303C;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    transition: color 0.15s ease;
-}
-```
-
-### 4-4. 하위 문서 수 badge (태그 페이지 `.tag-count` 패턴 차용)
-
-```scss
-.wiki-card-badge {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 6px;
-    background: #eef2ff;
-    border-radius: 9px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: $theme-color;
-    line-height: 1;
-
-    &::before {
-        content: "↳";
-        margin-right: 3px;
-        font-size: 0.65rem;
-        opacity: 0.7;
-    }
-}
-```
-
-### 4-5. 날짜
-
-```scss
-.wiki-card-date {
-    flex-shrink: 0;
-    font-size: 0.78rem;
-    color: #94a3b8;
-    white-space: nowrap;
-}
-```
+| 항목 | 값 | 토큰/비고 |
+|------|-----|-----------|
+| 위젯 컨테이너 | `position: fixed; right: 20px; bottom: 20px; z-index: 99` | safe-area 보정 추가 |
+| TOP 버튼 크기 | 44 × 44px | 터치 타깃 최소 44px(WCAG 2.5.5) |
+| ring viewBox | `0 0 44 44`, `r=20`, `cx/cy=22` | stroke 2px → 외경 44px |
+| ring track stroke | 3px, `var(--color-border)` | 미진행 트랙 |
+| ring fill stroke | 3px, `var(--color-interactive)` | 진행분 |
+| 표면(배경) | `var(--color-surface)` | 버튼 원형 배경 |
+| border-radius | `50%` | 완전 원형 |
+| 그림자 | `0 4px 14px rgba(0,0,0,0.15)` (light) / `0 4px 14px rgba(0,0,0,0.45)` (dark) | `--shadow-card`는 너무 강함(64px) → 전용 약식 그림자 |
+| 화살표 아이콘 | 20px, `var(--color-text-primary)` → hover 시 `var(--color-interactive)` | stroke `currentColor` |
+| 공유 액션 버튼 | 40 × 40px, `var(--color-surface)` 배경, `1px solid var(--color-border)` | 펼침 시 노출 |
 
 ---
 
-## 5. 다크모드 명세 (필수)
+## 3. Scroll Progress Ring 비주얼 스펙
 
-> **중요 제약**: `_sass/_theme.scss:60-62`에 `html.dark-mode :not(pre):not(code):not(code *) { color: ... !important; }` 전역 규칙이 존재한다. 다크모드에서 **글자색을 지정하려면 반드시 `!important`** 를 붙여야 전역 규칙을 이긴다. 배경/보더는 `!important` 불필요.
+SVG 두 개의 `<circle>` 중첩. 진행률은 **`stroke-dashoffset`** 으로 표현.
+
+- 반지름 `r = 20` → 둘레 `C = 2πr ≈ 125.66`
+- `stroke-dasharray: 125.66`(= C) 고정
+- `stroke-dashoffset: C × (1 - p)` , `p`는 0~1 진행률 (`scrolledPercentage / 100`)
+  - p=0 → offset 125.66 (빈 ring)
+  - p=1 → offset 0 (꽉 찬 ring)
+- 시작점을 12시 방향으로: `.top-widget__ring { transform: rotate(-90deg); transform-origin: 50% 50%; }`
+- fill 진행은 시계방향
 
 ```scss
-html.dark-mode {
-    .wiki-card-link {
-        background: #232428;
-        border-color: #303136;
-        border-left-color: transparent;
-
-        &:hover {
-            background: #2a2b30;
-            border-left-color: #669DFD;     // 다크모드 액센트는 블루(퍼플은 어두워 대비 부족)
-
-            .wiki-card-title {
-                color: #669DFD !important;
-            }
-        }
-    }
-
-    .wiki-card-title {
-        color: #F5F5F5 !important;
-    }
-
-    .wiki-card-date {
-        color: #6b7685 !important;
-    }
-
-    .wiki-card-badge {
-        background: #1a2a40;
-        color: #93c5fd !important;
-    }
+.top-widget__ring-track,
+.top-widget__ring-fill {
+    fill: none;
+    stroke-width: 3;
+}
+.top-widget__ring-track { stroke: var(--color-border); }
+.top-widget__ring-fill {
+    stroke: var(--color-interactive);
+    stroke-linecap: round;
+    stroke-dasharray: 125.66;          // 2π·20
+    stroke-dashoffset: 125.66;         // 초기 0%
+    transition: stroke-dashoffset 0.1s linear;  // rAF 갱신과 함께 미세 보간
 }
 ```
 
+> JS는 `ringFill.style.strokeDashoffset = (125.66 * (1 - p)).toFixed(2)` 로 갱신. `aria-label`도 `맨 위로 이동 (읽은 비율 N%)` 으로 동기 갱신(섹션 8).
+
 ---
 
-## 6. 모바일 반응형
+## 4. 상태 정의
 
-기본 레이아웃이 이미 모바일 친화적(flex + ellipsis). `@media (max-width: 800px)` 미세 조정:
+| 상태 | 트리거 | 비주얼 |
+|------|--------|--------|
+| **숨김** | 스크롤 < 1 viewport | `opacity:0; transform: translateY(8px) scale(0.9); pointer-events:none`, `aria-hidden="true"` |
+| **등장** | 스크롤 ≥ 1 viewport | `.is-visible`: `opacity:1; transform: translateY(0) scale(1)`, fade+scale 200ms |
+| **hover** (위젯) | 마우스 진입 | TOP 버튼 배경 `--color-surface-hover`, 화살표 색 `--color-interactive`, 공유 액션 펼침(`.top-widget__actions` 노출) |
+| **active** | 클릭 순간 | TOP 버튼 `transform: scale(0.92)` (95ms) |
+| **focus-visible** | 키보드 포커스 | `outline: 2px solid var(--color-accent); outline-offset: 2px` (기존 패턴 재활용) |
+
+> 표시 토글은 **클래스 기반**으로 전환. `top.js`의 `style.display = "block/none"` 코드를 `classList.toggle("is-visible", ...)` 로 교체해야 fade/scale 트랜지션이 동작한다(섹션 8, Frontend 작업).
+
+---
+
+## 5. 다크/라이트 모드 토큰
+
+| 요소 | Light | Dark | 토큰 |
+|------|-------|------|------|
+| 버튼 배경 | `#fff` | `#1E1F22` | `var(--color-surface)` |
+| ring track | `#d0d0d0` | `#636e72` | `var(--color-border)` |
+| ring fill | `#1d4ed8` | `#669DFD` | `var(--color-interactive)` |
+| 화살표 기본 | text-primary | `#F5F5F5` | `var(--color-text-primary)` |
+| 화살표 hover | `#1d4ed8` | `#669DFD` | `var(--color-interactive)` |
+| 그림자 | `rgba(0,0,0,0.15)` | `rgba(0,0,0,0.45)` | `html.dark-mode` 분기 |
+
+> 전부 CSS custom property로 처리 → 토큰 cascade로 자동 모드 전환. 하드코딩 색상 금지(TPO 원칙 5). 그림자만 `html.dark-mode .top-widget__top` 으로 명시 오버라이드.
+
+---
+
+## 6. 애니메이션 스펙
+
+| 대상 | duration | easing |
+|------|----------|--------|
+| 등장 fade+scale | 200ms | `cubic-bezier(0.16, 1, 0.3, 1)` |
+| ring 진행 보간 | 100ms | `linear` |
+| hover 배경/색 | 150ms | `ease` |
+| active scale | 95ms | `ease-out` |
+| 공유 액션 펼침 | 200ms | `cubic-bezier(0.16, 1, 0.3, 1)` |
+
+`prefers-reduced-motion` 처리:
+```scss
+@media (prefers-reduced-motion: reduce) {
+    .top-widget,
+    .top-widget__top,
+    .top-widget__ring-fill,
+    .top-widget__actions {
+        transition: none !important;
+    }
+}
+```
+- ring fill 트랜지션 제거 → offset이 즉시 점프(애니메이션 없음, 값 자체는 정확).
+- JS: `topFunction()`은 `prefers-reduced-motion` 시 `behavior:'auto'` 로 분기(섹션 8).
+
+---
+
+## 7. 모바일 반응형 (`@media (max-width: 800px)`)
 
 ```scss
 @media (max-width: 800px) {
-    .wiki-card-link {
-        padding: 11px 12px;
-        gap: 8px;
+    .top-widget {
+        right: max(14px, env(safe-area-inset-right));
+        bottom: max(14px, env(safe-area-inset-bottom));
     }
-    .wiki-card-title { font-size: 0.9rem; }
-    .wiki-card-date  { font-size: 0.74rem; }
+    .top-widget__top { width: 48px; height: 48px; }   // 터치 타깃 ↑
+    .top-widget__ring { width: 48px; height: 48px; }
 }
 ```
-
-- 제목이 길면 ellipsis로 잘리고 날짜/badge는 우측 고정 → 375px에서도 줄바꿈 없이 한 줄 유지.
-- 카드 패딩 포함 터치 타겟 높이 약 44px 충족(WCAG 2.5.5).
+- 모바일은 터치 타깃을 48px로 확대(엄지 도달성).
+- safe-area-inset으로 노치/홈인디케이터 영역 회피.
+- 펼침 액션은 **위쪽 방향**(`flex-direction: column-reverse` 또는 actions를 top 버튼 위에 배치) — 하단 safe-area 침범 방지.
+- 데스크탑 TOC가 있는 `wiki.html`/`post.html`에서도 위젯은 진행률+TOP만 노출되므로 중복 없음(섹션 점프 미포함).
 
 ---
 
-## 7. 접근성 (WCAG AA)
+## 8. 접근성 (WCAG AA)
 
 | 항목 | 처리 |
 |------|------|
-| 색 대비 | 제목 `#1F303C` on `#fff` ≈ 13:1 ✓ / 다크 `#F5F5F5` on `#232428` ≈ 14:1 ✓ |
-| badge 의미 전달 | 시각은 `↳N`, 스크린리더는 JS `aria-label="하위 문서 N개"` 부여 |
-| 시맨틱 | `<time datetime>` 사용, 링크는 `<a>` 유지 |
-| 포커스 | `.wiki-card-link:focus-visible`에 outline 명시(섹션 4-2) |
-| prefers-reduced-motion | 아래 규칙 추가 |
+| TOP 버튼 라벨 | `aria-label="맨 위로 이동 (읽은 비율 N%)"` — JS가 진행률과 동기 갱신 |
+| 공유 버튼 라벨 | `aria-label="이 글 공유하기"` |
+| ring/arrow SVG | `aria-hidden="true" focusable="false"` (장식 요소) |
+| 위젯 컨테이너 | 숨김 상태 `aria-hidden="true"`, 등장 시 `false` 로 토글 |
+| 키보드 | 두 버튼 모두 `<button>` → Tab 포커스 가능, Enter/Space 동작 |
+| 포커스 표시 | `:focus-visible` outline (섹션 4) |
+| 색 대비 | ring fill `#1d4ed8` on `#fff` ≈ 5.9:1, 화살표 text-primary ≈ 13:1 — AA 충족 |
+| reduced-motion | 애니메이션·smooth scroll 비활성(섹션 6) |
+| role | 기본 `button` 시맨틱으로 충분, 추가 role 불요 |
+
+---
+
+## 9. UI 변경 요청 (Frontend 작업 목록)
+
+| # | 항목 | 파일 | 변경 |
+|---|------|------|------|
+| 1 | HTML 구조 교체 | `_includes/footer.html` | `#topBtn` 단일 button → `#topWidget` 래퍼 + ring SVG + arrow + 공유 액션(섹션 1) |
+| 2 | 구 스타일 제거 | `_sass/_base.scss:230-266` | 기존 `#topBtn` 블록 삭제 |
+| 3 | 신규 위젯 스타일 | `_sass/_base.scss` 하단 | `.top-widget*` SCSS 추가(섹션 2~7) |
+| 4 | 표시 토글 교체 | `js/top.js` | `style.display` → `classList.toggle('is-visible', ...)` + `aria-hidden` 동기 |
+| 5 | 임계값 완화 | `js/top.js` | `> 80` → `scrollTop > window.innerHeight` (첫 1 viewport) |
+| 6 | ring 갱신 | `js/top.js` | `scrolledPercentage` → `ringFill.strokeDashoffset` 갱신, `aria-label` 동기, **rAF/throttle** 적용(현 raw scroll 개선) |
+| 7 | reduced-motion 스크롤 | `js/top.js` | `topFunction()`에서 matchMedia 분기 → `behavior:'auto'` |
+| 8 | 공유 동작(P1) | `js/top.js` | `#shareBtn`: `navigator.share` 지원 시 네이티브, 미지원 시 클립보드 복사 fallback |
+| 9 | 빌드 검증 | — | `bundle exec jekyll build` 성공 + 다크/라이트·375px 확인 |
+
+> 신규 SCSS는 `_sass/_base.scss` 하단에 추가(기존 `#topBtn`이 거기 있었으므로 응집). `main.scss`에 이미 import됨 → 추가 import 불필요.
+
+---
+
+## 10. SCSS 구현 명세 (Frontend가 바로 사용)
 
 ```scss
+/* === Scroll Progress Ring + Smart Action Widget === */
+.top-widget {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 99;
+    display: flex;
+    flex-direction: column-reverse;   // 액션이 TOP 버튼 위로 펼쳐짐
+    align-items: center;
+    gap: 10px;
+    opacity: 0;
+    transform: translateY(8px) scale(0.9);
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+
+    &.is-visible {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+        pointer-events: auto;
+    }
+}
+
+.top-widget__top {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    background: var(--color-surface);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.095s ease-out;
+
+    &:hover { background: var(--color-surface-hover); }
+    &:active { transform: scale(0.92); }
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+}
+
+.top-widget__ring {
+    position: absolute;
+    inset: 0;
+    transform: rotate(-90deg);
+    transform-origin: 50% 50%;
+}
+.top-widget__ring-track,
+.top-widget__ring-fill {
+    fill: none;
+    stroke-width: 3;
+}
+.top-widget__ring-track { stroke: var(--color-border); }
+.top-widget__ring-fill {
+    stroke: var(--color-interactive);
+    stroke-linecap: round;
+    stroke-dasharray: 125.66;
+    stroke-dashoffset: 125.66;
+    transition: stroke-dashoffset 0.1s linear;
+}
+
+.top-widget__arrow {
+    position: relative;
+    color: var(--color-text-primary);
+    transition: color 0.15s ease;
+}
+.top-widget__top:hover .top-widget__arrow { color: var(--color-interactive); }
+
+/* 펼침 액션 (P1: 공유) — 기본 숨김, 위젯 hover/focus-within 시 노출 */
+.top-widget__actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    opacity: 0;
+    transform: translateY(6px) scale(0.9);
+    pointer-events: none;
+    transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.top-widget:hover .top-widget__actions,
+.top-widget:focus-within .top-widget__actions {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.top-widget__action {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover { background: var(--color-surface-hover); color: var(--color-interactive); }
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+}
+
+html.dark-mode {
+    .top-widget__top   { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45); }
+    .top-widget__action { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
+}
+
+@media (max-width: 800px) {
+    .top-widget {
+        right: max(14px, env(safe-area-inset-right));
+        bottom: max(14px, env(safe-area-inset-bottom));
+    }
+    .top-widget__top,
+    .top-widget__ring { width: 48px; height: 48px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-    .wiki-card-link {
-        transition: none;
-        &:hover { transform: none; }
+    .top-widget,
+    .top-widget__top,
+    .top-widget__ring-fill,
+    .top-widget__actions {
+        transition: none !important;
     }
 }
 ```
 
 ---
 
-## 8. UI 변경 요청 요약 (Frontend 작업 목록)
+## 11. 디자인 토큰 요약
 
-| 항목 | 파일 | 변경 | 이유 |
-|------|------|------|------|
-| HTML 구조 교체 | `js/category.js` (L23,25,51-60) | `wiki-card-*` 시맨틱 구조로 재작성, 인라인 style 제거 | 카드 레이아웃 + 접근성 |
-| 구 스타일 제거 | `_sass/_layout.scss:99-107` | `#document-list .post-list/.post-item` 블록 삭제 | 신규 클래스로 대체 |
-| 신규 카드 스타일 | `_sass/_index.scss` 하단 | 섹션 4 SCSS 추가 | 홈 피드와 응집 |
-| 다크모드 | `_sass/_index.scss` 하단 | 섹션 5 SCSS 추가 (`!important` 필수) | 전역 color 규칙 우회 |
-| 반응형/접근성 | 동상 | 섹션 6·7 미디어쿼리 추가 | 모바일/WCAG |
-| 빌드 검증 | — | `bundle exec jekyll build` 성공 확인 | 배포 가능 상태 |
-
----
-
-## 9. 디자인 토큰
-
-| 토큰 | 라이트 | 다크 | 용도 |
-|------|--------|------|------|
-| Card BG | `#fff` | `#232428` | 카드 배경 |
-| Card Border | `#eef0f4` | `#303136` | 카드 테두리 |
-| Accent (hover) | `$theme-color` `#47146C` | `#669DFD` | 좌측 액센트 |
-| Title | `#1F303C` | `#F5F5F5` | 제목 |
-| Title Hover | `#1d4ed8` | `#669DFD` | 제목 강조 |
-| Date | `#94a3b8` | `#6b7685` | 날짜 메타 |
-| Badge BG / FG | `#eef2ff` / `#47146C` | `#1a2a40` / `#93c5fd` | 하위 문서 수 |
+| 토큰 | Light | Dark | 용도 |
+|------|-------|------|------|
+| `--color-surface` | `#fff` | `#1E1F22` | 버튼 배경 |
+| `--color-surface-hover` | `#f8f8fb` | `rgba(255,255,255,0.04)` | hover 배경 |
+| `--color-border` | `#d0d0d0` | `#636e72` | ring track / 액션 보더 |
+| `--color-interactive` | `#1d4ed8` | `#669DFD` | ring fill / hover 강조 |
+| `--color-text-primary` | `rgba(0,0,0,0.84)` | `#F5F5F5` | 화살표 기본 |
+| `--color-accent` | `#669DFD` | `#669DFD` | focus outline |

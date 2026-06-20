@@ -1,14 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Roboto+Slab:300,400,500,600,700,800,900&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@200;300;400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@100..900&display=swap');
-
 body {
     margin: 0;
     height: 100%;
-    max-width: 100vw; /* 화면 너비를 초과하지 않도록 설정 */
-    overflow-x: hidden; /* 가로 스크롤을 숨김 */
-    font: 400 16px 'Noto Sans',AppleSDGothicNeo,sans-serif;
-    color: rgba(0, 0, 0, 0.84);
+    max-width: 100vw;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    font: 400 16px 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Noto Sans KR', sans-serif;
+    color: var(--color-text-primary);
     -webkit-text-size-adjust: 100%;
     -webkit-font-feature-settings: "kern" 1;
     -moz-font-feature-settings: "kern" 1;
@@ -21,18 +18,12 @@ body {
 }
 
 body, th, td, div, p, ul, li {
-    word-break: keep-all; /* 한국어 어절 단위 줄바꿈, 영단어 보존 */
-    overflow-wrap: break-word; /* 컨테이너를 넘어가는 긴 단어만 줄바꿈 */
+    word-break: keep-all;
+    overflow-wrap: break-word;
 }
-
-$main-font-color: #4D5667;
 
 p, li {
-    color: $main-font-color;
-}
-
-a:link, a:visited {
-    color: inherit;
+    color: var(--color-text-secondary);
 }
 
 .post-content {
@@ -40,16 +31,16 @@ a:link, a:visited {
 }
 
 blockquote {
-    font-family: 'Noto Serif KR', serif;
-    background: #FFFFFF;
-    margin:0;
+    background: var(--color-surface);
+    margin: 0;
     padding: 1px 0px 1px 8px;
-    border-left: 4px solid #CCCCCC;
+    border-left: 4px solid var(--color-border);
     p {
         line-height: 2;
-        color: $second-font-color;
+        color: var(--color-text-blockquote);
     }
 }
+
 .hide {
     display: none;
 }
@@ -63,40 +54,46 @@ blockquote {
 .language-html td {
     padding: 0;
     border: 0;
+}
 
+a:link, a:visited {
+    color: inherit;
+}
+
+a:hover {
+    color: var(--color-interactive);
 }
 
 h1 {
     font-weight: 700;
 }
-h2,h3,h4,h5,h6 {
-    color: #1F303C; /* font-weight는 각 요소에서 개별 지정 */
+h2, h3, h4, h5, h6 {
+    color: var(--color-text-heading);
 }
 
-.post-content h1,h2,h3,h4,h5,h6 {
-    &:before { color:$theme-color; }
+.post-content h1, h2, h3, h4, h5, h6 {
+    &:before { color: var(--color-brand); }
 }
 
 h1 {
-    font-size: clamp(1.8rem, 3.0vw, 2.2rem); /* 뷰포트에 따라 조정 */
+    font-size: clamp(1.8rem, 3.0vw, 2.2rem);
     font-weight: 700;
     margin: 0 0 0.6em;
     line-height: 1.3;
 }
 .post-content h1 {
-    border-bottom: 1px solid $theme-color;
+    border-bottom: 1px solid var(--color-brand);
 }
 h2 {
     font-size: clamp(1.5rem, 2.4vw, 1.8rem);
     font-weight: 700;
     margin: 2em 0 0.6em;
     line-height: 1.35;
-    border-bottom: 1px solid #d0d0d0;
+    border-bottom: 1px solid var(--color-border);
     padding-bottom: 0.2em;
 }
 .post-content h2 {
     /* &:before { content:"⠁"; } */
-    // padding-top: 100px;
 }
 h3 {
     font-size: clamp(1.25rem, 1.8vw, 1.45rem);
@@ -106,23 +103,21 @@ h3 {
 }
 .post-content h3 {
     /* &:before { content:"⠃"; } */
-    // padding-top: 25px;
 }
 h4 {
     font-size: clamp(1.1rem, 1.5vw, 1.25rem);
     font-weight: 600;
     margin: 1.4em 0 0.6em;
-    padding-left: 5px;
+    padding-left: 4px;
 }
 .post-content h4 {
     /* &:before { content:"⠋"; } */
-    // padding-left: 10px;
 }
 h5 {
     font-size: clamp(1.0rem, 1.3vw, 1.1rem);
     font-weight: 600;
     margin: 1.4em 0 0.6em;
-    padding-left: 10px;
+    padding-left: 8px;
 }
 .post-content h5 {
     /* &:before { content:"⠛"; } */
@@ -131,11 +126,10 @@ h6 {
     font-size: 0.95rem;
     font-weight: 700;
     margin: 1.4em 0 0.6em;
-    padding-left: 10px;
+    padding-left: 8px;
 }
 .post-content h6 {
     /* &:before { content:"⠟"; } */
-    // padding-left: 10px;
 }
 
 .post-content .external-link {
@@ -145,7 +139,7 @@ h6 {
 }
 
 .post-content .tagged-link {
-    &:before { content:"#"; }
+    &:before { content: "#"; }
 }
 
 .link-checked {
@@ -217,7 +211,6 @@ sup[role=doc-noteref] {
             color: #df0000;
             & + .tooltiptext {
                 color: red;
-                // display: block; // create-link.js 에서 처리한다
             }
         }
 
@@ -225,8 +218,8 @@ sup[role=doc-noteref] {
             display: none;
             max-width: 800px;
             min-width: 300px;
-            background-color: #ffffff;
-            color: $main-font-color;
+            background-color: var(--color-surface);
+            color: var(--color-text-secondary);
             text-align: left;
             border-radius: 7px;
             border: 1px solid #df0000;
@@ -238,34 +231,128 @@ sup[role=doc-noteref] {
     }
 }
 
-/* 맨 위로 버튼 스타일 */
-#topBtn {
-    display: none; /* 버튼은 기본적으로 숨겨져 있습니다 */
-    position: fixed; /* 페이지에 고정되어 있습니다 */
-    bottom: 20px; /* 하단에서 20px 위에 위치합니다 */
-    right: 20px; /* 우측에서 20px 왼쪽에 위치합니다 */
-    z-index: 99; /* 다른 요소들 위에 위치합니다 */
-    border: none; /* 테두리는 없습니다 */
-    outline: none; /* 외곽선도 없습니다 */
-    background-color: #f7f7f7; /* 슬라이더 바의 배경색 */
-    cursor: pointer; /* 마우스 오버시 커서가 변경됩니다 */
-    padding: 10px; /* 내부 패딩은 10px입니다 */
-    border-radius: 50%; /* 원형 모양을 만듭니다 */
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* 버튼에 그림자를 추가합니다 */
-    font-size: 16px; /* 폰트 크기는 16px입니다 */
-    line-height: 20px; /* 라인 높이를 지정합니다 */
-    text-align: center; /* 텍스트를 중앙으로 정렬합니다 */
-    width: 50px; /* 버튼의 너비는 50px입니다 */
-    height: 50px; /* 버튼의 높이는 50px입니다 */
-    transition: bottom 0.5s ease; /* 부드러운 하강 효과를 위한 전환 속성 */
+/* === Smart Action Widget === */
+.top-widget {
+    position: fixed;
+    right: 20px;
+    bottom: 20px;
+    z-index: 99;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
 }
 
-#topBtn:hover {
-    background-color: #e8e8e8; /* 마우스 오버시 배경색을 변경합니다 */
+.top-widget__top {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    outline: none;
+    border-radius: 50%;
+    background: var(--color-surface);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    cursor: pointer;
+    transition: background 0.15s ease, transform 0.095s ease-out;
+
+    &:hover { background: var(--color-surface-hover); }
+    &:active { transform: scale(0.92); }
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
 }
 
-#topBtn::before {
-    display: block;
-    font-size: 24px; /* 화살표 크기를 지정합니다 */
-    margin-bottom: 5px; /* 텍스트와의 간격을 조정합니다 */
+
+.top-widget__arrow {
+    position: relative;
+    color: var(--color-text-primary);
+    transition: color 0.15s ease;
+}
+.top-widget__top:hover .top-widget__arrow { color: var(--color-interactive); }
+
+/* 공유 패널: 공유 버튼 좌측에 수평 전개 */
+.top-widget__share-panel {
+    display: flex;
+    flex-direction: row;
+    gap: 6px;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(10px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+
+    &.is-open {
+        opacity: 1;
+        pointer-events: auto;
+        transform: translateX(0);
+    }
+}
+
+.top-widget__share-item {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    color: var(--color-text-secondary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease;
+    flex-shrink: 0;
+
+    &:hover {
+        background: var(--color-surface-hover);
+        color: var(--color-interactive);
+    }
+
+    &:link, &:visited { color: var(--color-text-secondary); }
+
+    &.copied { color: #22c55e; }
+}
+
+.top-widget__action {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    border-radius: 50%;
+    background: var(--color-surface);
+    color: var(--color-text-primary);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+
+    &:hover { background: var(--color-surface-hover); color: var(--color-interactive); }
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
+}
+
+html.dark-mode {
+    .top-widget__top    { box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45); }
+    .top-widget__action { box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4); }
+}
+
+@media (max-width: 800px) {
+    .top-widget {
+        right: #{"max(14px, env(safe-area-inset-right))"};
+        bottom: #{"max(14px, env(safe-area-inset-bottom))"};
+    }
+    .top-widget__top { width: 40px; height: 40px; }
+    .top-widget__action { width: 36px; height: 36px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .top-widget__top { transition: none !important; }
+    .top-widget__share-panel { transition: none !important; }
 }

@@ -6,7 +6,7 @@
     padding: 0 16px;
 
     @media (min-width: 800px) {
-        padding: 0 5px;
+        padding: 0 4px;
     }
 }
 
@@ -35,10 +35,10 @@
     }
 
     &:hover {
-        background: #f8f8fb;
+        background: var(--color-surface-hover);
 
         .home-feed-title {
-            color: $theme-color;
+            color: var(--color-interactive);
         }
     }
 }
@@ -46,7 +46,7 @@
 .home-feed-title {
     font-size: 0.92rem;
     font-weight: 500;
-    color: #1F303C;
+    color: var(--color-text-heading);
     flex: 1;
     min-width: 0;
     overflow: hidden;
@@ -66,9 +66,18 @@
     display: none;
 }
 
+.wiki-card-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    background: var(--color-surface-muted);
+    border-radius: 8px;
+    padding: 1px 6px;
+}
+
 .home-feed-date {
     font-size: 0.78rem;
-    color: #8A93A5;
+    color: var(--color-text-tertiary);
     white-space: nowrap;
 }
 
@@ -77,63 +86,42 @@
 
     a {
         font-size: 0.85rem;
-        color: #8A93A5;
+        color: var(--color-text-tertiary);
         text-decoration: none;
 
         &:link, &:visited {
-            color: #8A93A5;
+            color: var(--color-text-tertiary);
         }
 
         &:hover {
-            color: $theme-color;
+            color: var(--color-interactive);
         }
     }
 }
 
-// Dark mode
-html.dark-mode .home-feed-link {
-    &:hover {
-        background: rgba(255, 255, 255, 0.04);
-
-        .home-feed-title {
-            color: #669DFD;
-        }
-    }
-}
-
-html.dark-mode .home-feed-title {
-    color: #F5F5F5;
-}
-
-html.dark-mode .home-feed-tag {
-    background: #1a2a40;
-    border-color: #253a5e;
-    color: #669DFD;
-}
-
-html.dark-mode .home-footer a {
-    &:link, &:visited {
-        color: #636e72;
-    }
-
-    &:hover {
-        color: #669DFD;
-    }
+.home-section-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.01em;
+    margin: 1.2rem 4px 0.4rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .indent {
-    margin-left: 30px;
-    padding: 10px;
+    margin-left: 28px;
+    padding: 8px;
 }
 
 .contact {
-    margin-top: 10px;
+    margin-top: 8px;
     text-align: center;
 
     a {
-        background: $theme_color;
+        background: var(--color-brand);
         color: #FFFFFF;
-        padding: 5px 10px;
+        padding: 4px 12px;
         text-decoration: none;
         border-radius: 8px;
         white-space: nowrap;
@@ -142,141 +130,5 @@ html.dark-mode .home-footer a {
             transition: background 0.3s ease;
             background: #666;
         }
-    }
-}
-
-.wiki-card-list {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 1rem;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.wiki-card-link {
-    display: flex;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 12px;
-    padding: 12px 14px;
-    background: #fff;
-    border: 1px solid #eef0f4;
-    border-left: 3px solid transparent;
-    border-radius: 8px;
-    text-decoration: none;
-    transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
-
-    &:link, &:visited {
-        color: inherit;
-    }
-
-    &:hover {
-        background: #f8f9fc;
-        border-left-color: $theme-color;
-        transform: translateX(2px);
-
-        .wiki-card-title {
-            color: #1d4ed8;
-        }
-    }
-
-    &:focus-visible {
-        outline: 2px solid #1d4ed8;
-        outline-offset: 2px;
-    }
-}
-
-.wiki-card-main {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex: 1;
-    min-width: 0;
-}
-
-.wiki-card-title {
-    font-size: 0.92rem;
-    font-weight: 500;
-    color: #1F303C;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    transition: color 0.15s ease;
-}
-
-.wiki-card-badge {
-    flex-shrink: 0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 18px;
-    height: 18px;
-    padding: 0 6px;
-    background: #eef2ff;
-    border-radius: 9px;
-    font-size: 0.7rem;
-    font-weight: 600;
-    color: $theme-color;
-    line-height: 1;
-
-    &::before {
-        content: "↳";
-        margin-right: 3px;
-        font-size: 0.65rem;
-        opacity: 0.7;
-    }
-}
-
-.wiki-card-date {
-    flex-shrink: 0;
-    font-size: 0.78rem;
-    color: #94a3b8;
-    white-space: nowrap;
-}
-
-html.dark-mode {
-    .wiki-card-link {
-        background: #232428;
-        border-color: #303136;
-        border-left-color: transparent;
-
-        &:hover {
-            background: #2a2b30;
-            border-left-color: #669DFD;
-
-            .wiki-card-title {
-                color: #669DFD !important;
-            }
-        }
-    }
-
-    .wiki-card-title {
-        color: #F5F5F5 !important;
-    }
-
-    .wiki-card-date {
-        color: #6b7685 !important;
-    }
-
-    .wiki-card-badge {
-        background: #1a2a40;
-        color: #93c5fd !important;
-    }
-}
-
-@media (max-width: 800px) {
-    .wiki-card-link {
-        padding: 11px 12px;
-        gap: 8px;
-    }
-    .wiki-card-title { font-size: 0.9rem; }
-    .wiki-card-date  { font-size: 0.74rem; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .wiki-card-link {
-        transition: none;
-        &:hover { transform: none; }
     }
 }

@@ -13,18 +13,18 @@ body {
     top: 0;
     left: 0; /* 화면 왼쪽 끝에서 시작하도록 설정 */
     z-index: 1;
-    background-color: #ffffff;
+    background-color: var(--color-surface);
 }
 
 .progress-bar {
     height: 4px;
-    background-color: #669DFD;
+    background-color: var(--color-accent);
     width: 0;
     transition: 0.15s;
 }
 
 .page-content {
-    background:#FFFFFF;
+    background: var(--color-surface);
     // padding: 30px 0;
 
     img {
@@ -56,7 +56,7 @@ body {
 .social-media-links a,
 .social-media-links a:visited {
     margin: 0 10px;
-    color: $main-font-color;
+    color: var(--color-text-secondary);
     font-size: 16px;
     display: inline-block;
     text-decoration: none;
@@ -102,10 +102,10 @@ ul.tag-list {
 }
 
 .section-nav {
-  background-color: #FFF;
-  margin: 5px 0;
-  padding: 10px 30px;
-  border: 1px solid #E8E8E8;
+  background-color: var(--color-surface);
+  margin: 4px 0;
+  padding: 8px 28px;
+  border: 1px solid var(--color-border);
   border-radius: 3px;
 }
 
@@ -136,7 +136,7 @@ ul.tag-list {
     a.active:visited {
         border: 0px solid transparent;
         background-color: transparent;
-        color: #000000;
+        color: var(--color-text-heading);
     }
 }
 
@@ -152,5 +152,58 @@ ul.tag-list {
 }
 
 .post-sub-document {
-    color: #000000;
+    color: var(--color-text-heading);
+}
+
+// ── Wiki prev/next navigation ──────────────────────────────
+.wiki-prev-next {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 2rem 0 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border-subtle);
+}
+
+.wiki-prev-next-link {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding: 12px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    text-decoration: none;
+    flex: 1;
+    max-width: calc(50% - 6px);
+    transition: background 0.12s ease, border-color 0.12s ease;
+
+    &:link, &:visited {
+        color: inherit;
+    }
+
+    &:hover {
+        background: var(--color-surface-hover);
+        border-color: var(--color-interactive);
+    }
+
+    &.wiki-next {
+        text-align: right;
+    }
+}
+
+.wiki-prev-next-label {
+    font-size: 0.68rem;
+    color: var(--color-text-tertiary);
+    font-weight: 500;
+}
+
+.wiki-prev-next-title {
+    font-size: 0.85rem;
+    color: var(--color-text-heading);
+    font-weight: 500;
+    line-height: 1.4;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
 }

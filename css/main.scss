@@ -2,20 +2,93 @@
 ---
 @charset "utf-8";
 
-$base-font-family  : Arial;
+// SCSS vars — compile-time only
 $default-font-size : 0.9rem;
-$default-font-color : #000;
-$second-font-color : #503e2b;
-$third-font-color : #9e948a;
-$forth-font-color : #808094;
 $small-font-size   : $default-font-size * 0.8;
 $base-line-height  : 1.5;
-
 $coding-font: Consolas, "Courier New", Courier;
-$theme-color: #47146C;
-$dark-color: #343540;
 
-// Import from 'sass_dir' (default: _sass)
+$theme-color:       #1d4ed8;
+$main-font-color:   #4D5667;
+$second-font-color: #503e2b;
+$third-font-color:  #9e948a;
+$forth-font-color:  #808094;
+$dark-color:        #1E1F22;
+
+// ── Design Tokens ──────────────────────────────────────────────────────────
+:root {
+    --color-brand:               #{$theme-color};
+    --color-accent:              #669DFD;
+    --color-interactive:         #{$theme-color};
+
+    --color-text-primary:        rgba(0, 0, 0, 0.84);
+    --color-text-heading:        #1F303C;
+    --color-text-secondary:      #{$main-font-color};
+    --color-text-tertiary:       #8A93A5;
+    --color-text-placeholder:    #bbb;
+    --color-text-blockquote:     #{$second-font-color};
+
+    --color-surface:             #FFFFFF;
+    --color-surface-hover:       #f8f8fb;
+    --color-surface-muted:       #f0f0f0;
+    --color-surface-code:        #E6E6E6;
+
+    --color-border:              #d0d0d0;
+    --color-border-subtle:       #f0f0f0;
+    --color-border-table:        #{$third-font-color};
+
+    --color-tag-bg:              #eff6ff;
+    --color-tag-border:          #dbeafe;
+    --color-tag-text:            #1e3a8a;
+    --color-tag-active:          #3b82f6;
+    --color-tag-count-bg:        #bfdbfe;
+
+    --color-toc-active:          #2563eb;
+
+    --color-badge-index:         #669DFD;
+    --color-badge-wiki:          #2563eb;
+    --color-badge-blog:          #82b782;
+    --color-badge-tag:           #f59e0b;
+
+    --shadow-card:               0 24px 64px rgba(0, 0, 0, 0.22);
+    --color-overlay:             rgba(0, 0, 0, 0.45);
+}
+
+html.dark-mode {
+    background-color: var(--color-surface);
+    color: var(--color-text-primary);
+
+    --color-interactive:         #669DFD;
+
+    --color-text-primary:        #F5F5F5;
+    --color-text-heading:        #e2e8f0;
+    --color-text-secondary:      #CED6DE;
+    --color-text-blockquote:     #c4a882;
+
+    --color-surface:             #{$dark-color};
+    --color-surface-hover:       rgba(255, 255, 255, 0.04);
+    --color-surface-muted:       #2b2d30;
+    --color-surface-code:        #2b2d30;
+
+    --color-border:              #636e72;
+    --color-border-subtle:       #3a3d42;
+    --color-border-table:        #636e72;
+
+    --color-tag-bg:              #1a2a40;
+    --color-tag-border:          #253a5e;
+    --color-tag-text:            #93c5fd;
+    --color-tag-active:          #93c5fd;
+    --color-tag-count-bg:        #2a4a7a;
+
+    --color-toc-active:          #669DFD;
+
+    --color-badge-wiki:          #3b82f6;
+
+    --shadow-card:               0 24px 64px rgba(0, 0, 0, 0.5);
+    --color-overlay:             rgba(0, 0, 0, 0.6);
+}
+
+// ── Imports ────────────────────────────────────────────────────────────────
 @import
     "base",
     "theme",

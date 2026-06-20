@@ -1,9 +1,11 @@
-/* 사이트 최상단 메뉴 바 + 구글 검색 */
+/* 사이트 최상단 메뉴 바 + 검색 */
 
 .header {
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #d0d0d0;
+    height: 48px;
+    border-bottom: 1px solid var(--color-border);
+    background-color: var(--color-surface);
 
     .header-left {
         flex: 1;
@@ -19,18 +21,17 @@
     .site-title {
         display: block;
         text-decoration: none;
-        color: #000000;
-        padding: 6px 10px;
-        font-style: 'Noto Sans';
+        color: var(--color-text-primary);
+        font-weight: 700;
+        padding: 8px 12px;
     }
 
     .site-title-right {
         display: flex;
         align-items: center;
         text-decoration: none;
-        color: #4D5667;
-        padding: 6px 10px;
-        font-style: 'Noto Sans';
+        color: var(--color-text-secondary);
+        padding: 8px 12px;
     }
 }
 
@@ -44,10 +45,17 @@
     border: none;
     cursor: pointer;
     font-size: inherit;
-    color: #4D5667;
-    padding: 6px 10px;
+    color: var(--color-text-secondary);
+    padding: 8px 12px;
     display: flex;
     align-items: center;
+    outline: none;
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+        border-radius: 4px;
+    }
 }
 
 // 오버레이 backdrop
@@ -55,7 +63,7 @@
     position: fixed;
     inset: 0;
     z-index: 1000;
-    background: rgba(0, 0, 0, 0.45);
+    background: var(--color-overlay);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
     display: flex;
@@ -74,9 +82,9 @@
 
 // 검색 카드
 div.search {
-    background: #ffffff;
+    background: var(--color-surface);
     border-radius: 12px;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.22);
+    box-shadow: var(--shadow-card);
     width: calc(100% - 32px);
     max-width: 560px;
     overflow: hidden;
@@ -97,7 +105,7 @@ div.search {
 }
 
 .search-icon {
-    color: #bbb;
+    color: var(--color-text-placeholder);
     font-size: 14px;
     flex-shrink: 0;
 }
@@ -110,12 +118,12 @@ div.search {
     border: none;
     font-size: 16px;
     outline: none;
-    color: #1F303C;
+    color: var(--color-text-heading);
     -webkit-appearance: none;
     min-width: 0;
 
     &::placeholder {
-        color: #bbb;
+        color: var(--color-text-placeholder);
     }
 }
 
@@ -123,17 +131,23 @@ div.search {
     background: none;
     border: none;
     cursor: pointer;
-    padding: 4px 6px;
-    color: #bbb;
+    padding: 4px 8px;
+    color: var(--color-text-placeholder);
     font-size: 14px;
     flex-shrink: 0;
     border-radius: 4px;
     line-height: 1;
     transition: color 0.15s ease, background 0.15s ease;
+    outline: none;
 
     &:hover {
-        color: #555;
-        background: #f0f0f0;
+        color: var(--color-text-secondary);
+        background: var(--color-surface-muted);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
     }
 }
 
@@ -142,7 +156,7 @@ div.search {
     display: none;
     max-height: 360px;
     overflow-y: auto;
-    border-top: 1px solid #f0f0f0;
+    border-top: 1px solid var(--color-border-subtle);
 
     &.is-open {
         display: block;
@@ -153,10 +167,10 @@ div.search {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 11px 20px;
+    padding: 12px 20px;
     text-decoration: none;
-    color: #1F303C;
-    border-bottom: 1px solid #f5f5f5;
+    color: var(--color-text-heading);
+    border-bottom: 1px solid var(--color-border-subtle);
     font-size: 14px;
     transition: background 0.1s ease;
 
@@ -165,7 +179,7 @@ div.search {
     }
 
     &:hover {
-        background: #f5f5f5;
+        background: var(--color-surface-hover);
     }
 }
 
@@ -179,10 +193,10 @@ div.search {
     flex-shrink: 0;
     letter-spacing: 0.02em;
 
-    &.type-index { background-color: #669DFD; }
-    &.type-wiki { background-color: #669DFD; }
-    &.type-blog { background-color: #82b782; }
-    &.type-tag { background-color: #f59e0b; }
+    &.type-index { background-color: var(--color-badge-index); }
+    &.type-wiki  { background-color: var(--color-badge-wiki); }
+    &.type-blog  { background-color: var(--color-badge-blog); }
+    &.type-tag   { background-color: var(--color-badge-tag); }
 }
 
 .search-result-main {
@@ -207,8 +221,8 @@ div.search {
 
 .search-result-tag {
     font-size: 10px;
-    color: #888;
-    background: #f0f0f0;
+    color: var(--color-text-tertiary);
+    background: var(--color-surface-muted);
     border-radius: 3px;
     padding: 1px 5px;
     flex-shrink: 0;
@@ -217,51 +231,6 @@ div.search {
 .search-no-result {
     padding: 20px;
     font-size: 14px;
-    color: #aaa;
+    color: var(--color-text-placeholder);
     text-align: center;
-}
-
-// 다크 모드
-html.dark-mode .searchbox-wrapper {
-    background: rgba(0, 0, 0, 0.6) !important;
-}
-
-html.dark-mode div.search {
-    background: #2b2d30 !important;
-    box-shadow: 0 24px 64px rgba(0, 0, 0, 0.5) !important;
-}
-
-html.dark-mode .searchInput {
-    color: #e8e8e8 !important;
-}
-
-html.dark-mode .search-results {
-    border-top-color: #3a3d42 !important;
-}
-
-html.dark-mode .search-result-item {
-    color: #e8e8e8 !important;
-    border-bottom-color: #3a3d42 !important;
-
-    &:hover {
-        background: #35373b !important;
-    }
-}
-
-html.dark-mode .search-result-tag {
-    color: #aaa !important;
-    background: #3a3d42 !important;
-}
-
-html.dark-mode .search-icon {
-    color: #666 !important;
-}
-
-html.dark-mode .search-close {
-    color: #666 !important;
-
-    &:hover {
-        color: #ccc !important;
-        background: #3a3d42 !important;
-    }
 }

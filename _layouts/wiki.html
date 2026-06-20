@@ -38,6 +38,38 @@ layout: document
 
     <br/>
 
+    {% assign wiki_sorted = site.wiki | where_exp: "item", "item.public != false" | where_exp: "item", "item.layout != 'category'" | where_exp: "item", "item.title != 'wiki'" | sort: 'updated' | reverse %}
+    {% for wdoc in wiki_sorted %}
+        {% if wdoc.url == page.url %}
+            {% unless forloop.last %}
+                {% assign prev_idx = forloop.index0 | plus: 1 %}
+                {% assign wiki_prev = wiki_sorted[prev_idx] %}
+            {% endunless %}
+            {% if forloop.index0 > 0 %}
+                {% assign next_idx = forloop.index0 | minus: 1 %}
+                {% assign wiki_next = wiki_sorted[next_idx] %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    {% if wiki_prev or wiki_next %}
+    <nav class="wiki-prev-next" aria-label="이전/다음 글">
+        {% if wiki_prev %}
+        <a class="wiki-prev-next-link wiki-prev" href="{{ wiki_prev.url }}">
+            <span class="wiki-prev-next-label">← 이전글</span>
+            <span class="wiki-prev-next-title">{{ wiki_prev.title }}</span>
+        </a>
+        {% else %}
+        <span></span>
+        {% endif %}
+        {% if wiki_next %}
+        <a class="wiki-prev-next-link wiki-next" href="{{ wiki_next.url }}">
+            <span class="wiki-prev-next-label">다음글 →</span>
+            <span class="wiki-prev-next-title">{{ wiki_next.title }}</span>
+        </a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
     {% if page.comment != false %}
     {% include comment.html %}
     {% endif%}
