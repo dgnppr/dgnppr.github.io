@@ -3,6 +3,7 @@ body {
     height: 100%;
     max-width: 100vw;
     overflow-x: hidden;
+    overflow-y: scroll;
     font: 400 16px 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, 'Noto Sans KR', sans-serif;
     color: var(--color-text-primary);
     -webkit-text-size-adjust: 100%;
@@ -53,6 +54,10 @@ blockquote {
 .language-html td {
     padding: 0;
     border: 0;
+}
+
+a:link, a:visited {
+    color: inherit;
 }
 
 h1 {

@@ -5,6 +5,7 @@ regenerate: true
 ---
 
 <div class="home">
+    <p class="home-section-title">Recently Changed Documents</p>
     <ul class="home-feed">
         {% assign documents = site.wiki | sort: 'updated' | reverse %}
         {% for doc in documents limit: 30 %}
