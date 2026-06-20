@@ -66,6 +66,15 @@
     display: none;
 }
 
+.wiki-card-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: var(--color-text-tertiary);
+    background: var(--color-surface-muted);
+    border-radius: 8px;
+    padding: 1px 6px;
+}
+
 .home-feed-date {
     font-size: 0.78rem;
     color: var(--color-text-tertiary);

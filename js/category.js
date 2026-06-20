@@ -20,9 +20,9 @@
 
             var html = '';
             for (var i = 0; i < children.length; i++) {
-                html += `<li id="child-document-${i}" class="wiki-card-item"></li>`
+                html += `<li id="child-document-${i}" class="home-feed-item"></li>`
             }
-            document.getElementById('document-list').innerHTML = `<ul class="wiki-card-list">${html}</ul>`
+            document.getElementById('document-list').innerHTML = `<ul class="home-feed">${html}</ul>`
 
             if (data.children && data.children.sort) {
                 insertChildren(data.children.sort());
@@ -47,19 +47,21 @@
                         return;
                     }
 
-                    const updated = data.updated.replace(/^(\d{4}-\d{2}-\d{2}).*/, '$1');
+                    const rawDate = data.updated.replace(/^(\d{4}-\d{2}-\d{2}).*/, '$1');
+                    const updated = new Date(rawDate + 'T00:00:00')
+                        .toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
                     const count = (data.children && data.children.length > 0) ? data.children.length : 0;
                     const badge = count > 0
                         ? `<span class="wiki-card-badge" aria-label="하위 문서 ${count}개">${count}</span>`
                         : '';
 
                     const html =
-                        `<a href="${data.url}" class="wiki-card-link">` +
-                            `<div class="wiki-card-main">` +
-                                `<span class="wiki-card-title">${data.title}</span>` +
+                        `<a href="${data.url}" class="home-feed-link">` +
+                            `<span class="home-feed-title">${data.title}</span>` +
+                            `<span class="home-feed-meta">` +
                                 badge +
-                            `</div>` +
-                            `<time class="wiki-card-date" datetime="${updated}">${updated}</time>` +
+                                `<time class="home-feed-date" datetime="${updated}">${updated}</time>` +
+                            `</span>` +
                         `</a>`;
                     document.getElementById(`child-document-${i}`).innerHTML = html;
 

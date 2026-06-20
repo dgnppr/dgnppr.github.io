@@ -7,7 +7,7 @@ $coding-font: "Menlo", "Monaco", "Consolas", "Courier New", monospace;
 code {
     font-family: $coding-font;
     color: inherit;
-    background-color: #f3f4f6;
+    background-color: var(--color-surface-code);
     padding: 2px 4px;
     border-radius: 5px;
     a {

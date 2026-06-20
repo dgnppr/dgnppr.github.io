@@ -1,5 +1,38 @@
 <footer class="footer">
-<button onclick="topFunction()" id="topBtn">Top</button>
+<div id="topWidget" class="top-widget" aria-hidden="true">
+  <!-- 펼침 보조 액션 (P1: 공유). 기본 숨김, 위젯 hover/focus 시 노출 -->
+  <div class="top-widget__actions">
+    <button type="button"
+            class="top-widget__action"
+            id="shareBtn"
+            aria-label="이 글 공유하기">
+      <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" focusable="false">
+        <path fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round"
+              d="M18 8a3 3 0 1 0-2.83-4M6 12a3 3 0 1 0 0 .01M18 16a3 3 0 1 0-2.83 4M8.6 13.5l6.8 4M15.4 6.5l-6.8 4"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- 메인 TOP 버튼 + progress ring. #topBtn / topFunction() 유지 -->
+  <button type="button"
+          onclick="topFunction()"
+          id="topBtn"
+          class="top-widget__top"
+          aria-label="맨 위로 이동 (읽은 비율 0%)">
+    <svg class="top-widget__ring" viewBox="0 0 44 44" width="44" height="44"
+         aria-hidden="true" focusable="false">
+      <circle class="top-widget__ring-track" cx="22" cy="22" r="20"/>
+      <circle class="top-widget__ring-fill"  cx="22" cy="22" r="20"/>
+    </svg>
+    <svg class="top-widget__arrow" viewBox="0 0 24 24" width="20" height="20"
+         aria-hidden="true" focusable="false">
+      <path fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round"
+            d="M12 19V5M5 12l7-7 7 7"/>
+    </svg>
+  </button>
+</div>
 <div>
     <div class="social-media-links">
         <a href="mailto:dgnppr@gmail.com" target="_blank"><i class="fas fa-envelope"></i></a>
