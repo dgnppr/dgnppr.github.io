@@ -4,6 +4,13 @@
     <title>{% if page.title %}{{ page.title }} - {{ site.title }}{% else %}{{ site.title }}{% endif %}</title>
     <meta name="description" content="{{ site.summary }}">
     <meta name="theme-color" content="#ffffff">
+    <script>
+        (function () {
+            var s = localStorage.getItem('theme');
+            var dark = s !== null ? s === 'dark-mode' : matchMedia('(prefers-color-scheme: dark)').matches;
+            if (dark) document.documentElement.classList.add('dark-mode');
+        })();
+    </script>
 
     <link rel="stylesheet" href="{{ "/css/main.css" | prepend: site.baseurl }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -37,6 +44,7 @@
     <meta name="msapplication-TileImage" content="/resource/icon/ms-icon-144x144.png">
 
     <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js" integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/fuse.js@7.0.0/dist/fuse.min.js"></script>
     {% if site.google_analytics.id %}
     <script async src="https://www.googletagmanager.com/gtag/js?id={{ site.google_analytics.id }}"></script>
     <script>
@@ -72,7 +80,7 @@
 (function () {
     var toggle = document.getElementById('search-toggle');
     var wrapper = document.getElementById('searchbox-wrapper');
-    var searchIndex = null;
+    var fuseInstance = null;
 
     function openSearch() {
         wrapper.classList.add('is-open');
@@ -106,11 +114,27 @@
     });
 
     function loadIndex(callback) {
-        if (searchIndex) { callback(); return; }
+        if (fuseInstance) { callback(); return; }
         fetch('/data/search-index.json')
             .then(function (r) { return r.json(); })
-            .then(function (data) { searchIndex = data; callback(); })
-            .catch(function () { searchIndex = []; });
+            .then(function (data) {
+                var items = data.filter(function (item) {
+                    if (item.type === 'tag') { return false; }
+                    if (item.type === 'wiki' && /^\/wiki\/[^/]+$/.test(item.url)) { return false; }
+                    return true;
+                });
+                fuseInstance = new Fuse(items, {
+                    keys: [
+                        { name: 'title', weight: 2 },
+                        { name: 'tags', weight: 1.5 },
+                        { name: 'summary', weight: 1 }
+                    ],
+                    threshold: 0.35,
+                    minMatchCharLength: 2
+                });
+                callback();
+            })
+            .catch(function () { fuseInstance = new Fuse([]); });
     }
 
     function getDisplayType(item) {
@@ -152,12 +176,8 @@
         var results = document.getElementById('search-results');
         if (!query) { results.classList.remove('is-open'); results.innerHTML = ''; return; }
         loadIndex(function () {
-            var matches = searchIndex.filter(function (item) {
-                return item.title.toLowerCase().includes(query) ||
-                    (item.summary && item.summary.toLowerCase().includes(query)) ||
-                    (item.tags && item.tags.some(function (t) { return t.toLowerCase().includes(query); }));
-            }).slice(0, 10);
-            renderResults(matches);
+            var results = fuseInstance.search(query, { limit: 10 });
+            renderResults(results.map(function (r) { return r.item; }));
         });
     });
 })();

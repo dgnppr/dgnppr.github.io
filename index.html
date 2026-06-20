@@ -5,33 +5,28 @@ regenerate: true
 ---
 
 <div class="home">
-    <h3 class="indent">Recently Changed Documents</h3>
-    <ul class="post-list">
+    <ul class="home-feed">
         {% assign documents = site.wiki | sort: 'updated' | reverse %}
         {% for doc in documents limit: 30 %}
-        {% if doc.public == true and doc.title != 'wiki' and doc.layout != 'category'%}
-        <li>
-            <div class="post-item">
-                <a class="post-link" href="{{ doc.url | prepend: site.baseurl }}">
-                    <div class="post-meta">
-                        <div class="title">{{ doc.title }}</div>
-                        <div class="updated post-date">{{ doc.updated | date: "%b %d, %Y" }}</div>
-                    </div>
-<!--                    <div class="post-excerpt">{{ doc.summary }}</div>-->
-<!--                    <ul class="tag-list">-->
-<!--                        <li class="post-tag">-->
-<!--                            {{ doc. tag }}-->
-<!--                        </li>-->
-<!--                    </ul>-->
-                </a>
-            </div>
+        {% if doc.public == true and doc.title != 'wiki' and doc.layout != 'category' %}
+        <li class="home-feed-item">
+            <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
+                <span class="home-feed-title">{{ doc.title }}</span>
+                <span class="home-feed-meta">
+                    {% assign first_tag = doc.tag | split: ' ' | first %}
+                    {% if first_tag and first_tag != '' %}
+                    <span class="home-feed-tag">{{ first_tag }}</span>
+                    {% endif %}
+                    <time class="home-feed-date">{{ doc.updated | date: "%b %d, %Y" }}</time>
+                </span>
+            </a>
         </li>
         {% endif %}
         {% endfor %}
     </ul>
-    <h3 class="indent">
+    <div class="home-footer">
         {% assign count = site.wiki | where: "public", true | where_exp: "item", "item.layout != 'category'" | size %}
-        <a href="/recent/">View all documents ({{ count }} items)</a>
-    </h3>
+        <a href="/recent/">View all documents ({{ count }} items) →</a>
+    </div>
 </div>
 {% include createLink.html %}

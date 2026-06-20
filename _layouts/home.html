@@ -2,7 +2,11 @@
 <html lang="ko">
     {% include header.html %}
     <body>
-    {{ content }}
-    {% include footer.html %}
+        <div class="page-content">
+            <div class="post">
+                {{ content }}
+            </div>
+        </div>
+        {% include footer.html %}
     </body>
 </html>

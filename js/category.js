@@ -20,9 +20,9 @@
 
             var html = '';
             for (var i = 0; i < children.length; i++) {
-                html += `<li id="child-document-${i}" class="post-item"></li>`
+                html += `<li id="child-document-${i}" class="wiki-card-item"></li>`
             }
-            document.getElementById('document-list').innerHTML = `<ul class="post-list">${html}</ul>`
+            document.getElementById('document-list').innerHTML = `<ul class="wiki-card-list">${html}</ul>`
 
             if (data.children && data.children.sort) {
                 insertChildren(data.children.sort());
@@ -48,15 +48,19 @@
                     }
 
                     const updated = data.updated.replace(/^(\d{4}-\d{2}-\d{2}).*/, '$1');
-                    const title = `<span>${data.title}</span>`
-                    const date = `<div style="float: right;">${updated}</div>`;
-                    const summary = (data.summary) ? `<div class="post-excerpt"> - ${data.summary}</div>` : '';
+                    const count = (data.children && data.children.length > 0) ? data.children.length : 0;
+                    const badge = count > 0
+                        ? `<span class="wiki-card-badge" aria-label="하위 문서 ${count}개">${count}</span>`
+                        : '';
 
-                    // 서브 문서들의 정보
-                    const subDoc = (data.children && data.children.length > 0) ? `<div class="post-sub-document"> ▸ 하위 문서: ${data.children.length} 개</div>` : '';
-
-//                    const html = `<a href="${data.url}" class="post-link">${title}${date}${summary}${subDoc}</a>`;
-                    const html = `<a href="${data.url}" class="post-link">${title}${date}${subDoc}</a>`;
+                    const html =
+                        `<a href="${data.url}" class="wiki-card-link">` +
+                            `<div class="wiki-card-main">` +
+                                `<span class="wiki-card-title">${data.title}</span>` +
+                                badge +
+                            `</div>` +
+                            `<time class="wiki-card-date" datetime="${updated}">${updated}</time>` +
+                        `</a>`;
                     document.getElementById(`child-document-${i}`).innerHTML = html;
 
                     return;

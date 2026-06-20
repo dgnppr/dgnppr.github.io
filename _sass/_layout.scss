@@ -1,17 +1,10 @@
 .wrapper {
     margin: 0 auto;
 }
-@media (max-width: 1120px) {
-    .wrapper {
-    }
-}
 
-@media (min-width: 800px) {
-  body {
-    width: 800px;
-    margin: auto;
-    // border: 0.1px solid #d0d0d0;
-  }
+body {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
 .progress-container {
@@ -96,6 +89,10 @@ ul.tag-list {
 
 .post-link {
     text-decoration: none;
+}
+
+#document-list .post-item {
+    border-bottom: none;
 }
 
 .no-text-deco {
