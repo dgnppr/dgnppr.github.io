@@ -1,0 +1,255 @@
+---
+layout: default
+title: 지식 그래프
+---
+<style>
+.header { position: relative; z-index: 200; }
+.searchbox-wrapper { z-index: 200; }
+footer { display: none !important; }
+.page-content { padding: 0 !important; max-width: none !important; }
+.page-content .post { padding: 0 !important; margin: 0 !important; max-width: none !important; }
+
+#knowledge-graph {
+    position: fixed;
+    top: 48px;
+    left: 0; right: 0; bottom: 0;
+    z-index: 1;
+}
+#knowledge-graph svg { display: block; }
+
+/* ── Graph panel ─────────────────────────────────── */
+#graph-panel {
+    position: fixed;
+    top: 60px;
+    right: 20px;
+    width: 210px;
+    /* light mode */
+    background: rgba(248, 250, 252, 0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(0,0,0,0.08);
+    border-radius: 10px;
+    padding: 12px;
+    z-index: 100;
+    color: #475569;
+    font-size: 12px;
+    font-family: system-ui, -apple-system, sans-serif;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+html.dark-mode #graph-panel {
+    background: rgba(13, 17, 23, 0.88);
+    border-color: rgba(255,255,255,0.08);
+    color: #94a3b8;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+#graph-panel.is-collapsed .panel-body { display: none; }
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+.panel-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #1e293b;
+}
+html.dark-mode .panel-title { color: #e2e8f0; }
+
+.panel-toggle {
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    padding: 0;
+    font-size: 14px;
+    line-height: 1;
+    transition: color 0.15s;
+}
+.panel-toggle:hover { color: #475569; }
+html.dark-mode .panel-toggle:hover { color: #94a3b8; }
+
+#graph-search {
+    width: 100%;
+    box-sizing: border-box;
+    background: rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 6px;
+    padding: 6px 10px;
+    color: #1e293b;
+    font-size: 12px;
+    outline: none;
+    margin-bottom: 10px;
+}
+#graph-search::placeholder { color: #94a3b8; }
+#graph-search:focus { border-color: rgba(0,0,0,0.2); }
+html.dark-mode #graph-search {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    color: #e2e8f0;
+}
+html.dark-mode #graph-search::placeholder { color: #475569; }
+html.dark-mode #graph-search:focus { border-color: rgba(255,255,255,0.2); }
+
+.panel-section-title {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin: 8px 0 6px;
+}
+
+#graph-groups {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: calc(100vh - 260px);
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+#graph-groups::-webkit-scrollbar { display: none; }
+
+.gp-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: pointer;
+    padding: 2px 0;
+    border-radius: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.gp-item input[type="checkbox"] { display: none; }
+.gp-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: opacity 0.15s;
+}
+.gp-item input:not(:checked) ~ .gp-dot { opacity: 0.25; }
+.gp-name {
+    flex: 1;
+    font-size: 11px;
+    color: #475569;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.15s;
+}
+.gp-item:hover .gp-name { color: #0f172a; }
+.gp-item input:not(:checked) ~ .gp-dot ~ .gp-name { color: #cbd5e1; }
+html.dark-mode .gp-name { color: #94a3b8; }
+html.dark-mode .gp-item:hover .gp-name { color: #e2e8f0; }
+html.dark-mode .gp-item input:not(:checked) ~ .gp-dot ~ .gp-name { color: #334155; }
+.gp-count {
+    font-size: 10px;
+    color: #94a3b8;
+    flex-shrink: 0;
+}
+html.dark-mode .gp-count { color: #334155; }
+
+#graph-stats {
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid rgba(0,0,0,0.08);
+    font-size: 10px;
+    color: #94a3b8;
+}
+html.dark-mode #graph-stats {
+    border-top-color: rgba(255,255,255,0.06);
+    color: #475569;
+}
+
+/* ── Tooltip ─────────────────────────────────────── */
+.graph-tooltip {
+    position: fixed;
+    background: rgba(248, 250, 252, 0.97);
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 0.78rem;
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1.5;
+    pointer-events: none;
+    z-index: 300;
+    max-width: 260px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+    opacity: 0;
+    transition: opacity 0.1s;
+}
+.graph-tooltip.is-visible { opacity: 1; }
+.graph-tooltip strong { display: block; color: #0f172a; margin-bottom: 3px; font-size: 0.84rem; }
+.graph-tooltip span { color: #64748b; font-size: 0.72rem; }
+html.dark-mode .graph-tooltip {
+    background: rgba(15, 20, 30, 0.97);
+    border-color: rgba(255,255,255,0.12);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+html.dark-mode .graph-tooltip strong { color: #f1f5f9; }
+
+/* ── Hint ────────────────────────────────────────── */
+.graph-hint {
+    position: fixed;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    color: rgba(0,0,0,0.25);
+    pointer-events: none;
+    z-index: 300;
+    white-space: nowrap;
+    font-family: system-ui, -apple-system, sans-serif;
+}
+html.dark-mode .graph-hint { color: rgba(255,255,255,0.2); }
+</style>
+
+<div id="knowledge-graph"></div>
+
+<div id="graph-panel">
+    <div class="panel-header">
+        <span class="panel-title">지식 그래프</span>
+        <button class="panel-toggle" id="panel-toggle-btn" aria-label="패널 접기">−</button>
+    </div>
+    <div class="panel-body">
+        <input id="graph-search" type="text" placeholder="노드 검색...">
+        <div class="panel-section-title">카테고리</div>
+        <div id="graph-groups"></div>
+        <div id="graph-stats"></div>
+    </div>
+</div>
+
+<p class="graph-hint">드래그로 이동 · 스크롤로 확대/축소 · 클릭으로 페이지 이동</p>
+
+<script>
+(function() {
+    var HEADER_H = 48;
+    var c = document.getElementById('knowledge-graph');
+    if (c) {
+        c.style.width  = window.innerWidth + 'px';
+        c.style.height = (window.innerHeight - HEADER_H) + 'px';
+    }
+    window.addEventListener('resize', function() {
+        if (c) {
+            c.style.width  = window.innerWidth + 'px';
+            c.style.height = (window.innerHeight - HEADER_H) + 'px';
+        }
+    });
+
+    // Panel collapse
+    var toggleBtn = document.getElementById('panel-toggle-btn');
+    var panel     = document.getElementById('graph-panel');
+    if (toggleBtn && panel) {
+        toggleBtn.addEventListener('click', function() {
+            var collapsed = panel.classList.toggle('is-collapsed');
+            toggleBtn.textContent = collapsed ? '+' : '−';
+        });
+    }
+})();
+</script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="/js/knowledge-graph.js"></script>

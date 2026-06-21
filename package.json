@@ -4,11 +4,16 @@
   "description": "data generator",
   "main": "generateData.js",
   "dependencies": {
+    "@google/genai": "^2.9.0",
     "yamljs": "^0.3.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "google-auth-library": "^10.7.0"
+  },
   "scripts": {
-    "test": "echo no test found"
+    "test": "echo no test found",
+    "summaries": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-summaries.js",
+    "summaries:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-summaries.js --force"
   },
   "repository": {
     "type": "git",
@@ -19,5 +24,8 @@
   "bugs": {
     "url": "https://github.com/dragonappear/dragonappear.github.io/issues"
   },
-  "homepage": "https://github.com/dragonappear/dragonappear.github.io#readme"
+  "homepage": "https://github.com/dragonappear/dragonappear.github.io#readme",
+  "allowScripts": {
+    "@google/genai@2.9.0": true
+  }
 }

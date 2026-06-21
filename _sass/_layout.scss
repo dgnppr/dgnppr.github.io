@@ -183,7 +183,9 @@ ul.tag-list {
 
     &:hover {
         background: var(--color-surface-hover);
-        border-color: var(--color-interactive);
+        border-color: var(--color-interactive-hover);
+
+        .wiki-prev-next-title { color: var(--color-interactive-hover); }
     }
 
     &.wiki-next {
@@ -206,6 +208,7 @@ ul.tag-list {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
+    transition: color 0.12s ease;
 }
 
 .related-posts {
@@ -240,10 +243,47 @@ ul.tag-list {
 
     &::before { content: "↗"; color: var(--color-text-tertiary); font-size: 0.78em; margin-right: 8px; flex-shrink: 0; }
     &:link, &:visited { color: var(--color-text-heading); }
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
     &:hover {
         background: var(--color-surface-hover);
-        border-color: var(--color-interactive);
+        border-color: var(--color-interactive-hover);
+        color: var(--color-interactive-hover);
     }
+}
+
+// ── AI 요약 카드 ─────────────────────────────────────────────
+.ai-summary {
+    margin: 0 0 1.8em;
+    padding: 14px 16px;
+    // 이전글/다음글 카드와 동일한 border 스타일
+    border: 1px solid var(--color-border);
+    border-left: 3px solid var(--color-interactive-hover);
+    border-radius: 0 8px 8px 0;
+    background: var(--color-surface);
+    transition: border-color 0.12s ease;
+}
+.ai-summary__header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+.ai-summary__icon {
+    font-size: 0.8rem;
+    line-height: 1;
+}
+.ai-summary__label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-interactive-hover);
+}
+.ai-summary__text {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
 }
 
 .series-nav {
