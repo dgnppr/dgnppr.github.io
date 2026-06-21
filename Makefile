@@ -26,6 +26,8 @@ help:
 	@echo "  make restart    - 서버 재시작"
 	@echo "  make status     - 서버 상태 확인"
 	@echo "  make clean      - 빌드 캐시 정리"
+	@echo "  make summaries        - AI 요약 생성 (캐시 있으면 스킵)"
+	@echo "  make summaries-force  - AI 요약 강제 재생성 (--force)"
 
 # ----------------------------------------
 # 의존성 설치
@@ -40,6 +42,16 @@ install:
 .PHONY: data
 data:
 	node generateData.js
+
+# ----------------------------------------
+# 요약 생성
+# ----------------------------------------
+.PHONY: summaries summaries-force
+summaries:
+	@set -a && . ./.env && set +a && node scripts/generate-summaries.js
+
+summaries-force:
+	@set -a && . ./.env && set +a && node scripts/generate-summaries.js --force
 
 # ----------------------------------------
 # 포그라운드 실행 (증분 빌드)
