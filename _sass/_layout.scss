@@ -257,8 +257,7 @@ ul.tag-list {
     padding: 14px 16px;
     // 이전글/다음글 카드와 동일한 border 스타일
     border: 1px solid var(--color-border);
-    border-left: 3px solid var(--color-interactive-hover);
-    border-radius: 0 8px 8px 0;
+    border-radius: 8px;
     background: var(--color-surface);
     transition: border-color 0.12s ease;
 }
@@ -277,7 +276,7 @@ ul.tag-list {
     font-weight: 700;
     letter-spacing: 0.07em;
     text-transform: uppercase;
-    color: var(--color-interactive-hover);
+    color: var(--color-text-secondary);
 }
 .ai-summary__text {
     margin: 0;
