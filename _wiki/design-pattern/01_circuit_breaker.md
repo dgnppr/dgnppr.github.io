@@ -3,11 +3,11 @@ layout  : wiki
 title   : Circuit Breaker 적용기 1편
 date    : 2024-11-19 00:00:00 +0900
 updated : 2024-11-19 00:00:00 +0900
-tag     : msa
+tag     : design-pattern
 toc     : true
 comment : true
 public  : true
-parent  : [[/msa]]
+parent  : [[/design-pattern]]
 latex   : true
 ---
 * TOC
