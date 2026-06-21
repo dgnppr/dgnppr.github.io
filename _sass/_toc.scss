@@ -6,13 +6,17 @@
     top: 16px;
     max-height: calc(100vh - 32px);
     width: 220px;
-    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-width: none;
     background-color: transparent;
     border: none;
     z-index: 1;
     font-size: 0.85rem;
     padding: 0.5rem 0;
     line-height: 1.7;
+
+    &::-webkit-scrollbar { display: none; }
 }
 
 #markdown-toc {

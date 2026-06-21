@@ -41,7 +41,16 @@
     };
 
     const activate = (target) => {
-        if (target) target.classList.add(ACTIVE_CLASS);
+        if (!target) return;
+        target.classList.add(ACTIVE_CLASS);
+        // TOC 내에서 active 항목이 보이도록 스크롤
+        var tocRect = tocEl.getBoundingClientRect();
+        var itemRect = target.getBoundingClientRect();
+        if (itemRect.bottom > tocRect.bottom) {
+            tocEl.scrollTop += itemRect.bottom - tocRect.bottom + 8;
+        } else if (itemRect.top < tocRect.top) {
+            tocEl.scrollTop -= tocRect.top - itemRect.top + 8;
+        }
     };
 
     const findCurrentHeading = () => {
