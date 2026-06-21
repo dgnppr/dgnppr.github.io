@@ -330,6 +330,13 @@
                     if (e.target.checked) hiddenCats.delete(cat); else hiddenCats.add(cat);
                     nodeEl.attr('display', function (d) { return hiddenCats.has(d.cat) ? 'none' : null; });
                     labelEl.attr('display', function (d) { return hiddenCats.has(d.cat) ? 'none' : null; });
+                    linkEl.attr('display', function (l) {
+                        var sid = l.source.slug || l.source;
+                        var tid = l.target.slug || l.target;
+                        var sNode = nodeMap[sid] || {};
+                        var tNode = nodeMap[tid] || {};
+                        return (hiddenCats.has(sNode.cat) || hiddenCats.has(tNode.cat)) ? 'none' : null;
+                    });
                 });
             });
         }
