@@ -273,9 +273,32 @@
                 }
             });
 
-        // 모바일: 배경 탭 시 하이라이트 해제
+        // 전체 노드가 화면에 들어오도록 줌 아웃
+        function zoomToFit() {
+            var pad = 50;
+            var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
+            nodes.forEach(function (n) {
+                if (n.x == null) return;
+                if (n.x < x0) x0 = n.x; if (n.x > x1) x1 = n.x;
+                if (n.y < y0) y0 = n.y; if (n.y > y1) y1 = n.y;
+            });
+            if (x0 === Infinity) return;
+            var bW = x1 - x0 || 1, bH = y1 - y0 || 1;
+            var scale = Math.min((W - pad * 2) / bW, (H - pad * 2) / bH, 1.2);
+            var tx = W / 2 - scale * (x0 + bW / 2);
+            var ty = H / 2 - scale * (y0 + bH / 2);
+            svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+        }
+
+        // 모바일: 배경 탭 시 하이라이트 해제 + 전체 그래프 보기
         svg.on('click', function (e) {
-            if (isTouchDevice && activeSlug && e.target === svg.node()) reset();
+            if (!isTouchDevice) return;
+            var tag = e.target.tagName;
+            if (tag === 'circle' || tag === 'text') return;
+            if (activeSlug) {
+                reset();
+                zoomToFit();
+            }
         });
 
         nodeEl.call(d3.drag()
