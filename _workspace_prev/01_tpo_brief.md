@@ -3,7 +3,7 @@
 ## 기본 정보
 - 요청 유형: UI 개선 + 기능 확장 (기획 → 디자인 → 구현 풀 파이프라인)
 - 산출물: 블로그 독자용 플로팅 보조 위젯 (포스트가 아닌 기능 개발 건)
-- 대상 사용자: DGPR 기술 블로그 독자 — **주로 미들~시니어 엔지니어**가 긴 기술 글(시스템 설계, Java, LLM, OS 등)을 정독하는 시나리오
+- 대상 사용자: DRAGONAPPEAR 기술 블로그 독자 — **주로 미들~시니어 엔지니어**가 긴 기술 글(시스템 설계, Java, LLM, OS 등)을 정독하는 시나리오
 - 수정 대상 파일: `js/top.js`, `_sass/_base.scss`, `_includes/footer.html`
 - 제약: Jekyll 정적 사이트 / Vanilla JS(+jQuery) / CSS custom properties 다크·라이트 / `prefers-reduced-motion` 존중 / 모바일 반응형 / 기존 `#topBtn` ID 유지
 

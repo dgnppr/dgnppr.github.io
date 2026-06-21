@@ -115,7 +115,7 @@ latex   : true
 
 ### 알림 전송 API
 
-알림 서버 주소를 `https://api.internal.dgpr.com`이라고 가정했을때, `https://api.internal.dgpr.com/v1/notifications`로 알림을 전송한다.
+알림 서버 주소를 `https://api.internal.DRAGONAPPEAR.com`이라고 가정했을때, `https://api.internal.DRAGONAPPEAR.com/v1/notifications`로 알림을 전송한다.
 
 ```json
 {

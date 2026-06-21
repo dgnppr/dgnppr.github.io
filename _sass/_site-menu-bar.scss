@@ -39,7 +39,7 @@
     cursor: pointer;
 }
 
-// 검색 토글 버튼
+// 검색/그래프 토글 버튼 (button, a 공용)
 .header-search-toggle {
     background: none;
     border: none;
@@ -49,7 +49,11 @@
     padding: 8px 12px;
     display: flex;
     align-items: center;
+    line-height: 1;
+    text-decoration: none;
     outline: none;
+
+    &:hover { color: var(--color-interactive); }
 
     &:focus-visible {
         outline: 2px solid var(--color-accent);

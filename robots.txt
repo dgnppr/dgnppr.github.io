@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://dgpr.me/sitemap.xml
+Sitemap: https://dgnppr.github.io/sitemap.xml

@@ -19,18 +19,18 @@ latex   : true
 ### 무엇을 공부했나
 
 - System Design
-  - [URL 단축기](https://dgpr.me/wiki/system-design/00_url_shortener_design/)
-  - [웹 크롤러](https://dgpr.me/wiki/system-design/01_web_crawler_design/)
-  - [알림 서비스](https://dgpr.me/wiki/system-design/02_notification_system_design/)
+  - [URL 단축기](https://dgnppr.github.io/wiki/system-design/00_url_shortener_design/)
+  - [웹 크롤러](https://dgnppr.github.io/wiki/system-design/01_web_crawler_design/)
+  - [알림 서비스](https://dgnppr.github.io/wiki/system-design/02_notification_system_design/)
 - 코드에 대한 고민
-  - [SpringBoot transaction 분석](https://dgpr.me/wiki/springboot/00_why_rollback_marked_transaction_is_unusable/)
-  - [디자인 패턴](https://dgpr.me/wiki/design-pattern/00_how_to_use_strategy_pattern/)
-  - [Text Fixture 생성](https://dgpr.me/wiki/essay/04_how_to_create_text_fixture/)
+  - [SpringBoot transaction 분석](https://dgnppr.github.io/wiki/springboot/00_why_rollback_marked_transaction_is_unusable/)
+  - [디자인 패턴](https://dgnppr.github.io/wiki/design-pattern/00_how_to_use_strategy_pattern/)
+  - [Text Fixture 생성](https://dgnppr.github.io/wiki/essay/04_how_to_create_text_fixture/)
 - 책 리뷰 스터디 참여
   - [데이터 중심 어플리케이션 스터디 및 데이터 질의 파트 발표](https://youtu.be/PhWu9m_tOyE)
-  - [이펙티브 자바 스터디 및 1,2,3,4장 발표](https://archive.dgpr.me/c2318b89-dc83-4ee8-a98a-bbe50508f049)
-  - [가상 면접 사례로 배우는 시스템 디자인 스터디](https://dgpr.notion.site/System-Design-3b1eae2410d14806a8f6eea008e1d7c6)
-  - [토비의 스프링 스터디 및 템플릿, 예외 발표](https://archive.dgpr.me/58e9aef2-c391-4ba2-88f8-99b501fad23a)
+  - [이펙티브 자바 스터디 및 1,2,3,4장 발표](https://archive.DRAGONAPPEAR.me/c2318b89-dc83-4ee8-a98a-bbe50508f049)
+  - [가상 면접 사례로 배우는 시스템 디자인 스터디](https://DRAGONAPPEAR.notion.site/System-Design-3b1eae2410d14806a8f6eea008e1d7c6)
+  - [토비의 스프링 스터디 및 템플릿, 예외 발표](https://archive.DRAGONAPPEAR.me/58e9aef2-c391-4ba2-88f8-99b501fad23a)
 
 <br>
 

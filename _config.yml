@@ -1,16 +1,16 @@
 # Site settings
-title: DGPR
-url: "https://dgpr.me"
+title: DRAGONAPPEAR
+url: "https://dgnppr.github.io"
 baseurl: ""
 description: dragonappear
-summary: DGPR 기술 블로그
+summary: DRAGONAPPEAR 기술 블로그
 
 # My information
 email: dgnppr@gmail.com
 author: dragonappear
-profile: dgpr
+profile: DRAGONAPPEAR
 github_username: dgnppr
-linkedin_username: dgpr
+linkedin_username: DRAGONAPPEAR
 comment-support: giscus
 
 # Build settings

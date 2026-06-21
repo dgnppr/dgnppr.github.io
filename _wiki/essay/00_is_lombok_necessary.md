@@ -76,13 +76,13 @@ public class Person {
     INVOKESPECIAL java/lang/Object.<init> ()V
     ALOAD 0
     ILOAD 1
-    PUTFIELD me/dgpr/lombok/Person.num : I
+    PUTFIELD me/DRAGONAPPEAR/lombok/Person.num : I
     ALOAD 0
     ILOAD 2
-    PUTFIELD me/dgpr/lombok/Person.age : I
+    PUTFIELD me/DRAGONAPPEAR/lombok/Person.age : I
     RETURN
    L1
-    LOCALVARIABLE this Lme/dgpr/lombok/Person; L0 L1 0
+    LOCALVARIABLE this Lme/DRAGONAPPEAR/lombok/Person; L0 L1 0
     LOCALVARIABLE num I L0 L1 1
     LOCALVARIABLE age I L0 L1 2
     MAXSTACK = 2
@@ -115,13 +115,13 @@ public class Person {
     INVOKESPECIAL java/lang/Object.<init> ()V
     ALOAD 0
     ILOAD 1
-    PUTFIELD me/dgpr/lombok/Person.age : I
+    PUTFIELD me/DRAGONAPPEAR/lombok/Person.age : I
     ALOAD 0
     ILOAD 2
-    PUTFIELD me/dgpr/lombok/Person.num : I
+    PUTFIELD me/DRAGONAPPEAR/lombok/Person.num : I
     RETURN
    L1
-    LOCALVARIABLE this Lme/dgpr/lombok/Person; L0 L1 0
+    LOCALVARIABLE this Lme/DRAGONAPPEAR/lombok/Person; L0 L1 0
     LOCALVARIABLE age I L0 L1 1
     LOCALVARIABLE num I L0 L1 2
     MAXSTACK = 2
