@@ -1,11 +1,25 @@
-# 작업 요청: 코드 블록 Mac 스타일 적용
+# 요청: 모바일 플로팅 위젯 UX 개선
 
-## 요청 유형
-UI 개선 (포스트 작성 불필요)
+## 문제
+모바일 화면에서 우하단 플로팅 위젯(top-widget)이 화면을 너무 많이 차지함.
 
-## 요청 내용
-코드 블록을 Mac 스타일로 변경.
-- 상단에 트래픽 라이트 버튼(빨강/노랑/초록 원형 버튼) 포함
-- 창 스타일 헤더 영역
-- 현재 코드 블록 스타일은 `_sass/_code.scss`에 위치
-- Jekyll 블로그 (Liquid 템플릿 + SCSS)
+## 현재 구조
+```
+[공유패널(수평 펼침)] [공유버튼] [그래프버튼] [TOP버튼]
+```
+
+- 공유패널 열릴 때: 3개 아이템 × 36px + gap = ~120px
+- 버튼 3개: ~120px + gap
+- 합계: 모바일 375px 화면의 ~72% 차지
+
+## 관련 파일
+- `_includes/footer.html` — top-widget HTML
+- `_sass/_base.scss` — top-widget SCSS (line 235~358)
+
+## 스택 제약
+- Jekyll + LibSass (NOT Dart Sass, `@import`만 사용)
+- Vanilla JS (no bundler, no ES modules)
+- 기존 데스크탑 동작 유지
+
+## 요청
+모바일에서 플로팅 버튼들이 화면을 덜 차지하도록 UX를 개선할 것.

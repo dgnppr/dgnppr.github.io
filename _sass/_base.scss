@@ -329,8 +329,10 @@ sup[role=doc-noteref] {
     color: var(--color-text-primary);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
     cursor: pointer;
+    text-decoration: none;
     transition: background 0.15s ease, color 0.15s ease;
 
+    &:link, &:visited { color: var(--color-text-primary); }
     &:hover { background: var(--color-surface-hover); color: var(--color-interactive); }
     &:focus-visible {
         outline: 2px solid var(--color-accent);
