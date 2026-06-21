@@ -7,8 +7,8 @@
     // ─── Theme tokens ───────────────────────────────────────────
     function isDark() { return document.documentElement.classList.contains('dark-mode'); }
     var THEME = {
-        dark:  { bg: '#0d1117', bgGrad: '#1a1f2e', link: 'rgba(255,255,255,0.07)', linkDim: 'rgba(255,255,255,0.02)', nodeStroke: '#0d1117', label: '#94a3b8', labelActive: '#ffffff' },
-        light: { bg: '#f8fafc', bgGrad: '#e8f0fe', link: 'rgba(0,0,0,0.10)',       linkDim: 'rgba(0,0,0,0.02)',       nodeStroke: '#f8fafc', label: '#475569', labelActive: '#0f172a' },
+        dark:  { bg: '#0d1117', bgGrad: '#1a1f2e', link: 'rgba(255,255,255,0.22)', linkDim: 'rgba(255,255,255,0.02)', nodeStroke: '#0d1117', label: '#94a3b8', labelActive: '#ffffff' },
+        light: { bg: '#f8fafc', bgGrad: '#e8f0fe', link: 'rgba(0,0,0,0.13)',       linkDim: 'rgba(0,0,0,0.02)',       nodeStroke: '#f8fafc', label: '#475569', labelActive: '#0f172a' },
     };
     function t() { return isDark() ? THEME.dark : THEME.light; }
 
@@ -195,6 +195,7 @@
 
         // ── Hover interaction ────────────────────────────────────
         var activeSlug = null, resetTimer;
+        var isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
 
         function highlight(d) {
             if (activeSlug === d.slug) return;
@@ -243,10 +244,39 @@
         }
 
         nodeEl
-            .on('mouseenter', function (e, d) { highlight(d); tooltip.style('left', (e.clientX + 14) + 'px').style('top', (e.clientY - 10) + 'px'); })
-            .on('mousemove',  function (e)    { tooltip.style('left', (e.clientX + 14) + 'px').style('top', (e.clientY - 10) + 'px'); })
-            .on('mouseleave', reset)
-            .on('click', function (e, d) { window.location.href = d.url; });
+            .on('mouseenter', function (e, d) {
+                if (isTouchDevice) return;
+                highlight(d);
+                tooltip.style('left', (e.clientX + 14) + 'px').style('top', (e.clientY - 10) + 'px');
+            })
+            .on('mousemove', function (e) {
+                if (isTouchDevice) return;
+                tooltip.style('left', (e.clientX + 14) + 'px').style('top', (e.clientY - 10) + 'px');
+            })
+            .on('mouseleave', function () { if (!isTouchDevice) reset(); })
+            .on('click', function (e, d) {
+                if (isTouchDevice) {
+                    if (activeSlug !== d.slug) {
+                        e.stopPropagation();
+                        clearTimeout(resetTimer);
+                        highlight(d);
+                        var cx = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || window.innerWidth / 2;
+                        var cy = e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || 120;
+                        tooltip.style('left', Math.min(cx + 14, window.innerWidth - 180) + 'px')
+                               .style('top', Math.max(70, cy - 60) + 'px')
+                               .style('transform', 'none');
+                    } else {
+                        window.location.href = d.url;
+                    }
+                } else {
+                    window.location.href = d.url;
+                }
+            });
+
+        // 모바일: 배경 탭 시 하이라이트 해제
+        svg.on('click', function (e) {
+            if (isTouchDevice && activeSlug && e.target === svg.node()) reset();
+        });
 
         nodeEl.call(d3.drag()
             .on('start', function (e, d) { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
@@ -283,12 +313,16 @@
 
         if (searchEl) {
             searchEl.addEventListener('input', function (e) {
+                // reset() 타이머가 검색 상태를 덮어쓰지 않도록 취소
+                clearTimeout(resetTimer);
+                activeSlug = null;
                 var q = e.target.value.toLowerCase().trim();
                 var th = t();
                 if (!q) {
                     nodeEl.attr('opacity', 1).attr('r', nodeR);
                     labelEl.attr('opacity', LABEL_NORMAL).attr('fill', th.label).attr('font-size', '9px');
-                    linkEl.attr('opacity', 1);
+                    linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 1);
+                    tooltip.classed('is-visible', false);
                     return;
                 }
                 var match = function (d) { return d.title.toLowerCase().includes(q); };
@@ -297,7 +331,7 @@
                 labelEl.attr('opacity', function (d) { return match(d) ? 1 : 0; })
                        .attr('fill', function (d) { return match(d) ? th.labelActive : th.label; })
                        .attr('font-size', function (d) { return match(d) ? '11px' : '9px'; });
-                linkEl.attr('opacity', 0.04);
+                linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 0.06);
             });
         }
 
@@ -310,6 +344,20 @@
             linkEl.attr('stroke', th.link);
             labelEl.attr('fill', th.label);
         }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+        // bfcache 복귀 시 드래그/하이라이트 상태 초기화 (모바일 "다른 노드 선택 불가" 버그 수정)
+        window.addEventListener('pageshow', function (e) {
+            if (!e.persisted) return;
+            nodes.forEach(function (n) { n.fx = null; n.fy = null; });
+            activeSlug = null;
+            clearTimeout(resetTimer);
+            var th = t();
+            nodeEl.attr('opacity', 1).attr('r', nodeR);
+            linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 1);
+            labelEl.attr('opacity', LABEL_NORMAL).attr('fill', th.label).attr('font-size', '9px');
+            tooltip.classed('is-visible', false);
+            sim.alpha(0.1).restart();
+        });
 
         window.addEventListener('resize', function () {
             W = container.clientWidth; H = container.clientHeight;

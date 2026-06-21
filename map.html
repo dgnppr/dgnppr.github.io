@@ -22,7 +22,7 @@ footer { display: none !important; }
     position: fixed;
     top: 60px;
     right: 20px;
-    width: 210px;
+    width: 240px;
     /* light mode */
     background: rgba(248, 250, 252, 0.92);
     backdrop-filter: blur(12px);
@@ -73,27 +73,65 @@ html.dark-mode .panel-title { color: #e2e8f0; }
 .panel-toggle:hover { color: #475569; }
 html.dark-mode .panel-toggle:hover { color: #94a3b8; }
 
+.search-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+.search-icon {
+    position: absolute;
+    left: 10px;
+    color: #94a3b8;
+    pointer-events: none;
+    flex-shrink: 0;
+}
+html.dark-mode .search-icon { color: #475569; }
 #graph-search {
     width: 100%;
     box-sizing: border-box;
-    background: rgba(0,0,0,0.04);
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 6px;
-    padding: 6px 10px;
+    background: rgba(0,0,0,0.05);
+    border: 1.5px solid rgba(0,0,0,0.10);
+    border-radius: 8px;
+    padding: 9px 34px 9px 32px;
     color: #1e293b;
-    font-size: 12px;
+    font-size: 13px;
     outline: none;
-    margin-bottom: 10px;
+    transition: border-color 0.15s, background 0.15s;
 }
 #graph-search::placeholder { color: #94a3b8; }
-#graph-search:focus { border-color: rgba(0,0,0,0.2); }
+#graph-search:focus {
+    border-color: rgba(0,0,0,0.28);
+    background: rgba(0,0,0,0.07);
+}
 html.dark-mode #graph-search {
-    background: rgba(255,255,255,0.05);
-    border-color: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.12);
     color: #e2e8f0;
 }
 html.dark-mode #graph-search::placeholder { color: #475569; }
-html.dark-mode #graph-search:focus { border-color: rgba(255,255,255,0.2); }
+html.dark-mode #graph-search:focus {
+    border-color: rgba(255,255,255,0.28);
+    background: rgba(255,255,255,0.09);
+}
+.search-clear {
+    position: absolute;
+    right: 8px;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 16px;
+    line-height: 1;
+    padding: 2px 4px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: color 0.15s, background 0.15s;
+}
+.search-clear:hover { color: #475569; background: rgba(0,0,0,0.06); }
+html.dark-mode .search-clear:hover { color: #e2e8f0; background: rgba(255,255,255,0.08); }
 
 .panel-section-title {
     font-size: 10px;
@@ -216,7 +254,13 @@ html.dark-mode .graph-hint { color: rgba(255,255,255,0.2); }
         <button class="panel-toggle" id="panel-toggle-btn" aria-label="패널 접기">−</button>
     </div>
     <div class="panel-body">
-        <input id="graph-search" type="text" placeholder="노드 검색...">
+        <div class="search-wrap">
+            <svg class="search-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.2" y1="10.2" x2="14" y2="14"/>
+            </svg>
+            <input id="graph-search" type="text" placeholder="노드 검색..." autocomplete="off">
+            <button class="search-clear" id="search-clear-btn" aria-label="검색 지우기">✕</button>
+        </div>
         <div class="panel-section-title">카테고리</div>
         <div id="graph-groups"></div>
         <div id="graph-stats"></div>
@@ -247,6 +291,21 @@ html.dark-mode .graph-hint { color: rgba(255,255,255,0.2); }
         toggleBtn.addEventListener('click', function() {
             var collapsed = panel.classList.toggle('is-collapsed');
             toggleBtn.textContent = collapsed ? '+' : '−';
+        });
+    }
+
+    // Search clear button
+    var clearBtn    = document.getElementById('search-clear-btn');
+    var searchInput = document.getElementById('graph-search');
+    if (clearBtn && searchInput) {
+        searchInput.addEventListener('input', function () {
+            clearBtn.style.display = this.value ? 'flex' : 'none';
+        });
+        clearBtn.addEventListener('click', function () {
+            searchInput.value = '';
+            clearBtn.style.display = 'none';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
         });
     }
 })();
