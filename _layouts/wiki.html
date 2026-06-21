@@ -14,7 +14,6 @@ layout: document
         {% if page.summary %}
         <p class="title-summary">{{ page.summary }}</p>
         {% endif %}
-        <br>
         <div class="history-button">
             <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
             <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>
@@ -24,6 +23,19 @@ layout: document
         </div>
         <hr>
     </header>
+    {% assign _url_parts = page.url | split: '/' %}
+    {% assign _wiki_tag = _url_parts[2] %}
+    <div class="wiki-mini-graph" id="wiki-mini-graph-wrap">
+        <div class="wiki-mini-graph__header" id="wiki-mini-graph-toggle">
+            <span class="wiki-mini-graph__title">미니 지식 그래프</span>
+            <span class="wiki-mini-graph__chevron" id="wiki-mini-graph-chevron">▾</span>
+        </div>
+        <div class="wiki-mini-graph__canvas" id="wiki-mini-graph-canvas">
+            <div id="wiki-mini-graph"></div>
+        </div>
+    </div>
+    <input type="hidden" id="thisTag" value="{{ _wiki_tag }}"/>
+
     <div id="ai-summary-box"></div>
     <article class="post-content">
         {{ content }}
@@ -141,6 +153,9 @@ layout: document
 {% include createLink.html %}
 {% include createTable.html %}
 
+<script src="/js/wiki-tooltip.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="/js/wiki-mini-graph.js"></script>
 <script src="/js/axios.min.js"></script>
 <script async src="/js/toc-highlight.js"></script>
 <script src="/js/reading-time.js"></script>

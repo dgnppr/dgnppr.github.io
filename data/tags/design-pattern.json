@@ -1,3 +1,4 @@
 [
- "design-pattern/00_how_to_use_strategy_pattern"
+ "design-pattern/00_how_to_use_strategy_pattern",
+ "design-pattern/01_circuit_breaker"
 ]

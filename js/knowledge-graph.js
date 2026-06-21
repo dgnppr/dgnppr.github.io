@@ -4,7 +4,7 @@
     var container = document.getElementById('knowledge-graph');
     if (!container || typeof d3 === 'undefined') return;
 
-    // ─── Theme tokens ───────────────────────────────────────────
+    // ─── Theme ──────────────────────────────────────────────────
     function isDark() { return document.documentElement.classList.contains('dark-mode'); }
     var THEME = {
         dark:  { bg: '#0d1117', bgGrad: '#1a1f2e', link: 'rgba(255,255,255,0.22)', linkDim: 'rgba(255,255,255,0.02)', nodeStroke: '#0d1117', label: '#94a3b8', labelActive: '#ffffff' },
@@ -31,6 +31,7 @@
         'reference':         '#64748b',
         'data-engineering':  '#d946ef',
         'blog':              '#f59e0b',
+        'llm':               '#818cf8',
     };
     var DEFAULT_COLOR = '#64748b';
     function catColor(cat) { return CAT_COLOR[cat] || DEFAULT_COLOR; }
@@ -41,13 +42,36 @@
         return m ? m[1] : 'default';
     }
 
-    // ─── Constants ──────────────────────────────────────────────
     var DIM_OPACITY  = 0.05;
     var LABEL_NORMAL = 0.8;
 
-    // ─── Canvas ─────────────────────────────────────────────────
     var W = container.clientWidth;
     var H = container.clientHeight;
+
+    // ─── SVG + background ───────────────────────────────────────
+    var svg = d3.select(container).append('svg').attr('width', W).attr('height', H);
+    var defs = svg.append('defs');
+
+    var grad = defs.append('radialGradient').attr('id', 'bg-grad').attr('cx', '50%').attr('cy', '50%').attr('r', '65%');
+    var gradStop0 = grad.append('stop').attr('offset', '0%').attr('stop-opacity', 0.5);
+    var gradStop1 = grad.append('stop').attr('offset', '100%').attr('stop-opacity', 0);
+
+    // Glow filter for nodes
+    var glowFilter = defs.append('filter').attr('id', 'node-glow')
+        .attr('x', '-60%').attr('y', '-60%').attr('width', '220%').attr('height', '220%');
+    glowFilter.append('feGaussianBlur').attr('in', 'SourceGraphic').attr('stdDeviation', 2.5).attr('result', 'blur');
+    var fm1 = glowFilter.append('feMerge');
+    fm1.append('feMergeNode').attr('in', 'blur');
+    fm1.append('feMergeNode').attr('in', 'SourceGraphic');
+
+    var glowActive = defs.append('filter').attr('id', 'node-glow-active')
+        .attr('x', '-80%').attr('y', '-80%').attr('width', '260%').attr('height', '260%');
+    glowActive.append('feGaussianBlur').attr('in', 'SourceGraphic').attr('stdDeviation', 5).attr('result', 'blur');
+    var fm2 = glowActive.append('feMerge');
+    fm2.append('feMergeNode').attr('in', 'blur');
+    fm2.append('feMergeNode').attr('in', 'SourceGraphic');
+
+    svg.append('rect').attr('width', W).attr('height', H).attr('fill', 'url(#bg-grad)');
 
     function applyTheme() {
         var th = t();
@@ -55,19 +79,12 @@
         gradStop0.attr('stop-color', th.bgGrad);
         gradStop1.attr('stop-color', th.bg);
     }
-
-    var svg = d3.select(container).append('svg').attr('width', W).attr('height', H);
-    var defs = svg.append('defs');
-    var grad = defs.append('radialGradient').attr('id', 'bg-grad').attr('cx', '50%').attr('cy', '50%').attr('r', '65%');
-    var gradStop0 = grad.append('stop').attr('offset', '0%').attr('stop-opacity', 0.5);
-    var gradStop1 = grad.append('stop').attr('offset', '100%').attr('stop-opacity', 0);
-    svg.append('rect').attr('width', W).attr('height', H).attr('fill', 'url(#bg-grad)');
+    applyTheme();
 
     var g = svg.append('g');
     var zoom = d3.zoom().scaleExtent([0.04, 10]).on('zoom', function (e) { g.attr('transform', e.transform); });
     svg.call(zoom);
     svg.call(zoom.transform, d3.zoomIdentity.translate(W / 2, H / 2).scale(0.7).translate(-W / 2, -H / 2));
-    applyTheme();
 
     // ─── Tooltip ────────────────────────────────────────────────
     var tooltip = d3.select(container).append('div').attr('class', 'graph-tooltip');
@@ -92,54 +109,41 @@
         var nodes   = [];
 
         searchIndex.forEach(function (page) {
-            // 태그 페이지 제외
             if (page.type === 'tag') return;
-            // 단일세그먼트 인덱스/카테고리 페이지 제외
             if (page.type === 'wiki' && /^\/wiki\/[^\/]+\/?$/.test(page.url)) return;
 
             var slug = page.url.replace(/^\/(wiki|posts|blog)\//, '');
             var cat  = getCategory(page.url, page.type);
             var n = {
-                id:     slug,
-                slug:   slug,
-                title:  page.title,
-                url:    page.url,
-                type:   page.type || 'wiki',
-                cat:    cat,
-                tags:   page.tags || [],
-                degree: 0,
+                id: slug, slug: slug, title: page.title,
+                url: page.url, type: page.type || 'wiki',
+                cat: cat, tags: page.tags || [], degree: 0,
             };
             nodes.push(n);
             nodeMap[slug] = n;
         });
 
-        // ── Build links + adjacency ─────────────────────────────
-        var seen = new Set();
-        var links = [];
-        var adj   = {};
+        // ── Build links ─────────────────────────────────────────
+        var seen = new Set(), links = [], adj = {};
 
         function addLink(aSlug, bSlug) {
             var key = [aSlug, bSlug].sort().join('|||');
             if (seen.has(key)) return;
             seen.add(key);
-            var aNode = nodeMap[aSlug], bNode = nodeMap[bSlug];
-            if (!aNode || !bNode) return;
+            var an = nodeMap[aSlug], bn = nodeMap[bSlug];
+            if (!an || !bn) return;
             links.push({ source: aSlug, target: bSlug });
-            aNode.degree++;
-            bNode.degree++;
+            an.degree++; bn.degree++;
             if (!adj[aSlug]) adj[aSlug] = new Set();
             if (!adj[bSlug]) adj[bSlug] = new Set();
-            adj[aSlug].add(bSlug);
-            adj[bSlug].add(aSlug);
+            adj[aSlug].add(bSlug); adj[bSlug].add(aSlug);
         }
 
         Object.keys(related).forEach(function (src) {
-            var sNode = nodeMap[src];
-            if (!sNode) return;
             (related[src] || []).forEach(function (rel) { addLink(src, rel.slug); });
         });
 
-        // ── Category groups & cluster centroids ─────────────────
+        // ── Category cluster centroids (circular) ───────────────
         var catGroups = {};
         nodes.forEach(function (n) { if (!catGroups[n.cat]) catGroups[n.cat] = []; catGroups[n.cat].push(n); });
         var cats = Object.keys(catGroups).sort(function (a, b) { return catGroups[b].length - catGroups[a].length; });
@@ -163,22 +167,49 @@
             .force('link',      d3.forceLink(links).id(function (d) { return d.id; }).distance(85).strength(0.35))
             .force('charge',    d3.forceManyBody().strength(-200).distanceMax(450))
             .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) + 10; }))
-            .force('clusterX',  d3.forceX().strength(0.15).x(function (d) { return (catCenters[d.cat] || {x: W/2}).x; }))
-            .force('clusterY',  d3.forceY().strength(0.15).y(function (d) { return (catCenters[d.cat] || {y: H/2}).y; }));
+            .force('clusterX',  d3.forceX().strength(0.15).x(function (d) { return (catCenters[d.cat] || { x: W / 2 }).x; }))
+            .force('clusterY',  d3.forceY().strength(0.15).y(function (d) { return (catCenters[d.cat] || { y: H / 2 }).y; }));
 
         // ── Draw layers ─────────────────────────────────────────
         var linkG  = g.append('g');
         var nodeG  = g.append('g');
         var labelG = g.append('g');
 
-        var linkEl = linkG.selectAll('line').data(links).join('line')
+        // Curved (bezier) links
+        var linkEl = linkG.selectAll('path').data(links).join('path')
+            .attr('fill', 'none')
             .attr('stroke', t().link)
             .attr('stroke-width', 1);
 
-        var nodeEl = nodeG.selectAll('circle').data(nodes).join('circle')
+        function linkPath(d) {
+            var sx = d.source.x || 0, sy = d.source.y || 0;
+            var tx = d.target.x || 0, ty = d.target.y || 0;
+            var mx = (sx + tx) / 2, my = (sy + ty) / 2;
+            var dx = tx - sx, dy = ty - sy;
+            var len = Math.sqrt(dx * dx + dy * dy) || 1;
+            var curve = Math.min(len * 0.18, 22);
+            var cpx = mx - dy / len * curve;
+            var cpy = my + dx / len * curve;
+            return 'M' + sx.toFixed(1) + ',' + sy.toFixed(1) +
+                   ' Q' + cpx.toFixed(1) + ',' + cpy.toFixed(1) +
+                   ' ' + tx.toFixed(1) + ',' + ty.toFixed(1);
+        }
+
+        // Halo
+        var haloEl = nodeG.selectAll('circle.halo').data(nodes).join('circle')
+            .attr('class', 'halo')
+            .attr('r', function (d) { return nodeR(d) * 2; })
+            .attr('fill', function (d) { return catColor(d.cat); })
+            .attr('opacity', 0.08)
+            .style('pointer-events', 'none');
+
+        // Node
+        var nodeEl = nodeG.selectAll('circle.node').data(nodes).join('circle')
+            .attr('class', 'node')
             .attr('r', nodeR)
             .attr('fill', function (d) { return catColor(d.cat); })
             .attr('stroke', t().nodeStroke).attr('stroke-width', 1.5)
+            .attr('filter', 'url(#node-glow)')
             .style('cursor', 'pointer');
 
         var labelEl = labelG.selectAll('text').data(nodes).join('text')
@@ -204,8 +235,15 @@
             var neighbors = adj[d.slug] || new Set();
             var th = t();
 
+            haloEl.attr('opacity', function (n) {
+                return n.slug === d.slug ? 0.30 : neighbors.has(n.slug) ? 0.12 : 0.02;
+            }).attr('r', function (n) {
+                return n.slug === d.slug ? nodeR(n) * 3 : nodeR(n) * 2;
+            });
+
             nodeEl.attr('opacity', function (n) { return n.slug === d.slug || neighbors.has(n.slug) ? 1 : DIM_OPACITY; })
-                  .attr('r', function (n) { return n.slug === d.slug ? nodeR(n) * 1.5 : nodeR(n); });
+                  .attr('r', function (n) { return n.slug === d.slug ? nodeR(n) * 1.5 : nodeR(n); })
+                  .attr('filter', function (n) { return n.slug === d.slug ? 'url(#node-glow-active)' : 'url(#node-glow)'; });
 
             linkEl.attr('stroke', function (l) {
                         var sid = l.source.slug || l.source, tid = l.target.slug || l.target;
@@ -236,7 +274,8 @@
             resetTimer = setTimeout(function () {
                 activeSlug = null;
                 var th = t();
-                nodeEl.attr('opacity', 1).attr('r', nodeR);
+                haloEl.attr('opacity', 0.08).attr('r', function (d) { return nodeR(d) * 2; });
+                nodeEl.attr('opacity', 1).attr('r', nodeR).attr('filter', 'url(#node-glow)');
                 linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 1);
                 labelEl.attr('opacity', LABEL_NORMAL).attr('fill', th.label).attr('font-size', '9px');
                 tooltip.classed('is-visible', false);
@@ -260,8 +299,8 @@
                         e.stopPropagation();
                         clearTimeout(resetTimer);
                         highlight(d);
-                        var cx = e.clientX || (e.touches && e.touches[0] && e.touches[0].clientX) || window.innerWidth / 2;
-                        var cy = e.clientY || (e.touches && e.touches[0] && e.touches[0].clientY) || 120;
+                        var cx = e.clientX || window.innerWidth / 2;
+                        var cy = e.clientY || 120;
                         tooltip.style('left', Math.min(cx + 14, window.innerWidth - 180) + 'px')
                                .style('top', Math.max(70, cy - 60) + 'px')
                                .style('transform', 'none');
@@ -273,7 +312,6 @@
                 }
             });
 
-        // 전체 노드가 화면에 들어오도록 줌 아웃
         function zoomToFit() {
             var pad = 50;
             var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
@@ -290,15 +328,11 @@
             svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
         }
 
-        // 모바일: 배경 탭 시 하이라이트 해제 + 전체 그래프 보기
         svg.on('click', function (e) {
             if (!isTouchDevice) return;
             var tag = e.target.tagName;
             if (tag === 'circle' || tag === 'text') return;
-            if (activeSlug) {
-                reset();
-                zoomToFit();
-            }
+            if (activeSlug) { reset(); zoomToFit(); }
         });
 
         nodeEl.call(d3.drag()
@@ -308,13 +342,12 @@
         );
 
         sim.on('tick', function () {
-            linkEl.attr('x1', function (d) { return d.source.x; }).attr('y1', function (d) { return d.source.y; })
-                  .attr('x2', function (d) { return d.target.x; }).attr('y2', function (d) { return d.target.y; });
+            linkEl.attr('d', linkPath);
+            haloEl.attr('cx', function (d) { return d.x; }).attr('cy', function (d) { return d.y; });
             nodeEl.attr('cx', function (d) { return d.x; }).attr('cy', function (d) { return d.y; });
             labelEl.attr('x', function (d) { return d.x + nodeR(d) + 3; }).attr('y', function (d) { return d.y; });
         });
 
-        // ── Side panel ──────────────────────────────────────────
         if (statsEl) statsEl.textContent = nodes.length + '개 노드 · ' + links.length + '개 연결';
 
         if (groupsEl) {
@@ -328,6 +361,7 @@
                 groupsEl.appendChild(item);
                 item.querySelector('input').addEventListener('change', function (e) {
                     if (e.target.checked) hiddenCats.delete(cat); else hiddenCats.add(cat);
+                    haloEl.attr('display', function (d) { return hiddenCats.has(d.cat) ? 'none' : null; });
                     nodeEl.attr('display', function (d) { return hiddenCats.has(d.cat) ? 'none' : null; });
                     labelEl.attr('display', function (d) { return hiddenCats.has(d.cat) ? 'none' : null; });
                     linkEl.attr('display', function (l) {
@@ -343,21 +377,23 @@
 
         if (searchEl) {
             searchEl.addEventListener('input', function (e) {
-                // reset() 타이머가 검색 상태를 덮어쓰지 않도록 취소
                 clearTimeout(resetTimer);
                 activeSlug = null;
                 var q = e.target.value.toLowerCase().trim();
                 var th = t();
                 if (!q) {
-                    nodeEl.attr('opacity', 1).attr('r', nodeR);
+                    haloEl.attr('opacity', 0.08).attr('r', function (d) { return nodeR(d) * 2; });
+                    nodeEl.attr('opacity', 1).attr('r', nodeR).attr('filter', 'url(#node-glow)');
                     labelEl.attr('opacity', LABEL_NORMAL).attr('fill', th.label).attr('font-size', '9px');
                     linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 1);
                     tooltip.classed('is-visible', false);
                     return;
                 }
                 var match = function (d) { return d.title.toLowerCase().includes(q); };
+                haloEl.attr('opacity', function (d) { return match(d) ? 0.28 : 0.02; });
                 nodeEl.attr('opacity', function (d) { return match(d) ? 1 : DIM_OPACITY; })
-                      .attr('r', function (d) { return match(d) ? nodeR(d) * 1.4 : nodeR(d); });
+                      .attr('r', function (d) { return match(d) ? nodeR(d) * 1.4 : nodeR(d); })
+                      .attr('filter', function (d) { return match(d) ? 'url(#node-glow-active)' : 'url(#node-glow)'; });
                 labelEl.attr('opacity', function (d) { return match(d) ? 1 : 0; })
                        .attr('fill', function (d) { return match(d) ? th.labelActive : th.label; })
                        .attr('font-size', function (d) { return match(d) ? '11px' : '9px'; });
@@ -365,27 +401,20 @@
             });
         }
 
-        // ── Theme switch sync ────────────────────────────────────
         new MutationObserver(function () {
             var th = t();
             applyTheme();
-            container.style.background = th.bg;
-            nodeEl.attr('stroke', th.nodeStroke);
+            nodeEl.attr('stroke', th.nodeStroke).attr('filter', 'url(#node-glow)');
             linkEl.attr('stroke', th.link);
             labelEl.attr('fill', th.label);
         }).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
 
-        // bfcache 복귀 시 드래그/하이라이트 상태 초기화 (모바일 "다른 노드 선택 불가" 버그 수정)
         window.addEventListener('pageshow', function (e) {
             if (!e.persisted) return;
             nodes.forEach(function (n) { n.fx = null; n.fy = null; });
             activeSlug = null;
             clearTimeout(resetTimer);
-            var th = t();
-            nodeEl.attr('opacity', 1).attr('r', nodeR);
-            linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 1);
-            labelEl.attr('opacity', LABEL_NORMAL).attr('fill', th.label).attr('font-size', '9px');
-            tooltip.classed('is-visible', false);
+            reset();
             sim.alpha(0.1).restart();
         });
 

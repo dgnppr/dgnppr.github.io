@@ -155,6 +155,52 @@ ul.tag-list {
     color: var(--color-text-heading);
 }
 
+// ── Wiki Mini Graph ─────────────────────────────────────────
+.wiki-mini-graph {
+    margin: 0.5rem 0 1.2rem;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--color-surface-hover);
+
+    &__header {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--color-border-subtle);
+        cursor: pointer;
+        user-select: none;
+
+        &:hover { background: var(--color-surface-hover); }
+    }
+
+    &__title {
+        font-size: 0.78rem;
+        font-weight: 600;
+        color: var(--color-text-secondary);
+        flex: 1;
+    }
+
+    &__chevron {
+        font-size: 0.65rem;
+        color: var(--color-text-tertiary);
+        transition: transform 0.2s ease;
+
+        &.is-collapsed { transform: rotate(-90deg); }
+    }
+
+    &__canvas {
+        height: 180px;
+        overflow: hidden;
+        transition: height 0.25s ease;
+
+        &.is-collapsed { height: 0; }
+
+        svg { display: block; }
+    }
+}
+
 // ── Wiki prev/next navigation ──────────────────────────────
 .wiki-prev-next {
     display: flex;

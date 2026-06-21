@@ -21,7 +21,40 @@ layout: default
         {{ content }}
     </article>
     {% include createLink.html %}
+
+    {% assign posts_sorted = site.posts %}
+    {% for post in posts_sorted %}
+        {% if post.url == page.url %}
+            {% unless forloop.last %}
+                {% assign post_prev = posts_sorted[forloop.index] %}
+            {% endunless %}
+            {% if forloop.index0 > 0 %}
+                {% assign post_next_idx = forloop.index0 | minus: 1 %}
+                {% assign post_next = posts_sorted[post_next_idx] %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    {% if post_prev or post_next %}
+    <nav class="wiki-prev-next" aria-label="이전/다음 포스트">
+        {% if post_prev %}
+        <a class="wiki-prev-next-link wiki-prev" href="{{ post_prev.url }}">
+            <span class="wiki-prev-next-label">← 이전글</span>
+            <span class="wiki-prev-next-title">{{ post_prev.title }}</span>
+        </a>
+        {% else %}
+        <span></span>
+        {% endif %}
+        {% if post_next %}
+        <a class="wiki-prev-next-link wiki-next" href="{{ post_next.url }}">
+            <span class="wiki-prev-next-label">다음글 →</span>
+            <span class="wiki-prev-next-title">{{ post_next.title }}</span>
+        </a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
     {% include comment.html %}
 
+    <script src="/js/wiki-tooltip.js"></script>
     <script async src="/js/toc-highlight.js"></script>
 </div>

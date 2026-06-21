@@ -40,13 +40,8 @@
     transition: color 0.15s ease;
 }
 
-// 호버: 활성 색상(#2563eb)과 다른 파란색
 #markdown-toc li a:hover {
-    color: #3b82f6;
-}
-
-html.dark-mode #markdown-toc li a:hover {
-    color: #93c5fd;
+    color: var(--color-toc-active);
 }
 
 // 중첩 ul/li 마커 제거 + 들여쓰기

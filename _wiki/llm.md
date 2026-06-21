@@ -1,6 +1,6 @@
 ---
 layout  : category
-title   : Agent
+title   : LLM
 date    : 2025-04-21 00:00:00 +0900
 updated : 2025-04-21 00:00:00 +0900
 tag     : 

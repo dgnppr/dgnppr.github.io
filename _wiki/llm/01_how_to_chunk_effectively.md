@@ -8,7 +8,7 @@ tag     : agent llm rag
 toc     : true
 comment : true
 public  : true
-parent  : [[/ai-agent]]
+parent  : [[/llm]]
 latex   : true
 ---
 

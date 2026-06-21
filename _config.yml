@@ -17,6 +17,7 @@ comment-support: giscus
 plugins:
   - jekyll-paginate
   - jekyll-gist
+  - jekyll-sitemap
 
 permalink: /blog/:year/:month/:day/:title/
 
