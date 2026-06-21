@@ -7,8 +7,5 @@
  "tags": [],
  "series": null,
  "snippet": "",
- "children": [
-  "data-engineering/00_what_is_medaliion_architecture",
-  "data-engineering/01_what_is_ontology"
- ]
+ "children": []
 }

@@ -6,7 +6,7 @@ updated : 2026-06-21 22:00:00 +0900
 tag     : data-engineering
 toc     : true
 comment : true
-public  : true
+public  : false
 parent  : [[/data-engineering]]
 latex   : true
 ---
