@@ -332,6 +332,7 @@ function collectData(file) {
     const parsed = parseInfo(file, parts[1]);
     if (parsed && parts.length > 2) {
         const body = parts.slice(2).join('---')
+            .replace(/\*\s*TOC\s*\n\{:toc\}/g, '')
             .replace(/```[\s\S]*?```/g, '')
             .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
             .replace(/[#*_`\[\]>]/g, '')
