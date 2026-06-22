@@ -7,7 +7,17 @@ const NO_PRINT = false;
 
 main();
 
+function cleanDir(dir) {
+    if (!fs.existsSync(dir)) return;
+    fs.rmSync(dir, { recursive: true, force: true });
+    fs.mkdirSync(dir, { recursive: true });
+}
+
 function main() {
+    cleanDir('./data/metadata');
+    cleanDir('./data/tags');
+    console.log('[정리] data/metadata, data/tags 초기화 완료');
+
     const list = [];
     const tagMap = {};
     const pageMap = {};
