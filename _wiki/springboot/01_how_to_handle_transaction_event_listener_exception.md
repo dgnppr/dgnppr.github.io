@@ -11,6 +11,7 @@ public  : true
 parent  : [[/spring-boot]]
 latex   : true
 status  : complete
+show-diagram: true
 ---
 
 * TOC

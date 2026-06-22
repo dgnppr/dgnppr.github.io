@@ -10,6 +10,7 @@ public  : true
 parent  : [[/retrospect]]
 latex   : true
 status  : complete
+show-diagram: true
 ---
 
 ## 새로운 시작

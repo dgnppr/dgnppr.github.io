@@ -171,12 +171,15 @@
             }
 
             // ── Simulation ──────────────────────────────────────────
+            var FLOAT_ALPHA = 0.005;
             var sim = d3.forceSimulation(nodes)
                 .force('link',      d3.forceLink(links).id(function (d) { return d.id; }).distance(85).strength(0.35))
                 .force('charge',    d3.forceManyBody().strength(-200).distanceMax(450))
                 .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) + 10; }))
                 .force('clusterX',  d3.forceX().strength(0.15).x(function (d) { return (catCenters[d.cat] || { x: W / 2 }).x; }))
-                .force('clusterY',  d3.forceY().strength(0.15).y(function (d) { return (catCenters[d.cat] || { y: H / 2 }).y; }));
+                .force('clusterY',  d3.forceY().strength(0.15).y(function (d) { return (catCenters[d.cat] || { y: H / 2 }).y; }))
+                .alphaDecay(0.015)
+                .alphaTarget(FLOAT_ALPHA);
 
             // ── Draw layers ─────────────────────────────────────────
             var linkG  = g.append('g');

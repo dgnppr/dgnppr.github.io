@@ -10,6 +10,7 @@ public  : false
 parent  : [[/retrospect]]
 latex   : true
 status  : complete
+show-diagram: true
 ---
 
 ## 3월 무엇을 했나

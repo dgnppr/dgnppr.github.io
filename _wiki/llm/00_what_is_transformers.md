@@ -11,6 +11,7 @@ public  : true
 parent  : [[/llm]]
 latex   : true
 status  : complete
+show-diagram: true
 ---
 
 

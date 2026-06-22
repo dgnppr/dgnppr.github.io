@@ -10,6 +10,7 @@ public  : false
 parent  : [[/data-engineering]]
 latex   : true
 status  : complete
+show-diagram: true
 ---
 * TOC
 {:toc}

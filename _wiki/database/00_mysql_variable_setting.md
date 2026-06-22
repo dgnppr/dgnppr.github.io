@@ -11,6 +11,7 @@ public  : false
 parent  : [[/database]]
 latex   : true
 status  : complete
+show-diagram: true
 ---
 
 * TOC

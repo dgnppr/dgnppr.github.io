@@ -11,6 +11,7 @@ public  : true
 parent  : [[/system-design]]
 latex   : true
 status  : complete
+show-diagram: true
 ---
 
 * TOC

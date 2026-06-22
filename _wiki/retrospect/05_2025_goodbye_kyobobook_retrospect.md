@@ -10,6 +10,7 @@ public  : true
 parent  : [[/retrospect]]
 latex   : true
 status  : complete
+show-diagram: true
 ---
 
 * TOC
