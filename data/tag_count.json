@@ -16,6 +16,10 @@
   "size": 3
  },
  {
+  "name": "data-architecture",
+  "size": 1
+ },
+ {
   "name": "data-engineering",
   "size": 1
  },
