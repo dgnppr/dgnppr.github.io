@@ -277,3 +277,15 @@ div.search {
   cursor: pointer;
   font-family: inherit;
 }
+
+.search-quick-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+
+  svg, i { display: block; }
+}
