@@ -59,41 +59,17 @@
 
     {% include json-ld.html %}
     <style>
-        :root {
-            --header-icon-hover-color: #bfdbfe;
-        }
-
         .header-search-toggle {
             transition: color 0.2s;
-        }
-
-        .header-search-toggle:hover {
-            color: var(--header-icon-hover-color);
         }
 
         .header-icon-unified {
             font-size: 1.1em;
         }
 
-        .header-search-toggle[aria-label="통계"] {
-            color: var(--color-text-secondary);
-        }
-
         .header-search-toggle[aria-label="통계"] .header-icon-unified {
             font-size: 1.25em;
             font-weight: 300;
-        }
-
-        .header-search-toggle[aria-label="지식 그래프"] {
-            color: var(--color-text-secondary);
-        }
-
-        .header-search-toggle[aria-label="지식 그래프"]:hover {
-            color: var(--header-icon-hover-color);
-        }
-
-        .header-search-toggle[aria-label="통계"]:hover {
-            color: var(--header-icon-hover-color);
         }
     </style>
 </head>
