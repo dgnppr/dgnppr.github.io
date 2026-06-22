@@ -9,6 +9,7 @@ comment : true
 public  : false
 parent  : [[/retrospect]]
 latex   : true
+status  : complete
 ---
 
 

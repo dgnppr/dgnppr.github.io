@@ -10,6 +10,7 @@ comment : true
 public  : true
 parent  : [[/essay]]
 latex   : true
+status  : complete
 ---
 
 * TOC

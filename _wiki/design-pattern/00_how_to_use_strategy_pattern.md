@@ -10,6 +10,7 @@ comment : true
 public  : true
 parent  : [[/design-pattern]]
 latex   : true
+status  : complete
 ---
 
 * TOC

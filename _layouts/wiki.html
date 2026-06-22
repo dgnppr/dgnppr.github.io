@@ -18,6 +18,8 @@ layout: document
             <p>Created: {{ page.date | date: '%Y.%m.%d' }} {% include weekday.html d=page.date %}</p>
             <p>Updated: {{ page.updated | date: '%Y.%m.%d' }} {% include weekday.html d=page.updated %}</p>
             <p>Author: <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}/" target="_blank" rel="noopener">Yonghyun Yoon</a></p>
+            {% if page.status %}<p>Status: <span class="post-status">{{ page.status }}</span></p>{% endif %}
+            {% if page.note %}<p>Note: <span class="post-note">{{ page.note }}</span></p>{% endif %}
             <p><span class="eta"></span></p>
             {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
         </div>

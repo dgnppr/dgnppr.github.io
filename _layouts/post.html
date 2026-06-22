@@ -10,6 +10,8 @@ layout: default
             {{ page.date | date: "%Y.%m.%d" }} {% include weekday.html d=page.date %}
         </p>
         {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
+        {% if page.status %}<p class="post-status-line">Status: <span class="post-status">{{ page.status }}</span></p>{% endif %}
+        {% if page.note %}<p class="post-note-line">Note: <span class="post-note">{{ page.note }}</span></p>{% endif %}
         <h2>{{ page.summary }}</h2>
     </header>
 
