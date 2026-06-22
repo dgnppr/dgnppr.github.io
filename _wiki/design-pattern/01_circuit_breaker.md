@@ -10,6 +10,7 @@ public  : true
 parent  : [[/design-pattern]]
 latex   : true
 ---
+
 * TOC
 {:toc}
 

@@ -12,6 +12,7 @@ parent  : [[/essay]]
 latex   : true
 ---
 
+
 * TOC
 {:toc}
 

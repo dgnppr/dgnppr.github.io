@@ -11,6 +11,7 @@ public  : true
 parent  : [[/essay]]
 latex   : true
 ---
+
 * TOC
 {:toc}
 
