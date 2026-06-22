@@ -57,14 +57,21 @@
     cursor: pointer;
     font-size: inherit;
     color: var(--color-text-secondary);
-    padding: 8px 12px;
+    padding: 8px 10px;
     display: flex;
     align-items: center;
     line-height: 1;
     text-decoration: none;
     outline: none;
+    transition: color 0.2s;
 
     &:hover { color: var(--color-interactive); }
+
+    // FA 아이콘 크기를 SVG 아이콘(14px)과 통일
+    .header-icon-unified {
+        font-size: 14px;
+        line-height: 1;
+    }
 
     // brain icon: outline-only (fill masked to background color)
     .fa-brain {
@@ -271,32 +278,3 @@ div.search {
   max-width: 100%;
 }
 
-.search-quick-label {
-  font-size: 0.7rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--color-text-tertiary);
-  padding: 8px 14px 4px;
-}
-
-.search-quick-action {
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.search-quick-icon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  color: var(--color-text-secondary);
-  flex-shrink: 0;
-
-  svg, i { display: block; }
-}
