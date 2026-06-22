@@ -943,6 +943,7 @@
   },
   "reference": "\"\"",
   "retrospect/00_2023_year_retrospect": {
+    "hash": "10eec5627196a12530c54acc8e01a715",
     "nodes": [
       {
         "id": "n1",
@@ -961,22 +962,22 @@
       },
       {
         "id": "n4",
-        "label": "기초 지식 부족 인지",
+        "label": "자신 부족함 인지",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "기초 학습 및 성장",
+        "label": "기초 학습 중요성",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "자기 성찰",
-        "type": "step"
+        "label": "성장 자양분",
+        "type": "end"
       },
       {
         "id": "n7",
-        "label": "2024년 목표 설정",
+        "label": "2024년 목표",
         "type": "end"
       }
     ],
@@ -1889,7 +1890,7 @@
     ]
   },
   "data-engineering/00_what_is_medaliion_architecture": {
-    "hash": "bb1571c7c974ccb7cb14bae7b243a779",
+    "hash": "106601af1bbc2c18120005b57bd37e8e",
     "nodes": [
       {
         "id": "n1",
@@ -1898,27 +1899,32 @@
       },
       {
         "id": "n2",
-        "label": "데이터 품질",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "데이터 활용도",
-        "type": "step"
-      },
-      {
-        "id": "n4",
         "label": "Bronze 계층",
         "type": "step"
       },
       {
-        "id": "n5",
+        "id": "n3",
         "label": "Silver 계층",
         "type": "step"
       },
       {
-        "id": "n6",
+        "id": "n4",
         "label": "Gold 계층",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "점진적 정제",
+        "type": "end"
+      },
+      {
+        "id": "n6",
+        "label": "재처리 유연성",
+        "type": "end"
+      },
+      {
+        "id": "n7",
+        "label": "단일 출처",
         "type": "end"
       }
     ],
@@ -1928,16 +1934,11 @@
         "to": "n2"
       },
       {
-        "from": "n1",
+        "from": "n2",
         "to": "n3"
       },
       {
-        "from": "n2",
-        "to": "n3",
-        "bidirectional": true
-      },
-      {
-        "from": "n1",
+        "from": "n3",
         "to": "n4"
       },
       {
@@ -1945,8 +1946,12 @@
         "to": "n5"
       },
       {
-        "from": "n5",
+        "from": "n4",
         "to": "n6"
+      },
+      {
+        "from": "n4",
+        "to": "n7"
       }
     ]
   }

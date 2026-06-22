@@ -7,7 +7,7 @@
         {
           "title": "메달리언 아키텍처란 무엇인가",
           "category": "data-engineering",
-          "status": "draft"
+          "status": "complete"
         },
         {
           "title": "코드 작성 비용이 0인 시대에서 나는 어떻게 해야할까",
@@ -168,8 +168,7 @@
     }
   },
   "byStatus": {
-    "draft": 1,
-    "complete": 23
+    "complete": 24
   },
   "byCategory": {
     "data-engineering": 1,
@@ -186,7 +185,7 @@
     {
       "title": "메달리언 아키텍처란 무엇인가",
       "date": "2026-06-22 00:00:00 +0900",
-      "status": "draft",
+      "status": "complete",
       "category": "data-engineering"
     },
     {
