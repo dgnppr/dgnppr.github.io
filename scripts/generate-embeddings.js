@@ -331,6 +331,12 @@ async function main() {
     fs.writeFileSync(RELATED_FILE, JSON.stringify(related));
     console.log('[저장] data/related.json (' + Object.keys(related).length + '개 항목)');
 
+    // 삭제된 파일의 stale 캐시 항목 제거
+    var validSlugs = new Set(files.map(function (f) { return slugFromPath(f.path, f.type); }));
+    Object.keys(cache).forEach(function (k) {
+        if (!validSlugs.has(k)) { delete cache[k]; cacheUpdated = true; }
+    });
+
     if (cacheUpdated) {
         fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
         console.log('[저장] data/embeddings.json (캐시 업데이트)');

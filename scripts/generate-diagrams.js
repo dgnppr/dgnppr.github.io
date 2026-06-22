@@ -13,8 +13,9 @@
  * - --force 플래그로 전체 재생성
  */
 'use strict';
-const fs   = require('fs');
-const path = require('path');
+const fs     = require('fs');
+const path   = require('path');
+const crypto = require('crypto');
 
 const GCP_PROJECT  = process.env.GOOGLE_PROJECT_ID;
 const GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
@@ -288,13 +289,14 @@ async function main() {
         var filePath = files[i];
         var slug     = slugFromPath(filePath);
 
-        if (!FORCE && results[slug]) {
+        var content = fs.readFileSync(filePath, 'utf8');
+        var hash    = crypto.createHash('md5').update(content).digest('hex');
+
+        if (!FORCE && results[slug] && results[slug].hash === hash) {
             skipped++;
             process.stdout.write('[캐시] ' + slug + '\n');
             continue;
         }
-
-        var content = fs.readFileSync(filePath, 'utf8');
 
         if (!/^show-diagram\s*:\s*true/m.test(content)) {
             process.stdout.write('[건너뜀] ' + slug + ' (show-diagram 없음)\n');
@@ -321,7 +323,7 @@ async function main() {
                 continue;
             }
 
-            results[slug] = diagram;
+            results[slug] = { hash: hash, nodes: diagram.nodes, edges: diagram.edges };
             generated++;
             process.stdout.write('완료 (' + diagram.nodes.length + '노드, ' + diagram.edges.length + '엣지)\n');
             fs.writeFileSync(DIAGRAMS_FILE, JSON.stringify(results, null, 2));
@@ -331,6 +333,14 @@ async function main() {
             failed++;
         }
     }
+
+    // 삭제된 파일의 stale 항목 제거
+    var validSlugs = new Set(files.map(slugFromPath));
+    var removed = 0;
+    Object.keys(results).forEach(function (k) {
+        if (!validSlugs.has(k)) { delete results[k]; removed++; }
+    });
+    if (removed) process.stdout.write('[정리] stale 항목 ' + removed + '개 제거\n');
 
     fs.writeFileSync(DIAGRAMS_FILE, JSON.stringify(results, null, 2));
     console.log('\n완료: ' + generated + '개 생성, ' + skipped + '개 캐시, ' + failed + '개 실패');

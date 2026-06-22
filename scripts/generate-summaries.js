@@ -8,14 +8,15 @@
  *   [GOOGLE_LOCATION=asia-northeast3] \
  *   node scripts/generate-summaries.js
  *
- * - 이미 생성된 슬러그는 건너뜀 (캐시)
+ * - 내용 hash 기반 캐시 (수정 시 자동 재생성, 삭제 시 stale 항목 제거)
  * - 내용이 100자 미만인 파일은 건너뜀
  * - 500ms 딜레이로 레이트 리밋 방지
  * - --force 플래그로 전체 재생성
  */
 'use strict';
-const fs   = require('fs');
-const path = require('path');
+const fs     = require('fs');
+const path   = require('path');
+const crypto = require('crypto');
 
 const GCP_PROJECT  = process.env.GOOGLE_PROJECT_ID;
 const GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
@@ -32,8 +33,9 @@ if (!GCP_CREDS || !GCP_PROJECT) {
 
 console.log('[백엔드] Vertex AI — ' + MODEL + ' (' + GCP_LOCATION + ')');
 
-const ROOT           = path.join(__dirname, '..');
-const SUMMARIES_FILE = path.join(ROOT, 'data/summaries.json');
+const ROOT                = path.join(__dirname, '..');
+const SUMMARIES_FILE      = path.join(ROOT, 'data/summaries.json');
+const SUMMARIES_HASH_FILE = path.join(ROOT, 'data/summaries-hashes.json');
 
 // ── 프롬프트 ───────────────────────────────────────────────────
 function buildPrompt(title, body) {
@@ -167,28 +169,32 @@ function extractBody(content) {
 
 // ── 메인 ──────────────────────────────────────────────────────
 async function main() {
-    var cache = {};
+    var results = {};
     if (fs.existsSync(SUMMARIES_FILE)) {
-        try { cache = JSON.parse(fs.readFileSync(SUMMARIES_FILE, 'utf8')); } catch (e) {}
+        try { results = JSON.parse(fs.readFileSync(SUMMARIES_FILE, 'utf8')); } catch (e) {}
+    }
+    var hashCache = {};
+    if (fs.existsSync(SUMMARIES_HASH_FILE)) {
+        try { hashCache = JSON.parse(fs.readFileSync(SUMMARIES_HASH_FILE, 'utf8')); } catch (e) {}
     }
 
-    var results   = Object.assign({}, cache);
     var generated = 0;
     var skipped   = 0;
 
     for (var i = 0; i < files.length; i++) {
         var filePath = files[i];
         var slug     = slugFromPath(filePath);
+        var content  = fs.readFileSync(filePath, 'utf8');
+        var hash     = crypto.createHash('md5').update(content).digest('hex');
 
-        if (!FORCE && results[slug]) {
+        if (!FORCE && results[slug] && hashCache[slug] === hash) {
             skipped++;
             process.stdout.write('[캐시] ' + slug + '\n');
             continue;
         }
 
-        var content = fs.readFileSync(filePath, 'utf8');
-        var title   = extractTitle(content);
-        var body    = extractBody(content);
+        var title = extractTitle(content);
+        var body  = extractBody(content);
 
         if (body.length < 100) {
             process.stdout.write('[건너뜀] ' + slug + ' (내용 부족)\n');
@@ -198,17 +204,28 @@ async function main() {
         try {
             process.stdout.write('[생성] ' + slug + '... ');
             var summary = await generateSummary(title || slug, body);
-            results[slug] = summary;
+            results[slug]   = summary;
+            hashCache[slug] = hash;
             generated++;
             process.stdout.write('완료 (' + summary.length + '자)\n');
             fs.writeFileSync(SUMMARIES_FILE, JSON.stringify(results, null, 2));
+            fs.writeFileSync(SUMMARIES_HASH_FILE, JSON.stringify(hashCache, null, 2));
             await new Promise(function (r) { setTimeout(r, 500); });
         } catch (e) {
             process.stdout.write('오류: ' + e.message + '\n');
         }
     }
 
+    // 삭제된 파일의 stale 항목 제거
+    var validSlugs = new Set(files.map(slugFromPath));
+    var removed = 0;
+    Object.keys(results).forEach(function (k) {
+        if (!validSlugs.has(k)) { delete results[k]; delete hashCache[k]; removed++; }
+    });
+    if (removed) process.stdout.write('[정리] stale 항목 ' + removed + '개 제거\n');
+
     fs.writeFileSync(SUMMARIES_FILE, JSON.stringify(results, null, 2));
+    fs.writeFileSync(SUMMARIES_HASH_FILE, JSON.stringify(hashCache, null, 2));
     console.log('\n완료: ' + generated + '개 생성, ' + skipped + '개 캐시 사용');
 }
 

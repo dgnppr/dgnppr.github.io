@@ -1,9 +1,3 @@
 {
-  "mcpServers": {
-    "dgnppr-wiki": {
-      "command": "node",
-      "args": ["/Users/yh.yoon/private/dgnppr.github.io/mcp/wiki-server.js"],
-      "type": "stdio"
-    }
-  }
+  "mcpServers": {}
 }
