@@ -12,44 +12,66 @@
 
 - 한국어 포함 다국어 지원
 - `outputDimensionality` 파라미터로 차원 축소 가능 (API 레벨 지원)
-- Vertex AI SA 키 이미 보유
 
 ### 차원 결정
 
-| 차원 | 파일 크기 (23개 글) | 비고 |
-|------|-------------------|------|
-| 768 | ~499KB | 기본값 |
-| 128 | ~83KB | 품질 손실 우려 |
-| **256** | **~164KB** | **선택** |
+| 차원 | 파일 크기 (참고) | 비고 |
+|------|----------------|------|
+| 128 | 소 | 품질 손실 우려 |
+| 256 | 중 | 구버전 선택값 |
+| **768** | **대** | **현재 선택 (기본값)** |
 
-128은 품질 저하 가능성이 있어 256으로 확정했다. 글 수가 늘어도 캐시 구조 덕분에 증분 계산만 발생한다.
+초기에는 파일 크기를 이유로 256을 선택했으나, 한국어 기술 문서에서 차원 압축 손실이 우려되어 768로 상향했다. 글 수가 늘어도 캐시 구조 덕분에 증분 계산만 발생한다.
 
 ---
 
 ## 스코어링 파이프라인
 
-`scripts/generate-embeddings.js`에서 7개 요소를 조합해 최종 점수를 산출한다.
+`scripts/generate-embeddings.js`에서 **가중합** 방식으로 최종 점수를 산출한다.
 
 ```
-최종 점수 = (임베딩 코사인 × 태그 × 카테고리 × 제목 × 길이 × 날짜) × (1 + BM25_WEIGHT × BM25정규화)
+score = 0.70 × semantic + 0.20 × keyword + 0.10 × tag
+      + cat_bonus + title_bonus          (가산 소프트 보너스)
 ```
 
-### 요소별 상세
+### 구성 요소
 
-| # | 요소 | 방식 | 상수 |
-|---|------|------|------|
-| 1 | 임베딩 코사인 유사도 | 기준값 | — |
-| 2 | 태그 보너스 | 공유 태그 1개당 ×(1 + 0.03) | `TAG_BONUS = 0.03` |
-| 3 | 태그 패널티 | 공유 태그 없으면 ×0.90 | `TAG_PENALTY = 0.90` |
-| 4 | 카테고리 보너스 | 같은 카테고리(URL 첫 세그먼트)면 ×1.05 | `CAT_BONUS = 0.05` |
-| 5 | 제목 키워드 overlap | 공유 키워드 1개당 ×(1 + 0.02) | `TITLE_BONUS = 0.02` |
-| 6 | 글 길이 패널티 | 100자 미만 ×0.50, 300자 미만 ×0.90 | `LEN_THRESHOLD = 300` |
-| 7 | 발행 시기 근접도 | 90일 이내 ×1.02, 365일 이상 ×0.98 | `DATE_BONUS/PENALTY` |
-| 8 | BM25 exact keyword | 최대 +15% 보정 (정규화 후) | `BM25_WEIGHT = 0.15` |
+| # | 요소 | 방식 | 가중치/값 |
+|---|------|------|----------|
+| 1 | 임베딩 코사인 유사도 | 0~1 스케일 | `SEMANTIC_WEIGHT = 0.70` |
+| 2 | BM25 키워드 점수 | p99 정규화 후 0~1 클리핑 | `KEYWORD_WEIGHT = 0.20` |
+| 3 | 태그 overlap | Jaccard-like: 공유 수 / max(|A|, |B|) | `TAG_WEIGHT = 0.10` |
+| 4 | 카테고리 보너스 | 같은 카테고리면 +0.02 (가산) | `CAT_BONUS_ADD = 0.02` |
+| 5 | 제목 키워드 보너스 | 공유 키워드 1개당 +0.01, 최대 3개 (가산) | `TITLE_BONUS_ADD = 0.01` |
 
-**점수가 1.0을 초과할 수 있다.** 코사인 기반에 보너스를 곱셈으로 쌓기 때문이다. z-score 필터는 절댓값이 아닌 분포 기준으로 동작하므로 문제없다.
+**하드 필터:** 두 문서 중 짧은 쪽 본문이 100자 미만이면 해당 쌍을 점수 계산에서 제외한다.
 
-**스코어링은 Pairwise 대칭으로 계산한다.** A→B와 B→A를 별도로 계산하지 않고, 하나의 점수를 양방향에서 공유한다. 현재 수식이 대칭적이므로 결과는 동일하되, 구조를 명시적으로 대칭으로 잡아 향후 비대칭 요소 추가 시 혼선을 방지한다.
+### 구 버전과의 비교
+
+| 항목 | 구버전 | 현버전 |
+|------|--------|--------|
+| 점수 구조 | 7개 인자 곱셈 체인 | 3항 가중합 + 2가산 보너스 |
+| 태그 없음 | ×0.90 패널티 | 패널티 없음 (보너스만 유지) |
+| BM25 정규화 | global max | 99th percentile |
+| 글 길이 처리 | ×0.50 / ×0.90 곱셈 패널티 | 하드 필터(100자 미만 쌍 제외) |
+| 날짜 근접도 | ±2% 곱셈 보정 | 제거 |
+| 임베딩 차원 | 256 | 768 |
+
+---
+
+## BM25 정규화
+
+```js
+// 구버전 — 아웃라이어 1개가 전체를 왜곡
+const bNorm = bm25Raw[key] / bm25Max;
+
+// 현버전 — 99th percentile 기준
+const bm25Sorted = Object.values(bm25Raw).sort((a, b) => a - b);
+const bm25P99    = bm25Sorted[Math.floor(bm25Sorted.length * 0.99)] || 1;
+const bNorm      = Math.min((bm25Raw[key] || 0) / bm25P99, 1.0);
+```
+
+키워드가 극단적으로 겹치는 쌍 하나가 `max`를 잡으면 나머지 BM25 기여가 0에 수렴하는 문제를 방어한다.
 
 ---
 
@@ -78,7 +100,27 @@ scores.filter(r => r.score >= threshold && r.score >= MIN_SCORE)
 - **z-score**: 글마다 자기 분포 기준으로 "유독 강한 관계"만 선택 (자기보정)
 - **MIN_SCORE**: 절댓값이 너무 낮으면 z-score를 통과해도 차단
 
-`MIN_SCORE = 0.70` 근거: 현재 코퍼스에서 "의미 있는 연결"의 최솟값이 0.74 수준이었고, 0.70은 여유 마진을 포함한 보수적 하한선이다.
+---
+
+## 평가
+
+`data/eval.json`에 정답 쌍을 정의하고, 스크립트 실행 시 자동으로 precision@5를 출력한다.
+
+```json
+{
+  "pairs": [
+    { "a": "slug-a", "b": "slug-b", "expected": true },
+    { "a": "slug-a", "b": "slug-c", "expected": false }
+  ]
+}
+```
+
+```
+[평가] precision@5: 6/7 (85.7%)
+[평가] 오탐(false positive): 0개
+```
+
+파라미터를 조정할 때마다 precision@5가 오르는지 확인하며 튜닝한다.
 
 ---
 
@@ -88,6 +130,7 @@ scores.filter(r => r.score >= threshold && r.score >= MIN_SCORE)
 data/
   embeddings.json   # 캐시: { slug: { hash: md5, embedding: float[] } }
   related.json      # 출력: { slug: [{ slug, title, url, score }] }
+  eval.json         # 평가셋: { pairs: [{ a, b, expected, note }] }
 ```
 
 - 내용 변경 시(`md5` 불일치)만 API 호출
@@ -96,26 +139,21 @@ data/
 
 ---
 
-## 상수 현황 (2026-06-22 기준)
+## 상수 현황 (2026-06-23 기준)
 
 ```js
-const TOP_N              = 5;
-const DIMS               = 256;
-const Z_SIGMA            = 1.0;
-const MIN_SCORE          = 0.70;
-const TAG_BONUS          = 0.03;
-const TAG_PENALTY        = 0.90;
-const CAT_BONUS          = 0.05;
-const TITLE_BONUS        = 0.02;
-const LEN_THRESHOLD      = 300;
-const LEN_THRESHOLD2     = 100;
-const LEN_PENALTY_FACTOR = 0.90;
-const LEN_PENALTY_FACTOR2= 0.50;
-const DATE_BONUS         = 1.02;
-const DATE_PENALTY       = 0.98;
-const BM25_K1            = 1.5;
-const BM25_B             = 0.75;
-const BM25_WEIGHT        = 0.15;
+const DIMS            = 768;
+const TOP_N           = 5;
+const Z_SIGMA         = 1.0;
+const MIN_SCORE       = 0.70;
+const SEMANTIC_WEIGHT = 0.70;
+const KEYWORD_WEIGHT  = 0.20;
+const TAG_WEIGHT      = 0.10;
+const CAT_BONUS_ADD   = 0.02;
+const TITLE_BONUS_ADD = 0.01;
+const LEN_MIN         = 100;
+const BM25_K1         = 1.5;
+const BM25_B          = 0.75;
 ```
 
 ---

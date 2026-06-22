@@ -27,7 +27,9 @@ $dark-color:        #1E1F22;
     --color-text-secondary:      #{$main-font-color};
     --color-text-tertiary:       #8A93A5;
     --color-text-placeholder:    #bbb;
-    --color-text-blockquote:     #{$second-font-color};
+    --color-text-blockquote:     #4B5563;
+    --color-blockquote-border:   #6B7280;
+    --color-blockquote-bg:       rgba(0, 0, 0, 0.025);
 
     --color-surface:             #FFFFFF;
     --color-surface-hover:       #f8f8fb;
@@ -36,7 +38,9 @@ $dark-color:        #1E1F22;
 
     --color-border:              #d0d0d0;
     --color-border-subtle:       #f0f0f0;
-    --color-border-table:        #{$third-font-color};
+    --color-border-table:        #d1d5db;
+    --color-table-head-bg:       #374151;
+    --color-table-head-text:     #ffffff;
 
     --color-tag-bg:              #eff6ff;
     --color-tag-border:          #dbeafe;
@@ -65,7 +69,9 @@ html.dark-mode {
     --color-text-primary:        #C8CDD5;
     --color-text-heading:        #B8C0CC;
     --color-text-secondary:      #8C96A4;
-    --color-text-blockquote:     #c4a882;
+    --color-text-blockquote:     #8C96A4;
+    --color-blockquote-border:   rgba(200, 205, 213, 0.35);
+    --color-blockquote-bg:       rgba(255, 255, 255, 0.04);
 
     --color-surface:             #{$dark-color};
     --color-surface-hover:       rgba(255, 255, 255, 0.04);
@@ -74,7 +80,9 @@ html.dark-mode {
 
     --color-border:              #636e72;
     --color-border-subtle:       #3a3d42;
-    --color-border-table:        #636e72;
+    --color-border-table:        #454950;
+    --color-table-head-bg:       #2c2f33;
+    --color-table-head-text:     var(--color-text-heading);
 
     --color-tag-bg:              #1a2a40;
     --color-tag-border:          #253a5e;

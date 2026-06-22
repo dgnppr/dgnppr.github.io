@@ -31,13 +31,15 @@ p, li {
 }
 
 blockquote {
-    background: var(--color-surface);
-    margin: 0;
-    padding: 1px 0px 1px 8px;
-    border-left: 4px solid var(--color-border);
+    background: var(--color-blockquote-bg);
+    margin: 1em 0;
+    padding: 10px 16px 10px 14px;
+    border-left: 3px solid var(--color-blockquote-border);
+    border-radius: 0 4px 4px 0;
     p {
-        line-height: 2;
+        line-height: 1.8;
         color: var(--color-text-blockquote);
+        margin: 4px 0;
     }
 }
 
