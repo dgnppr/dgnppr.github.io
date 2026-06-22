@@ -22,6 +22,33 @@ function parseFrontmatter(content) {
   return { meta, body: content.slice(match[0].length).trim() };
 }
 
+function formatDate(d) {
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} 00:00:00 +0900`;
+}
+
+function buildFrontmatter(args, existingMeta = null) {
+  const now = formatDate(new Date());
+  const date = existingMeta?.date ?? now;
+  const category = args.path.includes("/") ? args.path.split("/")[0] : "";
+
+  return [
+    "---",
+    `layout  : wiki`,
+    `title   : ${args.title}`,
+    `date    : ${date}`,
+    `updated : ${now}`,
+    `tag     : ${args.tag ?? ""}`,
+    `toc     : true`,
+    `comment : true`,
+    `latex   : true`,
+    `status  : ${args.status ?? "draft"}`,
+    `public  : ${args.public ?? true}`,
+    ...(category ? [`parent  : [[/${category}]]`] : []),
+    "---",
+  ].join("\n");
+}
+
 function collectWikiFiles(dir, base = WIKI_DIR) {
   const results = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -74,20 +101,18 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: "wiki_write",
-      description: "위키 페이지를 생성하거나 덮어쓴다. 경로에 디렉토리가 없으면 자동 생성한다.",
+      description: "위키 페이지를 생성하거나 수정한다. frontmatter는 서버가 자동 조립한다. 기존 파일 수정 시 date는 보존되고 updated만 갱신된다.",
       inputSchema: {
         type: "object",
         properties: {
-          path: {
-            type: "string",
-            description: "위키 파일 경로 (예: llm/01_attention.md)",
-          },
-          content: {
-            type: "string",
-            description: "파일 전체 내용 (frontmatter 포함)",
-          },
+          path:   { type: "string", description: "위키 파일 경로 (예: llm/01_attention.md)" },
+          title:  { type: "string", description: "페이지 제목" },
+          body:   { type: "string", description: "본문 내용 (frontmatter 제외)" },
+          tag:    { type: "string", description: "태그 (공백 구분, 선택)" },
+          status: { type: "string", description: "상태: draft | writing | complete (기본: draft)" },
+          public: { type: "boolean", description: "공개 여부 (기본: true)" },
         },
-        required: ["path", "content"],
+        required: ["path", "title", "body"],
       },
     },
   ],
@@ -159,8 +184,16 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     if (!args.path.endsWith(".md")) {
       return { content: [{ type: "text", text: ".md 파일만 쓸 수 있습니다." }], isError: true };
     }
+
+    const existingMeta = fs.existsSync(filePath)
+      ? parseFrontmatter(fs.readFileSync(filePath, "utf-8")).meta
+      : null;
+
+    const frontmatter = buildFrontmatter(args, existingMeta);
+    const file = `${frontmatter}\n\n${args.body.trim()}\n`;
+
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    fs.writeFileSync(filePath, args.content, "utf-8");
+    fs.writeFileSync(filePath, file, "utf-8");
     return { content: [{ type: "text", text: `저장 완료: ${args.path}` }] };
   }
 

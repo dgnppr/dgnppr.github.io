@@ -36,6 +36,14 @@ help:
 	@echo "  make summaries-force  - 모든 요약 강제 재생성"
 	@echo "  make embeddings       - 임베딩 기반 연관 포스트 생성 (캐시 있으면 스킵)"
 	@echo "  make embeddings-force - 모든 임베딩 강제 재계산"
+	@echo ""
+	@echo "MCP wiki server:"
+	@echo "  make mcp-start   - MCP 서버 포그라운드 실행 (수동 테스트용)"
+	@echo "  make mcp-back    - MCP 서버 백그라운드 실행"
+	@echo "  make mcp-stop    - MCP 서버 종료"
+	@echo "  make mcp-restart - MCP 서버 재시작"
+	@echo "  make mcp-status  - MCP 서버 상태 확인"
+	@echo "  make mcp-test    - MCP 서버 동작 확인"
 
 # ----------------------------------------
 # 의존성 설치
@@ -177,3 +185,45 @@ status:
 clean:
 	rm -rf _site .jekyll-cache .sass-cache
 	@echo "Cleaned."
+
+# ----------------------------------------
+# MCP wiki server
+# ----------------------------------------
+MCP_SERVER  := mcp/wiki-server.js
+MCP_PID     := .mcp.pid
+MCP_LOG     := .mcp.log
+
+.PHONY: mcp-start mcp-back mcp-stop mcp-restart mcp-status mcp-test
+
+mcp-start:
+	@echo "MCP wiki server 시작 (Ctrl+C로 종료)"
+	node $(MCP_SERVER)
+
+mcp-back:
+	@if [ -f $(MCP_PID) ] && kill -0 "$$(cat $(MCP_PID))" 2>/dev/null; then \
+		echo "이미 실행 중 (PID: $$(cat $(MCP_PID)))"; \
+	else \
+		node $(MCP_SERVER) >> $(MCP_LOG) 2>&1 & echo $$! > $(MCP_PID); \
+		echo "MCP 서버 백그라운드 시작 (PID: $$(cat $(MCP_PID)), 로그: $(MCP_LOG))"; \
+	fi
+
+mcp-stop:
+	@if [ -f $(MCP_PID) ] && kill -0 "$$(cat $(MCP_PID))" 2>/dev/null; then \
+		kill "$$(cat $(MCP_PID))" && rm $(MCP_PID) && echo "MCP 서버 종료"; \
+	else \
+		rm -f $(MCP_PID) && echo "실행 중인 MCP 서버 없음"; \
+	fi
+
+mcp-restart: mcp-stop mcp-back
+
+mcp-status:
+	@if [ -f $(MCP_PID) ] && kill -0 "$$(cat $(MCP_PID))" 2>/dev/null; then \
+		echo "MCP 서버 실행 중 (PID: $$(cat $(MCP_PID)))"; \
+	else \
+		echo "MCP 서버 중지됨"; \
+	fi
+
+mcp-test:
+	@echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0"}}}' \
+		| node $(MCP_SERVER) | head -1 | node -e \
+		"process.stdin.on('data',d=>{const r=JSON.parse(d);console.log('서버명:',r.result?.serverInfo?.name,'버전:',r.result?.serverInfo?.version)})"
