@@ -37,7 +37,6 @@ const ROOT                = path.join(__dirname, '..');
 const SUMMARIES_FILE      = path.join(ROOT, 'data/summaries.json');
 const SUMMARIES_HASH_FILE = path.join(ROOT, 'data/summaries-hashes.json');
 
-// ── 프롬프트 ───────────────────────────────────────────────────
 function buildPrompt(title, body) {
     return [
         '# 역할',
@@ -86,32 +85,22 @@ function buildPrompt(title, body) {
     ].join('\n');
 }
 
-// ── Vertex AI 클라이언트 ────────────────────────────────────────
-var ai;
+let ai;
 async function initClient() {
     if (ai) return;
-    var { GoogleGenAI } = require('@google/genai');
-    ai = new GoogleGenAI({
-        vertexai: true,
-        project: GCP_PROJECT,
-        location: GCP_LOCATION,
-    });
+    const { GoogleGenAI } = require('@google/genai');
+    ai = new GoogleGenAI({ vertexai: true, project: GCP_PROJECT, location: GCP_LOCATION });
 }
 
 async function generateSummary(title, body) {
     await initClient();
-    var response = await ai.models.generateContent({
+    const response = await ai.models.generateContent({
         model: MODEL,
         contents: buildPrompt(title, body),
-        config: {
-            maxOutputTokens: 600,
-            temperature: 0.45,
-            topP: 0.9,
-            thinkingConfig: { thinkingBudget: 0 },
-        },
+        config: { maxOutputTokens: 600, temperature: 0.45, topP: 0.9, thinkingConfig: { thinkingBudget: 0 } },
     });
     if (!response.text) {
-        var candidate = response.candidates && response.candidates[0];
+        const candidate = response.candidates && response.candidates[0];
         process.stderr.write(
             '[빈응답] finishReason=' + (candidate && candidate.finishReason) +
             ' promptFeedback=' + JSON.stringify(response.promptFeedback) +
@@ -122,11 +111,10 @@ async function generateSummary(title, body) {
     return response.text.trim();
 }
 
-// ── 파일 수집 ─────────────────────────────────────────────────
 function collectMarkdown(dir, results) {
     if (!fs.existsSync(dir)) return;
-    fs.readdirSync(dir).forEach(function (f) {
-        var full = path.join(dir, f);
+    fs.readdirSync(dir).forEach(f => {
+        const full = path.join(dir, f);
         if (fs.statSync(full).isDirectory()) {
             collectMarkdown(full, results);
         } else if (f.endsWith('.md') && !f.startsWith('_') && f !== 'README.md') {
@@ -135,7 +123,7 @@ function collectMarkdown(dir, results) {
     });
 }
 
-var files = [];
+const files = [];
 collectMarkdown(path.join(ROOT, '_wiki'), files);
 collectMarkdown(path.join(ROOT, '_posts'), files);
 console.log('총 ' + files.length + '개 파일 발견' + (FORCE ? ' (--force: 전체 재생성)' : ''));
@@ -145,47 +133,40 @@ function slugFromPath(p) {
 }
 
 function extractTitle(content) {
-    var m = content.match(/^title\s*[:\s]+(.+)$/m);
+    const m = content.match(/^title\s*[:\s]+(.+)$/m);
     return m ? m[1].trim().replace(/^["']|["']$/g, '') : '';
 }
 
 function extractBody(content) {
-    // front matter 제거
-    var body = content.replace(/^---[\s\S]*?---\n/, '');
-    return body
-        .replace(/```[\s\S]*?```/g, '')           // 코드블록
-        .replace(/`[^`]+`/g, '')                  // 인라인 코드
-        .replace(/!\[.*?\]\(.*?\)/g, '')           // 이미지
-        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')  // 링크 → 텍스트
-        .replace(/\[\[.*?\]\]/g, '')               // 위키 링크
-        .replace(/#+\s/g, '')                      // 헤딩 마커
-        .replace(/[*_~]/g, '')                     // 마크다운 기호
-        .replace(/\{[^}]+\}/g, '')                 // kramdown 속성
-        .replace(/<[^>]+>/g, '')                   // HTML 태그
+    return content
+        .replace(/^---[\s\S]*?---\n/, '')
+        .replace(/```[\s\S]*?```/g, '')
+        .replace(/`[^`]+`/g, '')
+        .replace(/!\[.*?\]\(.*?\)/g, '')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .replace(/\[\[.*?\]\]/g, '')
+        .replace(/#+\s/g, '')
+        .replace(/[*_~]/g, '')
+        .replace(/\{[^}]+\}/g, '')
+        .replace(/<[^>]+>/g, '')
         .replace(/\n{3,}/g, '\n\n')
         .trim()
         .slice(0, 3000);
 }
 
-// ── 메인 ──────────────────────────────────────────────────────
 async function main() {
-    var results = {};
-    if (fs.existsSync(SUMMARIES_FILE)) {
-        try { results = JSON.parse(fs.readFileSync(SUMMARIES_FILE, 'utf8')); } catch (e) {}
-    }
-    var hashCache = {};
-    if (fs.existsSync(SUMMARIES_HASH_FILE)) {
-        try { hashCache = JSON.parse(fs.readFileSync(SUMMARIES_HASH_FILE, 'utf8')); } catch (e) {}
-    }
+    let results   = {};
+    let hashCache = {};
+    if (fs.existsSync(SUMMARIES_FILE))      try { results   = JSON.parse(fs.readFileSync(SUMMARIES_FILE, 'utf8'));      } catch (e) {}
+    if (fs.existsSync(SUMMARIES_HASH_FILE)) try { hashCache = JSON.parse(fs.readFileSync(SUMMARIES_HASH_FILE, 'utf8')); } catch (e) {}
 
-    var generated = 0;
-    var skipped   = 0;
+    let generated = 0;
+    let skipped   = 0;
 
-    for (var i = 0; i < files.length; i++) {
-        var filePath = files[i];
-        var slug     = slugFromPath(filePath);
-        var content  = fs.readFileSync(filePath, 'utf8');
-        var hash     = crypto.createHash('md5').update(content).digest('hex');
+    for (const filePath of files) {
+        const slug    = slugFromPath(filePath);
+        const content = fs.readFileSync(filePath, 'utf8');
+        const hash    = crypto.createHash('md5').update(content).digest('hex');
 
         if (!FORCE && results[slug] && hashCache[slug] === hash) {
             skipped++;
@@ -193,8 +174,8 @@ async function main() {
             continue;
         }
 
-        var title = extractTitle(content);
-        var body  = extractBody(content);
+        const title = extractTitle(content);
+        const body  = extractBody(content);
 
         if (body.length < 100) {
             process.stdout.write('[건너뜀] ' + slug + ' (내용 부족)\n');
@@ -203,30 +184,29 @@ async function main() {
 
         try {
             process.stdout.write('[생성] ' + slug + '... ');
-            var summary = await generateSummary(title || slug, body);
+            const summary   = await generateSummary(title || slug, body);
             results[slug]   = summary;
             hashCache[slug] = hash;
             generated++;
             process.stdout.write('완료 (' + summary.length + '자)\n');
-            fs.writeFileSync(SUMMARIES_FILE, JSON.stringify(results, null, 2));
+            fs.writeFileSync(SUMMARIES_FILE,      JSON.stringify(results,   null, 2));
             fs.writeFileSync(SUMMARIES_HASH_FILE, JSON.stringify(hashCache, null, 2));
-            await new Promise(function (r) { setTimeout(r, 500); });
+            await new Promise(r => setTimeout(r, 500));
         } catch (e) {
             process.stdout.write('오류: ' + e.message + '\n');
         }
     }
 
-    // 삭제된 파일의 stale 항목 제거
-    var validSlugs = new Set(files.map(slugFromPath));
-    var removed = 0;
-    Object.keys(results).forEach(function (k) {
+    const validSlugs = new Set(files.map(slugFromPath));
+    let removed = 0;
+    Object.keys(results).forEach(k => {
         if (!validSlugs.has(k)) { delete results[k]; delete hashCache[k]; removed++; }
     });
     if (removed) process.stdout.write('[정리] stale 항목 ' + removed + '개 제거\n');
 
-    fs.writeFileSync(SUMMARIES_FILE, JSON.stringify(results, null, 2));
+    fs.writeFileSync(SUMMARIES_FILE,      JSON.stringify(results,   null, 2));
     fs.writeFileSync(SUMMARIES_HASH_FILE, JSON.stringify(hashCache, null, 2));
     console.log('\n완료: ' + generated + '개 생성, ' + skipped + '개 캐시 사용');
 }
 
-main().catch(function (e) { console.error(e); process.exit(1); });
+main().catch(e => { console.error(e); process.exit(1); });

@@ -9,14 +9,13 @@
 const fs   = require('fs');
 const path = require('path');
 
-const ROOT        = path.join(__dirname, '..');
-const STATS_FILE  = path.join(ROOT, 'data/writing-stats.json');
+const ROOT       = path.join(__dirname, '..');
+const STATS_FILE = path.join(ROOT, 'data/writing-stats.json');
 
-// ── 파일 수집 ─────────────────────────────────────────────────
 function collectMarkdown(dir, results) {
     if (!fs.existsSync(dir)) return;
-    fs.readdirSync(dir).forEach(function (f) {
-        var full = path.join(dir, f);
+    fs.readdirSync(dir).forEach(f => {
+        const full = path.join(dir, f);
         if (fs.statSync(full).isDirectory()) {
             collectMarkdown(full, results);
         } else if (f.endsWith('.md') && !f.startsWith('_') && f !== 'README.md') {
@@ -25,120 +24,79 @@ function collectMarkdown(dir, results) {
     });
 }
 
-var files = [];
+const files = [];
 collectMarkdown(path.join(ROOT, '_wiki'), files);
 collectMarkdown(path.join(ROOT, '_posts'), files);
 console.log('[수집] 총 ' + files.length + '개 파일 발견');
 
-// ── 동적 카테고리 목록 생성 ────────────────────────────────
-// _wiki의 1단계 디렉토리를 자동으로 스캔
-var categories = [];
-if (fs.existsSync(path.join(ROOT, '_wiki'))) {
-    fs.readdirSync(path.join(ROOT, '_wiki')).forEach(function(item) {
-        var itemPath = path.join(ROOT, '_wiki', item);
-        if (fs.statSync(itemPath).isDirectory() && !item.startsWith('_')) {
-            categories.push(item);
-        }
-    });
-}
-var categoryRegex = categories.length > 0
-    ? new RegExp('_wiki\/(' + categories.join('|') + ')\\/')
-    : /_wiki\/([^\/]+)\//;  // 폴백
+const wikiDir = path.join(ROOT, '_wiki');
+const categories = fs.existsSync(wikiDir)
+    ? fs.readdirSync(wikiDir).filter(item =>
+        fs.statSync(path.join(wikiDir, item)).isDirectory() && !item.startsWith('_'))
+    : [];
+
+const categoryRegex = categories.length > 0
+    ? new RegExp('_wiki\\/(' + categories.join('|') + ')\\/')
+    : /_wiki\/([^/]+)\//;
+
 console.log('[카테고리] ' + categories.join(', '));
 
-// ── 프론트매터 파싱 ────────────────────────────────────────
 function extractFrontMatter(content) {
-    var m = content.match(/^---([\s\S]*?)---/);
+    const m = content.match(/^---([\s\S]*?)---/);
     return m ? m[1] : '';
 }
 
 function parseYaml(yaml) {
-    var result = {};
-    yaml.split('\n').forEach(function(line) {
-        var match = line.match(/^(\w+)\s*:\s*(.*)$/);
+    const result = {};
+    yaml.split('\n').forEach(line => {
+        const match = line.match(/^(\w+)\s*:\s*(.*)$/);
         if (match) {
-            var key = match[1].trim();
-            var val = match[2].trim().replace(/^["']|["']$/g, '');
-            result[key] = val;
+            result[match[1].trim()] = match[2].trim().replace(/^["']|["']$/g, '');
         }
     });
     return result;
 }
 
 function getCategoryFromPath(filePath) {
-    // 동적으로 생성된 정규식으로 카테고리 판별
-    var match = filePath.match(categoryRegex);
+    const match = filePath.match(categoryRegex);
     return match ? match[1] : 'other';
 }
 
-// ── 통계 계산 ──────────────────────────────────────────────
-var stats = {
+const stats = {
     total: 0,
-    byMonth: {},      // { "2024-01": { count: 5, posts: [...] } }
-    byStatus: {},     // { "complete": 15, "draft": 2 }
-    byCategory: {},   // { "jpa": 10, "kafka": 8 }
-    posts: []         // 전체 포스트 목록
+    byMonth: {},
+    byStatus: {},
+    byCategory: {},
+    posts: [],
 };
 
-files.forEach(function(filePath) {
-    var content = fs.readFileSync(filePath, 'utf8');
-    var yaml = extractFrontMatter(content);
-    var meta = parseYaml(yaml);
+files.forEach(filePath => {
+    const content = fs.readFileSync(filePath, 'utf8');
+    const meta = parseYaml(extractFrontMatter(content));
 
-    if (!meta.date || !meta.public || meta.public !== 'true') {
-        return;
-    }
+    if (!meta.date || meta.public !== 'true') return;
 
-    var date = new Date(meta.date);
-    var yearMonth = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
-    var status = meta.status || 'unknown';
-    var category = getCategoryFromPath(filePath);
-    var title = meta.title || path.basename(filePath);
+    const date = new Date(meta.date);
+    const yearMonth = date.getFullYear() + '-' + String(date.getMonth() + 1).padStart(2, '0');
+    const status   = meta.status || 'unknown';
+    const category = getCategoryFromPath(filePath);
+    const title    = meta.title || path.basename(filePath);
 
-    // 월별 통계
-    if (!stats.byMonth[yearMonth]) {
-        stats.byMonth[yearMonth] = { count: 0, posts: [] };
-    }
+    if (!stats.byMonth[yearMonth]) stats.byMonth[yearMonth] = { count: 0, posts: [] };
     stats.byMonth[yearMonth].count++;
-    stats.byMonth[yearMonth].posts.push({
-        title: title,
-        category: category,
-        status: status
-    });
+    stats.byMonth[yearMonth].posts.push({ title, category, status });
 
-    // 상태별 통계
-    if (!stats.byStatus[status]) {
-        stats.byStatus[status] = 0;
-    }
-    stats.byStatus[status]++;
-
-    // 카테고리별 통계
-    if (!stats.byCategory[category]) {
-        stats.byCategory[category] = 0;
-    }
-    stats.byCategory[category]++;
-
+    stats.byStatus[status]   = (stats.byStatus[status]   || 0) + 1;
+    stats.byCategory[category] = (stats.byCategory[category] || 0) + 1;
     stats.total++;
-    stats.posts.push({
-        title: title,
-        date: meta.date,
-        status: status,
-        category: category
-    });
+    stats.posts.push({ title, date: meta.date, status, category });
 });
 
-// 날짜순 정렬
-stats.posts.sort(function(a, b) {
-    return new Date(b.date) - new Date(a.date);
-});
+stats.posts.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-// 월별 키 정렬
-var sortedMonths = Object.keys(stats.byMonth).sort().reverse();
-var sorted = {};
-sortedMonths.forEach(function(m) {
-    sorted[m] = stats.byMonth[m];
-});
-stats.byMonth = sorted;
+const sortedByMonth = {};
+Object.keys(stats.byMonth).sort().reverse().forEach(m => { sortedByMonth[m] = stats.byMonth[m]; });
+stats.byMonth = sortedByMonth;
 
 fs.writeFileSync(STATS_FILE, JSON.stringify(stats, null, 2));
 console.log('[완료] ' + STATS_FILE + ' 생성');

@@ -257,22 +257,6 @@ function extractBody(content) {
         .slice(0, 4000);
 }
 
-function insertDiagramToFile(filePath, diagram) {
-    var content = fs.readFileSync(filePath, 'utf8');
-
-    // front matter 이후에 다이어그램 섹션 삽입
-    var frontMatterEnd = content.indexOf('---', 3) + 3;
-    var afterFrontMatter = content.substring(frontMatterEnd);
-
-    // 기존 다이어그램 제거
-    afterFrontMatter = afterFrontMatter.replace(/<!-- diagram start -->[\s\S]*?<!-- diagram end -->\n*/g, '');
-
-    var diagramBlock = '\n<!-- diagram start -->\n```mermaid\n' + diagram + '\n```\n<!-- diagram end -->\n';
-    var newContent = content.substring(0, frontMatterEnd) + diagramBlock + afterFrontMatter;
-
-    fs.writeFileSync(filePath, newContent, 'utf8');
-}
-
 // ── 메인 ──────────────────────────────────────────────────────
 async function main() {
     var cache = {};
