@@ -347,6 +347,10 @@ function collectData(file) {
 }
 
 function saveRelatedPosts(pageMap) {
+    if (fs.existsSync('./data/embeddings.json')) {
+        console.log('embeddings.json 존재 — related.json 생성 스킵 (generate-embeddings.js 사용)');
+        return;
+    }
     var entries = Object.entries(pageMap);
     var related = {};
     entries.forEach(function(entry) {
