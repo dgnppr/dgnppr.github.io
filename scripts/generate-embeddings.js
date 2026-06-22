@@ -24,29 +24,27 @@ const GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
 const GCP_CREDS    = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 const FORCE        = process.argv.includes('--force');
 
-const MODEL  = 'text-embedding-004';
-const DIMS   = 256;
-const TOP_N  = 5;
+const MODEL = 'text-embedding-004';
+const DIMS  = 768;
+const TOP_N = 5;
 
 const Z_SIGMA   = 1.0;
 const MIN_SCORE = 0.70;
 
-const TAG_BONUS    = 0.03;
-const TAG_PENALTY  = 0.90;
-const CAT_BONUS    = 0.05;
-const TITLE_BONUS  = 0.02;
+// 가중합 가중치 (합계 = 1.0)
+const SEMANTIC_WEIGHT = 0.70;
+const KEYWORD_WEIGHT  = 0.20;
+const TAG_WEIGHT      = 0.10;
 
-const LEN_THRESHOLD        = 300;
-const LEN_THRESHOLD2       = 100;
-const LEN_PENALTY_FACTOR   = 0.90;
-const LEN_PENALTY_FACTOR2  = 0.50;
+// 가중합 이후 가산 소프트 보너스
+const CAT_BONUS_ADD   = 0.02;
+const TITLE_BONUS_ADD = 0.01;
 
-const DATE_BONUS    = 1.02;
-const DATE_PENALTY  = 0.98;
+// 하드 필터: 본문이 너무 짧은 쌍 제외
+const LEN_MIN = 100;
 
-const BM25_K1     = 1.5;
-const BM25_B      = 0.75;
-const BM25_WEIGHT = 0.15;
+const BM25_K1 = 1.5;
+const BM25_B  = 0.75;
 
 if (!GCP_CREDS || !GCP_PROJECT) {
     console.error('[오류] 환경 변수를 설정하세요:');
@@ -60,6 +58,7 @@ console.log('[백엔드] Vertex AI — ' + MODEL + ' (' + GCP_LOCATION + ')');
 const ROOT         = path.join(__dirname, '..');
 const CACHE_FILE   = path.join(ROOT, 'data/embeddings.json');
 const RELATED_FILE = path.join(ROOT, 'data/related.json');
+const EVAL_FILE    = path.join(ROOT, 'data/eval.json');
 
 // ── 유틸리티 ──────────────────────────────────────────────────
 
@@ -188,12 +187,12 @@ async function main() {
 
         if (fm.public === 'false') continue;
 
-        const slug  = slugFromPath(file.path, file.type);
-        const url   = urlFromPath(file.path, file.type, fm);
-        const body  = extractBody(content);
-        const text  = [fm.title || '', fm.summary || '', body].filter(Boolean).join('\n').slice(0, 2000);
-        const hash  = crypto.createHash('md5').update(text).digest('hex');
-        const tags  = fm.tag ? fm.tag.split(/\s+/).filter(Boolean) : [];
+        const slug   = slugFromPath(file.path, file.type);
+        const url    = urlFromPath(file.path, file.type, fm);
+        const body   = extractBody(content);
+        const text   = [fm.title || '', fm.summary || '', body].filter(Boolean).join('\n').slice(0, 2000);
+        const hash   = crypto.createHash('md5').update(text).digest('hex');
+        const tags   = fm.tag ? fm.tag.split(/\s+/).filter(Boolean) : [];
         const cached = cache[slug];
 
         if (!FORCE && cached && cached.hash === hash && cached.embedding.length === DIMS) {
@@ -253,45 +252,45 @@ async function main() {
 
     // ── BM25 전체 쌍 계산 ─────────────────────────────────────
     const bm25Raw = {};
-    let bm25Max   = 0;
     for (let i = 0; i < docs.length; i++) {
         for (let j = i + 1; j < docs.length; j++) {
-            const key  = [docs[i].slug, docs[j].slug].sort().join('|||');
-            const bRaw = (bm25(docs[i].slug, docs[j].slug) + bm25(docs[j].slug, docs[i].slug)) / 2;
-            bm25Raw[key] = bRaw;
-            if (bRaw > bm25Max) bm25Max = bRaw;
+            const key    = [docs[i].slug, docs[j].slug].sort().join('|||');
+            bm25Raw[key] = (bm25(docs[i].slug, docs[j].slug) + bm25(docs[j].slug, docs[i].slug)) / 2;
         }
     }
 
-    // ── Pairwise 점수 ─────────────────────────────────────────
+    // p99 기준 정규화 — 아웃라이어 1개가 전체를 왜곡하는 문제 방어
+    const bm25Sorted = Object.values(bm25Raw).sort((a, b) => a - b);
+    const bm25P99    = bm25Sorted[Math.floor(bm25Sorted.length * 0.99)] || 1;
+
+    // ── Pairwise 점수 (가중합) ────────────────────────────────
     const pairScores = {};
     for (let i = 0; i < docs.length; i++) {
         for (let j = i + 1; j < docs.length; j++) {
             const a   = docs[i], b = docs[j];
             const key = [a.slug, b.slug].sort().join('|||');
 
-            let score = cosine(a.embedding, b.embedding);
+            // 하드 필터: 짧은 문서 쌍은 신뢰할 수 없는 점수가 나오므로 제외
+            if (Math.min(a.bodyLen || 0, b.bodyLen || 0) < LEN_MIN) continue;
 
-            const sharedTags = (a.tags || []).filter(t => (b.tags || []).indexOf(t) !== -1).length;
-            score = sharedTags > 0 ? score * (1 + TAG_BONUS * sharedTags) : score * TAG_PENALTY;
+            const semantic = cosine(a.embedding, b.embedding);
+            const keyword  = Math.min((bm25Raw[key] || 0) / bm25P99, 1.0);
 
-            if (categoryOf(a.slug, a.type) === categoryOf(b.slug, b.type)) score *= (1 + CAT_BONUS);
+            const aTags    = a.tags || [], bTags = b.tags || [];
+            const shared   = aTags.filter(t => bTags.indexOf(t) !== -1).length;
+            const tagSignal = shared / Math.max(aTags.length, bTags.length, 1);
 
-            const aToks = titleToks(a.title), bToks = titleToks(b.title);
+            let score = SEMANTIC_WEIGHT * semantic
+                      + KEYWORD_WEIGHT  * keyword
+                      + TAG_WEIGHT      * tagSignal;
+
+            // 소프트 보너스: 가중합에 가산 (곱셈 체인 방지)
+            if (categoryOf(a.slug, a.type) === categoryOf(b.slug, b.type))
+                score += CAT_BONUS_ADD;
+
+            const aToks      = titleToks(a.title), bToks = titleToks(b.title);
             const sharedTitle = aToks.filter(w => bToks.indexOf(w) !== -1).length;
-            if (sharedTitle > 0) score *= (1 + TITLE_BONUS * sharedTitle);
-
-            const minLen = Math.min(a.bodyLen || 0, b.bodyLen || 0);
-            if (minLen < LEN_THRESHOLD2)     score *= LEN_PENALTY_FACTOR2;
-            else if (minLen < LEN_THRESHOLD) score *= LEN_PENALTY_FACTOR;
-
-            if (a.date && b.date) {
-                const daysDiff = Math.abs(new Date(a.date) - new Date(b.date)) / 86400000;
-                score *= daysDiff < 90 ? DATE_BONUS : daysDiff > 365 ? DATE_PENALTY : 1;
-            }
-
-            const bNorm = bm25Max > 0 ? (bm25Raw[key] || 0) / bm25Max : 0;
-            score *= (1 + BM25_WEIGHT * bNorm);
+            if (sharedTitle > 0) score += TITLE_BONUS_ADD * Math.min(sharedTitle, 3);
 
             pairScores[key] = score;
         }
@@ -323,6 +322,28 @@ async function main() {
     fs.writeFileSync(RELATED_FILE, JSON.stringify(related));
     console.log('[저장] data/related.json (' + Object.keys(related).length + '개 항목)');
 
+    // ── 평가 (data/eval.json 존재 시) ─────────────────────────
+    if (fs.existsSync(EVAL_FILE)) {
+        const evalData = JSON.parse(fs.readFileSync(EVAL_FILE, 'utf8'));
+        const positive = evalData.pairs.filter(p => p.expected);
+        const truePos  = positive.filter(p => (related[p.a] || []).some(r => r.slug === p.b));
+        const precision = positive.length ? truePos.length / positive.length : 0;
+        console.log('\n[평가] precision@5: ' + truePos.length + '/' + positive.length
+                  + ' (' + (precision * 100).toFixed(1) + '%)');
+
+        const falsePos = evalData.pairs
+            .filter(p => !p.expected)
+            .filter(p => (related[p.a] || []).some(r => r.slug === p.b));
+        if (falsePos.length > 0) {
+            console.log('[평가] 오탐(false positive): ' + falsePos.length + '개');
+            falsePos.forEach(p => console.log('  - ' + p.a + ' → ' + p.b));
+        }
+    } else {
+        console.log('\n[평가] data/eval.json 없음 — precision@5 측정 건너뜀');
+        console.log('       평가셋을 작성하면 다음 실행부터 자동으로 측정됩니다.');
+    }
+
+    // ── 캐시 정리 ─────────────────────────────────────────────
     const validSlugs = new Set(files.map(f => slugFromPath(f.path, f.type)));
     Object.keys(cache).forEach(k => {
         if (!validSlugs.has(k)) { delete cache[k]; cacheUpdated = true; }
