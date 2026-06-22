@@ -365,6 +365,24 @@
                 }, 80);
             }
 
+            function positionTooltip(n) {
+                var tr   = d3.zoomTransform(svg.node());
+                var rect = container.getBoundingClientRect();
+                var wo   = waveOff(n);
+                var cx   = tr.applyX(n.x + wo.x) + rect.left;
+                var cy   = tr.applyY(n.y + wo.y) + rect.top;
+                var tipW = tooltip.node().offsetWidth  || 240;
+                var tipH = tooltip.node().offsetHeight || 80;
+                var vw   = window.innerWidth, vh = window.innerHeight;
+                var left = cx + 16;
+                if (left + tipW > vw - 8) left = cx - tipW - 16;
+                left = Math.max(8, left);
+                var top  = cy - tipH / 2;
+                if (top < 8) top = 8;
+                if (top + tipH > vh - 8) top = vh - tipH - 8;
+                tooltip.style('left', left + 'px').style('top', top + 'px').style('transform', 'none');
+            }
+
             function pinNode(d) {
                 pinnedSlug = d.slug;
                 clearTimeout(resetTimer);
@@ -377,20 +395,7 @@
                     : '';
                 tooltip.classed('is-visible', true)
                     .html('<strong>' + cleanTitle + '</strong>' + summaryHtml);
-
-                // Position near the node's actual screen position
-                var tr = d3.zoomTransform(svg.node());
-                var rect = container.getBoundingClientRect();
-                var sx = tr.applyX(d.x) + rect.left;
-                var sy = tr.applyY(d.y) + rect.top;
-                var tipW = 240;
-                var tipH = tooltip.node().offsetHeight || 80;
-                var left = sx + 14;
-                if (left + tipW > window.innerWidth - 8) left = sx - tipW - 14;
-                var top = sy - tipH / 2;
-                if (top < 8) top = 8;
-                if (top + tipH > window.innerHeight - 8) top = window.innerHeight - tipH - 8;
-                tooltip.style('left', left + 'px').style('top', top + 'px').style('transform', 'none');
+                positionTooltip(d);
             }
 
             nodeEl
@@ -444,6 +449,7 @@
 
             function renderPositions() {
                 _waveNow = performance.now();
+                if (pinnedSlug && nodeMap[pinnedSlug]) positionTooltip(nodeMap[pinnedSlug]);
                 linkEl.attr('d', linkPath);
                 linkLabelEl
                     .attr('x', function (d) { return linkMid(d).x; })

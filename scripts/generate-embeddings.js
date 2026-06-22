@@ -27,8 +27,20 @@ const TOP_N        = 5;
 const MODEL        = 'text-embedding-004';
 const DIMS         = 256; // outputDimensionality: 768→256으로 축소 (3배 파일 감소, 품질 손실 미미)
 const Z_SIGMA      = 1.0;  // 각 글 기준 mean + Z_SIGMA * std 이상인 연결만 포함
-const TAG_BONUS    = 0.03; // 공유 태그 1개당 점수 증폭 (score × (1 + TAG_BONUS × 공유태그수))
-const TAG_PENALTY  = 0.90; // 공유 태그가 없을 때 점수 감소 배율
+const MIN_SCORE    = 0.70; // 절대 하한선 — z-score 통과해도 이 값 미만이면 차단
+const TAG_BONUS    = 0.03; // 공유 태그 1개당 증폭
+const TAG_PENALTY  = 0.90; // 공유 태그 없을 때 감소
+const CAT_BONUS    = 0.05; // 같은 카테고리 보너스
+const TITLE_BONUS  = 0.02; // 제목 공유 키워드 1개당 보너스
+const LEN_THRESHOLD  = 300;  // 짧은 글 기준 (본문 chars)
+const LEN_THRESHOLD2 = 100;  // 매우 짧은 글 기준
+const LEN_PENALTY_FACTOR  = 0.90; // 300자 미만 패널티
+const LEN_PENALTY_FACTOR2 = 0.50; // 100자 미만 패널티
+const DATE_BONUS   = 1.02; // 90일 이내 발행 보너스
+const DATE_PENALTY = 0.98; // 365일 이상 차이 패널티
+const BM25_K1      = 1.5;  // BM25 term frequency saturation
+const BM25_B       = 0.75; // BM25 length normalization
+const BM25_WEIGHT  = 0.15; // BM25 기여 비중 (최대 +15% 보정)
 
 if (!GCP_CREDS || !GCP_PROJECT) {
     console.error('[오류] 환경 변수를 설정하세요:');
@@ -175,7 +187,7 @@ async function main() {
 
         if (!FORCE && cached && cached.hash === hash && cached.embedding.length === DIMS) {
             process.stdout.write('[캐시] ' + slug + '\n');
-            docs.push({ slug: slug, url: url, title: fm.title || slug, tags: tags, embedding: cached.embedding });
+            docs.push({ slug: slug, url: url, title: fm.title || slug, tags: tags, embedding: cached.embedding, body: body, bodyLen: body.length, date: fm.date || fm.updated || null, type: file.type });
             continue;
         }
 
@@ -189,7 +201,7 @@ async function main() {
             var embedding = await embed(text);
             cache[slug]   = { hash: hash, embedding: embedding };
             cacheUpdated  = true;
-            docs.push({ slug: slug, url: url, title: fm.title || slug, tags: tags, embedding: embedding });
+            docs.push({ slug: slug, url: url, title: fm.title || slug, tags: tags, embedding: embedding, body: body, bodyLen: body.length, date: fm.date || fm.updated || null, type: file.type });
             process.stdout.write('완료 (' + embedding.length + '차원)\n');
             // 캐시를 매번 중간 저장 (중단 시 손실 방지)
             fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
@@ -199,18 +211,108 @@ async function main() {
         }
     }
 
-    // ── 코사인 유사도 → related.json ──────────────────────────
+    // ── 스코어링 ──────────────────────────────────────────────
     console.log('\n[유사도 계산] ' + docs.length + '개 문서...');
-    var related = {};
 
+    // ── BM25 인덱스 구축 ──────────────────────────────────────
+    function tokenize(text) {
+        return (text || '').toLowerCase()
+            .replace(/[^\w가-힣]/g, ' ')
+            .split(/\s+/)
+            .filter(function (w) { return w.length >= 2; });
+    }
+    var tfMap = {}, dfMap = {};
+    docs.forEach(function (doc) {
+        var tokens = tokenize(doc.body || '');
+        doc._dl = tokens.length;
+        tfMap[doc.slug] = {};
+        var seen = {};
+        tokens.forEach(function (t) {
+            tfMap[doc.slug][t] = (tfMap[doc.slug][t] || 0) + 1;
+            if (!seen[t]) { dfMap[t] = (dfMap[t] || 0) + 1; seen[t] = true; }
+        });
+    });
+    var avgdl = docs.reduce(function (s, d) { return s + d._dl; }, 0) / docs.length;
+
+    function bm25(qSlug, tSlug) {
+        var qTf = tfMap[qSlug] || {}, tTf = tfMap[tSlug] || {};
+        var dl = (tfMap[tSlug] && docs.find(function (d) { return d.slug === tSlug; })._dl) || 0;
+        var s = 0;
+        Object.keys(qTf).forEach(function (t) {
+            var f = tTf[t] || 0;
+            if (!f) return;
+            var idf = Math.log((docs.length - (dfMap[t] || 0) + 0.5) / ((dfMap[t] || 0) + 0.5) + 1);
+            s += idf * f * (BM25_K1 + 1) / (f + BM25_K1 * (1 - BM25_B + BM25_B * dl / avgdl));
+        });
+        return s;
+    }
+
+    // ── 헬퍼 ─────────────────────────────────────────────────
+    function categoryOf(slug, type) { return type === 'wiki' ? slug.split('/')[0] : 'blog'; }
+    function titleToks(title) {
+        return (title || '').toLowerCase().replace(/[^\w가-힣]/g, ' ').split(/\s+/).filter(function (w) { return w.length >= 2; });
+    }
+
+    // ── BM25 전체 쌍 계산 (정규화용 최댓값 탐색) ─────────────
+    var bm25Raw = {}, bm25Max = 0;
+    for (var pi = 0; pi < docs.length; pi++) {
+        for (var pj = pi + 1; pj < docs.length; pj++) {
+            var pKey = [docs[pi].slug, docs[pj].slug].sort().join('|||');
+            var bRaw = (bm25(docs[pi].slug, docs[pj].slug) + bm25(docs[pj].slug, docs[pi].slug)) / 2;
+            bm25Raw[pKey] = bRaw;
+            if (bRaw > bm25Max) bm25Max = bRaw;
+        }
+    }
+
+    // ── Pairwise 점수 (대칭, 양방향 평균) ────────────────────
+    var pairScores = {};
+    for (var i = 0; i < docs.length; i++) {
+        for (var j = i + 1; j < docs.length; j++) {
+            var a = docs[i], b = docs[j];
+            var key = [a.slug, b.slug].sort().join('|||');
+
+            // 1. 임베딩 코사인 유사도
+            var score = cosine(a.embedding, b.embedding);
+
+            // 2. 태그 보너스/패널티
+            var sharedTags = (a.tags || []).filter(function (t) { return (b.tags || []).indexOf(t) !== -1; }).length;
+            score = sharedTags > 0 ? score * (1 + TAG_BONUS * sharedTags) : score * TAG_PENALTY;
+
+            // 3. 카테고리 보너스
+            if (categoryOf(a.slug, a.type) === categoryOf(b.slug, b.type)) score *= (1 + CAT_BONUS);
+
+            // 4. 제목 키워드 overlap
+            var aToks = titleToks(a.title), bToks = titleToks(b.title);
+            var sharedTitle = aToks.filter(function (w) { return bToks.indexOf(w) !== -1; }).length;
+            if (sharedTitle > 0) score *= (1 + TITLE_BONUS * sharedTitle);
+
+            // 5. 글 길이 패널티
+            var minLen = Math.min(a.bodyLen || 0, b.bodyLen || 0);
+            if (minLen < LEN_THRESHOLD2) score *= LEN_PENALTY_FACTOR2;
+            else if (minLen < LEN_THRESHOLD) score *= LEN_PENALTY_FACTOR;
+
+            // 6. 발행 시기 근접도
+            if (a.date && b.date) {
+                var daysDiff = Math.abs(new Date(a.date) - new Date(b.date)) / 86400000;
+                score *= daysDiff < 90 ? DATE_BONUS : daysDiff > 365 ? DATE_PENALTY : 1;
+            }
+
+            // 7. BM25 보정 (정규화 후 최대 +15%)
+            var bNorm = bm25Max > 0 ? (bm25Raw[key] || 0) / bm25Max : 0;
+            score *= (1 + BM25_WEIGHT * bNorm);
+
+            pairScores[key] = score;
+        }
+    }
+
+    // ── Z-score per doc → related.json ────────────────────────
+    var related = {};
     docs.forEach(function (doc) {
         var scores = docs
             .filter(function (d) { return d.slug !== doc.slug; })
             .map(function (d) {
-                var base     = cosine(doc.embedding, d.embedding);
-                var shared   = (doc.tags || []).filter(function (t) { return (d.tags || []).indexOf(t) !== -1; }).length;
-                var adjusted = shared > 0 ? base * (1 + TAG_BONUS * shared) : base * TAG_PENALTY;
-                return { slug: d.slug, title: d.title, url: d.url, score: adjusted };
+                var key = [doc.slug, d.slug].sort().join('|||');
+                return { slug: d.slug, title: d.title, url: d.url, score: pairScores[key] || 0 };
             });
 
         var mean = scores.reduce(function (s, r) { return s + r.score; }, 0) / scores.length;
@@ -218,7 +320,7 @@ async function main() {
         var threshold = mean + Z_SIGMA * std;
 
         var scored = scores
-            .filter(function (r) { return r.score >= threshold; })
+            .filter(function (r) { return r.score >= threshold && r.score >= MIN_SCORE; })
             .sort(function (a, b) { return b.score - a.score; })
             .slice(0, TOP_N)
             .map(function (r) { return { slug: r.slug, title: r.title, url: r.url, score: +r.score.toFixed(3) }; });
