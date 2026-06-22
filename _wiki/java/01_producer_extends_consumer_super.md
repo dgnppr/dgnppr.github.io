@@ -13,7 +13,6 @@ latex   : true
 status  : complete
 ---
 
-
 * TOC
 {:toc}
 

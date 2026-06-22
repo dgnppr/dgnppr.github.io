@@ -11,8 +11,8 @@ public  : true
 parent  : [[/jpa]]
 latex   : true
 status  : complete
+show-diagram: true
 ---
-
 
 * TOC
 {:toc}

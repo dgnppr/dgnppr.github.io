@@ -21,7 +21,7 @@ const GCP_PROJECT  = process.env.GOOGLE_PROJECT_ID;
 const GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
 const GCP_CREDS    = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 const FORCE        = process.argv.includes('--force');
-const MODEL        = 'gemini-2.5-flash-lite';
+const MODEL        = 'gemini-2.5-flash';
 
 if (!GCP_CREDS || !GCP_PROJECT) {
     console.error('[오류] 환경 변수를 설정하세요:');
@@ -105,8 +105,18 @@ async function generateSummary(title, body) {
             maxOutputTokens: 600,
             temperature: 0.45,
             topP: 0.9,
+            thinkingConfig: { thinkingBudget: 0 },
         },
     });
+    if (!response.text) {
+        var candidate = response.candidates && response.candidates[0];
+        process.stderr.write(
+            '[빈응답] finishReason=' + (candidate && candidate.finishReason) +
+            ' promptFeedback=' + JSON.stringify(response.promptFeedback) +
+            ' safetyRatings=' + JSON.stringify(candidate && candidate.safetyRatings) + '\n'
+        );
+        throw new Error('모델이 빈 응답을 반환했습니다.');
+    }
     return response.text.trim();
 }
 

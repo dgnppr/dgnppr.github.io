@@ -24,6 +24,19 @@ layout: default
     </article>
     {% include createLink.html %}
 
+    {% if page.show-diagram %}
+    <div class="diagram-section">
+        <div class="diagram-item">
+            <div class="diagram__header">
+                <span class="diagram__label">다이어그램</span>
+            </div>
+            <div class="diagram__content">
+                <p>시각적 구조 설명이 곧 추가됩니다.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
     {% assign posts_sorted = site.posts %}
     {% for post in posts_sorted %}
         {% if post.url == page.url %}

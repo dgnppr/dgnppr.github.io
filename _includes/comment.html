@@ -1,8 +1,23 @@
 {% if page.comment != false %}
 <div class="post-comments">
+<br>
+<hr>
+<br>
+{% if page.later_thoughts %}
+<div class="later-thoughts">
+    {% for thought in page.later_thoughts %}
+    <div class="later-thoughts-item">
+        <div class="later-thoughts__header">
+            <span class="later-thoughts__icon">✦</span>
+            <span class="later-thoughts__label">필자 추후 생각</span>
+            <span class="later-thoughts__date">{{ thought.date | date: "%Y.%m.%d" }}</span>
+        </div>
+        <p class="later-thoughts__text">{{ thought.text }}</p>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
     {% if site.comment-support == "disqus" %}
-    <br>
-    <hr>
     <div id="disqus_thread"></div>
     <script type="text/javascript">
         var disqus_shortname = '{{ site.disqus.id }}'; // required: replace example with your forum shortname
@@ -14,8 +29,6 @@
     </script>
     {% endif %}
     {% if site.comment-support == "utterances" %}
-    <br>
-    <hr>
     <script src="https://utteranc.es/client.js"
             repo="{{ site.utterances.repo }}"
             {% if page.issue-number %}issue-number="{{ page.issue-number }}"{% else %}issue-term="{{ site.utterances.issue-term }}"{% endif %}
@@ -25,9 +38,6 @@
     </script>
     {% endif %}
     {% if site.comment-support == "giscus" %}
-    <br>
-    <hr>
-    <br>
     <div class="giscus"></div>
     <script>
     (function () {

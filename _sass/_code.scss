@@ -212,12 +212,63 @@ html.dark-mode div.highlight {
 }
 
 .mermaid-diagram {
+  position: relative;
   background: var(--color-surface);
   border: 1px solid var(--color-border-subtle);
-  border-radius: 8px;
-  padding: 1.5em;
+  border-top: 2.5px solid var(--color-brand);
+  border-radius: 0 0 10px 10px;
+  padding: 2em 1.5em 1.5em;
   margin: 1.5em 0;
   overflow-x: auto;
   text-align: center;
-  svg { max-width: 100%; height: auto; }
+  box-shadow: 0 2px 12px rgba(29, 78, 216, 0.06);
+
+  .diagram-section & {
+    border-top: none;
+    border-radius: 6px;
+    padding: 1.5em 1em;
+    margin: 0;
+    box-shadow: none;
+
+    svg {
+      width: 100%;
+      max-width: 100%;
+      height: auto;
+    }
+  }
+
+  svg {
+    max-width: 100%;
+    height: auto;
+
+    // node shapes
+    .node rect,
+    .node circle,
+    .node ellipse,
+    .node polygon,
+    .node path {
+      stroke-width: 1.5px !important;
+    }
+
+    // edge labels
+    .edgeLabel {
+      font-size: 12px !important;
+    }
+
+    // sequence diagram actor boxes
+    .actor {
+      stroke-width: 1.5px !important;
+    }
+
+    // all text
+    text, tspan {
+      font-family: 'Pretendard Variable', Pretendard, -apple-system, sans-serif !important;
+    }
+  }
+}
+
+html.dark-mode .mermaid-diagram {
+  border-color: var(--color-border-subtle);
+  border-top-color: var(--color-accent);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }

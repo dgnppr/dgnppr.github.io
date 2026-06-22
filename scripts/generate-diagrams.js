@@ -21,7 +21,7 @@ const GCP_PROJECT  = process.env.GOOGLE_PROJECT_ID;
 const GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
 const GCP_CREDS    = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 const FORCE        = process.argv.includes('--force');
-const MODEL        = 'gemini-2.5-flash-lite';
+const MODEL        = 'gemini-2.5-flash';
 
 if (!GCP_CREDS || !GCP_PROJECT) {
     console.error('[오류] 환경 변수를 설정하세요:');
@@ -44,49 +44,79 @@ if (!fs.existsSync(DIAGRAM_DIR)) {
 function buildPrompt(title, body) {
     return [
         '# 역할',
-        '기술 블로그의 복잡한 개념을 Mermaid 다이어그램으로 시각화하는 AI.',
-        '텍스트에서 구조, 흐름, 관계를 추출해 명확한 다이어그램을 생성한다.',
+        '기술 블로그 포스트의 핵심 서사를 Mermaid 다이어그램 하나로 압축하는 AI.',
+        '독자가 다이어그램만 보고도 "이 글의 핵심이 뭔지" 바로 알 수 있어야 한다.',
         '',
         '# 출력 형식',
-        'Mermaid 다이어그램 코드만 반환. 마크다운 펜스(```), 설명, JSON 일절 금지.',
+        'Mermaid 코드만 반환. 마크다운 펜스(```), 제목, 설명, JSON 일절 금지.',
         '',
-        '# 선택 기준',
-        '내용에 맞는 Mermaid 종류를 선택:',
-        '  - 시간 순서, 단계, 호출 흐름 → sequenceDiagram',
-        '  - 클래스/엔티티 관계 → graph LR (또는 TD)',
-        '  - 상태 변화 → stateDiagram-v2',
-        '  - 프로세스 흐름 → flowchart TD',
-        '  - 계층 구조 → graph TD',
+        '# 글 유형별 최적 형식',
+        '',
+        '## 문제 해결형 (트러블슈팅·적용기·삽질기)',
+        '→ flowchart TD: 문제 발생 → 원인 분석 → 해결 과정 → 결과',
+        '→ stateDiagram-v2: 시스템 상태 변화가 핵심일 때',
+        '',
+        '## 개념 설명형 (원리·동작 방식·비교)',
+        '→ mindmap: 개념 간 관계·계층 구조 표현',
+        '→ flowchart LR: 데이터·요청 흐름 표현',
+        '',
+        '## 회고·에세이형 (경험·생각 정리)',
+        '→ mindmap: 핵심 인사이트와 관련 개념 연결',
+        '→ timeline: 시간 순 경험 변화가 핵심일 때',
+        '',
+        '## 시스템 설계형 (아키텍처·설계 결정)',
+        '→ flowchart TD: 컴포넌트와 데이터 흐름',
+        '→ sequenceDiagram: 서비스 간 상호작용이 핵심일 때',
         '',
         '# 규칙',
-        '- 제목은 명확하게 (예: "JPA 트랜잭션 흐름", "Kafka 메시지 처리")',
-        '- 한글과 영문 섞임 허용 (기술용어는 영문 유지)',
-        '- 노드/상태는 간결하게, 30자 이내',
-        '- 주요 개념만 포함 (세부사항 제외)',
-        '- 다이어그램이 타당하지 않으면 빈 줄 반환 ("") → 생성 스킵',
+        '- 노드/항목 레이블: 20자 이내, 핵심 단어만',
+        '- 한글·영문 혼용 허용 (기술 용어는 영문)',
+        '- 노드 수: 6~12개 (mindmap은 루트 포함 12개 이내)',
+        '- 인과 관계나 흐름이 있으면 화살표로 명시',
+        '- 다이어그램이 글의 핵심을 담기 어려우면 빈 줄("") 반환',
         '',
-        '# 예시',
+        '# Few-shot 예시',
         '',
-        '## Input (JPA 트랜잭션 내용)',
-        '트랜잭션 시작 → SQL 실행 → Dirty Checking → 커밋 → 종료',
+        '## 예시 1 — 문제 해결형 (Circuit Breaker 적용기)',
+        '### Output',
+        'flowchart TD',
+        '    A[제휴사 API 타임아웃] --> B[Kafka 컨슈머 랙 폭증]',
+        '    B --> C[Convoy Effect]',
+        '    C --> D[정상 제휴사도 지연]',
+        '    D --> E{해결책}',
+        '    E --> F[Circuit Breaker 도입]',
+        '    F --> G[CLOSED → OPEN → HALF-OPEN]',
+        '    G --> H[장애 격리 성공]',
         '',
-        '## Output',
-        'sequenceDiagram',
-        '    participant Client',
-        '    participant JPA',
-        '    participant DB',
-        '    Client->>JPA: @Transactional',
-        '    JPA->>JPA: PersistenceContext 생성',
-        '    JPA->>DB: SQL 실행',
-        '    JPA->>JPA: Dirty Checking',
-        '    JPA->>DB: UPDATE 쿼리',
-        '    JPA->>DB: COMMIT',
+        '## 예시 2 — 개념 설명형 (JPA Dirty Checking)',
+        '### Output',
+        'flowchart LR',
+        '    A[Entity 조회] --> B[1차 캐시 저장]',
+        '    B --> C[스냅샷 생성]',
+        '    C --> D[트랜잭션 종료]',
+        '    D --> E[스냅샷 비교]',
+        '    E -->|변경 감지| F[UPDATE 쿼리 자동 실행]',
+        '    E -->|변경 없음| G[쿼리 생략]',
+        '',
+        '## 예시 3 — 회고형 (연간 회고)',
+        '### Output',
+        'mindmap',
+        '  root((2024 회고))',
+        '    성장',
+        '      시스템 설계 학습',
+        '      팀 협업 경험',
+        '    도전',
+        '      레거시 개선',
+        '      장애 대응',
+        '    다음 목표',
+        '      오픈소스 기여',
+        '      글쓰기 습관',
         '',
         '---',
         '',
         '제목: ' + title,
         '',
-        '내용 (마크다운):',
+        '내용:',
         body,
     ].join('\n');
 }
@@ -112,9 +142,18 @@ async function generateDiagram(title, body) {
             maxOutputTokens: 1000,
             temperature: 0.4,
             topP: 0.9,
+            thinkingConfig: { thinkingBudget: 0 },
         },
     });
-    return response.text.trim();
+    if (!response.text) {
+        var candidate = response.candidates && response.candidates[0];
+        process.stderr.write(
+            '[빈응답] finishReason=' + (candidate && candidate.finishReason) +
+            ' promptFeedback=' + JSON.stringify(response.promptFeedback) +
+            ' safetyRatings=' + JSON.stringify(candidate && candidate.safetyRatings) + '\n'
+        );
+    }
+    return (response.text || '').trim();
 }
 
 // ── 파일 수집 ─────────────────────────────────────────────────
@@ -208,6 +247,12 @@ async function main() {
         }
 
         var content = fs.readFileSync(filePath, 'utf8');
+
+        if (!/^show-diagram\s*:\s*true/m.test(content)) {
+            process.stdout.write('[건너뜀] ' + slug + ' (show-diagram 없음)\n');
+            continue;
+        }
+
         var title   = extractTitle(content);
         var body    = extractBody(content);
 
@@ -228,7 +273,6 @@ async function main() {
             }
 
             results[slug] = diagram;
-            insertDiagramToFile(filePath, diagram);
             generated++;
             process.stdout.write('완료 (' + diagram.split('\n').length + '줄)\n');
             fs.writeFileSync(DIAGRAMS_FILE, JSON.stringify(results, null, 2));

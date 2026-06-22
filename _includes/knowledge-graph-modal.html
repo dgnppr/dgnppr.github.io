@@ -1,0 +1,103 @@
+<!-- 전체 지식 그래프 모달 (전역 컴포넌트) -->
+<div id="kg-modal-overlay" class="kg-modal-overlay" role="dialog" aria-modal="true" aria-label="전체 지식 그래프">
+    <div class="kg-modal">
+        <div class="kg-modal__header">
+            <span class="kg-modal__title">지식 그래프</span>
+            <div class="kg-modal__search-wrap">
+                <svg class="kg-modal__search-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.2" y1="10.2" x2="14" y2="14"/>
+                </svg>
+                <input id="modal-kg-search" class="kg-modal__search" type="text" placeholder="제목 · 태그 검색..." autocomplete="off">
+            </div>
+            <button class="kg-modal__close" id="kg-modal-close" aria-label="닫기">
+                <svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                    <line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/>
+                </svg>
+            </button>
+        </div>
+        <div class="kg-modal__body">
+            <div id="modal-kg-container" class="kg-modal__graph">
+                <div class="kg-modal__hint" aria-hidden="true">드래그로 이동 &middot; 스크롤로 확대/축소 &middot; 클릭으로 미리보기</div>
+            </div>
+            <div class="kg-modal__panel">
+                <div class="kg-modal__panel-header">
+                    <span class="kg-modal__panel-title">카테고리</span>
+                    <span id="modal-kg-stats" class="kg-modal__stats"></span>
+                </div>
+                <div id="modal-kg-groups" class="kg-modal__groups"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function () {
+    if (window.d3) { loadKg(); return; }
+    var s = document.createElement('script');
+    s.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+    s.onload = loadKg;
+    document.head.appendChild(s);
+    function loadKg() {
+        if (window.KnowledgeGraph && window.KnowledgeGraph.init) return;
+        var k = document.createElement('script');
+        k.src = '/js/knowledge-graph.js';
+        document.head.appendChild(k);
+    }
+})();
+</script>
+<script>
+(function () {
+    var overlay  = document.getElementById('kg-modal-overlay');
+    var closeBtn = document.getElementById('kg-modal-close');
+    var searchEl = document.getElementById('modal-kg-search');
+    var graphEl  = document.getElementById('modal-kg-container');
+    if (!overlay) return;
+
+    var initialized = false;
+
+    function openModal() {
+        overlay.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+        if (searchEl) { searchEl.value = ''; searchEl.focus(); }
+
+        if (!initialized && window.KnowledgeGraph) {
+            initialized = true;
+            requestAnimationFrame(function () {
+                window.KnowledgeGraph.init({
+                    container: graphEl,
+                    search:    searchEl,
+                    groups:    document.getElementById('modal-kg-groups'),
+                    stats:     document.getElementById('modal-kg-stats'),
+                    panel:     null,
+                });
+            });
+        }
+    }
+
+    function closeModal() {
+        overlay.classList.remove('is-open');
+        document.body.style.overflow = '';
+        var tip = document.querySelector('.graph-tooltip');
+        if (tip) tip.classList.remove('is-visible');
+    }
+
+    window.openKnowledgeGraphModal = openModal;
+
+    document.addEventListener('click', function (e) {
+        var trigger = e.target.closest('[data-kg-open], #wiki-mini-graph-expand');
+        if (!trigger) return;
+        e.preventDefault();
+        openModal();
+    });
+
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal();
+    });
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeModal();
+    });
+
+    if (location.hash === '#graph') openModal();
+})();
+</script>

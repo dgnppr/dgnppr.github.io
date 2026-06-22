@@ -30,6 +30,11 @@ layout: document
     <div class="wiki-mini-graph" id="wiki-mini-graph-wrap">
         <div class="wiki-mini-graph__header">
             <span class="wiki-mini-graph__title">미니 지식 그래프</span>
+            <button class="wiki-mini-graph__expand" id="wiki-mini-graph-expand" aria-label="전체 지식 그래프 보기" title="전체 지식 그래프 보기">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/>
+                </svg>
+            </button>
         </div>
         <div class="wiki-mini-graph__canvas" id="wiki-mini-graph-canvas">
             <div id="wiki-mini-graph"></div>
@@ -43,6 +48,22 @@ layout: document
     </article>
 
     <br/>
+
+    <div class="diagram-section" id="diagram-section" style="display:none">
+        <div class="diagram__header">
+            <svg class="diagram__icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="1" y="1" width="5" height="5" rx="1"/><rect x="10" y="1" width="5" height="5" rx="1"/><rect x="5.5" y="10" width="5" height="5" rx="1"/>
+                <line x1="3.5" y1="6" x2="3.5" y2="8"/><line x1="12.5" y1="6" x2="12.5" y2="8"/><line x1="3.5" y1="8" x2="12.5" y2="8"/><line x1="8" y1="8" x2="8" y2="10"/>
+            </svg>
+            <span class="diagram__label">요약 다이어그램</span>
+        </div>
+        <div class="diagram__skeleton" id="diagram-skeleton">
+            <div class="diagram__skeleton-bar" style="width:60%"></div>
+            <div class="diagram__skeleton-bar" style="width:85%"></div>
+            <div class="diagram__skeleton-bar" style="width:45%"></div>
+        </div>
+        <div class="diagram__content" id="diagram-content"></div>
+    </div>
 
     {% assign wiki_sorted = site.wiki | where_exp: "item", "item.public != false" | where_exp: "item", "item.layout != 'category'" | where_exp: "item", "item.title != 'wiki'" | sort: 'updated' | reverse %}
     {% for wdoc in wiki_sorted %}
@@ -78,6 +99,7 @@ layout: document
 
     <div id="reading-cta" class="reading-cta"></div>
     <div id="series-nav-container"></div>
+
     <script>
     (function() {
         var nameEl = document.getElementById('thisName');
@@ -165,13 +187,92 @@ layout: document
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>
 (function() {
+  function mermaidTheme() {
+    var dark = document.documentElement.classList.contains('dark-mode');
+    var font = "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif";
+    return dark ? {
+      theme: 'base',
+      themeVariables: {
+        primaryColor:           '#1a2a40',
+        primaryTextColor:       '#93c5fd',
+        primaryBorderColor:     '#669DFD',
+        secondaryColor:         '#2b2d30',
+        secondaryTextColor:     '#8C96A4',
+        secondaryBorderColor:   '#636e72',
+        tertiaryColor:          '#1a2535',
+        tertiaryTextColor:      '#93c5fd',
+        tertiaryBorderColor:    '#253a5e',
+        lineColor:              '#669DFD',
+        background:             '#1E1F22',
+        mainBkg:                '#1a2a40',
+        nodeBkg:                '#1a2535',
+        nodeBorder:             '#669DFD',
+        edgeLabelBackground:    '#1E1F22',
+        clusterBkg:             '#242628',
+        clusterBorder:          '#253a5e',
+        titleColor:             '#B8C0CC',
+        actorBkg:               '#1a2a40',
+        actorBorder:            '#669DFD',
+        actorTextColor:         '#93c5fd',
+        actorLineColor:         '#669DFD',
+        signalColor:            '#669DFD',
+        signalTextColor:        '#C8CDD5',
+        activationBkgColor:     '#1a2535',
+        activationBorderColor:  '#669DFD',
+        labelBoxBkgColor:       '#1a2a40',
+        labelBoxBorderColor:    '#669DFD',
+        labelTextColor:         '#93c5fd',
+        loopTextColor:          '#93c5fd',
+        noteBkgColor:           '#2d2a1e',
+        noteTextColor:          '#fbbf24',
+        noteBorderColor:        '#92400e',
+        fontFamily:             font,
+        fontSize:               '14px',
+      }
+    } : {
+      theme: 'base',
+      themeVariables: {
+        primaryColor:           '#e8f1fb',
+        primaryTextColor:       '#2c5282',
+        primaryBorderColor:     '#90b8e8',
+        secondaryColor:         '#f0f4f8',
+        secondaryTextColor:     '#4a5568',
+        secondaryBorderColor:   '#c8d8eb',
+        tertiaryColor:          '#eef5fc',
+        tertiaryTextColor:      '#2c5282',
+        tertiaryBorderColor:    '#a8c8f0',
+        lineColor:              '#5a9fd4',
+        background:             '#FFFFFF',
+        mainBkg:                '#e8f1fb',
+        nodeBkg:                '#eef5fc',
+        nodeBorder:             '#90b8e8',
+        edgeLabelBackground:    '#f7fbff',
+        clusterBkg:             '#f0f6fc',
+        clusterBorder:          '#a8c8f0',
+        titleColor:             '#1a365d',
+        actorBkg:               '#e8f1fb',
+        actorBorder:            '#90b8e8',
+        actorTextColor:         '#2c5282',
+        actorLineColor:         '#5a9fd4',
+        signalColor:            '#5a9fd4',
+        signalTextColor:        '#2c5282',
+        activationBkgColor:     '#e8f1fb',
+        activationBorderColor:  '#90b8e8',
+        labelBoxBkgColor:       '#e8f1fb',
+        labelBoxBorderColor:    '#90b8e8',
+        labelTextColor:         '#2c5282',
+        loopTextColor:          '#2c5282',
+        noteBkgColor:           '#fef9c3',
+        noteTextColor:          '#713f12',
+        noteBorderColor:        '#fbbf24',
+        fontFamily:             font,
+        fontSize:               '14px',
+      }
+    };
+  }
+
   function initMermaid() {
-    var isDark = document.documentElement.classList.contains('dark-mode');
-    mermaid.initialize({
-      startOnLoad: false,
-      theme: isDark ? 'dark' : 'default',
-      securityLevel: 'loose',
-    });
+    mermaid.initialize(Object.assign({ startOnLoad: false, securityLevel: 'loose' }, mermaidTheme()));
     document.querySelectorAll('code.language-mermaid').forEach(function(el) {
       var pre = el.parentElement;
       var code = el.textContent;
@@ -189,7 +290,6 @@ layout: document
   document.addEventListener('DOMContentLoaded', function() {
     if (document.querySelector('code.language-mermaid')) initMermaid();
 
-    // 다크모드 전환 시 재렌더링
     var observer = new MutationObserver(function(mutations) {
       mutations.forEach(function(m) {
         if (m.attributeName === 'class' && document.querySelector('.mermaid-diagram')) {
@@ -199,6 +299,110 @@ layout: document
     });
     observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
   });
+
+  // 요약 다이어그램: diagrams.json에 데이터가 있으면 이전글 위에 렌더링
+  var diagramCode = null;
+
+  function renderSummaryDiagram() {
+    var section   = document.getElementById('diagram-section');
+    var container = document.getElementById('diagram-content');
+    var skeleton  = document.getElementById('diagram-skeleton');
+    if (!section || !container || !diagramCode) return;
+
+    container.innerHTML = '';
+    var div = document.createElement('div');
+    div.className = 'mermaid-diagram';
+    div.textContent = diagramCode;
+    container.appendChild(div);
+
+    mermaid.initialize(Object.assign({ startOnLoad: false, securityLevel: 'loose' }, mermaidTheme()));
+    mermaid.run({ nodes: [div] })
+      .then(function() {
+        if (skeleton) skeleton.style.display = 'none';
+        container.classList.add('diagram__content--visible');
+        attachDiagramZoom(div);
+      })
+      .catch(function() { if (skeleton) skeleton.style.display = 'none'; });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var section  = document.getElementById('diagram-section');
+    var skeleton = document.getElementById('diagram-skeleton');
+    if (!section) return;
+
+    var slug = (document.getElementById('thisName') || {}).value;
+    if (!slug) return;
+
+    fetch('/data/diagrams.json')
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(data) {
+        if (!data || !data[slug]) return;
+        diagramCode = data[slug];
+        section.style.display = '';
+        renderSummaryDiagram();
+      })
+      .catch(function() { if (skeleton) skeleton.style.display = 'none'; });
+
+    // 다크모드 전환 시 재렌더링
+    var dmObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'class' && diagramCode) {
+          var container = document.getElementById('diagram-content');
+          if (container) container.classList.remove('diagram__content--visible');
+          setTimeout(renderSummaryDiagram, 50);
+        }
+      });
+    });
+    dmObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  function attachDiagramZoom(div) {
+    var svg = div.querySelector('svg');
+    if (!svg) return;
+    div.style.cursor = 'zoom-in';
+
+    var overlay = document.createElement('div');
+    overlay.id = 'diagram-zoom-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', '다이어그램 확대 보기');
+    var inner = document.createElement('div');
+    inner.id = 'diagram-zoom-inner';
+    var closeBtn = document.createElement('button');
+    closeBtn.id = 'diagram-zoom-close';
+    closeBtn.setAttribute('aria-label', '닫기');
+    closeBtn.innerHTML = '&times;';
+    overlay.appendChild(inner);
+    overlay.appendChild(closeBtn);
+    document.body.appendChild(overlay);
+
+    function openZoom() {
+      var clone = svg.cloneNode(true);
+      clone.removeAttribute('width');
+      clone.removeAttribute('height');
+      clone.setAttribute('width', '100%');
+      clone.setAttribute('height', '100%');
+      clone.style.width = '100%';
+      clone.style.height = '100%';
+      clone.style.display = 'block';
+      inner.innerHTML = '';
+      inner.appendChild(clone);
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+    function closeZoom() {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    div.addEventListener('click', openZoom);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeZoom(); });
+    closeBtn.addEventListener('click', closeZoom);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeZoom();
+    });
+  }
 })();
 </script>
 

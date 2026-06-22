@@ -10,6 +10,6 @@
   "os"
  ],
  "series": null,
- "snippet": "글을 쓰게 된 계기 레디스는 초당 100,00 QPS 이상 처리가 가능하다고 한다. 왜 멀티쓰레드가 아닌 싱글 스레드로 개발을 했고, 어떻게 이런 성능을 낼 수 있었을까? Redis 개발자인 Salvatore Sanfilippo가 왜 싱글 스레드로 개발했는지에 대한 Git 커밋 및 인터뷰는 찾지 못했지만 그의 관점이 담긴 인터뷰를 찾아봤다. 아래 대답에서 어떤 관점에서 싱글 스레드로 개발했는지 알 수 있었다. I’m very focused on keeping it small, I don’t have a good reputation for being open-minded with new features. I’m extremely conservative. Otherwise, after seven years of",
+ "snippet": "<!-- diagram start -- mermaid flowchart TD ARedis, 왜 싱글 스레드인가? -- B{Redis 개발 철학} B -- C작고 간단한 시스템 유지 C -- D복잡성 회피 D -- E{싱글 스레드 장점} E -- E1쉬운 구현 & 동시성 보장 (이벤트 루프) E -- E2CPU는 병목이 아님 (Memory/Network Bound) E -- E3쉬운 배포 E -- F커널 레벨 멀티플렉싱으로 동시성 확보 F -- G메인 스레드: 이벤트 루프 & 명령어 처리 G -- H서브 스레드: 백그라운드 I/O (unlink, bioclose, biolazyfree) H -- IRedis 6.0: 네트워크 I/O 멀티 스레드 도입 I -- J결론: 단순성 유지 & 성능 최적화 <!-- di",
  "children": []
 }

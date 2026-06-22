@@ -83,9 +83,9 @@
                 <span class="toggle-thumb"></span>
             </span>
         </button>
-        <a href="/map" class="header-search-toggle" aria-label="지식 그래프">
+        <button type="button" id="header-graph-btn" class="header-search-toggle" data-kg-open aria-label="지식 그래프">
             <i class="fas fa-brain header-icon-unified" aria-hidden="true"></i>
-        </a>
+        </button>
         <button id="search-toggle" class="header-search-toggle" aria-label="검색">
             <i class="fas fa-search"></i>
         </button>
@@ -116,7 +116,8 @@
         },
         {
             label: '지식 그래프',
-            url: '/map/',
+            url: '#',
+            modal: true,
             icon: '<i class="fas fa-brain" aria-hidden="true"></i>'
         },
         {
@@ -132,7 +133,8 @@
         results.innerHTML =
             '<div class="search-quick-label">바로가기</div>' +
             QUICK_ACTIONS.map(function(a) {
-                return '<a class="search-result-item" href="' + a.url + '">' +
+                var extra = a.modal ? ' data-kg-open' : '';
+                return '<a class="search-result-item" href="' + a.url + '"' + extra + '>' +
                     '<span class="search-quick-icon">' + a.icon + '</span>' +
                     '<span class="search-result-main">' +
                     '<span class="search-result-title">' + a.label + '</span>' +
@@ -170,6 +172,7 @@
     });
 
     wrapper.addEventListener('click', function (e) {
+        if (e.target.closest('[data-kg-open]')) { closeSearch(); return; }
         var card = wrapper.querySelector('.search');
         if (card && !card.contains(e.target)) { closeSearch(); }
     });

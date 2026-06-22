@@ -58,3 +58,185 @@
     color: var(--color-text-tertiary);
 }
 
+// 섹션 구분선
+.section-divider {
+    margin: 3rem 0 2rem 0;
+    border: none;
+    border-top: 2px solid var(--color-border);
+    opacity: 0.5;
+}
+
+// 나중에 생각 섹션
+.later-thoughts {
+    margin: 0 0 1.5em;
+}
+
+.later-thoughts-item {
+    margin: 0 0 1.2em;
+    padding: 14px 16px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-surface);
+    transition: border-color 0.12s ease;
+}
+
+.later-thoughts-item:last-child {
+    margin-bottom: 0;
+}
+
+.later-thoughts__header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.later-thoughts__icon {
+    font-size: 0.8rem;
+    line-height: 1;
+}
+
+.later-thoughts__label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+.later-thoughts__date {
+    font-size: 0.65rem;
+    color: var(--color-text-tertiary);
+}
+
+.later-thoughts__text {
+    margin: 0;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    color: var(--color-text-secondary);
+}
+
+// 다이어그램 확대 오버레이
+#diagram-zoom-overlay {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.72);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+
+    &.is-open {
+        opacity: 1;
+        pointer-events: auto;
+    }
+}
+
+#diagram-zoom-inner {
+    background: var(--color-surface);
+    border-radius: 10px;
+    padding: 2em;
+    width: 90vw;
+    height: 85vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
+
+    svg {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+#diagram-zoom-close {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.4rem;
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.8;
+
+    &:hover { opacity: 1; }
+}
+
+// 다이어그램 섹션
+.diagram-section {
+    margin: 3em 0 1.8em;
+    padding: 18px 20px 14px;
+    border: 1px solid var(--color-border);
+    border-radius: 10px;
+    background: var(--color-surface);
+}
+
+.diagram__header {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.diagram__icon {
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+}
+
+.diagram__label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--color-text-secondary);
+}
+
+// 스켈레톤 로딩
+.diagram__skeleton {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 1.2em 0;
+}
+
+.diagram__skeleton-bar {
+    height: 12px;
+    border-radius: 6px;
+    background: linear-gradient(90deg, var(--color-border) 25%, var(--color-surface-muted) 50%, var(--color-border) 75%);
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.4s infinite;
+}
+
+@keyframes skeleton-shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+// 다이어그램 페이드인
+.diagram__content {
+    opacity: 0;
+    transition: opacity 0.35s ease;
+
+    &--visible { opacity: 1; }
+}
+
+// 확대 힌트
+.diagram__hint {
+    margin: 6px 0 0;
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--color-text-secondary);
+    opacity: 0.6;
+    display: none;
+
+    .diagram__content--visible ~ & { display: block; }
+}
+
