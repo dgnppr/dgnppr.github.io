@@ -23,43 +23,8 @@
     var COLOR_NODE_DIM = '#93c5fd';
 
     // ── Tooltip ──────────────────────────────────────────────────
-    var tip = document.createElement('div');
-    tip.style.cssText = [
-        'position:fixed', 'z-index:9999', 'pointer-events:none',
-        'opacity:0', 'transition:opacity 0.13s ease',
-        'background:var(--color-surface)',
-        'border:1px solid var(--color-border)',
-        'border-radius:8px', 'padding:9px 12px',
-        'max-width:220px',
-        'box-shadow:0 4px 18px rgba(0,0,0,0.13)',
-        'font-family:system-ui,-apple-system,sans-serif',
-    ].join(';');
-    document.body.appendChild(tip);
-
-    function showTip(e, d, summaries, scoreBySlug) {
-        var cleanTitle = d.title.replace(/^[""""]|[""""]$/g, '');
-        var score = !d.isCurrent ? scoreBySlug[d.slug] : undefined;
-        var scoreHtml = score !== undefined
-            ? '<div style="font-size:0.72rem;color:var(--color-text-secondary);margin-top:2px">유사도 <b>' + score.toFixed(3) + '</b></div>'
-            : '';
-        var sum = (summaries[d.slug] || summaries[d.id] || '').trim();
-        var sumHtml = sum
-            ? '<div style="font-size:0.73rem;color:var(--color-text-secondary);margin-top:4px;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical">' + sum + '</div>'
-            : '';
-        tip.innerHTML =
-            '<div style="font-size:0.82rem;font-weight:600;color:var(--color-text-heading)">' + cleanTitle + '</div>' +
-            scoreHtml +
-            sumHtml;
-        positionTip(e);
-        tip.style.opacity = '1';
-    }
-    function positionTip(e) {
-        var x = Math.min(e.clientX + 14, window.innerWidth - 235);
-        var y = e.clientY - 10;
-        tip.style.left = x + 'px';
-        tip.style.top  = y + 'px';
-    }
-    function hideTip() { tip.style.opacity = '0'; }
+    var tip = d3.select(document.body).append('div').attr('class', 'graph-tooltip');
+    function hideTip() { tip.classed('is-visible', false); }
 
     // ── Load data ────────────────────────────────────────────────
     Promise.all([
@@ -110,8 +75,6 @@
         });
 
         // ── 링크 구성 ─────────────────────────────────────────────
-        // self ↔ 각 related 노드
-        // related 노드끼리도 related.json에서 교차 확인
         var seen = new Set(), links = [], adj = {};
 
         function addLink(aSlug, bSlug, score) {
@@ -260,7 +223,7 @@
         var labelEl = g.selectAll('text.mg-label').data(nodes).join('text')
             .attr('class', 'mg-label')
             .text(function (d) {
-                var tx = d.title.replace(/^[""""]|[""""]$/g, '');
+                var tx = d.title.replace(/^[“”„‟]|[“”„‟]$/g, '');
                 return tx.length > 12 ? tx.slice(0, 12) + '…' : tx;
             })
             .attr('font-size', function (d) { return d.isCurrent ? '11px' : '10px'; })
@@ -284,8 +247,32 @@
             })
         );
 
+        // ── Tooltip positioning (follows node on scroll/zoom) ────
+        function positionTip(n) {
+            var tr   = d3.zoomTransform(svg.node());
+            var rect = container.getBoundingClientRect();
+            var wo   = waveOff(n);
+            var cx   = tr.applyX(n.x + wo.x) + rect.left;
+            var cy   = tr.applyY(n.y + wo.y) + rect.top;
+            var tipW = tip.node().offsetWidth  || 240;
+            var tipH = tip.node().offsetHeight || 80;
+            var vw   = window.innerWidth, vh = window.innerHeight;
+            var gap  = Math.max(12, nodeR(n) * 1.2 * tr.k + 6);
+
+            var candidates = [
+                { l: cx + gap,        tp: cy - tipH / 2 },
+                { l: cx - tipW - gap, tp: cy - tipH / 2 },
+                { l: cx - tipW / 2,   tp: cy + gap       },
+                { l: cx - tipW / 2,   tp: cy - tipH - gap },
+            ];
+            var c = candidates[0];
+            var l = Math.max(8, Math.min(c.l,  vw - tipW - 8));
+            var t2 = Math.max(8, Math.min(c.tp, vh - tipH - 8));
+            tip.style('left', l + 'px').style('top', t2 + 'px').style('transform', 'none');
+        }
+
         // ── Hover & click ────────────────────────────────────────
-        var activeSlug = null;
+        var activeSlug = null, pinnedSlug = null;
 
         function highlightNode(d) {
             nodeEl.attr('opacity', function (n) {
@@ -322,28 +309,39 @@
             linkScoreEl.attr('opacity', 0);
         }
 
+        function pinNode(d, summaries, scoreBySlug) {
+            pinnedSlug = d.slug;
+            activeSlug = d.slug;
+            highlightNode(d);
+
+            var cleanTitle = d.title.replace(/^[“”„‟]|[“”„‟]$/g, '');
+            var score = !d.isCurrent ? scoreBySlug[d.slug] : undefined;
+            var scoreHtml = score !== undefined
+                ? '<div class="kg-tip-summary">유사도 <b>' + score.toFixed(3) + '</b></div>'
+                : '';
+            var sum = (summaries[d.slug] || summaries[d.id] || '').trim();
+            var sumHtml = sum
+                ? '<div class="kg-tip-summary">' + sum.slice(0, 120) + (sum.length > 120 ? '…' : '') + '</div>'
+                : '';
+            tip.html('<strong>' + cleanTitle + '</strong>' + scoreHtml + sumHtml)
+               .classed('is-visible', true);
+            positionTip(d);
+        }
+
         nodeEl
-            .on('mouseenter', function (e, d) { highlightNode(d); })
-            .on('mouseleave', function (e, d) {
-                if (activeSlug !== d.slug) resetHighlight();
-                else highlightNode(d);
-            })
+            .on('mouseenter', function (e, d) { if (!pinnedSlug) highlightNode(d); })
+            .on('mouseleave', function (e, d) { if (!pinnedSlug) resetHighlight(); })
             .on('click', function (e, d) {
                 e.stopPropagation();
-                if (activeSlug === d.slug) {
-                    hideTip();
-                    activeSlug = null;
-                    resetHighlight();
+                if (pinnedSlug === d.slug) {
                     if (!d.isCurrent) window.location.href = d.url;
                 } else {
-                    activeSlug = d.slug;
-                    showTip(e, d, summaries, scoreBySlug);
-                    highlightNode(d);
+                    pinNode(d, summaries, scoreBySlug);
                 }
             });
 
         document.addEventListener('click', function () {
-            if (activeSlug) { hideTip(); activeSlug = null; resetHighlight(); }
+            if (pinnedSlug) { hideTip(); pinnedSlug = null; activeSlug = null; resetHighlight(); }
         });
 
         // ── Tick ─────────────────────────────────────────────────
@@ -359,6 +357,9 @@
 
         sim.on('tick', function () {
             _waveNow = performance.now();
+
+            if (pinnedSlug && nodeMap[pinnedSlug]) positionTip(nodeMap[pinnedSlug]);
+
             linkEl.attr('d', function (d) {
                 var so = waveOff(d.source), to2 = waveOff(d.target);
                 var sx = (d.source.x || 0) + so.x, sy = (d.source.y || 0) + so.y;
