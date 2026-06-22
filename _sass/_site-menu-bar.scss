@@ -24,6 +24,17 @@
         color: var(--color-text-primary);
         font-weight: 700;
         padding: 8px 12px;
+
+        &::after {
+            content: '';
+            display: inline-block;
+            width: 3px;
+            height: 3px;
+            background-color: #3b82f6;
+            margin-left: 2px;
+            vertical-align: baseline;
+            margin-bottom: -1px;
+        }
     }
 
     .site-title-right {
