@@ -1,7 +1,7 @@
 [
  {
   "name": "agent",
-  "size": 2
+  "size": 1
  },
  {
   "name": "algorithm",
@@ -37,15 +37,11 @@
  },
  {
   "name": "llm",
-  "size": 2
+  "size": 1
  },
  {
   "name": "os",
   "size": 3
- },
- {
-  "name": "rag",
-  "size": 1
  },
  {
   "name": "redis",
