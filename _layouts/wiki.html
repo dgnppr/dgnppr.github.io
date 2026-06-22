@@ -371,9 +371,9 @@ layout: document
     var closeBtn = document.createElement('button');
     closeBtn.id = 'diagram-zoom-close';
     closeBtn.setAttribute('aria-label', '닫기');
-    closeBtn.innerHTML = '&times;';
+    closeBtn.innerHTML = '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>';
+    inner.appendChild(closeBtn);
     overlay.appendChild(inner);
-    overlay.appendChild(closeBtn);
     document.body.appendChild(overlay);
 
     function openZoom() {
@@ -385,8 +385,9 @@ layout: document
       clone.style.width = '100%';
       clone.style.height = '100%';
       clone.style.display = 'block';
-      inner.innerHTML = '';
-      inner.appendChild(clone);
+      var prevSvg = inner.querySelector(':scope > svg');
+      if (prevSvg) prevSvg.remove();
+      inner.insertBefore(clone, closeBtn);
       overlay.classList.add('is-open');
       document.body.style.overflow = 'hidden';
       closeBtn.focus();

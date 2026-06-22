@@ -224,11 +224,12 @@ html.dark-mode div.highlight {
   box-shadow: 0 2px 12px rgba(29, 78, 216, 0.06);
 
   .diagram-section & {
-    border-top: none;
-    border-radius: 6px;
+    border: none;
+    border-radius: 0;
     padding: 1.5em 1em;
     margin: 0;
     box-shadow: none;
+    background: transparent;
 
     svg {
       width: 100%;

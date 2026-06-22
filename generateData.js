@@ -333,9 +333,11 @@ function collectData(file) {
     if (parsed && parts.length > 2) {
         const body = parts.slice(2).join('---')
             .replace(/\*\s*TOC\s*\n\{:toc\}/g, '')
+            .replace(/<!--[\s\S]*?-->/g, '')
             .replace(/```[\s\S]*?```/g, '')
+            .replace(/!\[[^\]]*\]\([^)]+\)/g, '')
             .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
-            .replace(/[#*_`\[\]>]/g, '')
+            .replace(/[#*_`\[\]>!]/g, '')
             .replace(/\s+/g, ' ')
             .trim()
             .slice(0, 400);

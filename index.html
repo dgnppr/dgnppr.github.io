@@ -5,11 +5,20 @@ regenerate: true
 ---
 
 <div class="home">
-    <p class="home-section-title">Recently Changed Documents</p>
+    <p class="home-section-title">Knowledge Graph</p>
+    <div class="home-kg-wrap">
+        <div id="home-kg-container" class="home-kg-container"></div>
+        <button class="home-kg-expand" data-kg-open aria-label="전체 지식 그래프 보기">
+            <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/>
+            </svg>
+        </button>
+    </div>
+
+    <p class="home-section-title" style="margin-top:2rem">Recently Changed Documents</p>
     <ul class="home-feed">
-        {% assign documents = site.wiki | sort: 'updated' | reverse %}
-        {% for doc in documents limit: 30 %}
-        {% if doc.public == true and doc.title != 'wiki' and doc.layout != 'category' %}
+        {% assign documents = site.wiki | where: "public", true | where_exp: "item", "item.title != 'wiki'" | where_exp: "item", "item.layout != 'category'" | sort: 'updated' | reverse %}
+        {% for doc in documents limit: 10 %}
         <li class="home-feed-item">
             <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
                 <span class="home-feed-title">{{ doc.title }}</span>
@@ -22,7 +31,6 @@ regenerate: true
                 </span>
             </a>
         </li>
-        {% endif %}
         {% endfor %}
     </ul>
     <div class="home-footer">
@@ -30,4 +38,38 @@ regenerate: true
         <a href="/recent/">View all documents ({{ count }} items) →</a>
     </div>
 </div>
+
+<script>
+(function () {
+    function initHomeGraph() {
+        if (!window.KnowledgeGraph || !window.d3) return;
+        var el = document.getElementById('home-kg-container');
+        if (!el || el.dataset.kgReady) return;
+        el.dataset.kgReady = '1';
+        window.KnowledgeGraph.init({ container: el, panel: null, groups: null, stats: null, search: null });
+    }
+
+    function loadScripts() {
+        if (window.d3) { loadKg(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+        s.onload = loadKg;
+        document.head.appendChild(s);
+    }
+
+    function loadKg() {
+        if (window.KnowledgeGraph && window.KnowledgeGraph.init) { initHomeGraph(); return; }
+        var k = document.createElement('script');
+        k.src = '/js/knowledge-graph.js';
+        k.onload = initHomeGraph;
+        document.head.appendChild(k);
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadScripts);
+    } else {
+        loadScripts();
+    }
+})();
+</script>
 {% include createLink.html %}

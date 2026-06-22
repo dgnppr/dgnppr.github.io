@@ -450,6 +450,13 @@
                 svg.select('rect').attr('width', W).attr('height', H);
             });
 
+            document.addEventListener('click', function (e) {
+                if (!pinnedSlug) return;
+                if (container.contains(e.target)) return;
+                pinnedSlug = null;
+                tooltip.classed('is-visible', false);
+            });
+
         }).catch(function (e) { console.error('graph error:', e); });
     }
 

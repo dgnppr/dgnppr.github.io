@@ -136,6 +136,7 @@
 }
 
 #diagram-zoom-inner {
+    position: relative;
     background: var(--color-surface);
     border-radius: 10px;
     padding: 2em;
@@ -156,18 +157,31 @@
 }
 
 #diagram-zoom-close {
-    position: fixed;
-    top: 1.2rem;
-    right: 1.4rem;
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 2rem;
-    line-height: 1;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: var(--color-surface-hover);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    color: var(--color-text-secondary);
     cursor: pointer;
-    opacity: 0.8;
+    transition: color 0.15s, background 0.15s;
+    flex-shrink: 0;
 
-    &:hover { opacity: 1; }
+    &:hover {
+        color: var(--color-text-primary);
+        background: var(--color-surface-muted);
+    }
+    &:focus-visible {
+        outline: 2px solid var(--color-accent);
+        outline-offset: 2px;
+    }
 }
 
 // 다이어그램 섹션

@@ -11,9 +11,12 @@
   var closeBtn = document.createElement('button');
   closeBtn.id = 'lb-close';
   closeBtn.setAttribute('aria-label', '닫기');
-  closeBtn.innerHTML = '&times;';
-  overlay.appendChild(img);
-  overlay.appendChild(closeBtn);
+  closeBtn.innerHTML = '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>';
+  var container = document.createElement('div');
+  container.id = 'lb-container';
+  container.appendChild(img);
+  container.appendChild(closeBtn);
+  overlay.appendChild(container);
   document.body.appendChild(overlay);
 
   function open(src, alt) {

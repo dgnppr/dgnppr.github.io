@@ -77,8 +77,9 @@
     function closeModal() {
         overlay.classList.remove('is-open');
         document.body.style.overflow = '';
-        var tip = document.querySelector('.graph-tooltip');
-        if (tip) tip.classList.remove('is-visible');
+        document.querySelectorAll('.graph-tooltip').forEach(function (tip) {
+            tip.classList.remove('is-visible');
+        });
     }
 
     window.openKnowledgeGraphModal = openModal;
