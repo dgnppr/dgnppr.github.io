@@ -92,7 +92,7 @@
         var g = svg.append('g');
         var zoom = d3.zoom().scaleExtent([0.04, 10]).on('zoom', function (e) { g.attr('transform', e.transform); });
         svg.call(zoom);
-        svg.call(zoom.transform, d3.zoomIdentity.translate(W / 2, H / 2).scale(0.7).translate(-W / 2, -H / 2));
+        // 초기 transform은 zoomToFit이 자동 처리
 
         // ─── Tooltip ────────────────────────────────────────────────
         var tooltip = d3.select(document.body).append('div').attr('class', 'graph-tooltip');
@@ -147,8 +147,18 @@
                 adj[aSlug].add(bSlug); adj[bSlug].add(aSlug);
             }
 
+            var scoreMap = {};
             Object.keys(related).forEach(function (src) {
-                (related[src] || []).forEach(function (rel) { addLink(src, rel.slug); });
+                (related[src] || []).forEach(function (rel) {
+                    addLink(src, rel.slug);
+                    if (rel.score !== undefined) {
+                        var key = [src, rel.slug].sort().join('|||');
+                        if (!scoreMap[key]) scoreMap[key] = rel.score;
+                    }
+                });
+            });
+            links.forEach(function (l) {
+                l.score = scoreMap[[l.source, l.target].sort().join('|||')];
             });
 
             // ── Category cluster centroids (circular) ───────────────
@@ -170,6 +180,22 @@
                 return Math.max(4, Math.min(20, base));
             }
 
+            // ── Wave float animation ────────────────────────────────
+            var WAVE_AMP    = 3;
+            var WAVE_PERIOD = 4000;
+            var _waveNow    = 0;
+            nodes.forEach(function (n, i) {
+                n._wavePhaseX = (i / nodes.length) * Math.PI * 2;
+                n._wavePhaseY = (i / nodes.length) * Math.PI * 2 + Math.PI * 0.5;
+            });
+            function waveOff(n) {
+                var t2 = _waveNow / WAVE_PERIOD * 2 * Math.PI;
+                return {
+                    x: Math.sin(t2 + n._wavePhaseX) * WAVE_AMP * 0.5,
+                    y: Math.sin(t2 + n._wavePhaseY) * WAVE_AMP,
+                };
+            }
+
             // ── Simulation ──────────────────────────────────────────
             var FLOAT_ALPHA = 0.005;
             var sim = d3.forceSimulation(nodes)
@@ -179,21 +205,48 @@
                 .force('clusterX',  d3.forceX().strength(0.15).x(function (d) { return (catCenters[d.cat] || { x: W / 2 }).x; }))
                 .force('clusterY',  d3.forceY().strength(0.15).y(function (d) { return (catCenters[d.cat] || { y: H / 2 }).y; }))
                 .alphaDecay(0.015)
-                .alphaTarget(FLOAT_ALPHA);
+                .alphaTarget(FLOAT_ALPHA)
+                .stop();
 
             // ── Draw layers ─────────────────────────────────────────
-            var linkG  = g.append('g');
-            var nodeG  = g.append('g');
-            var labelG = g.append('g');
+            var linkG      = g.append('g');
+            var linkLabelG = g.append('g');
+            var nodeG      = g.append('g');
+            var labelG     = g.append('g');
 
             var linkEl = linkG.selectAll('path').data(links).join('path')
                 .attr('fill', 'none')
                 .attr('stroke', t().link)
                 .attr('stroke-width', 1);
 
+            var linkLabelEl = linkLabelG.selectAll('text.link-score').data(links).join('text')
+                .attr('class', 'link-score')
+                .text(function (d) { return d.score !== undefined ? d.score.toFixed(3) : ''; })
+                .attr('font-size', '8px')
+                .attr('font-family', 'system-ui,-apple-system,sans-serif')
+                .attr('text-anchor', 'middle')
+                .attr('dominant-baseline', 'middle')
+                .attr('fill', t().label)
+                .attr('stroke', t().bg)
+                .attr('stroke-width', 2.5)
+                .style('paint-order', 'stroke fill')
+                .attr('opacity', 0)
+                .style('pointer-events', 'none').style('user-select', 'none');
+
+            function linkMid(d) {
+                var so = waveOff(d.source), to2 = waveOff(d.target);
+                var sx = (d.source.x || 0) + so.x, sy = (d.source.y || 0) + so.y;
+                var ex = (d.target.x || 0) + to2.x, ey = (d.target.y || 0) + to2.y;
+                var mx = (sx + ex) / 2, my = (sy + ey) / 2;
+                var dx = ex - sx, dy = ey - sy, len = Math.sqrt(dx*dx + dy*dy) || 1;
+                var curve = Math.min(len * 0.18, 22);
+                return { x: mx - dy / len * curve * 0.5, y: my + dx / len * curve * 0.5 };
+            }
+
             function linkPath(d) {
-                var sx = d.source.x || 0, sy = d.source.y || 0;
-                var tx = d.target.x || 0, ty = d.target.y || 0;
+                var so = waveOff(d.source), to2 = waveOff(d.target);
+                var sx = (d.source.x || 0) + so.x, sy = (d.source.y || 0) + so.y;
+                var tx = (d.target.x || 0) + to2.x, ty = (d.target.y || 0) + to2.y;
                 var mx = (sx + tx) / 2, my = (sy + ty) / 2;
                 var dx = tx - sx, dy = ty - sy;
                 var len = Math.sqrt(dx * dx + dy * dy) || 1;
@@ -270,10 +323,30 @@
                        .attr('fill', function (n) { return n.slug === d.slug ? th.labelActive : th.label; })
                        .attr('font-size', function (n) { return n.slug === d.slug ? '11px' : '9px'; });
 
+                linkLabelEl
+                    .attr('opacity', function (l) {
+                        var sid = l.source.slug || l.source, tid = l.target.slug || l.target;
+                        return (sid === d.slug || tid === d.slug) ? 1 : 0;
+                    })
+                    .attr('fill', function (l) {
+                        var sid = l.source.slug || l.source, tid = l.target.slug || l.target;
+                        return (sid === d.slug || tid === d.slug) ? catColor(d.cat) : th.label;
+                    })
+                    .attr('stroke', th.bg);
+
                 var tagList = d.tags.slice(0, 4).map(function (tx) { return '#' + tx; });
+                var nScores = [];
+                neighbors.forEach(function (nSlug) {
+                    var s = scoreMap[[d.slug, nSlug].sort().join('|||')];
+                    if (s !== undefined) nScores.push(s);
+                });
+                var avgScore = nScores.length
+                    ? (nScores.reduce(function (a, b) { return a + b; }, 0) / nScores.length)
+                    : null;
+                var scoreText = avgScore !== null ? ' · avg <b>' + avgScore.toFixed(3) + '</b>' : '';
                 tooltip.classed('is-visible', true)
                     .html('<strong>' + d.title + '</strong><span>' +
-                        d.cat + ' · ' + d.degree + '개 연결' +
+                        d.cat + ' · ' + d.degree + '개 연결' + scoreText +
                         (tagList.length ? '<br>' + tagList.join(' ') : '') + '</span>');
             }
 
@@ -287,6 +360,7 @@
                     nodeEl.attr('opacity', 1).attr('r', nodeR).attr('filter', 'url(#' + glowId + ')');
                     linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 1);
                     labelEl.attr('opacity', LABEL_NORMAL).attr('fill', th.label).attr('font-size', '9px');
+                    linkLabelEl.attr('opacity', 0);
                     tooltip.classed('is-visible', false);
                 }, 80);
             }
@@ -329,7 +403,7 @@
                     }
                 });
 
-            function zoomToFit() {
+            function zoomToFit(duration) {
                 var pad = 50;
                 var x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
                 nodes.forEach(function (n) {
@@ -342,7 +416,8 @@
                 var scale = Math.min((W - pad * 2) / bW, (H - pad * 2) / bH, 1.2);
                 var tx = W / 2 - scale * (x0 + bW / 2);
                 var ty = H / 2 - scale * (y0 + bH / 2);
-                svg.transition().duration(500).call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
+                svg.transition().duration(duration !== undefined ? duration : 500)
+                    .call(zoom.transform, d3.zoomIdentity.translate(tx, ty).scale(scale));
             }
 
             svg.on('click', function (e) {
@@ -356,6 +431,7 @@
                 nodeEl.attr('opacity', 1).attr('r', nodeR).attr('filter', 'url(#' + glowId + ')');
                 linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 1);
                 labelEl.attr('opacity', LABEL_NORMAL).attr('fill', th.label).attr('font-size', '9px');
+                linkLabelEl.attr('opacity', 0);
                 tooltip.classed('is-visible', false);
                 zoomToFit();
             });
@@ -366,12 +442,25 @@
                 .on('end',   function (e, d) { if (!e.active) sim.alphaTarget(FLOAT_ALPHA); })
             );
 
-            sim.on('tick', function () {
+            function renderPositions() {
+                _waveNow = performance.now();
                 linkEl.attr('d', linkPath);
-                haloEl.attr('cx', function (d) { return d.x; }).attr('cy', function (d) { return d.y; });
-                nodeEl.attr('cx', function (d) { return d.x; }).attr('cy', function (d) { return d.y; });
-                labelEl.attr('x', function (d) { return d.x + nodeR(d) + 3; }).attr('y', function (d) { return d.y; });
-            });
+                linkLabelEl
+                    .attr('x', function (d) { return linkMid(d).x; })
+                    .attr('y', function (d) { return linkMid(d).y; });
+                haloEl.attr('cx', function (d) { var o = waveOff(d); return d.x + o.x; })
+                      .attr('cy', function (d) { var o = waveOff(d); return d.y + o.y; });
+                nodeEl.attr('cx', function (d) { var o = waveOff(d); return d.x + o.x; })
+                      .attr('cy', function (d) { var o = waveOff(d); return d.y + o.y; });
+                labelEl.attr('x', function (d) { var o = waveOff(d); return d.x + o.x + nodeR(d) + 3; })
+                        .attr('y', function (d) { var o = waveOff(d); return d.y + o.y; });
+            }
+
+            // 300틱 사전 수렴 후 즉시 fit, 그 다음 gentle float 재시작
+            sim.tick(300);
+            renderPositions();
+            zoomToFit(0);
+            sim.on('tick', renderPositions).restart();
 
             if (statsEl) statsEl.textContent = nodes.length + '개 노드 · ' + links.length + '개 연결';
 

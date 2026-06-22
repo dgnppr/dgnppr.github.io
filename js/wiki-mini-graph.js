@@ -2,21 +2,12 @@
     'use strict';
 
     var nameEl = document.getElementById('thisName');
-    var tagEl  = document.getElementById('thisTag');
     if (!nameEl || typeof d3 === 'undefined') return;
 
     var currentSlug = nameEl.value;
-    // currentTag is the URL category segment (e.g. "springboot", "jpa")
-    var currentTag  = (tagEl && tagEl.value) || (function () {
-        var parts = window.location.pathname.split('/');
-        return parts[2] || '';
-    })();
-    if (!currentSlug || !currentTag) return;
+    if (!currentSlug) return;
 
     var container = document.getElementById('wiki-mini-graph');
-    var canvas    = document.getElementById('wiki-mini-graph-canvas');
-    var toggle    = document.getElementById('wiki-mini-graph-toggle');
-    var chevron   = document.getElementById('wiki-mini-graph-chevron');
     if (!container) return;
 
     // ── Theme ────────────────────────────────────────────────────
@@ -45,14 +36,19 @@
     ].join(';');
     document.body.appendChild(tip);
 
-    function showTip(e, d, summaries) {
+    function showTip(e, d, summaries, scoreBySlug) {
         var cleanTitle = d.title.replace(/^[""""]|[""""]$/g, '');
+        var score = !d.isCurrent ? scoreBySlug[d.slug] : undefined;
+        var scoreHtml = score !== undefined
+            ? '<div style="font-size:0.72rem;color:var(--color-text-secondary);margin-top:2px">유사도 <b>' + score.toFixed(3) + '</b></div>'
+            : '';
         var sum = (summaries[d.slug] || summaries[d.id] || '').trim();
         var sumHtml = sum
             ? '<div style="font-size:0.73rem;color:var(--color-text-secondary);margin-top:4px;line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical">' + sum + '</div>'
             : '';
         tip.innerHTML =
             '<div style="font-size:0.82rem;font-weight:600;color:var(--color-text-heading)">' + cleanTitle + '</div>' +
+            scoreHtml +
             sumHtml;
         positionTip(e);
         tip.style.opacity = '1';
@@ -67,88 +63,86 @@
 
     // ── Load data ────────────────────────────────────────────────
     Promise.all([
-        fetch('/data/search-index.json').then(function (r) { return r.json(); }),
+        fetch('/data/related.json').then(function (r) { return r.json(); }),
         fetch('/data/summaries.json').then(function (r) { return r.json(); }).catch(function () { return {}; }),
     ]).then(function (results) {
-        var searchIndex = results[0];
-        var summaries   = results[1];
+        var related   = results[0];
+        var summaries = results[1];
 
-        function isWikiPage(p) {
-            if (p.type === 'tag') return false;
-            if (!/^\/wiki\//.test(p.url)) return false;
-            // Exclude category hub pages (/wiki/{one-segment}) unless it IS the current page
-            if (/^\/wiki\/[^\/]+\/?$/.test(p.url) && toSlug(p.url) !== currentSlug) return false;
-            return true;
-        }
-        function toSlug(url) {
-            return url.replace(/^\/(wiki|posts|blog)\//, '').replace(/\/$/, '');
-        }
+        var relatedEntries = related[currentSlug] || [];
+        if (relatedEntries.length === 0) { hideGraph(); return; }
 
-        var selfEntry = searchIndex.find(function (p) { return toSlug(p.url) === currentSlug; });
-        var selfTags  = selfEntry ? (selfEntry.tags || []) : [];
-
-        // ── Level 1: same URL category ───────────────────────────
-        var catNodes = searchIndex.filter(function (p) {
-            if (!isWikiPage(p)) return false;
-            var m = p.url.match(/^\/wiki\/([^\/]+)/);
-            return m && m[1] === currentTag;
+        // slug → score (현재 글 기준)
+        var scoreBySlug = {};
+        relatedEntries.forEach(function (r) {
+            if (r.score !== undefined) scoreBySlug[r.slug] = r.score;
+        });
+        // related 노드끼리의 cross-score
+        relatedEntries.forEach(function (r) {
+            (related[r.slug] || []).forEach(function (rr) {
+                if (rr.score !== undefined) {
+                    var key = [r.slug, rr.slug].sort().join('|||');
+                    if (!scoreBySlug[key]) scoreBySlug[key] = rr.score;
+                }
+            });
         });
 
-        // ── Level 2: shared tags across wiki ─────────────────────
-        if (catNodes.length < 2 && selfTags.length > 0) {
-            catNodes = searchIndex.filter(function (p) {
-                if (!isWikiPage(p)) return false;
-                var slug = toSlug(p.url);
-                if (slug === currentSlug) return true;
-                return (p.tags || []).some(function (t) { return selfTags.indexOf(t) !== -1; });
-            }).slice(0, 30);
-        }
+        // ── 현재 페이지 제목 ──────────────────────────────────────
+        var selfTitle = (function () {
+            var h1 = document.querySelector('h1');
+            if (h1) return h1.textContent.trim();
+            return document.title.split(' - ')[0].trim() || currentSlug;
+        })();
+        var selfUrl = window.location.pathname;
 
-        // ── Level 3: any wiki pages (last resort) ────────────────
-        if (catNodes.length < 2) {
-            catNodes = searchIndex.filter(function (p) {
-                return isWikiPage(p) && !/^\/wiki\/[^\/]+\/?$/.test(p.url);
-            }).slice(0, 20);
-            // always include self
-            if (selfEntry && !catNodes.some(function (p) { return toSlug(p.url) === currentSlug; })) {
-                catNodes.unshift(selfEntry);
-            }
-        }
-
-        if (catNodes.length < 2) { hideGraph(); return; }
-
-        // ── Build node map ────────────────────────────────────────
+        // ── 노드 구성: self + related ─────────────────────────────
         var nodeMap = {};
-        var nodes = catNodes.map(function (p) {
-            var slug = toSlug(p.url);
-            var n = {
-                id: slug, slug: slug, title: p.title, url: p.url,
-                isCurrent: slug === currentSlug,
-                degree: 0,
-                tags: Array.isArray(p.tags) ? p.tags : [],
-            };
-            nodeMap[slug] = n;
-            return n;
+        var nodes = [];
+
+        var selfNode = { id: currentSlug, slug: currentSlug, title: selfTitle, url: selfUrl, isCurrent: true, degree: 0 };
+        nodeMap[currentSlug] = selfNode;
+        nodes.push(selfNode);
+
+        relatedEntries.forEach(function (r) {
+            var n = { id: r.slug, slug: r.slug, title: r.title, url: r.url, isCurrent: false, degree: 0 };
+            nodeMap[r.slug] = n;
+            nodes.push(n);
         });
 
-        // ── Links: shared tags ────────────────────────────────────
+        // ── 링크 구성 ─────────────────────────────────────────────
+        // self ↔ 각 related 노드
+        // related 노드끼리도 related.json에서 교차 확인
         var seen = new Set(), links = [], adj = {};
-        for (var i = 0; i < nodes.length; i++) {
-            for (var j = i + 1; j < nodes.length; j++) {
-                var a = nodes[i], b = nodes[j];
-                var shared = a.tags.some(function (t) { return b.tags.indexOf(t) !== -1; });
-                if (!shared) continue;
-                var key = [a.id, b.id].sort().join('|||');
-                if (seen.has(key)) continue;
-                seen.add(key);
-                links.push({ source: a.id, target: b.id });
-                a.degree++; b.degree++;
-                if (!adj[a.id]) adj[a.id] = new Set();
-                if (!adj[b.id]) adj[b.id] = new Set();
-                adj[a.id].add(b.id);
-                adj[b.id].add(a.id);
-            }
+
+        function addLink(aSlug, bSlug, score) {
+            var key = [aSlug, bSlug].sort().join('|||');
+            if (seen.has(key)) return;
+            if (!nodeMap[aSlug] || !nodeMap[bSlug]) return;
+            seen.add(key);
+            links.push({ source: aSlug, target: bSlug, score: score });
+            nodeMap[aSlug].degree++;
+            nodeMap[bSlug].degree++;
+            if (!adj[aSlug]) adj[aSlug] = new Set();
+            if (!adj[bSlug]) adj[bSlug] = new Set();
+            adj[aSlug].add(bSlug);
+            adj[bSlug].add(aSlug);
         }
+
+        // self → related
+        relatedEntries.forEach(function (r) { addLink(currentSlug, r.slug, scoreBySlug[r.slug]); });
+
+        // related 노드 간 교차 연결
+        relatedEntries.forEach(function (r) {
+            var rRelated = related[r.slug] || [];
+            rRelated.forEach(function (rr) {
+                if (nodeMap[rr.slug]) {
+                    var crossKey = [r.slug, rr.slug].sort().join('|||');
+                    addLink(r.slug, rr.slug, scoreBySlug[crossKey]);
+                }
+            });
+        });
+
+        if (nodes.length < 2) { hideGraph(); return; }
 
         // ── SVG setup ────────────────────────────────────────────
         var W = container.clientWidth || 600;
@@ -183,11 +177,27 @@
             return Math.max(5, Math.min(n.isCurrent ? 15 : 12, base));
         }
 
+        // ── Wave float animation ─────────────────────────────────
+        var WAVE_AMP    = 2.5;
+        var WAVE_PERIOD = 4000;
+        var _waveNow    = 0;
+        nodes.forEach(function (n, i) {
+            n._wavePhaseX = (i / nodes.length) * Math.PI * 2;
+            n._wavePhaseY = (i / nodes.length) * Math.PI * 2 + Math.PI * 0.5;
+        });
+        function waveOff(n) {
+            if (n.isCurrent) return { x: 0, y: 0 };
+            var t2 = _waveNow / WAVE_PERIOD * 2 * Math.PI;
+            return {
+                x: Math.sin(t2 + n._wavePhaseX) * WAVE_AMP * 0.5,
+                y: Math.sin(t2 + n._wavePhaseY) * WAVE_AMP,
+            };
+        }
+
         // ── Simulation ───────────────────────────────────────────
-        var linkDist = links.length > nodes.length * 2 ? 70 : 100;
         var FLOAT_ALPHA = 0.005;
         var sim = d3.forceSimulation(nodes)
-            .force('link',      d3.forceLink(links).id(function (d) { return d.id; }).distance(linkDist).strength(0.25))
+            .force('link',      d3.forceLink(links).id(function (d) { return d.id; }).distance(90).strength(0.3))
             .force('charge',    d3.forceManyBody().strength(-280).distanceMax(400))
             .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) + 14; }))
             .force('centerX',   d3.forceX(W / 2).strength(0.04))
@@ -202,6 +212,20 @@
         var linkEl = g.selectAll('path.mg-link').data(links).join('path')
             .attr('class', 'mg-link').attr('fill', 'none')
             .attr('stroke', th().link).attr('stroke-width', 0.9);
+
+        var linkScoreEl = g.selectAll('text.mg-link-score').data(links).join('text')
+            .attr('class', 'mg-link-score')
+            .text(function (d) { return d.score !== undefined ? d.score.toFixed(3) : ''; })
+            .attr('font-size', '8px')
+            .attr('font-family', 'system-ui,-apple-system,sans-serif')
+            .attr('text-anchor', 'middle')
+            .attr('dominant-baseline', 'middle')
+            .attr('fill', th().label)
+            .attr('stroke', isDark() ? '#0d1117' : '#f8fafc')
+            .attr('stroke-width', 2.5)
+            .style('paint-order', 'stroke fill')
+            .attr('opacity', 0)
+            .style('pointer-events', 'none').style('user-select', 'none');
 
         function lp(d) {
             var sx = d.source.x || 0, sy = d.source.y || 0;
@@ -254,7 +278,10 @@
                 d.fx = d.x; d.fy = d.y;
             })
             .on('drag',  function (e, d) { d.fx = e.x; d.fy = e.y; })
-            .on('end',   function (e, d) { if (!e.active) sim.alphaTarget(FLOAT_ALPHA); })
+            .on('end',   function (e, d) {
+                if (!e.active) sim.alphaTarget(FLOAT_ALPHA);
+                if (!d.isCurrent) { d.fx = null; d.fy = null; }
+            })
         );
 
         // ── Hover & click ────────────────────────────────────────
@@ -269,29 +296,34 @@
             });
             linkEl
                 .attr('opacity', function (l) {
-                    var s = l.source.slug || l.source, t = l.target.slug || l.target;
-                    return (s === d.slug || t === d.slug) ? 1 : 0.05;
+                    var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
+                    return (s === d.slug || tgt === d.slug) ? 1 : 0.05;
                 })
                 .attr('stroke', function (l) {
-                    var s = l.source.slug || l.source, t = l.target.slug || l.target;
-                    return (s === d.slug || t === d.slug) ? COLOR_CURRENT : th().link;
+                    var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
+                    return (s === d.slug || tgt === d.slug) ? COLOR_CURRENT : th().link;
                 })
                 .attr('stroke-width', function (l) {
-                    var s = l.source.slug || l.source, t = l.target.slug || l.target;
-                    return (s === d.slug || t === d.slug) ? 1.8 : 0.9;
+                    var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
+                    return (s === d.slug || tgt === d.slug) ? 1.8 : 0.9;
                 });
+            linkScoreEl
+                .attr('opacity', function (l) {
+                    var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
+                    return (s === d.slug || tgt === d.slug) ? 1 : 0;
+                })
+                .attr('fill', COLOR_CURRENT);
         }
 
         function resetHighlight() {
             nodeEl.attr('opacity', function (d) { return d.isCurrent ? 1 : 0.8; });
             haloEl.attr('opacity', function (d) { return d.isCurrent ? 0.25 : 0.08; });
             linkEl.attr('stroke', th().link).attr('stroke-width', 0.9).attr('opacity', 1);
+            linkScoreEl.attr('opacity', 0);
         }
 
         nodeEl
-            .on('mouseenter', function (e, d) {
-                highlightNode(d);
-            })
+            .on('mouseenter', function (e, d) { highlightNode(d); })
             .on('mouseleave', function (e, d) {
                 if (activeSlug !== d.slug) resetHighlight();
                 else highlightNode(d);
@@ -299,35 +331,55 @@
             .on('click', function (e, d) {
                 e.stopPropagation();
                 if (activeSlug === d.slug) {
-                    // 같은 노드 다시 클릭 → 이동 (현재 노드면 닫기만)
                     hideTip();
                     activeSlug = null;
                     resetHighlight();
                     if (!d.isCurrent) window.location.href = d.url;
                 } else {
                     activeSlug = d.slug;
-                    showTip(e, d, summaries);
+                    showTip(e, d, summaries, scoreBySlug);
                     highlightNode(d);
                 }
             });
 
-        // 그래프 바깥 클릭 시 툴팁 닫기
         document.addEventListener('click', function () {
-            if (activeSlug) {
-                hideTip();
-                activeSlug = null;
-                resetHighlight();
-            }
+            if (activeSlug) { hideTip(); activeSlug = null; resetHighlight(); }
         });
 
         // ── Tick ─────────────────────────────────────────────────
+        function mgLinkMid(d) {
+            var so = waveOff(d.source), to2 = waveOff(d.target);
+            var sx = (d.source.x || 0) + so.x, sy = (d.source.y || 0) + so.y;
+            var ex = (d.target.x || 0) + to2.x, ey = (d.target.y || 0) + to2.y;
+            var mx = (sx + ex) / 2, my = (sy + ey) / 2;
+            var dx = ex - sx, dy = ey - sy, len = Math.sqrt(dx*dx + dy*dy) || 1;
+            var c = Math.min(len * 0.18, 16);
+            return { x: mx - dy / len * c * 0.5, y: my + dx / len * c * 0.5 };
+        }
+
         sim.on('tick', function () {
-            linkEl.attr('d', lp);
-            haloEl.attr('cx', function (d) { return d.x; }).attr('cy', function (d) { return d.y; });
-            nodeEl.attr('cx', function (d) { return d.x; }).attr('cy', function (d) { return d.y; });
+            _waveNow = performance.now();
+            linkEl.attr('d', function (d) {
+                var so = waveOff(d.source), to2 = waveOff(d.target);
+                var sx = (d.source.x || 0) + so.x, sy = (d.source.y || 0) + so.y;
+                var tx = (d.target.x || 0) + to2.x, ty = (d.target.y || 0) + to2.y;
+                var mx = (sx + tx) / 2, my = (sy + ty) / 2;
+                var dx = tx - sx, dy = ty - sy, len = Math.sqrt(dx*dx + dy*dy) || 1;
+                var c = Math.min(len * 0.18, 16);
+                return 'M' + sx.toFixed(1) + ',' + sy.toFixed(1) +
+                       ' Q' + (mx - dy/len*c).toFixed(1) + ',' + (my + dx/len*c).toFixed(1) +
+                       ' ' + tx.toFixed(1) + ',' + ty.toFixed(1);
+            });
+            linkScoreEl
+                .attr('x', function (d) { return mgLinkMid(d).x; })
+                .attr('y', function (d) { return mgLinkMid(d).y; });
+            haloEl.attr('cx', function (d) { var o = waveOff(d); return d.x + o.x; })
+                  .attr('cy', function (d) { var o = waveOff(d); return d.y + o.y; });
+            nodeEl.attr('cx', function (d) { var o = waveOff(d); return d.x + o.x; })
+                  .attr('cy', function (d) { var o = waveOff(d); return d.y + o.y; });
             labelEl
-                .attr('x', function (d) { return d.x + nodeR(d) + 3; })
-                .attr('y', function (d) { return d.y; });
+                .attr('x', function (d) { var o = waveOff(d); return d.x + o.x + nodeR(d) + 3; })
+                .attr('y', function (d) { var o = waveOff(d); return d.y + o.y; });
         });
 
         // ── Theme sync ───────────────────────────────────────────

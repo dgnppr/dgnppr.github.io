@@ -34,6 +34,8 @@ help:
 	@echo "  make diagrams-force   - 모든 다이어그램 강제 재생성"
 	@echo "  make summaries        - AI 요약 생성 (캐시 있으면 스킵)"
 	@echo "  make summaries-force  - 모든 요약 강제 재생성"
+	@echo "  make embeddings       - 임베딩 기반 연관 포스트 생성 (캐시 있으면 스킵)"
+	@echo "  make embeddings-force - 모든 임베딩 강제 재계산"
 
 # ----------------------------------------
 # 의존성 설치
@@ -82,6 +84,16 @@ summaries:
 
 summaries-force:
 	@set -a && . ./.env && set +a && node scripts/generate-summaries.js --force
+
+# ----------------------------------------
+# 임베딩 기반 연관 포스트 생성
+# ----------------------------------------
+.PHONY: embeddings embeddings-force
+embeddings:
+	@set -a && . ./.env && set +a && node scripts/generate-embeddings.js
+
+embeddings-force:
+	@set -a && . ./.env && set +a && node scripts/generate-embeddings.js --force
 
 # ----------------------------------------
 # 포그라운드 실행 (증분 빌드)

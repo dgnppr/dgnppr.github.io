@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /**
- * AI 다이어그램 생성기 (Mermaid)
+ * AI 다이어그램 생성기 (JSON DAG)
  *
  * 실행 방법 — Google Gemini Vertex AI (서비스 계정):
  *   GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json \
@@ -9,8 +9,7 @@
  *   node scripts/generate-diagrams.js
  *
  * - 이미 생성된 다이어그램은 건너뜀 (캐시)
- * - 마크다운 내용 기반 Mermaid 시각화 자동 생성
- * - 포스트에 <!-- diagram --> 섹션으로 삽입
+ * - 마크다운 내용 기반 단방향 그래프(DAG) JSON 자동 생성
  * - --force 플래그로 전체 재생성
  */
 'use strict';
@@ -44,73 +43,107 @@ if (!fs.existsSync(DIAGRAM_DIR)) {
 function buildPrompt(title, body) {
     return [
         '# 역할',
-        '기술 블로그 포스트의 핵심 서사를 Mermaid 다이어그램 하나로 압축하는 AI.',
-        '독자가 다이어그램만 보고도 "이 글의 핵심이 뭔지" 바로 알 수 있어야 한다.',
+        '기술 블로그 포스트의 핵심 서사를 방향 그래프로 압축하는 AI.',
+        '독자가 그래프만 보고도 "이 글의 핵심 관계가 뭔지" 바로 알 수 있어야 한다.',
         '',
         '# 출력 형식',
-        'Mermaid 코드만 반환. 마크다운 펜스(```), 제목, 설명, JSON 일절 금지.',
+        '아래 JSON 스키마만 반환. 마크다운 펜스(```), 제목, 설명, 주석 일절 금지.',
         '',
-        '# 글 유형별 최적 형식',
+        '{',
+        '  "nodes": [',
+        '    { "id": "n1", "label": "레이블", "type": "root|step|decision|end" }',
+        '  ],',
+        '  "edges": [',
+        '    { "from": "n1", "to": "n2" },',
+        '    { "from": "n2", "to": "n3", "bidirectional": true, "label": "선택적 레이블" }',
+        '  ]',
+        '}',
         '',
-        '## 문제 해결형 (트러블슈팅·적용기·삽질기)',
-        '→ flowchart TD: 문제 발생 → 원인 분석 → 해결 과정 → 결과',
-        '→ stateDiagram-v2: 시스템 상태 변화가 핵심일 때',
+        '# 노드 타입',
+        '- root: 시작점 또는 핵심 주제 (1개 권장)',
+        '- step: 일반 과정·항목 (기본값)',
+        '- decision: 분기점·선택 (조건이 있을 때)',
+        '- end: 최종 결론·결과',
         '',
-        '## 개념 설명형 (원리·동작 방식·비교)',
-        '→ mindmap: 개념 간 관계·계층 구조 표현',
-        '→ flowchart LR: 데이터·요청 흐름 표현',
+        '# 엣지 타입 — 핵심 규칙',
+        '기술 블로그의 개념들은 대부분 서로 영향을 주고받는다.',
+        '아래 패턴이 글에 등장하면 반드시 bidirectional:true를 사용하라.',
         '',
-        '## 회고·에세이형 (경험·생각 정리)',
-        '→ mindmap: 핵심 인사이트와 관련 개념 연결',
-        '→ timeline: 시간 순 경험 변화가 핵심일 때',
+        '## 반드시 양방향으로 표현해야 하는 패턴',
+        '1. 트레이드오프: "A를 얻으면 B를 잃는다" → A ↔ B',
+        '   예) 성능 ↔ 일관성, 캐시 적중률 ↔ 메모리 사용, 단순함 ↔ 유연성',
+        '2. 상호 의존: "A는 B를 필요로 하고 B도 A를 필요로 한다"',
+        '   예) 프로듀서 ↔ 컨슈머, 클라이언트 ↔ 서버, Lock ↔ 트랜잭션',
+        '3. 피드백 루프: "A가 B를 유발하고 B가 다시 A에 영향을 준다"',
+        '   예) 트래픽 증가 ↔ 레이턴시 증가, 장애 ↔ 재시도 폭증',
+        '4. 비교·대안: "A 대신 B, B 대신 A를 선택할 수 있다"',
+        '   예) 낙관적 잠금 ↔ 비관적 잠금, 동기 ↔ 비동기',
         '',
-        '## 시스템 설계형 (아키텍처·설계 결정)',
-        '→ flowchart TD: 컴포넌트와 데이터 흐름',
-        '→ sequenceDiagram: 서비스 간 상호작용이 핵심일 때',
+        '## 단방향만 쓰는 경우',
+        '- 시간 순서가 명확한 단계 (A 이후에만 B 가능)',
+        '- 원인 → 결과 (역방향 흐름이 없을 때)',
         '',
         '# 규칙',
-        '- 노드/항목 레이블: 20자 이내, 핵심 단어만',
-        '- 한글·영문 혼용 허용 (기술 용어는 영문)',
-        '- 노드 수: 6~12개 (mindmap은 루트 포함 12개 이내)',
-        '- 인과 관계나 흐름이 있으면 화살표로 명시',
-        '- 다이어그램이 글의 핵심을 담기 어려우면 빈 줄("") 반환',
+        '- 노드 수: 5~9개',
+        '- label: 14자 이내, 핵심 단어만',
+        '- 양방향 엣지 1~3개를 적극 활용하여 관계의 복잡성을 표현할 것',
+        '- 글의 핵심 흐름을 담기 어려우면 빈 JSON {"nodes":[],"edges":[]} 반환',
         '',
-        '# Few-shot 예시',
+        '# 예시 1 — 문제 해결형',
+        '{',
+        '  "nodes": [',
+        '    {"id":"n1","label":"API 타임아웃","type":"root"},',
+        '    {"id":"n2","label":"Kafka 랙 폭증","type":"step"},',
+        '    {"id":"n3","label":"Convoy Effect","type":"step"},',
+        '    {"id":"n4","label":"해결책 선택","type":"decision"},',
+        '    {"id":"n5","label":"Circuit Breaker","type":"step"},',
+        '    {"id":"n6","label":"장애 격리 성공","type":"end"}',
+        '  ],',
+        '  "edges": [',
+        '    {"from":"n1","to":"n2"},',
+        '    {"from":"n2","to":"n3"},',
+        '    {"from":"n3","to":"n4"},',
+        '    {"from":"n4","to":"n5"},',
+        '    {"from":"n5","to":"n6"}',
+        '  ]',
+        '}',
         '',
-        '## 예시 1 — 문제 해결형 (Circuit Breaker 적용기)',
-        '### Output',
-        'flowchart TD',
-        '    A[제휴사 API 타임아웃] --> B[Kafka 컨슈머 랙 폭증]',
-        '    B --> C[Convoy Effect]',
-        '    C --> D[정상 제휴사도 지연]',
-        '    D --> E{해결책}',
-        '    E --> F[Circuit Breaker 도입]',
-        '    F --> G[CLOSED → OPEN → HALF-OPEN]',
-        '    G --> H[장애 격리 성공]',
+        '# 예시 2 — 개념 설명형 (분기)',
+        '{',
+        '  "nodes": [',
+        '    {"id":"n1","label":"Entity 조회","type":"root"},',
+        '    {"id":"n2","label":"스냅샷 생성","type":"step"},',
+        '    {"id":"n3","label":"트랜잭션 종료","type":"step"},',
+        '    {"id":"n4","label":"변경 감지","type":"decision"},',
+        '    {"id":"n5","label":"UPDATE 자동 실행","type":"end"},',
+        '    {"id":"n6","label":"쿼리 생략","type":"end"}',
+        '  ],',
+        '  "edges": [',
+        '    {"from":"n1","to":"n2"},',
+        '    {"from":"n2","to":"n3"},',
+        '    {"from":"n3","to":"n4"},',
+        '    {"from":"n4","to":"n5","label":"변경 있음"},',
+        '    {"from":"n4","to":"n6","label":"변경 없음"}',
+        '  ]',
+        '}',
         '',
-        '## 예시 2 — 개념 설명형 (JPA Dirty Checking)',
-        '### Output',
-        'flowchart LR',
-        '    A[Entity 조회] --> B[1차 캐시 저장]',
-        '    B --> C[스냅샷 생성]',
-        '    C --> D[트랜잭션 종료]',
-        '    D --> E[스냅샷 비교]',
-        '    E -->|변경 감지| F[UPDATE 쿼리 자동 실행]',
-        '    E -->|변경 없음| G[쿼리 생략]',
-        '',
-        '## 예시 3 — 회고형 (연간 회고)',
-        '### Output',
-        'mindmap',
-        '  root((2024 회고))',
-        '    성장',
-        '      시스템 설계 학습',
-        '      팀 협업 경험',
-        '    도전',
-        '      레거시 개선',
-        '      장애 대응',
-        '    다음 목표',
-        '      오픈소스 기여',
-        '      글쓰기 습관',
+        '# 예시 3 — 트레이드오프형 (양방향 엣지 사용)',
+        '{',
+        '  "nodes": [',
+        '    {"id":"n1","label":"싱글 스레드","type":"root"},',
+        '    {"id":"n2","label":"동시성 보장","type":"end"},',
+        '    {"id":"n3","label":"높은 처리량 한계","type":"step"},',
+        '    {"id":"n4","label":"I/O 멀티플렉싱","type":"step"},',
+        '    {"id":"n5","label":"서브 스레드 분리","type":"end"}',
+        '  ],',
+        '  "edges": [',
+        '    {"from":"n1","to":"n2"},',
+        '    {"from":"n1","to":"n3"},',
+        '    {"from":"n2","to":"n3","bidirectional":true},',
+        '    {"from":"n3","to":"n4"},',
+        '    {"from":"n4","to":"n5"}',
+        '  ]',
+        '}',
         '',
         '---',
         '',
@@ -153,7 +186,22 @@ async function generateDiagram(title, body) {
             ' safetyRatings=' + JSON.stringify(candidate && candidate.safetyRatings) + '\n'
         );
     }
-    return (response.text || '').trim();
+    var raw = (response.text || '').trim();
+    // strip markdown fences if LLM added them
+    raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
+    return raw;
+}
+
+function parseAndValidate(raw) {
+    if (!raw) return null;
+    var obj;
+    try { obj = JSON.parse(raw); } catch (e) { return null; }
+    if (!obj || !Array.isArray(obj.nodes) || !Array.isArray(obj.edges)) return null;
+    if (!obj.nodes.length) return null;
+    // basic sanity: every edge references existing node ids
+    var ids = new Set(obj.nodes.map(function (n) { return n.id; }));
+    obj.edges = obj.edges.filter(function (e) { return ids.has(e.from) && ids.has(e.to); });
+    return obj;
 }
 
 // ── 파일 수집 ─────────────────────────────────────────────────
@@ -263,18 +311,19 @@ async function main() {
 
         try {
             process.stdout.write('[생성] ' + slug + '... ');
-            var diagram = await generateDiagram(title || slug, body);
+            var raw = await generateDiagram(title || slug, body);
+            var diagram = parseAndValidate(raw);
 
-            // 빈 다이어그램은 건너뜀
-            if (!diagram || diagram.trim() === '') {
-                process.stdout.write('생략 (다이어그램 불가)\n');
+            if (!diagram) {
+                process.stdout.write('생략 (파싱 실패 또는 빈 그래프)\n');
+                if (raw) process.stderr.write('[raw] ' + raw.substring(0, 200) + '\n');
                 failed++;
                 continue;
             }
 
             results[slug] = diagram;
             generated++;
-            process.stdout.write('완료 (' + diagram.split('\n').length + '줄)\n');
+            process.stdout.write('완료 (' + diagram.nodes.length + '노드, ' + diagram.edges.length + '엣지)\n');
             fs.writeFileSync(DIAGRAMS_FILE, JSON.stringify(results, null, 2));
             await new Promise(function (r) { setTimeout(r, 600); });
         } catch (e) {

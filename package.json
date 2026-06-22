@@ -16,7 +16,9 @@
     "summaries:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-summaries.js --force",
     "diagrams": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-diagrams.js",
     "diagrams:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-diagrams.js --force",
-    "stats": "node scripts/generate-writing-stats.js"
+    "stats": "node scripts/generate-writing-stats.js",
+    "embeddings": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-embeddings.js",
+    "embeddings:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-embeddings.js --force"
   },
   "repository": {
     "type": "git",

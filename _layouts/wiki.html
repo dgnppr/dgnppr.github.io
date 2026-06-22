@@ -178,6 +178,7 @@ layout: document
 
 <script src="/js/wiki-tooltip.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="/js/summary-dag.js"></script>
 <script src="/js/wiki-mini-graph.js"></script>
 <script src="/js/axios.min.js"></script>
 <script async src="/js/toc-highlight.js"></script>
@@ -301,28 +302,25 @@ layout: document
   });
 
   // 요약 다이어그램: diagrams.json에 데이터가 있으면 이전글 위에 렌더링
-  var diagramCode = null;
+  var diagramData = null; // JSON DAG object
 
   function renderSummaryDiagram() {
     var section   = document.getElementById('diagram-section');
     var container = document.getElementById('diagram-content');
     var skeleton  = document.getElementById('diagram-skeleton');
-    if (!section || !container || !diagramCode) return;
+    if (!section || !container || !diagramData) return;
 
-    container.innerHTML = '';
-    var div = document.createElement('div');
-    div.className = 'mermaid-diagram';
-    div.textContent = diagramCode;
-    container.appendChild(div);
-
-    mermaid.initialize(Object.assign({ startOnLoad: false, securityLevel: 'loose' }, mermaidTheme()));
-    mermaid.run({ nodes: [div] })
-      .then(function() {
-        if (skeleton) skeleton.style.display = 'none';
+    if (typeof SummaryDAG !== 'undefined') {
+      var ok = SummaryDAG.render(container, diagramData);
+      if (skeleton) skeleton.style.display = 'none';
+      if (ok) {
         container.classList.add('diagram__content--visible');
-        attachDiagramZoom(div);
-      })
-      .catch(function() { if (skeleton) skeleton.style.display = 'none'; });
+        attachDiagramZoom(container);
+      }
+      return;
+    }
+
+    if (skeleton) skeleton.style.display = 'none';
   }
 
   document.addEventListener('DOMContentLoaded', function() {
@@ -337,7 +335,10 @@ layout: document
       .then(function(r) { return r.ok ? r.json() : null; })
       .then(function(data) {
         if (!data || !data[slug]) return;
-        diagramCode = data[slug];
+        var entry = data[slug];
+        // 구 포맷(문자열)은 무시, 새 JSON 스키마만 처리
+        if (typeof entry !== 'object' || !entry.nodes) return;
+        diagramData = entry;
         section.style.display = '';
         renderSummaryDiagram();
       })
@@ -346,7 +347,7 @@ layout: document
     // 다크모드 전환 시 재렌더링
     var dmObserver = new MutationObserver(function(mutations) {
       mutations.forEach(function(m) {
-        if (m.attributeName === 'class' && diagramCode) {
+        if (m.attributeName === 'class' && diagramData) {
           var container = document.getElementById('diagram-content');
           if (container) container.classList.remove('diagram__content--visible');
           setTimeout(renderSummaryDiagram, 50);
@@ -360,6 +361,9 @@ layout: document
     var svg = div.querySelector('svg');
     if (!svg) return;
     div.style.cursor = 'zoom-in';
+
+    var existing = document.getElementById('diagram-zoom-overlay');
+    if (existing) existing.remove();
 
     var overlay = document.createElement('div');
     overlay.id = 'diagram-zoom-overlay';

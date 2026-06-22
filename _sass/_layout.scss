@@ -608,7 +608,7 @@ html.dark-mode .freshness-badge {
         transform: translateX(-50%);
         font-size: 0.67rem;
         color: var(--color-text-tertiary);
-        background: var(--color-surface);
+        background: #f8fafc;
         border: 1px solid var(--color-border-subtle);
         border-radius: 999px;
         padding: 4px 12px;
@@ -617,6 +617,8 @@ html.dark-mode .freshness-badge {
         opacity: 0.75;
         letter-spacing: 0.01em;
         z-index: 10;
+
+        .dark-mode & { background: #0d1117; }
     }
 
     &__panel {
