@@ -346,7 +346,14 @@
                 var tag = e.target.tagName;
                 if (tag === 'circle' || tag === 'text') return;
                 pinnedSlug = null;
-                reset();
+                clearTimeout(resetTimer);
+                activeSlug = null;
+                var th = t();
+                haloEl.attr('opacity', 0.08).attr('r', function (d) { return nodeR(d) * 2; });
+                nodeEl.attr('opacity', 1).attr('r', nodeR).attr('filter', 'url(#' + glowId + ')');
+                linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 1);
+                labelEl.attr('opacity', LABEL_NORMAL).attr('fill', th.label).attr('font-size', '9px');
+                tooltip.classed('is-visible', false);
                 zoomToFit();
             });
 
