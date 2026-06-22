@@ -172,17 +172,17 @@
     justify-content: center;
     width: 32px;
     height: 32px;
-    background: rgba(0, 0, 0, 0.55);
+    background: var(--color-surface);
     border: none;
     border-radius: 50%;
-    color: #fff;
+    color: var(--color-text-secondary);
     cursor: pointer;
-    transition: background 0.15s;
+    outline: none;
+    transition: background 0.15s, color 0.15s;
 
-    &:hover { background: rgba(0, 0, 0, 0.8); }
-    &:focus-visible {
-        outline: 2px solid #fff;
-        outline-offset: 2px;
+    &:hover {
+        background: var(--color-surface-muted);
+        color: var(--color-text-primary);
     }
 }
 
