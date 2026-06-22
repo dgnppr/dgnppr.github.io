@@ -247,7 +247,7 @@
             })
         );
 
-        // ── Tooltip positioning (follows node on scroll/zoom) ────
+        // ── Tooltip positioning (clamped to container, avoids nodes) ─
         function positionTip(n) {
             var tr   = d3.zoomTransform(svg.node());
             var rect = container.getBoundingClientRect();
@@ -256,8 +256,32 @@
             var cy   = tr.applyY(n.y + wo.y) + rect.top;
             var tipW = tip.node().offsetWidth  || 240;
             var tipH = tip.node().offsetHeight || 80;
-            var vw   = window.innerWidth, vh = window.innerHeight;
-            var gap  = Math.max(12, nodeR(n) * 1.2 * tr.k + 6);
+            var pad  = 6;
+            var gap  = Math.max(10, nodeR(n) * tr.k + 4);
+
+            var minL = rect.left + pad, maxL = rect.right  - tipW - pad;
+            var minT = rect.top  + pad, maxT = rect.bottom - tipH - pad;
+
+            // 모든 노드의 화면 위치 수집
+            var nodePositions = nodes.map(function (nd) {
+                var nwo = waveOff(nd);
+                return {
+                    x: tr.applyX(nd.x + nwo.x) + rect.left,
+                    y: tr.applyY(nd.y + nwo.y) + rect.top,
+                    r: nodeR(nd) * tr.k,
+                };
+            });
+
+            function overlapsAnyNode(l, t) {
+                for (var i = 0; i < nodePositions.length; i++) {
+                    var p = nodePositions[i];
+                    var clx = Math.max(l, Math.min(p.x, l + tipW));
+                    var cly = Math.max(t, Math.min(p.y, t + tipH));
+                    var dx = p.x - clx, dy = p.y - cly;
+                    if (dx * dx + dy * dy < p.r * p.r) return true;
+                }
+                return false;
+            }
 
             var candidates = [
                 { l: cx + gap,        tp: cy - tipH / 2 },
@@ -265,40 +289,44 @@
                 { l: cx - tipW / 2,   tp: cy + gap       },
                 { l: cx - tipW / 2,   tp: cy - tipH - gap },
             ];
-            var c = candidates[0];
-            var l = Math.max(8, Math.min(c.l,  vw - tipW - 8));
-            var t2 = Math.max(8, Math.min(c.tp, vh - tipH - 8));
-            tip.style('left', l + 'px').style('top', t2 + 'px').style('transform', 'none');
+
+            var best = null;
+            for (var i = 0; i < candidates.length; i++) {
+                var cl = Math.max(minL, Math.min(candidates[i].l,  maxL));
+                var ct = Math.max(minT, Math.min(candidates[i].tp, maxT));
+                if (!overlapsAnyNode(cl, ct)) { best = { l: cl, t: ct }; break; }
+                if (!best) best = { l: cl, t: ct };
+            }
+            tip.style('left', best.l + 'px').style('top', best.t + 'px').style('transform', 'none');
         }
 
         // ── Hover & click ────────────────────────────────────────
         var activeSlug = null, pinnedSlug = null;
 
         function highlightNode(d) {
+            var neighbors = adj[d.slug] || new Set();
+            function isHighlighted(slug) { return slug === d.slug || neighbors.has(slug); }
+            function isConnected(l) {
+                var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
+                return isHighlighted(s) && isHighlighted(tgt);
+            }
+            function isDirectLink(l) {
+                var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
+                return s === d.slug || tgt === d.slug;
+            }
+
             nodeEl.attr('opacity', function (n) {
-                return n.slug === d.slug || (adj[d.slug] && adj[d.slug].has(n.slug)) ? 1 : 0.25;
+                return isHighlighted(n.slug) ? 1 : 0.25;
             });
             haloEl.attr('opacity', function (n) {
-                return n.slug === d.slug ? 0.28 : n.isCurrent ? 0.25 : 0.03;
+                return n.slug === d.slug ? 0.28 : neighbors.has(n.slug) ? 0.12 : 0.03;
             });
             linkEl
-                .attr('opacity', function (l) {
-                    var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
-                    return (s === d.slug || tgt === d.slug) ? 1 : 0.05;
-                })
-                .attr('stroke', function (l) {
-                    var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
-                    return (s === d.slug || tgt === d.slug) ? COLOR_CURRENT : th().link;
-                })
-                .attr('stroke-width', function (l) {
-                    var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
-                    return (s === d.slug || tgt === d.slug) ? 1.8 : 0.9;
-                });
+                .attr('opacity', function (l) { return isConnected(l) ? 1 : 0.05; })
+                .attr('stroke', function (l) { return isDirectLink(l) ? COLOR_CURRENT : th().link; })
+                .attr('stroke-width', function (l) { return isDirectLink(l) ? 1.8 : 0.9; });
             linkScoreEl
-                .attr('opacity', function (l) {
-                    var s = l.source.slug || l.source, tgt = l.target.slug || l.target;
-                    return (s === d.slug || tgt === d.slug) ? 1 : 0;
-                })
+                .attr('opacity', function (l) { return isDirectLink(l) ? 1 : 0; })
                 .attr('fill', COLOR_CURRENT);
         }
 

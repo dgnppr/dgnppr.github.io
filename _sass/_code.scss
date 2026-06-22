@@ -38,12 +38,12 @@ pre code {
  * 코드 본문은 항상 다크 유지(A안). 인라인 code는 div.highlight 래퍼가
  * 없으므로 헤더가 부착되지 않아 자동 격리됨.
  */
-$code-header-bg-light:     #EAEAEB;
-$code-header-border-light: #D8D8DA;
-$code-window-border-light: #D0D0D0;
-$code-header-bg-dark:      #323233;
-$code-header-border-dark:  #3F3F46;
-$code-window-border-dark:  #3F3F46;
+$code-header-bg-light:     #E8ECF4;
+$code-header-border-light: #D0D6E8;
+$code-window-border-light: #CDD3E5;
+$code-header-bg-dark:      #0E1117;
+$code-header-border-dark:  #1C2130;
+$code-window-border-dark:  #1C2130;
 
 $traffic-red:   #FF5F57;
 $traffic-amber: #FFBD2E;
@@ -58,18 +58,27 @@ div.highlight {
     border: 1px solid $code-window-border-light;
     margin: 1.2em 0;
 
-    /* Mac 헤더 바 + 좌측 트래픽 라이트 3개 (단일 가상요소 multi radial-gradient) */
+    /* Mac 헤더 바 */
     &::before {
         content: "";
         display: block;
         height: 36px;
-        background:
-            radial-gradient(circle 6px at 22px 18px, $traffic-red   98%, transparent 100%),
-            radial-gradient(circle 6px at 42px 18px, $traffic-amber 98%, transparent 100%),
-            radial-gradient(circle 6px at 62px 18px, $traffic-green 98%, transparent 100%),
-            $code-header-bg-light;
-        background-repeat: no-repeat;
+        background: $code-header-bg-light;
         border-bottom: 1px solid $code-header-border-light;
+    }
+
+    /* 트래픽 라이트: border-radius:50% + box-shadow로 완벽한 원 */
+    &::after {
+        content: "";
+        position: absolute;
+        top: 12px;
+        left: 22px;
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: $traffic-red;
+        box-shadow: 20px 0 0 $traffic-amber, 40px 0 0 $traffic-green;
+        pointer-events: none;
     }
 
     /* 래퍼로 외곽선/라운드를 옮겼으므로 내부 pre는 정리 */
@@ -110,12 +119,7 @@ html.dark-mode div.highlight {
     border-color: $code-window-border-dark;
 
     &::before {
-        background:
-            radial-gradient(circle 6px at 22px 18px, $traffic-red   98%, transparent 100%),
-            radial-gradient(circle 6px at 42px 18px, $traffic-amber 98%, transparent 100%),
-            radial-gradient(circle 6px at 62px 18px, $traffic-green 98%, transparent 100%),
-            $code-header-bg-dark;
-        background-repeat: no-repeat;
+        background: $code-header-bg-dark;
         border-bottom-color: $code-header-border-dark;
     }
 }
@@ -126,28 +130,19 @@ html.dark-mode div.highlight {
         border-radius: 8px;
         font-size: 0.82em;
 
-        &::before {
-            height: 30px;
-            background:
-                radial-gradient(circle 5px at 18px 15px, $traffic-red   98%, transparent 100%),
-                radial-gradient(circle 5px at 36px 15px, $traffic-amber 98%, transparent 100%),
-                radial-gradient(circle 5px at 54px 15px, $traffic-green 98%, transparent 100%),
-                $code-header-bg-light;
-            background-repeat: no-repeat;
+        &::before { height: 30px; }
+
+        &::after {
+            top: 10px;
+            left: 18px;
+            width: 10px;
+            height: 10px;
+            box-shadow: 18px 0 0 $traffic-amber, 36px 0 0 $traffic-green;
         }
 
         pre { padding: 12px; }
 
         .code-copy-btn { height: 30px; }
-    }
-
-    html.dark-mode div.highlight::before {
-        background:
-            radial-gradient(circle 5px at 18px 15px, $traffic-red   98%, transparent 100%),
-            radial-gradient(circle 5px at 36px 15px, $traffic-amber 98%, transparent 100%),
-            radial-gradient(circle 5px at 54px 15px, $traffic-green 98%, transparent 100%),
-            $code-header-bg-dark;
-        background-repeat: no-repeat;
     }
 }
 
