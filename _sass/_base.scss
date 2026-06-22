@@ -242,8 +242,8 @@ sup[role=doc-noteref] {
 
 .top-widget__top {
     position: relative;
-    width: 44px;
-    height: 44px;
+    width: 40px;
+    height: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -271,26 +271,29 @@ sup[role=doc-noteref] {
 }
 .top-widget__top:hover .top-widget__arrow { color: var(--color-interactive); }
 
-/* 공유 패널: 공유 버튼 좌측에 수평 전개 */
+/* 공유 패널: 공유 버튼 좌측에 수평 전개 — max-width 푸시 방식 */
 .top-widget__share-panel {
     display: flex;
     flex-direction: row;
-    gap: 6px;
+    gap: 8px;
+    overflow: hidden;
+    max-width: 0;
     opacity: 0;
     pointer-events: none;
-    transform: translateX(10px);
-    transition: opacity 0.18s ease, transform 0.18s ease;
+    margin-left: -8px; /* 닫혔을 때 왼쪽 gap 상쇄 → 세 버튼 간격 균등 */
+    transition: opacity 0.2s ease, max-width 0.22s ease, margin-left 0.22s ease;
 
     &.is-open {
+        max-width: 220px;
         opacity: 1;
         pointer-events: auto;
-        transform: translateX(0);
+        margin-left: 0;
     }
 }
 
 .top-widget__share-item {
-    width: 36px;
-    height: 36px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     background: var(--color-surface);
     border: 1px solid var(--color-border-subtle);
@@ -347,13 +350,44 @@ html.dark-mode {
         right: #{"max(14px, env(safe-area-inset-right))"};
         bottom: #{"max(14px, env(safe-area-inset-bottom))"};
     }
-    .top-widget__top { width: 40px; height: 40px; }
-    .top-widget__action { width: 36px; height: 36px; }
+    .top-widget__top, .top-widget__action, .top-widget__share-item { width: 36px; height: 36px; }
+}
+
+/* 포커스 리딩 버튼 툴팁 + active 상태 */
+.focus-reading-btn {
+    position: relative;
+
+    &::after {
+        content: attr(title);
+        position: absolute;
+        bottom: calc(100% + 6px);
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        background: var(--color-text-primary);
+        color: var(--color-surface);
+        font-size: 0.7rem;
+        padding: 3px 8px;
+        border-radius: 4px;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.15s ease;
+        z-index: 100;
+    }
+
+    &:hover::after { opacity: 1; }
+
+    &--active {
+        background: var(--color-interactive);
+        color: var(--color-surface);
+        border-color: var(--color-interactive);
+    }
 }
 
 @media (prefers-reduced-motion: reduce) {
     .top-widget__top { transition: none !important; }
     .top-widget__share-panel { transition: none !important; }
+    .focus-reading-btn::after { transition: none !important; }
 }
 
 mark.search-highlight {

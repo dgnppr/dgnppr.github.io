@@ -19,6 +19,10 @@
   overlay.appendChild(container);
   document.body.appendChild(overlay);
 
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    overlay.classList.add('no-motion');
+  }
+
   function open(src, alt) {
     img.src = src;
     img.alt = alt || '';
@@ -31,18 +35,19 @@
     document.body.style.overflow = '';
     img.src = '';
   }
+
   overlay.addEventListener('click', function(e) { if (e.target === overlay) close(); });
   closeBtn.addEventListener('click', close);
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape' && overlay.classList.contains('is-open')) close();
   });
 
-  document.addEventListener('DOMContentLoaded', function() {
-    var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduced) overlay.classList.add('no-motion');
-    document.querySelectorAll('.post-content img').forEach(function(el) {
-      el.style.cursor = 'zoom-in';
-      el.addEventListener('click', function() { open(el.src, el.alt); });
-    });
+  // 이벤트 위임 — DOMContentLoaded 타이밍·<a> 안 이미지 모두 처리
+  document.addEventListener('click', function(e) {
+    var el = e.target;
+    if (!el || el.tagName !== 'IMG') return;
+    if (!el.closest || !el.closest('.post-content')) return;
+    e.preventDefault();
+    open(el.src, el.alt);
   });
 })();
