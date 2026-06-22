@@ -75,7 +75,6 @@ function main() {
     saveMetaDataFiles(pageMap);
     saveDocumentUrlList(pageMap);
     saveSearchIndex(pageMap, tagMap);
-    saveRelatedPosts(pageMap);
     saveSeries(pageMap);
     saveHubData(pageMap);
 }
@@ -346,33 +345,6 @@ function collectData(file) {
     return parsed;
 }
 
-function saveRelatedPosts(pageMap) {
-    if (fs.existsSync('./data/embeddings.json')) {
-        console.log('embeddings.json 존재 — related.json 생성 스킵 (generate-embeddings.js 사용)');
-        return;
-    }
-    var entries = Object.entries(pageMap);
-    var related = {};
-    entries.forEach(function(entry) {
-        var slug = entry[0];
-        var page = entry[1];
-        if (!page.tags || page.tags.length === 0) return;
-        var scored = entries
-            .filter(function(e) { return e[0] !== slug; })
-            .map(function(e) {
-                var s = e[0];
-                var p = e[1];
-                var overlap = (p.tags || []).filter(function(t) { return page.tags.includes(t); }).length;
-                return { slug: s, score: overlap, title: p.title, url: p.url };
-            })
-            .filter(function(r) { return r.score > 0; })
-            .sort(function(a, b) { return b.score - a.score; })
-            .slice(0, 3)
-            .map(function(r) { return { slug: r.slug, title: r.title, url: r.url }; });
-        if (scored.length > 0) related[slug] = scored;
-    });
-    saveToFile('./data/related.json', JSON.stringify(related), PRINT);
-}
 
 function saveSeries(pageMap) {
     var seriesMap = {};
