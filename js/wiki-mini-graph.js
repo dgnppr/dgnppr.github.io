@@ -185,12 +185,15 @@
 
         // ── Simulation ───────────────────────────────────────────
         var linkDist = links.length > nodes.length * 2 ? 70 : 100;
+        var FLOAT_ALPHA = 0.005;
         var sim = d3.forceSimulation(nodes)
             .force('link',      d3.forceLink(links).id(function (d) { return d.id; }).distance(linkDist).strength(0.25))
             .force('charge',    d3.forceManyBody().strength(-280).distanceMax(400))
             .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) + 14; }))
             .force('centerX',   d3.forceX(W / 2).strength(0.04))
-            .force('centerY',   d3.forceY(H / 2).strength(0.05));
+            .force('centerY',   d3.forceY(H / 2).strength(0.05))
+            .alphaDecay(0.015)
+            .alphaTarget(FLOAT_ALPHA);
 
         var cur = nodeMap[currentSlug];
         if (cur) { cur.fx = W / 2; cur.fy = H / 2; }
@@ -251,7 +254,7 @@
                 d.fx = d.x; d.fy = d.y;
             })
             .on('drag',  function (e, d) { d.fx = e.x; d.fy = e.y; })
-            .on('end',   function (e, d) { if (!e.active) sim.alphaTarget(0); })
+            .on('end',   function (e, d) { if (!e.active) sim.alphaTarget(FLOAT_ALPHA); })
         );
 
         // ── Hover & click ────────────────────────────────────────

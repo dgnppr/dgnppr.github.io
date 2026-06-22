@@ -363,7 +363,7 @@
             nodeEl.call(d3.drag()
                 .on('start', function (e, d) { if (!e.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
                 .on('drag',  function (e, d) { d.fx = e.x; d.fy = e.y; })
-                .on('end',   function (e, d) { if (!e.active) sim.alphaTarget(0); })
+                .on('end',   function (e, d) { if (!e.active) sim.alphaTarget(FLOAT_ALPHA); })
             );
 
             sim.on('tick', function () {
