@@ -26,9 +26,8 @@ layout: document
     {% assign _url_parts = page.url | split: '/' %}
     {% assign _wiki_tag = _url_parts[2] %}
     <div class="wiki-mini-graph" id="wiki-mini-graph-wrap">
-        <div class="wiki-mini-graph__header" id="wiki-mini-graph-toggle">
+        <div class="wiki-mini-graph__header">
             <span class="wiki-mini-graph__title">미니 지식 그래프</span>
-            <span class="wiki-mini-graph__chevron" id="wiki-mini-graph-chevron">▾</span>
         </div>
         <div class="wiki-mini-graph__canvas" id="wiki-mini-graph-canvas">
             <div id="wiki-mini-graph"></div>

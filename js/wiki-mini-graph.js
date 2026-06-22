@@ -19,14 +19,6 @@
     var chevron   = document.getElementById('wiki-mini-graph-chevron');
     if (!container) return;
 
-    // ── Collapse toggle ──────────────────────────────────────────
-    if (toggle) {
-        toggle.addEventListener('click', function () {
-            var collapsed = canvas.classList.toggle('is-collapsed');
-            if (chevron) chevron.classList.toggle('is-collapsed', collapsed);
-        });
-    }
-
     // ── Theme ────────────────────────────────────────────────────
     function isDark() { return document.documentElement.classList.contains('dark-mode'); }
     var THEME = {
@@ -160,7 +152,7 @@
 
         // ── SVG setup ────────────────────────────────────────────
         var W = container.clientWidth || 600;
-        var H = 180;
+        var H = 240;
         container.style.width = '100%';
         container.style.height = H + 'px';
 
@@ -187,18 +179,18 @@
         svg.call(zoom).on('dblclick.zoom', null);
 
         function nodeR(n) {
-            var base = n.isCurrent ? 9 : 4 + Math.sqrt(n.degree) * 1.6;
-            return Math.max(3.5, Math.min(n.isCurrent ? 12 : 9, base));
+            var base = n.isCurrent ? 12 : 6 + Math.sqrt(n.degree) * 2;
+            return Math.max(5, Math.min(n.isCurrent ? 15 : 12, base));
         }
 
         // ── Simulation ───────────────────────────────────────────
-        var linkDist = links.length > nodes.length * 2 ? 40 : 55;
+        var linkDist = links.length > nodes.length * 2 ? 70 : 100;
         var sim = d3.forceSimulation(nodes)
-            .force('link',      d3.forceLink(links).id(function (d) { return d.id; }).distance(linkDist).strength(0.35))
-            .force('charge',    d3.forceManyBody().strength(-100).distanceMax(200))
-            .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) + 5; }))
-            .force('centerX',   d3.forceX(W / 2).strength(0.06))
-            .force('centerY',   d3.forceY(H / 2).strength(0.08));
+            .force('link',      d3.forceLink(links).id(function (d) { return d.id; }).distance(linkDist).strength(0.25))
+            .force('charge',    d3.forceManyBody().strength(-280).distanceMax(400))
+            .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) + 14; }))
+            .force('centerX',   d3.forceX(W / 2).strength(0.04))
+            .force('centerY',   d3.forceY(H / 2).strength(0.05));
 
         var cur = nodeMap[currentSlug];
         if (cur) { cur.fx = W / 2; cur.fy = H / 2; }
@@ -244,7 +236,7 @@
                 var tx = d.title.replace(/^[""""]|[""""]$/g, '');
                 return tx.length > 12 ? tx.slice(0, 12) + '…' : tx;
             })
-            .attr('font-size', function (d) { return d.isCurrent ? '9px' : '8px'; })
+            .attr('font-size', function (d) { return d.isCurrent ? '11px' : '10px'; })
             .attr('font-weight', function (d) { return d.isCurrent ? '700' : '400'; })
             .attr('font-family', 'system-ui,-apple-system,sans-serif')
             .attr('fill', function (d) { return d.isCurrent ? th().labelActive : th().label; })
@@ -263,39 +255,67 @@
         );
 
         // ── Hover & click ────────────────────────────────────────
+        var activeSlug = null;
+
+        function highlightNode(d) {
+            nodeEl.attr('opacity', function (n) {
+                return n.slug === d.slug || (adj[d.slug] && adj[d.slug].has(n.slug)) ? 1 : 0.25;
+            });
+            haloEl.attr('opacity', function (n) {
+                return n.slug === d.slug ? 0.28 : n.isCurrent ? 0.25 : 0.03;
+            });
+            linkEl
+                .attr('opacity', function (l) {
+                    var s = l.source.slug || l.source, t = l.target.slug || l.target;
+                    return (s === d.slug || t === d.slug) ? 1 : 0.05;
+                })
+                .attr('stroke', function (l) {
+                    var s = l.source.slug || l.source, t = l.target.slug || l.target;
+                    return (s === d.slug || t === d.slug) ? COLOR_CURRENT : th().link;
+                })
+                .attr('stroke-width', function (l) {
+                    var s = l.source.slug || l.source, t = l.target.slug || l.target;
+                    return (s === d.slug || t === d.slug) ? 1.8 : 0.9;
+                });
+        }
+
+        function resetHighlight() {
+            nodeEl.attr('opacity', function (d) { return d.isCurrent ? 1 : 0.8; });
+            haloEl.attr('opacity', function (d) { return d.isCurrent ? 0.25 : 0.08; });
+            linkEl.attr('stroke', th().link).attr('stroke-width', 0.9).attr('opacity', 1);
+        }
+
         nodeEl
             .on('mouseenter', function (e, d) {
-                showTip(e, d, summaries);
-                nodeEl.attr('opacity', function (n) {
-                    return n.slug === d.slug || (adj[d.slug] && adj[d.slug].has(n.slug)) ? 1 : 0.25;
-                });
-                haloEl.attr('opacity', function (n) {
-                    return n.slug === d.slug ? 0.28 : n.isCurrent ? 0.25 : 0.03;
-                });
-                linkEl
-                    .attr('opacity', function (l) {
-                        var s = l.source.slug || l.source, t = l.target.slug || l.target;
-                        return (s === d.slug || t === d.slug) ? 1 : 0.05;
-                    })
-                    .attr('stroke', function (l) {
-                        var s = l.source.slug || l.source, t = l.target.slug || l.target;
-                        return (s === d.slug || t === d.slug) ? COLOR_CURRENT : th().link;
-                    })
-                    .attr('stroke-width', function (l) {
-                        var s = l.source.slug || l.source, t = l.target.slug || l.target;
-                        return (s === d.slug || t === d.slug) ? 1.8 : 0.9;
-                    });
+                highlightNode(d);
             })
-            .on('mousemove', function (e) { positionTip(e); })
-            .on('mouseleave', function () {
-                hideTip();
-                nodeEl.attr('opacity', function (d) { return d.isCurrent ? 1 : 0.8; });
-                haloEl.attr('opacity', function (d) { return d.isCurrent ? 0.25 : 0.08; });
-                linkEl.attr('stroke', th().link).attr('stroke-width', 0.9).attr('opacity', 1);
+            .on('mouseleave', function (e, d) {
+                if (activeSlug !== d.slug) resetHighlight();
+                else highlightNode(d);
             })
             .on('click', function (e, d) {
-                if (!d.isCurrent) window.location.href = d.url;
+                e.stopPropagation();
+                if (activeSlug === d.slug) {
+                    // 같은 노드 다시 클릭 → 이동 (현재 노드면 닫기만)
+                    hideTip();
+                    activeSlug = null;
+                    resetHighlight();
+                    if (!d.isCurrent) window.location.href = d.url;
+                } else {
+                    activeSlug = d.slug;
+                    showTip(e, d, summaries);
+                    highlightNode(d);
+                }
             });
+
+        // 그래프 바깥 클릭 시 툴팁 닫기
+        document.addEventListener('click', function () {
+            if (activeSlug) {
+                hideTip();
+                activeSlug = null;
+                resetHighlight();
+            }
+        });
 
         // ── Tick ─────────────────────────────────────────────────
         sim.on('tick', function () {
