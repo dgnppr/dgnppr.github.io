@@ -1,0 +1,1 @@
+{% assign _wd = include.d | date: "%u" %}{% if include.short %}{% case _wd %}{% when "1" %}Mon{% when "2" %}Tue{% when "3" %}Wed{% when "4" %}Thu{% when "5" %}Fri{% when "6" %}Sat{% when "7" %}Sun{% endcase %}{% else %}{% case _wd %}{% when "1" %}월요일{% when "2" %}화요일{% when "3" %}수요일{% when "4" %}목요일{% when "5" %}금요일{% when "6" %}토요일{% when "7" %}일요일{% endcase %}{% endif %}

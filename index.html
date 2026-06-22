@@ -18,7 +18,7 @@ regenerate: true
                     {% if first_tag and first_tag != '' %}
                     <span class="home-feed-tag">{{ first_tag }}</span>
                     {% endif %}
-                    <time class="home-feed-date">{{ doc.updated | date: "%b %d, %Y" }}</time>
+                    <time class="home-feed-date">{% include weekday.html d=doc.updated short=true %}, {{ doc.updated | date: "%b %d, %Y" }}</time>
                 </span>
             </a>
         </li>

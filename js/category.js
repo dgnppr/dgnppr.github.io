@@ -48,8 +48,11 @@
                     }
 
                     const rawDate = data.updated.replace(/^(\d{4}-\d{2}-\d{2}).*/, '$1');
-                    const updated = new Date(rawDate + 'T00:00:00')
-                        .toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' });
+                    const _d = new Date(rawDate + 'T00:00:00');
+                    const _dow = ['일요일','월요일','화요일','수요일','목요일','금요일','토요일'][_d.getDay()];
+                    const updated = _d.getFullYear() + '.' +
+                        String(_d.getMonth() + 1).padStart(2, '0') + '.' +
+                        String(_d.getDate()).padStart(2, '0') + ' ' + _dow;
                     const count = (data.children && data.children.length > 0) ? data.children.length : 0;
                     const badge = count > 0
                         ? `<span class="wiki-card-badge" aria-label="하위 문서 ${count}개">${count}</span>`

@@ -14,7 +14,7 @@ adsense: false
         <li class="home-feed-item">
             <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
                 <span class="home-feed-title">{{ doc.title }}</span>
-                <time class="home-feed-date">{{ doc.updated | date: "%b %d, %Y" }}</time>
+                <time class="home-feed-date">{% include weekday.html d=doc.updated short=true %}, {{ doc.updated | date: "%b %d, %Y" }}</time>
             </a>
         </li>
         {% endif %}

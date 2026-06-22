@@ -11,8 +11,8 @@ layout: document
             <p class="title-summary">{{ page.summary }}</p>
         {% endif %}
         <div class="history-button">
-            <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
-            <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>
+            <p>Created: {{ page.date | date: '%Y.%m.%d' }} {% include weekday.html d=page.date %}</p>
+            <p>Updated: {{ page.updated | date: '%Y.%m.%d' }} {% include weekday.html d=page.updated %}</p>
         </div>
         {% raw %}
             <div id="parent-list"></div>

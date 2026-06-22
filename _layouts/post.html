@@ -7,7 +7,7 @@ layout: default
             <a href="{{ page.url }}"> {{ page.title }} </a>
         </h1>
         <p class="created-date">
-            {{ page.date | date: "%Y.%m.%d" }}
+            {{ page.date | date: "%Y.%m.%d" }} {% include weekday.html d=page.date %}
         </p>
         {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
         <h2>{{ page.summary }}</h2>
