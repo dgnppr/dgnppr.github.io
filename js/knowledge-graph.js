@@ -374,13 +374,54 @@
                 var tipW = tooltip.node().offsetWidth  || 240;
                 var tipH = tooltip.node().offsetHeight || 80;
                 var vw   = window.innerWidth, vh = window.innerHeight;
-                var left = cx + 16;
-                if (left + tipW > vw - 8) left = cx - tipW - 16;
-                left = Math.max(8, left);
-                var top  = cy - tipH / 2;
-                if (top < 8) top = 8;
-                if (top + tipH > vh - 8) top = vh - tipH - 8;
-                tooltip.style('left', left + 'px').style('top', top + 'px').style('transform', 'none');
+                var nodeScreenR = nodeR(n) * 1.5 * tr.k;
+                var gap  = Math.max(12, nodeScreenR + 6);
+
+                // collect neighbor screen positions to avoid covering them
+                var nbPos = [];
+                (adj[n.slug] || new Set()).forEach(function (slug) {
+                    var nb = nodeMap[slug];
+                    if (!nb) return;
+                    var nwo = waveOff(nb);
+                    nbPos.push({
+                        x: tr.applyX(nb.x + nwo.x) + rect.left,
+                        y: tr.applyY(nb.y + nwo.y) + rect.top,
+                        r: nodeR(nb) * tr.k,
+                    });
+                });
+
+                function overlapsNodes(l, tp) {
+                    for (var i = 0; i < nbPos.length; i++) {
+                        var p = nbPos[i];
+                        var clx = Math.max(l, Math.min(p.x, l + tipW));
+                        var cly = Math.max(tp, Math.min(p.y, tp + tipH));
+                        var dx = p.x - clx, dy = p.y - cly;
+                        if (dx * dx + dy * dy < p.r * p.r) return true;
+                    }
+                    return false;
+                }
+
+                // try right → left → below → above; pick first clear position
+                var candidates = [
+                    { l: cx + gap,        tp: cy - tipH / 2 },
+                    { l: cx - tipW - gap, tp: cy - tipH / 2 },
+                    { l: cx - tipW / 2,   tp: cy + gap       },
+                    { l: cx - tipW / 2,   tp: cy - tipH - gap },
+                ];
+                var best = null;
+                for (var i = 0; i < candidates.length; i++) {
+                    var c = candidates[i];
+                    var cl = Math.max(8, Math.min(c.l,  vw - tipW - 8));
+                    var ct = Math.max(8, Math.min(c.tp, vh - tipH - 8));
+                    if (!overlapsNodes(cl, ct)) { best = { l: cl, t: ct }; break; }
+                }
+                if (!best) {
+                    best = {
+                        l: Math.max(8, Math.min(candidates[0].l,  vw - tipW - 8)),
+                        t: Math.max(8, Math.min(candidates[0].tp, vh - tipH - 8)),
+                    };
+                }
+                tooltip.style('left', best.l + 'px').style('top', best.t + 'px').style('transform', 'none');
             }
 
             function pinNode(d) {
@@ -552,6 +593,14 @@
                 if (!pinnedSlug) return;
                 if (container.contains(e.target)) return;
                 pinnedSlug = null;
+                clearTimeout(resetTimer);
+                activeSlug = null;
+                var th = t();
+                haloEl.attr('opacity', 0.08).attr('r', function (d) { return nodeR(d) * 2; });
+                nodeEl.attr('opacity', 1).attr('r', nodeR).attr('filter', 'url(#' + glowId + ')');
+                linkEl.attr('stroke', th.link).attr('stroke-width', 1).attr('opacity', 1);
+                labelEl.attr('opacity', LABEL_NORMAL).attr('fill', th.label).attr('font-size', '9px');
+                linkLabelEl.attr('opacity', 0);
                 tooltip.classed('is-visible', false);
             });
 
