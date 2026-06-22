@@ -26,8 +26,14 @@ help:
 	@echo "  make restart    - 서버 재시작"
 	@echo "  make status     - 서버 상태 확인"
 	@echo "  make clean      - 빌드 캐시 정리"
+	@echo ""
+	@echo "Data generation:"
+	@echo "  make add-status       - status: complete 추가 (누락된 파일만)"
+	@echo "  make stats            - 글쓰기 통계 생성 (월별, 카테고리, 상태)"
+	@echo "  make diagrams         - AI 다이어그램 생성 (Vertex AI)"
+	@echo "  make diagrams-force   - 모든 다이어그램 강제 재생성"
 	@echo "  make summaries        - AI 요약 생성 (캐시 있으면 스킵)"
-	@echo "  make summaries-force  - AI 요약 강제 재생성 (--force)"
+	@echo "  make summaries-force  - 모든 요약 강제 재생성"
 
 # ----------------------------------------
 # 의존성 설치
@@ -44,7 +50,31 @@ data:
 	node generateData.js
 
 # ----------------------------------------
-# 요약 생성
+# 상태 필드 추가
+# ----------------------------------------
+.PHONY: add-status
+add-status:
+	node scripts/add-status.js
+
+# ----------------------------------------
+# 글쓰기 통계 생성
+# ----------------------------------------
+.PHONY: stats
+stats:
+	node scripts/generate-writing-stats.js
+
+# ----------------------------------------
+# AI 다이어그램 생성 (Vertex AI)
+# ----------------------------------------
+.PHONY: diagrams diagrams-force
+diagrams:
+	@set -a && . ./.env && set +a && node scripts/generate-diagrams.js
+
+diagrams-force:
+	@set -a && . ./.env && set +a && node scripts/generate-diagrams.js --force
+
+# ----------------------------------------
+# AI 요약 생성
 # ----------------------------------------
 .PHONY: summaries summaries-force
 summaries:
