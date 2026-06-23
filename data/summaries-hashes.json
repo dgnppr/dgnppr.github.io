@@ -25,5 +25,6 @@
   "system-design/00_url_shortener_design": "c6317c5ed29a12de1fe4ed15fbbd6a49",
   "system-design/01_web_crawler_design": "bbed6d35d7e923905ff7e919a520d24a",
   "system-design/02_notification_system_design": "517f35dd489e713c00ac1e3453a7a074",
-  "system-design/03_sns_feed_system_design": "9fcbfc08e5d4030c483d9817757dc508"
+  "system-design/03_sns_feed_system_design": "9fcbfc08e5d4030c483d9817757dc508",
+  "data-analysis/00_how_to_design_funnel": "9bee4200b5f2c04c0e49056b8e5c905a"
 }

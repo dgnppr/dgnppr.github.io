@@ -8,12 +8,20 @@
   "size": 1
  },
  {
+  "name": "analytics",
+  "size": 1
+ },
+ {
   "name": "bert",
   "size": 1
  },
  {
   "name": "code-analysis",
   "size": 3
+ },
+ {
+  "name": "data-analysis",
+  "size": 1
  },
  {
   "name": "data-architecture",
@@ -30,6 +38,10 @@
  {
   "name": "essay",
   "size": 5
+ },
+ {
+  "name": "funnel",
+  "size": 1
  },
  {
   "name": "gpt",
