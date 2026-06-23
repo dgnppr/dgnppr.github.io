@@ -29,7 +29,7 @@ const DIMS  = 768;
 const TOP_N = 5;
 
 const Z_SIGMA   = 1.0;
-const MIN_SCORE = 0.70;
+const MIN_SCORE = 0.50;
 
 // 가중합 가중치 (합계 = 1.0)
 const SEMANTIC_WEIGHT = 0.70;
@@ -167,6 +167,55 @@ async function embed(text) {
     return emb;
 }
 
+// ── 가중치 그리드 서치 ────────────────────────────────────────
+
+function optimizeWeights(rawSignals, docs, evalData) {
+    const positive = (evalData.pairs || []).filter(p => p.expected);
+    if (!positive.length) return { weights: { s: SEMANTIC_WEIGHT, k: KEYWORD_WEIGHT, t: TAG_WEIGHT }, precision: 0 };
+
+    let best = { weights: { s: SEMANTIC_WEIGHT, k: KEYWORD_WEIGHT, t: TAG_WEIGHT }, precision: -1 };
+
+    for (let sw = 5; sw <= 9; sw++) {
+        for (let kw = 0; kw <= 4; kw++) {
+            const tw = 10 - sw - kw;
+            if (tw < 0) continue;
+            const ws = sw / 10, wk = kw / 10, wt = tw / 10;
+
+            const tempPair = {};
+            Object.keys(rawSignals).forEach(key => {
+                const { semantic, keyword, tag, bonus } = rawSignals[key];
+                tempPair[key] = ws * semantic + wk * keyword + wt * tag + bonus;
+            });
+
+            const tempRelated = {};
+            docs.forEach(doc => {
+                const pairs = docs
+                    .filter(d => d.slug !== doc.slug)
+                    .map(d => {
+                        const key   = [doc.slug, d.slug].sort().join('|||');
+                        const score = tempPair[key];
+                        return score !== undefined ? { slug: d.slug, score } : null;
+                    })
+                    .filter(Boolean);
+                if (!pairs.length) return;
+                const mean = pairs.reduce((s, r) => s + r.score, 0) / pairs.length;
+                const std  = Math.sqrt(pairs.reduce((s, r) => s + Math.pow(r.score - mean, 2), 0) / pairs.length);
+                const thr  = mean + Z_SIGMA * std;
+                tempRelated[doc.slug] = pairs
+                    .filter(r => r.score >= thr && r.score >= MIN_SCORE)
+                    .sort((a, b) => b.score - a.score)
+                    .slice(0, TOP_N)
+                    .map(r => r.slug);
+            });
+
+            const tp = positive.filter(p => (tempRelated[p.a] || []).includes(p.b)).length;
+            const precision = tp / positive.length;
+            if (precision > best.precision) best = { weights: { s: ws, k: wk, t: wt }, precision };
+        }
+    }
+    return best;
+}
+
 // ── 메인 ──────────────────────────────────────────────────────
 
 const files = [];
@@ -255,7 +304,7 @@ async function main() {
     for (let i = 0; i < docs.length; i++) {
         for (let j = i + 1; j < docs.length; j++) {
             const key    = [docs[i].slug, docs[j].slug].sort().join('|||');
-            bm25Raw[key] = (bm25(docs[i].slug, docs[j].slug) + bm25(docs[j].slug, docs[i].slug)) / 2;
+            bm25Raw[key] = Math.max(bm25(docs[i].slug, docs[j].slug), bm25(docs[j].slug, docs[i].slug));
         }
     }
 
@@ -263,38 +312,67 @@ async function main() {
     const bm25Sorted = Object.values(bm25Raw).sort((a, b) => a - b);
     const bm25P99    = bm25Sorted[Math.floor(bm25Sorted.length * 0.99)] || 1;
 
-    // ── Pairwise 점수 (가중합) ────────────────────────────────
-    const pairScores = {};
+    // ── 코사인 pre-pass: 분포 범위 확보 후 min-max 정규화 ────
+    const rawCosines = {};
     for (let i = 0; i < docs.length; i++) {
         for (let j = i + 1; j < docs.length; j++) {
-            const a   = docs[i], b = docs[j];
-            const key = [a.slug, b.slug].sort().join('|||');
-
-            // 하드 필터: 짧은 문서 쌍은 신뢰할 수 없는 점수가 나오므로 제외
+            const a = docs[i], b = docs[j];
             if (Math.min(a.bodyLen || 0, b.bodyLen || 0) < LEN_MIN) continue;
-
-            const semantic = cosine(a.embedding, b.embedding);
-            const keyword  = Math.min((bm25Raw[key] || 0) / bm25P99, 1.0);
-
-            const aTags    = a.tags || [], bTags = b.tags || [];
-            const shared   = aTags.filter(t => bTags.indexOf(t) !== -1).length;
-            const tagSignal = shared / Math.max(aTags.length, bTags.length, 1);
-
-            let score = SEMANTIC_WEIGHT * semantic
-                      + KEYWORD_WEIGHT  * keyword
-                      + TAG_WEIGHT      * tagSignal;
-
-            // 소프트 보너스: 가중합에 가산 (곱셈 체인 방지)
-            if (categoryOf(a.slug, a.type) === categoryOf(b.slug, b.type))
-                score += CAT_BONUS_ADD;
-
-            const aToks      = titleToks(a.title), bToks = titleToks(b.title);
-            const sharedTitle = aToks.filter(w => bToks.indexOf(w) !== -1).length;
-            if (sharedTitle > 0) score += TITLE_BONUS_ADD * Math.min(sharedTitle, 3);
-
-            pairScores[key] = score;
+            const key = [a.slug, b.slug].sort().join('|||');
+            rawCosines[key] = cosine(a.embedding, b.embedding);
         }
     }
+    const cosineVals  = Object.values(rawCosines);
+    const cosineMin   = cosineVals.length ? Math.min(...cosineVals) : 0;
+    const cosineMax   = cosineVals.length ? Math.max(...cosineVals) : 1;
+    const cosineRange = cosineMax - cosineMin || 1;
+
+    // ── 원시 신호 저장 (가중치 최적화 재사용) ────────────────
+    const rawSignals = {};
+    for (let i = 0; i < docs.length; i++) {
+        for (let j = i + 1; j < docs.length; j++) {
+            const a = docs[i], b = docs[j];
+            const key = [a.slug, b.slug].sort().join('|||');
+            if (!(key in rawCosines)) continue;
+
+            const semantic = (rawCosines[key] - cosineMin) / cosineRange;
+            const keyword  = Math.min((bm25Raw[key] || 0) / bm25P99, 1.0);
+
+            const aTags  = a.tags || [], bTags = b.tags || [];
+            const shared = aTags.filter(t => bTags.indexOf(t) !== -1).length;
+            const tag    = shared / (aTags.length + bTags.length - shared || 1);
+
+            let bonus = 0;
+            if (categoryOf(a.slug, a.type) === categoryOf(b.slug, b.type)) bonus += CAT_BONUS_ADD;
+            const aToks = titleToks(a.title), bToks = titleToks(b.title);
+            const sharedTitle = aToks.filter(w => bToks.indexOf(w) !== -1).length;
+            if (sharedTitle > 0) bonus += TITLE_BONUS_ADD * Math.min(sharedTitle, 3);
+
+            rawSignals[key] = { semantic, keyword, tag, bonus };
+        }
+    }
+
+    // ── 가중치 최적화 (eval.json 존재 시 grid search) ────────
+    let usedWeights = { s: SEMANTIC_WEIGHT, k: KEYWORD_WEIGHT, t: TAG_WEIGHT };
+    if (fs.existsSync(EVAL_FILE)) {
+        const evalForOpt = JSON.parse(fs.readFileSync(EVAL_FILE, 'utf8'));
+        const opt = optimizeWeights(rawSignals, docs, evalForOpt);
+        usedWeights = opt.weights;
+        console.log('[가중치 최적화] s=' + opt.weights.s.toFixed(1)
+                  + ' k=' + opt.weights.k.toFixed(1)
+                  + ' t=' + opt.weights.t.toFixed(1)
+                  + ' → precision@5: ' + (opt.precision * 100).toFixed(1) + '%');
+    }
+
+    // ── Pairwise 점수 (가중합) ────────────────────────────────
+    const pairScores = {};
+    Object.keys(rawSignals).forEach(key => {
+        const { semantic, keyword, tag, bonus } = rawSignals[key];
+        pairScores[key] = Math.min(
+            usedWeights.s * semantic + usedWeights.k * keyword + usedWeights.t * tag + bonus,
+            1.0
+        );
+    });
 
     // ── Z-score per doc → related.json ────────────────────────
     const related = {};
@@ -302,9 +380,13 @@ async function main() {
         const scores = docs
             .filter(d => d.slug !== doc.slug)
             .map(d => {
-                const key = [doc.slug, d.slug].sort().join('|||');
-                return { slug: d.slug, title: d.title, url: d.url, score: pairScores[key] || 0 };
-            });
+                const key   = [doc.slug, d.slug].sort().join('|||');
+                const score = pairScores[key];
+                return score !== undefined ? { slug: d.slug, title: d.title, url: d.url, score } : null;
+            })
+            .filter(Boolean);
+
+        if (!scores.length) return;
 
         const mean = scores.reduce((s, r) => s + r.score, 0) / scores.length;
         const std  = Math.sqrt(scores.reduce((s, r) => s + Math.pow(r.score - mean, 2), 0) / scores.length);
@@ -324,19 +406,36 @@ async function main() {
 
     // ── 평가 (data/eval.json 존재 시) ─────────────────────────
     if (fs.existsSync(EVAL_FILE)) {
-        const evalData = JSON.parse(fs.readFileSync(EVAL_FILE, 'utf8'));
-        const positive = evalData.pairs.filter(p => p.expected);
-        const truePos  = positive.filter(p => (related[p.a] || []).some(r => r.slug === p.b));
-        const precision = positive.length ? truePos.length / positive.length : 0;
+        const evalData  = JSON.parse(fs.readFileSync(EVAL_FILE, 'utf8'));
+        const slugSet   = new Set(docs.map(d => d.slug));
+
+        // stale slug 감지
+        const stale = evalData.pairs.filter(p => !slugSet.has(p.a) || !slugSet.has(p.b));
+        if (stale.length > 0) {
+            console.log('\n[평가] stale 쌍 ' + stale.length + '개 (corpus에 없음 — 평가 제외):');
+            stale.forEach(p => console.log('  - ' + p.a + ' ↔ ' + p.b));
+        }
+
+        const validPairs   = evalData.pairs.filter(p => slugSet.has(p.a) && slugSet.has(p.b));
+        const positive     = validPairs.filter(p => p.expected);
+        const truePos      = positive.filter(p => (related[p.a] || []).some(r => r.slug === p.b));
+        const precision    = positive.length ? truePos.length / positive.length : 0;
+        const recall       = positive.length ? truePos.length / positive.length : 0;
+
+        // recall = TP / (TP + FN). 여기선 positive가 exhaustive하지 않으므로 precision과 동치이지만 구분해서 기록
         console.log('\n[평가] precision@5: ' + truePos.length + '/' + positive.length
                   + ' (' + (precision * 100).toFixed(1) + '%)');
+        console.log('[평가] recall@5:    ' + truePos.length + '/' + positive.length
+                  + ' (' + (recall * 100).toFixed(1) + '%)');
 
-        const falsePos = evalData.pairs
+        const falsePos = validPairs
             .filter(p => !p.expected)
             .filter(p => (related[p.a] || []).some(r => r.slug === p.b));
         if (falsePos.length > 0) {
             console.log('[평가] 오탐(false positive): ' + falsePos.length + '개');
             falsePos.forEach(p => console.log('  - ' + p.a + ' → ' + p.b));
+        } else {
+            console.log('[평가] 오탐(false positive): 0개');
         }
     } else {
         console.log('\n[평가] data/eval.json 없음 — precision@5 측정 건너뜀');

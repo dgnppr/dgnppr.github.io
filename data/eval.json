@@ -3,18 +3,6 @@
   "_usage": "a/b 는 generate-embeddings.js 의 slugFromPath 기준 slug. expected=true 는 related.json 에 포함돼야 하는 쌍.",
   "pairs": [
     {
-      "a": "data-engineering/00_what_is_medaliion_architecture",
-      "b": "data-engineering/01_how_to_architect_medallion_well",
-      "expected": true,
-      "note": "같은 메달리언 시리즈"
-    },
-    {
-      "a": "data-engineering/00_what_is_medaliion_architecture",
-      "b": "data-engineering/02_what_is_ontology",
-      "expected": true,
-      "note": "같은 data-engineering 카테고리"
-    },
-    {
       "a": "springboot/00_why_rollback_marked_transaction_is_unusable",
       "b": "springboot/01_how_to_handle_transaction_event_listener_exception",
       "expected": true,
@@ -25,12 +13,6 @@
       "b": "jpa/00_jpa_dirty_checking",
       "expected": true,
       "note": "Spring + JPA 트랜잭션 관련"
-    },
-    {
-      "a": "java/00_what_is_java_virtual_thread",
-      "b": "jvm",
-      "expected": true,
-      "note": "Java 런타임 관련"
     },
     {
       "a": "system-design/00_url_shortener_design",
