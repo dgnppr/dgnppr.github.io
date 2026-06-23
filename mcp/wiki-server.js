@@ -8,7 +8,10 @@ import {
 import fs from "fs";
 import path from "path";
 
-const WIKI_DIR = path.join(import.meta.dirname, "..", "_wiki");
+const WIKI_DIR       = path.join(import.meta.dirname, "..", "_wiki");
+const EMBEDDINGS_FILE = path.join(import.meta.dirname, "..", "data", "embeddings.json");
+const BACKEND        = process.env.EMBEDDING_BACKEND;
+const OLLAMA_URL     = process.env.OLLAMA_URL || "http://localhost:11434";
 
 function parseFrontmatter(content) {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
@@ -47,6 +50,49 @@ function buildFrontmatter(args, existingMeta = null) {
     ...(category ? [`parent  : [[/${category}]]`] : []),
     "---",
   ].join("\n");
+}
+
+function cosine(a, b) {
+  let dot = 0, na = 0, nb = 0;
+  for (let i = 0; i < a.length; i++) {
+    dot += a[i] * b[i];
+    na  += a[i] * a[i];
+    nb  += b[i] * b[i];
+  }
+  return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
+}
+
+let _ai;
+async function embedQuery(text) {
+  if (!BACKEND) throw new Error("EMBEDDING_BACKEND 환경변수가 설정되지 않았습니다 (vertexai | ollama)");
+
+  if (BACKEND === "ollama") {
+    const res = await fetch(`${OLLAMA_URL}/api/embeddings`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ model: "bge-m3", prompt: text }),
+    });
+    if (!res.ok) throw new Error(`Ollama HTTP ${res.status}: ${await res.text()}`);
+    const json = await res.json();
+    return json.embedding;
+  }
+
+  if (!_ai) {
+    const { GoogleGenAI } = await import("@google/genai");
+    _ai = new GoogleGenAI({
+      vertexai: true,
+      project: process.env.GOOGLE_PROJECT_ID,
+      location: process.env.GOOGLE_LOCATION || "asia-northeast3",
+    });
+  }
+  const response = await _ai.models.embedContent({
+    model: "text-embedding-004",
+    contents: text,
+    config: { outputDimensionality: 768 },
+  });
+  const emb = response.embeddings?.[0]?.values ?? response.embedding?.values;
+  if (!emb) throw new Error("Vertex AI 임베딩 응답 형식 오류");
+  return emb;
 }
 
 function collectWikiFiles(dir, base = WIKI_DIR) {
@@ -95,6 +141,29 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         type: "object",
         properties: {
           query: { type: "string", description: "검색할 키워드" },
+        },
+        required: ["query"],
+      },
+    },
+    {
+      name: "wiki_find",
+      description: "위키에서 문서를 검색해 관련도 순 목록을 반환한다. 다중 키워드(공백 구분) 지원. 제목 3점, 태그 2점, 본문 출현당 1점으로 채점.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: { type: "string", description: "검색 키워드 (공백으로 구분해 다중 입력 가능)" },
+        },
+        required: ["query"],
+      },
+    },
+    {
+      name: "wiki_query",
+      description: "위키에서 질문과 관련된 문서의 전체 본문을 반환한다. Claude가 내용을 읽고 사용자 질문에 답하는 용도.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: { type: "string", description: "검색할 질문 또는 키워드" },
+          limit: { type: "number", description: "반환할 최대 문서 수 (기본: 3)" },
         },
         required: ["query"],
       },
@@ -174,6 +243,61 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         },
       ],
     };
+  }
+
+  if (name === "wiki_find" || name === "wiki_query") {
+    if (!fs.existsSync(EMBEDDINGS_FILE)) {
+      return { content: [{ type: "text", text: "임베딩 캐시가 없습니다. generate-embeddings.js를 먼저 실행하세요." }], isError: true };
+    }
+    const cache = JSON.parse(fs.readFileSync(EMBEDDINGS_FILE, "utf-8"));
+
+    let queryVec;
+    try {
+      queryVec = await embedQuery(args.query);
+    } catch (e) {
+      return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true };
+    }
+
+    const files = collectWikiFiles(WIKI_DIR);
+    const scored = files
+      .map((f) => {
+        const slug = f.replace(/\.md$/, "");
+        const cached = cache[slug];
+        if (!cached) return null;
+        return { f, score: cosine(queryVec, cached.embedding) };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.score - a.score);
+
+    if (name === "wiki_find") {
+      const results = scored.slice(0, 10).map(({ f, score }) => {
+        const content = fs.readFileSync(path.join(WIKI_DIR, f), "utf-8");
+        const { meta } = parseFrontmatter(content);
+        return { path: f, title: meta.title || f, tags: meta.tag || "", score: +score.toFixed(3) };
+      });
+      return {
+        content: [{
+          type: "text",
+          text: results.length
+            ? JSON.stringify(results, null, 2)
+            : `'${args.query}'에 대한 문서를 찾을 수 없습니다.`,
+        }],
+      };
+    }
+
+    if (name === "wiki_query") {
+      const limit = args.limit ?? 3;
+      const top = scored.slice(0, limit);
+      if (!top.length) {
+        return { content: [{ type: "text", text: `'${args.query}'에 대한 위키 내용을 찾을 수 없습니다.` }] };
+      }
+      const output = top.map(({ f, score }) => {
+        const content = fs.readFileSync(path.join(WIKI_DIR, f), "utf-8");
+        const { meta, body } = parseFrontmatter(content);
+        return `# ${meta.title || f}\n경로: ${f} | 유사도: ${score.toFixed(3)}\n태그: ${meta.tag || "(없음)"}\n\n${body}`;
+      }).join("\n\n---\n\n");
+      return { content: [{ type: "text", text: output }] };
+    }
   }
 
   if (name === "wiki_write") {

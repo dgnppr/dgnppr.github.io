@@ -180,7 +180,46 @@ layout: default
 <script src="/js/focus-reading.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script src="/js/summary-dag.js"></script>
-<script src="/js/wiki-mini-graph.js"></script>
+<script>
+/* 미니 지식 그래프 — 3D (knowledge-graph-3d.js 재사용) */
+(function () {
+    var nameEl = document.getElementById('thisName');
+    if (!nameEl) return;
+    var currentSlug = nameEl.value;
+    if (!currentSlug) return;
+    var el = document.getElementById('wiki-mini-graph');
+    if (!el) return;
+
+    function loadKg3D() {
+        if (window.KnowledgeGraph3D) {
+            window.KnowledgeGraph3D.init({
+                container:  el,
+                focusSlug:  currentSlug,
+                miniMode:   true,
+                search: null, groups: null, stats: null,
+            });
+            return;
+        }
+        var s = document.createElement('script');
+        s.src = '/js/knowledge-graph-3d.js';
+        s.onload = function () {
+            window.KnowledgeGraph3D.init({
+                container:  el,
+                focusSlug:  currentSlug,
+                miniMode:   true,
+                search: null, groups: null, stats: null,
+            });
+        };
+        document.head.appendChild(s);
+    }
+
+    if (window.d3) { loadKg3D(); return; }
+    var sd = document.createElement('script');
+    sd.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+    sd.onload = loadKg3D;
+    document.head.appendChild(sd);
+})();
+</script>
 <script src="/js/axios.min.js"></script>
 <script async src="/js/toc-highlight.js"></script>
 <script src="/js/reading-time.js"></script>

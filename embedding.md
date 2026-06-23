@@ -8,20 +8,35 @@
 
 ## 모델 선택
 
-**Gemini `text-embedding-004` via Vertex AI**
+`EMBEDDING_BACKEND` 환경변수로 백엔드를 전환할 수 있다.
+
+| 백엔드 | 모델 | 차원 | 실행 조건 |
+|--------|------|------|----------|
+| `vertexai` (기본) | `text-embedding-004` | 768 | GCP 서비스 계정 필요 |
+| `ollama` | `bge-m3` | 1024 | Ollama 로컬 서버 필요 |
+
+두 백엔드의 캐시(`data/embeddings.json`)는 차원 수가 달라 자동으로 구분된다. 백엔드를 바꾸면 `cached.embedding.length !== DIMS` 검사에 걸려 전체 재계산이 발생한다.
+
+### Vertex AI (`text-embedding-004`)
 
 - 한국어 포함 다국어 지원
-- `outputDimensionality` 파라미터로 차원 축소 가능 (API 레벨 지원)
+- `outputDimensionality` 파라미터로 차원 축소 가능
 
-### 차원 결정
+### Ollama (`bge-m3`)
 
-| 차원 | 파일 크기 (참고) | 비고 |
-|------|----------------|------|
-| 128 | 소 | 품질 손실 우려 |
-| 256 | 중 | 구버전 선택값 |
-| **768** | **대** | **현재 선택 (기본값)** |
+- 로컬 실행 — API 비용 없음
+- 한국어 포함 다국어 지원 (MTEB 다국어 상위권)
+- 1024차원 고정
 
-초기에는 파일 크기를 이유로 256을 선택했으나, 한국어 기술 문서에서 차원 압축 손실이 우려되어 768로 상향했다. 글 수가 늘어도 캐시 구조 덕분에 증분 계산만 발생한다.
+### 차원 결정 (vertexai)
+
+| 차원 | 비고 |
+|------|------|
+| 128 | 품질 손실 우려 |
+| 256 | 구버전 선택값 |
+| **768** | **현재 선택** |
+
+초기에는 파일 크기를 이유로 256을 선택했으나, 한국어 기술 문서에서 차원 압축 손실이 우려되어 768로 상향했다.
 
 ---
 
@@ -33,6 +48,8 @@
 score = 0.70 × semantic + 0.20 × keyword + 0.10 × tag
       + cat_bonus + title_bonus          (가산 소프트 보너스)
 ```
+
+임계값(z-score + MIN_SCORE)을 통과한 글은 개수 제한 없이 전부 저장한다.
 
 ### 구성 요소
 
@@ -161,8 +178,14 @@ const BM25_B          = 0.75;
 ## 실행
 
 ```bash
+# Vertex AI (기본)
 make embeddings        # 캐시 활용 (변경 글만 재계산)
 make embeddings-force  # 전체 강제 재계산
+
+# Ollama
+ollama pull bge-m3
+EMBEDDING_BACKEND=ollama node scripts/generate-embeddings.js
+EMBEDDING_BACKEND=ollama node scripts/generate-embeddings.js --force
 ```
 
-pre-commit hook에 연동되어 있어 `_wiki/` 또는 `_posts/` 아래 `.md` 파일이 스테이징되면 자동 실행된다.
+pre-commit hook에 연동되어 있어 `_wiki/` 또는 `_posts/` 아래 `.md` 파일이 스테이징되면 자동 실행된다. hook은 `EMBEDDING_BACKEND` 환경변수를 그대로 상속하므로 셸에서 export하면 반영된다.

@@ -98,9 +98,11 @@
         var container = opts.container;
         if (!container || typeof d3 === 'undefined') return;
 
-        var dark  = isDark();
-        var bgHex = dark ? 0x060a14 : 0xf8fafc;
-        var bgStr = dark ? '#060a14' : '#f8fafc';
+        var dark      = isDark();
+        var bgHex     = dark ? 0x060a14 : 0xf8fafc;
+        var bgStr     = dark ? '#060a14' : '#f8fafc';
+        var focusSlug = opts.focusSlug || null;
+        var miniMode  = opts.miniMode  || false;
         var W = container.clientWidth  || 800;
         var H = container.clientHeight || 500;
 
@@ -128,6 +130,21 @@
                 nodes.push(n);
                 nodeMap[slug] = n;
             });
+
+            /* focusSlug 모드: 현재 노드 + 직접 연결된 이웃만 표시 */
+            if (focusSlug) {
+                var focalSlugs = new Set([focusSlug]);
+                (related[focusSlug] || []).forEach(function (r) { focalSlugs.add(r.slug); });
+                nodes = nodes.filter(function (n) { return focalSlugs.has(n.slug); });
+                nodeMap = {};
+                nodes.forEach(function (n) { nodeMap[n.slug] = n; });
+                /* 관련 노드 없으면 위젯 숨김 */
+                if (nodes.length <= 1) {
+                    var wrap = container.closest('[id$="-wrap"]') || container.parentElement;
+                    if (wrap) wrap.style.display = 'none';
+                    return;
+                }
+            }
 
             /* ── 링크 빌드 ──────────────────────────────────── */
             var seen = new Set(), links = [], adj = {};
@@ -168,7 +185,7 @@
                 return catGroups[b].length - catGroups[a].length;
             });
 
-            var clusterR = 180; // 노드 간격 확보
+            var clusterR = miniMode ? 170 : 180;
             var catCenters = {}, catZBase = {};
             cats.forEach(function (cat, i) {
                 var angle = (i / cats.length) * 2 * Math.PI - Math.PI / 2;
@@ -270,7 +287,8 @@
                 var r   = nodeR(n);
                 var col = themedColor(n.cat, dark);
 
-                var visR = r * 1.5;
+                var isFocal = focusSlug && n.slug === focusSlug;
+                var visR = isFocal ? r * 2.2 : r * 1.5;
 
                 var mesh = new THREE.Mesh(
                     new THREE.SphereGeometry(visR, 28, 28),
@@ -366,9 +384,9 @@
                 .force('link', d3.forceLink(links)
                     .id(function (d) { return d.id; })
                     /* score 높을수록 가깝게 (score=0.95→~30, score=0.6→~90) */
-                    .distance(function (d) { return Math.max(25, 200 - (d.score || 0.7) * 180); })
+                    .distance(function (d) { return Math.max(miniMode ? 100 : 25, 200 - (d.score || 0.7) * 180); })
                     .strength(function (d) { return 0.2 + (d.score || 0.7) * 0.35; }))
-                .force('charge',    d3.forceManyBody().strength(-180).distanceMax(350))
+                .force('charge',    d3.forceManyBody().strength(miniMode ? -320 : -180).distanceMax(350))
                 .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) * 1.5 + 8; }))
                 .force('clusterX',  d3.forceX().strength(0.2)
                     .x(function (d) { return (catCenters[d.cat] || { x: 0 }).x; }))
@@ -521,8 +539,9 @@
             controls.dampingFactor  = 0.08;
             controls.minDistance    = 80;
             controls.maxDistance    = 4000;
-            controls.autoRotate     = false;
-            controls.autoRotateSpeed = 0.3;
+            controls.autoRotate      = miniMode;
+            controls.autoRotateSpeed = 0.5;
+            controls.enablePan       = !miniMode;
             controls.target.set(0, 0, 0);
 
             function onDown(e) {
@@ -648,8 +667,9 @@
                 downAt = null;
                 if (moved > 6 || dt > 400) return;
 
+                var wasPinned = pinnedNode !== null;
                 doReset();
-                zoomToFitCompact();
+                if (!wasPinned) zoomToFitCompact();
             }
 
             /* ── 카테고리 패널 ───────────────────────────── */

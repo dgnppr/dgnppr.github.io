@@ -121,8 +121,13 @@ body {
 
     &__canvas {
         overflow: hidden;
+        height: 240px;
 
-        svg { display: block; }
+        svg    { display: block; }
+        canvas { display: block; width: 100% !important; height: 100% !important; }
+
+        /* 3D 컨테이너(#wiki-mini-graph)가 full height 차지하도록 */
+        > div { width: 100%; height: 100%; }
     }
 }
 

@@ -5,10 +5,15 @@
  * Gemini text-embedding-004 로 각 글의 의미 벡터를 생성하고,
  * 코사인 유사도 상위 5개를 data/related.json 으로 덮어씁니다.
  *
- * 실행:
+ * 실행 (Vertex AI):
  *   GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json \
  *   GOOGLE_PROJECT_ID=himart-cdp \
  *   [GOOGLE_LOCATION=asia-northeast3] \
+ *   node scripts/generate-embeddings.js
+ *
+ * 실행 (Ollama):
+ *   EMBEDDING_BACKEND=ollama \
+ *   [OLLAMA_URL=http://localhost:11434] \
  *   node scripts/generate-embeddings.js
  *
  * - 임베딩 캐시: data/embeddings.json (내용 변경 시에만 재계산)
@@ -22,11 +27,13 @@ const crypto = require('crypto');
 const GCP_PROJECT  = process.env.GOOGLE_PROJECT_ID;
 const GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
 const GCP_CREDS    = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const OLLAMA_URL   = process.env.OLLAMA_URL || 'http://localhost:11434';
+const BACKEND      = process.env.EMBEDDING_BACKEND || 'vertexai'; // 'vertexai' | 'ollama'
 const FORCE        = process.argv.includes('--force');
 
-const MODEL = 'text-embedding-004';
-const DIMS  = 768;
-const TOP_N = 5;
+const MODEL = BACKEND === 'ollama' ? 'bge-m3'           : 'text-embedding-004';
+const DIMS  = BACKEND === 'ollama' ? 1024               : 768;
+const EVAL_TOP_N = 5; // precision@5 평가 기준 (변경 금지)
 
 const Z_SIGMA   = 1.0;
 const MIN_SCORE = 0.50;
@@ -46,14 +53,17 @@ const LEN_MIN = 100;
 const BM25_K1 = 1.5;
 const BM25_B  = 0.75;
 
-if (!GCP_CREDS || !GCP_PROJECT) {
+if (BACKEND === 'vertexai' && (!GCP_CREDS || !GCP_PROJECT)) {
     console.error('[오류] 환경 변수를 설정하세요:');
     console.error('  GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json');
     console.error('  GOOGLE_PROJECT_ID=my-project');
     process.exit(1);
 }
 
-console.log('[백엔드] Vertex AI — ' + MODEL + ' (' + GCP_LOCATION + ')');
+const backendLabel = BACKEND === 'ollama'
+    ? 'Ollama — ' + MODEL + ' (' + OLLAMA_URL + ')'
+    : 'Vertex AI — ' + MODEL + ' (' + GCP_LOCATION + ')';
+console.log('[백엔드] ' + backendLabel);
 
 const ROOT         = path.join(__dirname, '..');
 const CACHE_FILE   = path.join(ROOT, 'data/embeddings.json');
@@ -148,14 +158,25 @@ function titleToks(title) {
 // ── Vertex AI 클라이언트 ───────────────────────────────────────
 
 let ai;
-async function initClient() {
+async function initVertexClient() {
     if (ai) return;
     const { GoogleGenAI } = require('@google/genai');
     ai = new GoogleGenAI({ vertexai: true, project: GCP_PROJECT, location: GCP_LOCATION });
 }
 
 async function embed(text) {
-    await initClient();
+    if (BACKEND === 'ollama') {
+        const res = await fetch(OLLAMA_URL + '/api/embeddings', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ model: MODEL, prompt: text }),
+        });
+        if (!res.ok) throw new Error('Ollama HTTP ' + res.status + ': ' + await res.text());
+        const json = await res.json();
+        if (!json.embedding) throw new Error('임베딩 응답 형식 오류: ' + JSON.stringify(Object.keys(json)));
+        return json.embedding;
+    }
+    await initVertexClient();
     const response = await ai.models.embedContent({
         model: MODEL,
         contents: text,
@@ -204,7 +225,7 @@ function optimizeWeights(rawSignals, docs, evalData) {
                 tempRelated[doc.slug] = pairs
                     .filter(r => r.score >= thr && r.score >= MIN_SCORE)
                     .sort((a, b) => b.score - a.score)
-                    .slice(0, TOP_N)
+                    .slice(0, EVAL_TOP_N)
                     .map(r => r.slug);
             });
 
@@ -395,7 +416,6 @@ async function main() {
         const scored = scores
             .filter(r => r.score >= threshold && r.score >= MIN_SCORE)
             .sort((a, b) => b.score - a.score)
-            .slice(0, TOP_N)
             .map(r => ({ slug: r.slug, title: r.title, url: r.url, score: +r.score.toFixed(3) }));
 
         if (scored.length > 0) related[doc.slug] = scored;
