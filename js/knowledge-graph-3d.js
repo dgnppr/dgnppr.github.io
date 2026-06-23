@@ -74,7 +74,7 @@
     function ensureLibs() {
         if (_libsP) return _libsP;
         _libsP = loadScript(BASE + '/build/three.min.js')
-            .then(function () { return loadScript(BASE + '/examples/js/controls/OrbitControls.js'); });
+            .then(function () { return loadScript(BASE + '/examples/js/controls/TrackballControls.js'); });
         return _libsP;
     }
 
@@ -380,17 +380,23 @@
             });
 
             /* ── D3 시뮬레이션 ──────────────────────────────── */
+            /* 고정 기본 간격 — 노드 수 무관하게 가독성 유지, 카메라가 줌아웃으로 수용 */
+            var idealDist = miniMode ? 110 : 80;
+
             var sim = d3.forceSimulation(nodes)
                 .force('link', d3.forceLink(links)
                     .id(function (d) { return d.id; })
-                    /* score 높을수록 가깝게 (score=0.95→~30, score=0.6→~90) */
-                    .distance(function (d) { return Math.max(miniMode ? 100 : 25, 200 - (d.score || 0.7) * 180); })
-                    .strength(function (d) { return 0.2 + (d.score || 0.7) * 0.35; }))
-                .force('charge',    d3.forceManyBody().strength(miniMode ? -320 : -180).distanceMax(350))
-                .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) * 1.5 + 8; }))
-                .force('clusterX',  d3.forceX().strength(0.2)
+                    /* idealDist 기준으로 score가 높을수록 가깝게, 낮을수록 멀게 */
+                    .distance(function (d) {
+                        var s = d.score || 0.7;
+                        return idealDist * (1.8 - s * 0.8); /* score=1.0→idealDist, score=0.6→1.32*idealDist */
+                    })
+                    .strength(function (d) { return 0.15 + (d.score || 0.7) * 0.3; }))
+                .force('charge',    d3.forceManyBody().strength(-(idealDist * idealDist * 0.09)).distanceMax(Math.max(350, idealDist * 5)))
+                .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) + idealDist * 0.40; }))
+                .force('clusterX',  d3.forceX().strength(miniMode ? 0.04 : 0.18)
                     .x(function (d) { return (catCenters[d.cat] || { x: 0 }).x; }))
-                .force('clusterY',  d3.forceY().strength(0.2)
+                .force('clusterY',  d3.forceY().strength(miniMode ? 0.04 : 0.18)
                     .y(function (d) { return (catCenters[d.cat] || { y: 0 }).y; }))
                 .alphaDecay(0.015)
                 .alphaTarget(FLOAT_ALPHA)
@@ -404,12 +410,17 @@
             function zoomToFit() {
                 var maxR = 1;
                 nodes.forEach(function (n) {
-                    var r2 = Math.sqrt((n.x || 0) * (n.x || 0) + (n.y || 0) * (n.y || 0));
-                    if (r2 > maxR) maxR = r2;
+                    var r = Math.sqrt((n.x || 0) * (n.x || 0) + (n.y || 0) * (n.y || 0));
+                    if (r > maxR) maxR = r;
                 });
-                var z = (maxR / Math.tan(FOV * 0.5 * Math.PI / 180)) + 30;
-                camera.position.z = Math.max(150, Math.min(700, z));
-                camera.updateMatrixWorld(true);
+                var fovHalfRad = FOV * 0.5 * Math.PI / 180;
+                var z = maxR / Math.tan(fovHalfRad) * 1.15 + 60;
+                camera.position.set(0, 0, Math.max(150, z));
+                camera.lookAt(0, 0, 0);
+                if (controls) {
+                    controls.target.set(0, 0, 0);
+                    controls.update();
+                }
             }
 
             /* ── 배경 클릭 시 전체 노드 fit ────────────── */
@@ -421,7 +432,6 @@
                     var r = Math.sqrt(nx * nx + ny * ny);
                     if (r > maxR) maxR = r;
                 });
-                /* 멀리 드래그한 이상치가 카메라를 너무 빼는 것 방지 */
                 maxR = Math.min(maxR, 420);
                 var z = Math.max(320, maxR * 2.2 + 80);
                 camera.position.set(60, 90, z);
@@ -533,16 +543,48 @@
             renderer.domElement.addEventListener('pointermove', onMove);
             renderer.domElement.addEventListener('pointerup',   onUp);
 
-            /* OrbitControls는 반드시 내 핸들러 이후에 등록 */
-            var controls = new THREE.OrbitControls(camera, renderer.domElement);
-            controls.enableDamping  = true;
-            controls.dampingFactor  = 0.08;
-            controls.minDistance    = 80;
-            controls.maxDistance    = 4000;
-            controls.autoRotate      = miniMode;
-            controls.autoRotateSpeed = 0.5;
-            controls.enablePan       = !miniMode;
+            /* TrackballControls — 극점 제한 없는 자유 360° 회전 */
+            var controls = new THREE.TrackballControls(camera, renderer.domElement);
+            controls.rotateSpeed          = 2.0;
+            controls.staticMoving         = false;
+            controls.dynamicDampingFactor = 0.12;
+            controls.minDistance          = 80;
+            controls.maxDistance          = 4000;
+            controls.noZoom               = true;  // 커스텀 wheel 줌으로 대체
+            controls.noPan                = miniMode;
             controls.target.set(0, 0, 0);
+
+            /* 마우스 위치 기준 줌 — OrbitControls 이후 등록으로 wheel 선점 */
+            renderer.domElement.addEventListener('wheel', function (e) {
+                e.preventDefault();
+                var rect = renderer.domElement.getBoundingClientRect();
+                var nx = ((e.clientX - rect.left) / rect.width)  *  2 - 1;
+                var ny = -((e.clientY - rect.top)  / rect.height) *  2 + 1;
+
+                /* 마우스 아래의 월드 좌표 (현재 target 거리 기준) */
+                var zoomRay = new THREE.Raycaster();
+                zoomRay.setFromCamera(new THREE.Vector2(nx, ny), camera);
+                var dist = camera.position.distanceTo(controls.target);
+                var mouseWorld = zoomRay.ray.at(dist, new THREE.Vector3());
+
+                /* 줌 배율 */
+                var factor = e.deltaY > 0 ? 1.12 : (1 / 1.12);
+
+                /* 카메라와 target 모두 mouseWorld 기준으로 스케일 */
+                var camOff    = camera.position.clone().sub(mouseWorld).multiplyScalar(factor);
+                var targetOff = controls.target.clone().sub(mouseWorld).multiplyScalar(factor);
+                camera.position.copy(mouseWorld.clone().add(camOff));
+                controls.target.copy(mouseWorld.clone().add(targetOff));
+
+                /* min/max distance 강제 적용 */
+                var newDist = camera.position.distanceTo(controls.target);
+                if (newDist < controls.minDistance || newDist > controls.maxDistance) {
+                    var clampedDist = Math.max(controls.minDistance, Math.min(controls.maxDistance, newDist));
+                    var dir = camera.position.clone().sub(controls.target).normalize();
+                    camera.position.copy(controls.target.clone().add(dir.multiplyScalar(clampedDist)));
+                }
+                controls.update();
+            }, { passive: false });
 
             function onDown(e) {
                 if (e.button !== 0) return;
@@ -555,27 +597,26 @@
                 var hits = ray.intersectObjects(visibleMeshes, false);
                 if (!hits.length) return;
 
-                e.stopImmediatePropagation(); // OrbitControls 차단
+                /* 노드 히트 기록만 — 차단은 드래그 임계 초과 시까지 보류
+                   → OrbitControls도 함께 회전 시작하지만, 드래그 확정 시 controls.enabled=false로 전환 */
                 dragMesh  = hits[0].object;
                 isDragging = false;
                 dragPlane.setFromNormalAndCoplanarPoint(
                     camera.getWorldDirection(new THREE.Vector3()),
                     dragMesh.position
                 );
-                /* fx/fy 및 sim.restart는 실제 드래그 시작 시(onMove)에만 설정
-                   — 클릭과 드래그를 명확히 구분 */
             }
 
             function onMove(e) {
                 setPtr(e);
                 if (dragMesh) {
-                    e.stopImmediatePropagation();
-                    /* 3px 이상 이동 시에만 드래그로 판정 */
+                    /* 3px 이상 이동 시 노드 드래그 확정 → OrbitControls 비활성 */
                     if (!isDragging && downAt) {
                         var dx = Math.abs(e.clientX - downAt.x);
                         var dy = Math.abs(e.clientY - downAt.y);
                         if (dx > 3 || dy > 3) {
                             isDragging = true;
+                            controls.enabled = false;
                             var dn = dragMesh.userData.node;
                             dn.fx = dn.x; dn.fy = dn.y;
                             dragConnSet = adj[dn.slug] || new Set();
@@ -626,9 +667,9 @@
             }
 
             function onUp(e) {
-                if (dragMesh) {
-                    e.stopImmediatePropagation();
+                controls.enabled = true; // 노드 드래그 종료 시 항상 복원
 
+                if (dragMesh) {
                     if (!isDragging) {
                         /* 순수 클릭 → pinNode 또는 페이지 이동 (sim 상태 그대로) */
                         var cn = dragMesh.userData.node;
@@ -910,6 +951,16 @@
                 /* 프리뷰 카드 — 노드 따라 이동, 연결 노드 안 가리는 방향 선택 */
                 if (pinnedNode) updatePreviewPos();
 
+                /* miniMode 자동 회전 — Y축 기준 서서히 회전 */
+                if (miniMode && !isDragging) {
+                    var _a = 0.004;
+                    var _px = camera.position.x - controls.target.x;
+                    var _pz = camera.position.z - controls.target.z;
+                    var _c = Math.cos(_a), _s = Math.sin(_a);
+                    camera.position.x = controls.target.x + _c * _px + _s * _pz;
+                    camera.position.z = controls.target.z - _s * _px + _c * _pz;
+                    camera.lookAt(controls.target);
+                }
                 controls.update();
                 renderer.render(scene, camera);
                 projectLabels();
@@ -975,6 +1026,7 @@
                 W = container.clientWidth; H = container.clientHeight;
                 camera.aspect = W / H; camera.updateProjectionMatrix();
                 renderer.setSize(W, H);
+                controls.handleResize();
             }
             window.addEventListener('resize', onResize);
 
