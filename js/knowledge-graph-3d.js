@@ -1,0 +1,987 @@
+// knowledge-graph-3d.js — Three.js 3D 지식 그래프
+(function () {
+    'use strict';
+
+    /* ── 상수 ───────────────────────────────────────────────────── */
+    var FLOAT_ALPHA  = 0.005;
+    var WAVE_AMP     = 3;
+    var WAVE_PERIOD  = 4000;
+    var LABEL_NORMAL = 0.8;
+
+    /* ── 5-family 색상 팔레트 ─────────────────────────────────────
+       Indigo / Blue / Teal / Rose / Amber + Slate(neutral)
+       패밀리 안에서 명도 gradient로 카테고리 구분
+    ─────────────────────────────────────────────────────────────── */
+    var CAT_COLOR = {
+        /* Indigo family */
+        'ai-agent':          '#4f46e5',
+        'llm':               '#6366f1',
+        'retrospect':        '#818cf8',
+        /* Blue family */
+        'database':          '#1d4ed8',
+        'msa':               '#3b82f6',
+        'system-design':     '#60a5fa',
+        /* Teal family */
+        'spring-boot':       '#0f766e',
+        'springboot':        '#0f766e',
+        'jpa':               '#0d9488',
+        'data-engineering':  '#14b8a6',
+        'design-pattern':    '#2dd4bf',
+        /* Rose/Red family */
+        'code-architecture': '#be123c',
+        'java':              '#e11d48',
+        'kafka':             '#fb7185',
+        /* Amber family */
+        'jvm':               '#b45309',
+        'blog':              '#d97706',
+        'essay':             '#f59e0b',
+        /* Neutral */
+        'reference':         '#64748b',
+    };
+    function catColor(c) { return CAT_COLOR[c] || '#64748b'; }
+    function isDark()    { return document.documentElement.classList.contains('dark-mode'); }
+    /* 다크모드에서 살짝 톤다운한 Three.Color 반환 */
+    function themedColor(cat, darkMode) {
+        var col = new THREE.Color(catColor(cat));
+        if (darkMode) {
+            var r = col.r, g = col.g, b = col.b;
+            var avg = (r + g + b) / 3;
+            col.r = (r + (avg - r) * 0.08) * 0.88;
+            col.g = (g + (avg - g) * 0.08) * 0.88;
+            col.b = (b + (avg - b) * 0.08) * 0.88;
+        }
+        return col;
+    }
+    function getCategory(url, type) {
+        if (type === 'blog') return 'blog';
+        var m = url.match(/^\/wiki\/([^\/]+)/);
+        return m ? m[1] : 'default';
+    }
+
+    /* ── CDN 로드 ───────────────────────────────────────────────── */
+    function loadScript(src) {
+        return new Promise(function (res, rej) {
+            if (document.querySelector('script[src="' + src + '"]')) return res();
+            var s = document.createElement('script');
+            s.src = src; s.async = false;
+            s.onload = res;
+            s.onerror = function () { rej(new Error('load failed: ' + src)); };
+            document.head.appendChild(s);
+        });
+    }
+    var BASE = 'https://cdn.jsdelivr.net/npm/three@0.128.0';
+    var _libsP = null;
+    function ensureLibs() {
+        if (_libsP) return _libsP;
+        _libsP = loadScript(BASE + '/build/three.min.js')
+            .then(function () { return loadScript(BASE + '/examples/js/controls/OrbitControls.js'); });
+        return _libsP;
+    }
+
+    /* ── 글로우 스프라이트 텍스처 ──────────────────────────────── */
+    var _glowTex = null;
+    function glowTex() {
+        if (_glowTex) return _glowTex;
+        var cv = document.createElement('canvas'); cv.width = cv.height = 64;
+        var ctx = cv.getContext('2d');
+        var g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        g.addColorStop(0,   'rgba(255,255,255,1)');
+        g.addColorStop(0.4, 'rgba(255,255,255,0.3)');
+        g.addColorStop(1,   'rgba(255,255,255,0)');
+        ctx.fillStyle = g; ctx.fillRect(0, 0, 64, 64);
+        _glowTex = new THREE.CanvasTexture(cv);
+        return _glowTex;
+    }
+
+    /* ── 메인 초기화 ────────────────────────────────────────────── */
+    function initGraph(opts) {
+        var container = opts.container;
+        if (!container || typeof d3 === 'undefined') return;
+
+        var dark  = isDark();
+        var bgHex = dark ? 0x060a14 : 0xf8fafc;
+        var bgStr = dark ? '#060a14' : '#f8fafc';
+        var W = container.clientWidth  || 800;
+        var H = container.clientHeight || 500;
+
+        /* ── 데이터 로드 ────────────────────────────────────────── */
+        Promise.all([
+            fetch('/data/search-index.json').then(function (r) { return r.json(); }),
+            fetch('/data/related.json').then(function (r) { return r.json(); }),
+        ]).then(function (results) {
+            var searchIndex = results[0];
+            var related     = results[1];
+
+            /* ── 노드 빌드 ───────────────────────────────────── */
+            var nodeMap = {}, nodes = [];
+            searchIndex.forEach(function (page) {
+                if (page.type === 'tag') return;
+                if (page.type === 'wiki' && /^\/wiki\/[^\/]+\/?$/.test(page.url)) return;
+                var slug = page.url.replace(/^\/(wiki|posts|blog)\//, '');
+                var cat  = getCategory(page.url, page.type);
+                var n = {
+                    id: slug, slug: slug, title: page.title,
+                    url: page.url, type: page.type || 'wiki',
+                    cat: cat, tags: page.tags || [],
+                    summary: page.summary || '', degree: 0,
+                };
+                nodes.push(n);
+                nodeMap[slug] = n;
+            });
+
+            /* ── 링크 빌드 ──────────────────────────────────── */
+            var seen = new Set(), links = [], adj = {};
+            var scoreMap = {};
+
+            function addLink(a, b) {
+                var key = [a, b].sort().join('|||');
+                if (seen.has(key)) return;
+                seen.add(key);
+                var an = nodeMap[a], bn = nodeMap[b];
+                if (!an || !bn) return;
+                links.push({ source: a, target: b });
+                an.degree++; bn.degree++;
+                if (!adj[a]) adj[a] = new Set();
+                if (!adj[b]) adj[b] = new Set();
+                adj[a].add(b); adj[b].add(a);
+            }
+            Object.keys(related).forEach(function (src) {
+                (related[src] || []).forEach(function (rel) {
+                    addLink(src, rel.slug);
+                    if (rel.score !== undefined) {
+                        var k = [src, rel.slug].sort().join('|||');
+                        if (!scoreMap[k]) scoreMap[k] = rel.score;
+                    }
+                });
+            });
+            links.forEach(function (l) {
+                l.score = scoreMap[[l.source, l.target].sort().join('|||')];
+            });
+
+            /* ── 카테고리 클러스터 (2D 방식, 3D 좌표로 변환) ── */
+            var catGroups = {};
+            nodes.forEach(function (n) {
+                if (!catGroups[n.cat]) catGroups[n.cat] = [];
+                catGroups[n.cat].push(n);
+            });
+            var cats = Object.keys(catGroups).sort(function (a, b) {
+                return catGroups[b].length - catGroups[a].length;
+            });
+
+            var clusterR = 180; // 노드 간격 확보
+            var catCenters = {}, catZBase = {};
+            cats.forEach(function (cat, i) {
+                var angle = (i / cats.length) * 2 * Math.PI - Math.PI / 2;
+                catCenters[cat] = {
+                    x: clusterR * Math.cos(angle),
+                    y: clusterR * Math.sin(angle),
+                };
+                // Z: 카테고리마다 다른 깊이 레이어
+                catZBase[cat] = -150 + (i / Math.max(cats.length - 1, 1)) * 300;
+            });
+
+            /* ── 파도 페이즈 할당 ────────────────────────── */
+            nodes.forEach(function (n, i) {
+                n._wavePhaseX = (i / nodes.length) * Math.PI * 2;
+                n._wavePhaseY = (i / nodes.length) * Math.PI * 2 + Math.PI * 0.5;
+                n._wavePhaseZ = (i / nodes.length) * Math.PI * 2 + Math.PI;
+            });
+            /* 카테고리 내 노드 순서 기반 Z 분산 */
+            var catCounter = {};
+            nodes.forEach(function (n) {
+                var cat = n.cat;
+                if (!catCounter[cat]) catCounter[cat] = 0;
+                var idx   = catCounter[cat]++;
+                var total = catGroups[cat].length;
+                var frac  = total > 1 ? (idx / (total - 1)) - 0.5 : 0; // -0.5 ~ +0.5
+                n.z = (catZBase[cat] || 0) + frac * 120; // ±60 단위 분산
+            });
+
+            /* ── 노드 반지름 ─────────────────────────────── */
+            function nodeR(n) {
+                var base = 4 + Math.sqrt(n.degree) * 3.2;
+                if (n.type === 'blog') base += 2;
+                return Math.max(4, Math.min(20, base));
+            }
+
+            /* ── Three.js 씬 구성 ─────────────────────────── */
+            container.style.position = 'relative';
+            var initDotClr = dark ? 'rgba(74,104,144,0.55)' : 'rgba(100,116,139,0.30)';
+            container.style.backgroundColor = bgStr;
+            container.style.backgroundImage = 'radial-gradient(circle, ' + initDotClr + ' 1.2px, transparent 1.2px)';
+            container.style.backgroundSize = '28px 28px';
+            var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.setSize(W, H);
+            renderer.setClearColor(0x000000, 0); /* 투명 — 배경은 CSS로 */
+            container.appendChild(renderer.domElement);
+
+            /* 라벨 오버레이 */
+            var labelsEl = document.createElement('div');
+            labelsEl.style.cssText =
+                'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;overflow:hidden;';
+            container.appendChild(labelsEl);
+
+            var scene = new THREE.Scene();
+            scene.fog = new THREE.Fog(bgHex, 700, 1800);
+            scene.add(new THREE.AmbientLight(0xffffff, 0.35));
+            var dLight = new THREE.DirectionalLight(0xffffff, 0.55);
+            dLight.position.set(120, 200, 300); scene.add(dLight);
+
+            /* ── 별 파티클 (다크모드 공간감) ────────────── */
+            var starPoints = null;
+            (function () {
+                var count = 800;
+                var pos   = new Float32Array(count * 3);
+                for (var i = 0; i < count; i++) {
+                    /* 구형 분포 — 노드 영역(~300) 바깥 600-1500 거리 */
+                    var r     = 650 + Math.random() * 850;
+                    var theta = Math.random() * Math.PI * 2;
+                    var phi   = Math.acos(2 * Math.random() - 1);
+                    pos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
+                    pos[i * 3 + 1] = r * Math.sin(phi) * Math.sin(theta);
+                    pos[i * 3 + 2] = r * Math.cos(phi);
+                }
+                var geo = new THREE.BufferGeometry();
+                geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+                starPoints = new THREE.Points(geo, new THREE.PointsMaterial({
+                    color: 0xc8d8ff,
+                    size: 1.4,
+                    sizeAttenuation: true,
+                    transparent: true,
+                    opacity: dark ? 0.65 : 0,
+                    depthWrite: false,
+                }));
+                scene.add(starPoints);
+            }());
+
+            /* 도트 격자는 CSS background로 처리 (applyTheme에서 갱신) */
+
+            var FOV = 50;
+            var camera = new THREE.PerspectiveCamera(FOV, W / H, 1, 2000);
+            camera.position.set(60, 90, 370);
+            camera.lookAt(0, 0, 0);
+
+            /* ── 노드 메시 생성 ──────────────────────────── */
+            var meshes = [], nodeById = {};
+            var hiddenCats = new Set();
+
+            nodes.forEach(function (n) {
+                var r   = nodeR(n);
+                var col = themedColor(n.cat, dark);
+
+                var visR = r * 1.5;
+
+                var mesh = new THREE.Mesh(
+                    new THREE.SphereGeometry(visR, 28, 28),
+                    new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: 0.06 })
+                );
+                mesh.position.set(0, 0, n.z);
+
+                /* 테두리: 살짝 큰 BackSide 구체 → 안쪽 면이 테두리로 보임 */
+                var borderMesh = new THREE.Mesh(
+                    new THREE.SphereGeometry(visR * 1.18, 20, 20),
+                    new THREE.MeshBasicMaterial({ color: col, side: THREE.BackSide })
+                );
+                mesh.add(borderMesh);
+
+                /* halo — 공간감 글로우 (최소한만) */
+                var haloMesh = new THREE.Mesh(
+                    new THREE.SphereGeometry(visR * 2.4, 14, 14),
+                    new THREE.MeshBasicMaterial({
+                        color: col, transparent: true, opacity: 0.07, depthWrite: false,
+                    })
+                );
+                haloMesh.renderOrder = -1;
+                mesh.add(haloMesh);
+
+                /* 선택 시 강화되는 글로우 스프라이트 */
+                var sprite = new THREE.Sprite(new THREE.SpriteMaterial({
+                    map: glowTex(), color: col, transparent: true,
+                    depthWrite: false, blending: THREE.AdditiveBlending, opacity: 0,
+                }));
+                sprite.scale.setScalar(visR * 5);
+                mesh.add(sprite);
+
+                /* 라벨 */
+                var labelDiv = document.createElement('div');
+                var txt = n.title.replace(/^[""]|[""]$/g, '');
+                labelDiv.textContent = txt.length > 16 ? txt.slice(0, 16) + '…' : txt;
+                labelDiv.style.cssText =
+                    'position:absolute;pointer-events:none;white-space:nowrap;' +
+                    'font-size:9px;font-family:system-ui,-apple-system,sans-serif;' +
+                    'color:' + (dark ? '#94a3b8' : '#475569') + ';' +
+                    'text-shadow:0 0 4px ' + bgStr + ',0 0 8px ' + bgStr + ';' +
+                    'opacity:' + LABEL_NORMAL + ';';
+                labelsEl.appendChild(labelDiv);
+
+                mesh.userData = {
+                    node: n, sprite: sprite, haloMesh: haloMesh, borderMesh: borderMesh,
+                    labelDiv: labelDiv, r: visR, dimmed: false, selected: false, active: false,
+                };
+                scene.add(mesh);
+                meshes.push(mesh);
+                nodeById[n.id] = mesh;
+                n._mesh = mesh;
+            });
+
+            /* ── 링크 생성 ───────────────────────────────── */
+            var linkObjs = [];
+            links.forEach(function (l) {
+                var sId = l.source, tId = l.target;
+                var sm = nodeById[sId], tm = nodeById[tId];
+                if (!sm || !tm) return;
+                var geo = new THREE.BufferGeometry();
+                geo.setAttribute('position',
+                    new THREE.Float32BufferAttribute(new Float32Array(6), 3));
+                var mat = new THREE.LineBasicMaterial({
+                    color: dark ? 0xffffff : 0x334155,
+                    transparent: true,
+                    opacity: dark ? 0.55 : 0.45,
+                });
+                var line = new THREE.Line(geo, mat);
+                scene.add(line);
+
+                /* 유사도 점수 레이블 */
+                var scoreDiv = null;
+                if (l.score !== undefined) {
+                    scoreDiv = document.createElement('div');
+                    scoreDiv.style.cssText =
+                        'position:absolute;pointer-events:none;display:none;' +
+                        'font-size:8px;font-weight:700;transform:translate(-50%,-50%);' +
+                        'padding:1px 5px;border-radius:3px;white-space:nowrap;' +
+                        (dark
+                            ? 'color:#e2e8f0;background:rgba(13,17,23,0.88);border:1px solid rgba(51,65,85,0.5);'
+                            : 'color:#334155;background:rgba(248,250,252,0.88);border:1px solid rgba(226,232,240,0.7);');
+                    scoreDiv.textContent = l.score.toFixed(3);
+                    labelsEl.appendChild(scoreDiv);
+                }
+                linkObjs.push({ sId: sId, tId: tId, sm: sm, tm: tm,
+                                line: line, mat: mat, connected: false, dimmed: false,
+                                score: l.score, scoreDiv: scoreDiv });
+            });
+
+            /* ── D3 시뮬레이션 ──────────────────────────────── */
+            var sim = d3.forceSimulation(nodes)
+                .force('link', d3.forceLink(links)
+                    .id(function (d) { return d.id; })
+                    /* score 높을수록 가깝게 (score=0.95→~30, score=0.6→~90) */
+                    .distance(function (d) { return Math.max(25, 200 - (d.score || 0.7) * 180); })
+                    .strength(function (d) { return 0.2 + (d.score || 0.7) * 0.35; }))
+                .force('charge',    d3.forceManyBody().strength(-180).distanceMax(350))
+                .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) * 1.5 + 8; }))
+                .force('clusterX',  d3.forceX().strength(0.2)
+                    .x(function (d) { return (catCenters[d.cat] || { x: 0 }).x; }))
+                .force('clusterY',  d3.forceY().strength(0.2)
+                    .y(function (d) { return (catCenters[d.cat] || { y: 0 }).y; }))
+                .alphaDecay(0.015)
+                .alphaTarget(FLOAT_ALPHA)
+                .stop();
+
+            sim.tick(400);
+            zoomToFit();
+            sim.restart();
+
+            /* ── 초기 카메라 zoom-to-fit ────────────────── */
+            function zoomToFit() {
+                var maxR = 1;
+                nodes.forEach(function (n) {
+                    var r2 = Math.sqrt((n.x || 0) * (n.x || 0) + (n.y || 0) * (n.y || 0));
+                    if (r2 > maxR) maxR = r2;
+                });
+                var z = (maxR / Math.tan(FOV * 0.5 * Math.PI / 180)) + 30;
+                camera.position.z = Math.max(150, Math.min(700, z));
+                camera.updateMatrixWorld(true);
+            }
+
+            /* ── 배경 클릭 시 전체 노드 fit ────────────── */
+            function zoomToFitCompact() {
+                var maxR = 80;
+                nodes.forEach(function (n) {
+                    var nx = n.fx !== undefined ? n.fx : (n.x || 0);
+                    var ny = n.fy !== undefined ? n.fy : (n.y || 0);
+                    var r = Math.sqrt(nx * nx + ny * ny);
+                    if (r > maxR) maxR = r;
+                });
+                /* 멀리 드래그한 이상치가 카메라를 너무 빼는 것 방지 */
+                maxR = Math.min(maxR, 420);
+                var z = Math.max(320, maxR * 2.2 + 80);
+                camera.position.set(60, 90, z);
+                camera.lookAt(0, 0, 0);
+                controls.target.set(0, 0, 0);
+                controls.update();
+            }
+
+            /* ── 상태 ────────────────────────────────────── */
+            var pinnedNode = null, activeNode = null, resetTimer = null, activeSearch = false;
+
+            function highlight(n) {
+                activeNode = n;
+                clearTimeout(resetTimer);
+                var nb = adj[n.slug] || new Set();
+                var th = dark
+                    ? { label: '#94a3b8', labelActive: '#ffffff' }
+                    : { label: '#475569', labelActive: '#0f172a' };
+
+                meshes.forEach(function (m) {
+                    var mn = m.userData.node;
+                    var isSel = mn.slug === n.slug;
+                    var isNb  = nb.has(mn.slug);
+                    m.userData.selected = isSel;
+                    m.userData.dimmed   = !isSel && !isNb;
+                    m.userData.active   = isSel || isNb;
+
+                    /* 라벨 */
+                    var div = m.userData.labelDiv;
+                    if (div) {
+                        var opa = (isSel || isNb) ? 1 : 0;
+                        div._opa = opa;
+                        div.style.opacity  = opa.toString();
+                        div.style.color    = isSel ? th.labelActive : th.label;
+                        div.style.fontSize = isSel ? '11px' : '9px';
+                    }
+                });
+
+                linkObjs.forEach(function (lo) {
+                    var conn = lo.sId === n.slug || lo.tId === n.slug;
+                    lo.connected = conn;
+                    lo.dimmed    = !conn;
+                });
+
+                showPreview(n);
+            }
+
+            function resetHighlight() {
+                if (pinnedNode) return;
+                clearTimeout(resetTimer);
+                resetTimer = setTimeout(function () {
+                    activeNode = null;
+                    var th = dark ? { label: '#94a3b8' } : { label: '#475569' };
+                    meshes.forEach(function (m) {
+                        m.userData.selected = false;
+                        m.userData.dimmed   = false;
+                        m.userData.active   = false;
+                        var div = m.userData.labelDiv;
+                        if (div) {
+                            div._opa = LABEL_NORMAL;
+                            div.style.opacity  = LABEL_NORMAL.toString();
+                            div.style.color    = th.label;
+                            div.style.fontSize = '9px';
+                        }
+                    });
+                    linkObjs.forEach(function (lo) { lo.connected = false; lo.dimmed = false; });
+                    previewEl.classList.remove('is-visible');
+                }, 80);
+            }
+
+            function pinNode(n) {
+                pinnedNode = n;
+                clearTimeout(resetTimer);
+                activeNode = null;
+                highlight(n);
+            }
+
+            /* ── 툴팁 (2D graph-tooltip 동일 스타일, position:fixed) ── */
+            var previewEl = document.createElement('div');
+            previewEl.className = 'graph-tooltip';
+            previewEl.style.zIndex = '3200';
+            document.body.appendChild(previewEl);
+
+            function showPreview(n) {
+                var title = n.title.replace(/^[""""]|[""""]$/g, '');
+                previewEl.innerHTML = '<strong>' + title + '</strong>';
+                previewEl.classList.add('is-visible');
+            }
+
+            /* ─────────────────────────────────────────────────────
+               핵심: 내 이벤트 핸들러를 OrbitControls보다 먼저 등록.
+               노드 히트 시 stopImmediatePropagation으로 OrbitControls 차단.
+            ──────────────────────────────────────────────────────── */
+            var ray       = new THREE.Raycaster();
+            var ptr       = new THREE.Vector2(-9, -9);
+            var dragPlane = new THREE.Plane();
+            var dragMesh    = null;
+            var isDragging  = false;
+            var downAt      = null;
+            var dragConnSet = null; // 드래그 중 연결 노드 slug set
+
+            function setPtr(e) {
+                var rc = renderer.domElement.getBoundingClientRect();
+                ptr.x =  ((e.clientX - rc.left) / rc.width)  * 2 - 1;
+                ptr.y = -((e.clientY - rc.top)  / rc.height) * 2 + 1;
+            }
+
+            renderer.domElement.addEventListener('pointerdown', onDown);
+            renderer.domElement.addEventListener('pointermove', onMove);
+            renderer.domElement.addEventListener('pointerup',   onUp);
+
+            /* OrbitControls는 반드시 내 핸들러 이후에 등록 */
+            var controls = new THREE.OrbitControls(camera, renderer.domElement);
+            controls.enableDamping  = true;
+            controls.dampingFactor  = 0.08;
+            controls.minDistance    = 80;
+            controls.maxDistance    = 4000;
+            controls.autoRotate     = false;
+            controls.autoRotateSpeed = 0.3;
+            controls.target.set(0, 0, 0);
+
+            function onDown(e) {
+                if (e.button !== 0) return;
+                setPtr(e);
+                camera.updateMatrixWorld();
+                ray.setFromCamera(ptr, camera);
+                downAt = { x: e.clientX, y: e.clientY, t: Date.now() };
+
+                var visibleMeshes = meshes.filter(function (m) { return m.visible; });
+                var hits = ray.intersectObjects(visibleMeshes, false);
+                if (!hits.length) return;
+
+                e.stopImmediatePropagation(); // OrbitControls 차단
+                dragMesh  = hits[0].object;
+                isDragging = false;
+                dragPlane.setFromNormalAndCoplanarPoint(
+                    camera.getWorldDirection(new THREE.Vector3()),
+                    dragMesh.position
+                );
+                /* fx/fy 및 sim.restart는 실제 드래그 시작 시(onMove)에만 설정
+                   — 클릭과 드래그를 명확히 구분 */
+            }
+
+            function onMove(e) {
+                setPtr(e);
+                if (dragMesh) {
+                    e.stopImmediatePropagation();
+                    /* 3px 이상 이동 시에만 드래그로 판정 */
+                    if (!isDragging && downAt) {
+                        var dx = Math.abs(e.clientX - downAt.x);
+                        var dy = Math.abs(e.clientY - downAt.y);
+                        if (dx > 3 || dy > 3) {
+                            isDragging = true;
+                            var dn = dragMesh.userData.node;
+                            dn.fx = dn.x; dn.fy = dn.y;
+                            dragConnSet = adj[dn.slug] || new Set();
+                            /* 연결 노드 fx/fy 해제 → 링크 힘으로 따라오게 */
+                            dragConnSet.forEach(function (s) {
+                                var nb = nodeMap[s];
+                                if (nb) { nb.fx = undefined; nb.fy = undefined; }
+                            });
+                            /* charge 약화(비연결 노드 산란 방지), 클러스터 OFF, 링크 강화 */
+                            sim.force('charge').strength(-25);
+                            sim.force('clusterX').strength(0);
+                            sim.force('clusterY').strength(0);
+                            sim.force('link').strength(0.5);
+                            sim.alphaTarget(0.25).restart();
+                        }
+                    }
+                    if (isDragging) {
+                        camera.updateMatrixWorld();
+                        ray.setFromCamera(ptr, camera);
+                        var pt = new THREE.Vector3();
+                        if (ray.ray.intersectPlane(dragPlane, pt)) {
+                            var dn2 = dragMesh.userData.node;
+                            dn2.fx = pt.x; dn2.fy = pt.y; dn2.fz = pt.z;
+                        }
+                    }
+                    return;
+                }
+                camera.updateMatrixWorld();
+                ray.setFromCamera(ptr, camera);
+                var visibleMeshes = meshes.filter(function (m) { return m.visible; });
+                renderer.domElement.style.cursor =
+                    ray.intersectObjects(visibleMeshes, false).length ? 'pointer' : 'grab';
+            }
+
+            function doReset() {
+                pinnedNode = null; clearTimeout(resetTimer); activeNode = null;
+                meshes.forEach(function (m) {
+                    m.userData.selected = false; m.userData.dimmed = false; m.userData.active = false;
+                    if (m.userData.labelDiv) {
+                        m.userData.labelDiv._opa = LABEL_NORMAL;
+                        m.userData.labelDiv.style.opacity  = LABEL_NORMAL.toString();
+                        m.userData.labelDiv.style.fontSize = '9px';
+                    }
+                });
+                linkObjs.forEach(function (lo) { lo.connected = false; lo.dimmed = false; });
+                activeSearch = false;
+                previewEl.classList.remove('is-visible');
+            }
+
+            function onUp(e) {
+                if (dragMesh) {
+                    e.stopImmediatePropagation();
+
+                    if (!isDragging) {
+                        /* 순수 클릭 → pinNode 또는 페이지 이동 (sim 상태 그대로) */
+                        var cn = dragMesh.userData.node;
+                        dragMesh = null; isDragging = false; downAt = null;
+                        if (pinnedNode && pinnedNode.slug === cn.slug) {
+                            window.location.href = cn.url;
+                        } else {
+                            pinNode(cn);
+                        }
+                        return;
+                    }
+
+                    /* 드래그 종료: 연결 노드를 현재 위치에 pin → 원복 방지 */
+                    if (dragConnSet) {
+                        dragConnSet.forEach(function (s) {
+                            var nb = nodeMap[s];
+                            if (nb) { nb.fx = nb.x; nb.fy = nb.y; }
+                        });
+                        dragConnSet = null;
+                    }
+                    /* 힘 원복 */
+                    sim.force('charge').strength(-180);
+                    sim.force('clusterX').strength(0.2);
+                    sim.force('clusterY').strength(0.2);
+                    sim.force('link').strength(function (d) { return 0.2 + (d.score || 0.7) * 0.35; });
+                    sim.alphaTarget(FLOAT_ALPHA);
+                    dragMesh = null; isDragging = false; downAt = null;
+                    return;
+                }
+
+                /* 배경 클릭 판정 */
+                if (!downAt) return;
+                var moved = Math.abs(e.clientX - downAt.x) + Math.abs(e.clientY - downAt.y);
+                var dt    = Date.now() - downAt.t;
+                var nowT  = Date.now();
+                downAt = null;
+                if (moved > 6 || dt > 400) return;
+
+                doReset();
+                zoomToFitCompact();
+            }
+
+            /* ── 카테고리 패널 ───────────────────────────── */
+            var groupsEl = opts.groups;
+            if (groupsEl) {
+                cats.forEach(function (cat) {
+                    var item = document.createElement('label');
+                    item.className = 'gp-chip';
+                    item.innerHTML =
+                        '<input type="checkbox" checked data-cat="' + cat + '" class="gp-chip__input">' +
+                        '<span class="gp-chip__dot" style="background:' + catColor(cat) + '"></span>' +
+                        '<span class="gp-chip__name">' + cat + '</span>' +
+                        '<span class="gp-chip__count">' + catGroups[cat].length + '</span>';
+                    groupsEl.appendChild(item);
+                    item.querySelector('input').addEventListener('change', function (ev) {
+                        if (ev.target.checked) hiddenCats.delete(cat);
+                        else hiddenCats.add(cat);
+                        meshes.forEach(function (m) {
+                            m.visible = !hiddenCats.has(m.userData.node.cat);
+                            if (m.userData.labelDiv)
+                                m.userData.labelDiv.style.display = m.visible ? '' : 'none';
+                        });
+                        linkObjs.forEach(function (lo) {
+                            lo.line.visible =
+                                !hiddenCats.has(lo.sm.userData.node.cat) &&
+                                !hiddenCats.has(lo.tm.userData.node.cat);
+                        });
+                    });
+                });
+            }
+
+            if (opts.stats) {
+                opts.stats.textContent = nodes.length + '개 노드 · ' + links.length + '개 연결';
+            }
+
+            /* ── 검색 ───────────────────────────────────── */
+            if (opts.search) {
+                opts.search.addEventListener('input', function () {
+                    var q = this.value.toLowerCase().trim();
+                    pinnedNode = null; clearTimeout(resetTimer); activeNode = null;
+                    activeSearch = q.length > 0;
+                    if (!q) {
+                        meshes.forEach(function (m) {
+                            m.userData.dimmed   = false;
+                            m.userData.selected = false;
+                            if (m.userData.labelDiv) {
+                                m.userData.labelDiv._opa = LABEL_NORMAL;
+                                m.userData.labelDiv.style.opacity  = LABEL_NORMAL.toString();
+                                m.userData.labelDiv.style.fontSize = '9px';
+                            }
+                        });
+                        linkObjs.forEach(function (lo) { lo.connected = false; lo.dimmed = false; });
+                        previewEl.classList.remove('is-visible');
+                        return;
+                    }
+                    function match(n) {
+                        return n.title.toLowerCase().includes(q) ||
+                               (n.tags || []).some(function (tg) { return tg.toLowerCase().includes(q); });
+                    }
+                    meshes.forEach(function (m) {
+                        var ok = match(m.userData.node);
+                        var opa = ok ? 1 : 0;
+                        m.userData.dimmed   = !ok;
+                        m.userData.selected = false;
+                        if (m.userData.labelDiv) {
+                            m.userData.labelDiv._opa = opa;
+                            m.userData.labelDiv.style.opacity  = opa.toString();
+                            m.userData.labelDiv.style.fontSize = ok ? '11px' : '9px';
+                        }
+                    });
+                    linkObjs.forEach(function (lo) { lo.connected = false; lo.dimmed = true; });
+                });
+            }
+
+            /* ── 다크모드 감지 + 전체 재테마 ─────────────── */
+            function applyTheme() {
+                dark = isDark();
+                var bgStr2 = dark ? '#060a14' : '#f8fafc';
+                var dotClr = dark ? 'rgba(74,104,144,0.55)' : 'rgba(100,116,139,0.30)';
+                if (scene.fog) scene.fog.color.set(dark ? 0x060a14 : 0xf8fafc);
+                if (starPoints) starPoints.material.opacity = dark ? 0.65 : 0;
+                /* 컨테이너에 도트 격자 배경 */
+                container.style.backgroundColor = bgStr2;
+                container.style.backgroundImage =
+                    'radial-gradient(circle, ' + dotClr + ' 1.2px, transparent 1.2px)';
+                container.style.backgroundSize = '28px 28px';
+
+                /* 노드 재색상 */
+                meshes.forEach(function (m) {
+                    var col = themedColor(m.userData.node.cat, dark);
+                    m.material.color.set(col);
+                    if (m.userData.borderMesh) m.userData.borderMesh.material.color.set(col);
+                    if (m.userData.haloMesh)   m.userData.haloMesh.material.color.set(col);
+                    m.userData.sprite.material.color.set(col);
+                    var div = m.userData.labelDiv;
+                    if (div) {
+                        div.style.color      = dark ? '#94a3b8' : '#475569';
+                        div.style.textShadow = '0 0 4px ' + bgStr2 + ',0 0 8px ' + bgStr2;
+                    }
+                });
+
+                /* 스코어 div 재색상 */
+                linkObjs.forEach(function (lo) {
+                    if (!lo.scoreDiv) return;
+                    if (dark) {
+                        lo.scoreDiv.style.color      = '#e2e8f0';
+                        lo.scoreDiv.style.background = 'rgba(13,17,23,0.88)';
+                        lo.scoreDiv.style.borderColor = 'rgba(51,65,85,0.5)';
+                    } else {
+                        lo.scoreDiv.style.color      = '#334155';
+                        lo.scoreDiv.style.background = 'rgba(248,250,252,0.88)';
+                        lo.scoreDiv.style.borderColor = 'rgba(226,232,240,0.7)';
+                    }
+                });
+            }
+            new MutationObserver(applyTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+
+            /* ── 라벨 screen-projection ─────────────────── */
+            var projV2 = new THREE.Vector3();
+            function projectLabels() {
+                var cw = renderer.domElement.clientWidth;
+                var ch = renderer.domElement.clientHeight;
+                meshes.forEach(function (m) {
+                    var ud  = m.userData;
+                    var div = ud.labelDiv;
+                    if (!div || !m.visible) return;
+
+                    /* 숨김 처리 */
+                    if (ud.dimmed && !ud.selected && !ud.active) {
+                        div.style.display = 'none'; return;
+                    }
+
+                    projV2.copy(m.position).applyMatrix4(camera.matrixWorldInverse);
+                    if (projV2.z > -1) { div.style.display = 'none'; return; }
+
+                    projV2.copy(m.position).project(camera);
+                    var sx = (projV2.x  * 0.5 + 0.5) * cw;
+                    var sy = (-projV2.y * 0.5 + 0.5) * ch;
+                    if (sx < 8 || sx > cw - 8 || sy < 8 || sy > ch - 8) {
+                        div.style.display = 'none'; return;
+                    }
+
+                    /* fog-based opacity (div._opa = 기준값, fog는 가산 감쇠) */
+                    var dist = camera.position.distanceTo(m.position);
+                    var fog  = Math.max(0, Math.min(1, (dist - 700) / 1100));
+                    var baseOpa = div._opa !== undefined ? div._opa : LABEL_NORMAL;
+                    var finalOpa = baseOpa * (1 - fog * 0.6);
+
+                    div.style.display   = '';
+                    div.style.left      = sx + 'px';
+                    div.style.top       = (sy - ud.r - 4) + 'px';
+                    div.style.transform = 'translate(-50%,-100%)';
+                    div.style.opacity   = finalOpa.toFixed(2);
+                });
+            }
+
+            /* ── 애니메이션 루프 ─────────────────────────── */
+            var running = true;
+            var _projPV = new THREE.Vector3();
+
+            function animate() {
+                if (!running) return;
+                requestAnimationFrame(animate);
+
+                var now = performance.now();
+                var waveT = now / WAVE_PERIOD * 2 * Math.PI;
+                var beingDragged = isDragging && dragMesh ? dragMesh.userData.node : null;
+                var cw = renderer.domElement.clientWidth;
+                var ch = renderer.domElement.clientHeight;
+
+                meshes.forEach(function (m) {
+                    var ud = m.userData, n = ud.node;
+                    var wox = Math.sin(waveT + n._wavePhaseX) * WAVE_AMP * 0.5;
+                    var woy = Math.sin(waveT + n._wavePhaseY) * WAVE_AMP;
+
+                    if (n === beingDragged) {
+                        m.position.x = n.fx !== undefined ? n.fx : (n.x || 0);
+                        m.position.y = n.fy !== undefined ? n.fy : (n.y || 0);
+                        m.position.z = n.fz !== undefined ? n.fz : n.z;
+                    } else {
+                        m.position.x = (n.x || 0) + wox;
+                        m.position.y = (n.y || 0) + woy;
+                        /* 드래그 후에도 fz 유지 (3D 위치 보존) */
+                        m.position.z = (n.fz !== undefined ? n.fz : n.z) + Math.sin(waveT * 0.4 + n._wavePhaseZ) * 4;
+                    }
+
+                    var dim = ud.dimmed, sel = ud.selected;
+                    var hidden = dim && (pinnedNode || activeSearch);
+                    /* 내부 구체: 극도로 투명 (유리 질감 힌트) */
+                    m.material.opacity = hidden ? 0 : 0.06;
+                    m.scale.setScalar(sel ? 1.3 : 1.0);
+                    /* 테두리: 항상 solid (pinned+dim만 숨김) */
+                    if (ud.borderMesh) {
+                        ud.borderMesh.material.transparent = hidden;
+                        ud.borderMesh.material.opacity = hidden ? 0 : 1;
+                    }
+                    /* halo: 아주 희미하게만 */
+                    if (ud.haloMesh) {
+                        ud.haloMesh.material.opacity = hidden ? 0 : (sel ? 0.28 : 0.07);
+                    }
+                    ud.sprite.material.opacity = hidden ? 0 : (sel ? 0.55 : 0);
+                });
+
+                var pinnedCatCol = pinnedNode ? catColor(pinnedNode.cat) : null;
+
+                linkObjs.forEach(function (lo) {
+                    if (!lo.line.visible) return;
+                    var sp  = lo.sm.position, tp = lo.tm.position;
+                    var arr = lo.line.geometry.attributes.position.array;
+                    arr[0] = sp.x; arr[1] = sp.y; arr[2] = sp.z;
+                    arr[3] = tp.x; arr[4] = tp.y; arr[5] = tp.z;
+                    lo.line.geometry.attributes.position.needsUpdate = true;
+
+                    var mat = lo.mat, d2 = dark;
+                    if (lo.connected) {
+                        /* 선택된 노드의 catColor로 엣지 하이라이트 */
+                        mat.color.setStyle(pinnedCatCol || catColor(lo.sm.userData.node.cat));
+                        mat.opacity = 1; mat.linewidth = 2;
+
+                        /* 유사도 점수 레이블 위치 갱신 */
+                        if (lo.scoreDiv) {
+                            _projPV.set((sp.x + tp.x) / 2, (sp.y + tp.y) / 2, (sp.z + tp.z) / 2).project(camera);
+                            var smx = (_projPV.x * 0.5 + 0.5) * cw;
+                            var smy = (-_projPV.y * 0.5 + 0.5) * ch;
+                            lo.scoreDiv.style.display = '';
+                            lo.scoreDiv.style.left    = smx + 'px';
+                            lo.scoreDiv.style.top     = smy + 'px';
+                            if (pinnedCatCol) lo.scoreDiv.style.color = pinnedCatCol;
+                        }
+                    } else {
+                        if (lo.scoreDiv) lo.scoreDiv.style.display = 'none';
+                        mat.color.set(d2 ? 0xffffff : 0x334155);
+                        /* pinned 상태면 비연결 링크 완전 숨김 */
+                        mat.opacity = (pinnedNode && lo.dimmed) ? 0 : (lo.dimmed ? 0.04 : (d2 ? 0.55 : 0.45));
+                    }
+                });
+
+                /* 프리뷰 카드 — 노드 따라 이동, 연결 노드 안 가리는 방향 선택 */
+                if (pinnedNode) updatePreviewPos();
+
+                controls.update();
+                renderer.render(scene, camera);
+                projectLabels();
+            }
+
+            /* ── 프리뷰 위치 스마트 배치 ─────────────────── */
+            function viewportOf(mesh) {
+                var rect = renderer.domElement.getBoundingClientRect();
+                _projPV.copy(mesh.position).project(camera);
+                return {
+                    x: (_projPV.x * 0.5 + 0.5) * rect.width  + rect.left,
+                    y: (-_projPV.y * 0.5 + 0.5) * rect.height + rect.top,
+                };
+            }
+
+            function updatePreviewPos() {
+                var m = nodeById[pinnedNode.slug];
+                if (!m) return;
+                var vw    = window.innerWidth, vh = window.innerHeight;
+                var sp    = viewportOf(m);
+                var tipW  = previewEl.offsetWidth  || 240;
+                var tipH  = previewEl.offsetHeight || 80;
+                var gap   = Math.max(12, m.userData.r + 6);
+                var pad   = 8;
+
+                /* 이웃 노드 뷰포트 위치 */
+                var nbPos = [];
+                (adj[pinnedNode.slug] || new Set()).forEach(function (s) {
+                    var nm = nodeById[s];
+                    if (nm && nm.visible) nbPos.push(viewportOf(nm));
+                });
+
+                /* 4방향 후보 */
+                var candidates = [
+                    { l: sp.x + gap,            tp: sp.y - tipH / 2 },
+                    { l: sp.x - tipW - gap,     tp: sp.y - tipH / 2 },
+                    { l: sp.x - tipW / 2,       tp: sp.y + gap       },
+                    { l: sp.x - tipW / 2,       tp: sp.y - tipH - gap },
+                ];
+
+                function overlapScore(c) {
+                    var cx = c.l + tipW / 2, cy = c.tp + tipH / 2, sc = 0;
+                    nbPos.forEach(function (nb) {
+                        var dx = Math.abs(nb.x - cx), dy = Math.abs(nb.y - cy);
+                        if (dx < tipW / 2 + 30 && dy < tipH / 2 + 30) sc++;
+                    });
+                    if (c.l < pad || c.l + tipW > vw - pad) sc += 5;
+                    if (c.tp < pad || c.tp + tipH > vh - pad) sc += 5;
+                    return sc;
+                }
+
+                var best = candidates.reduce(function (prev, cur) {
+                    return overlapScore(cur) < overlapScore(prev) ? cur : prev;
+                });
+
+                previewEl.style.left = Math.max(pad, Math.min(best.l,  vw - tipW - pad)) + 'px';
+                previewEl.style.top  = Math.max(pad, Math.min(best.tp, vh - tipH - pad)) + 'px';
+            }
+            animate();
+
+            /* ── 리사이즈 ─────────────────────────────── */
+            function onResize() {
+                W = container.clientWidth; H = container.clientHeight;
+                camera.aspect = W / H; camera.updateProjectionMatrix();
+                renderer.setSize(W, H);
+            }
+            window.addEventListener('resize', onResize);
+
+            /* ── dispose ─────────────────────────────── */
+            var _dispose = function () {
+                running = false; sim.stop(); clearTimeout(resetTimer);
+                previewEl.classList.remove('is-visible');
+                window.removeEventListener('resize', onResize);
+                if (labelsEl.parentNode)  labelsEl.remove();
+                if (previewEl.parentNode) previewEl.remove();
+                linkObjs.forEach(function (lo) { if (lo.scoreDiv && lo.scoreDiv.parentNode) lo.scoreDiv.remove(); });
+                renderer.dispose();
+            };
+            container._kg3dDispose = _dispose;
+
+        }).catch(function (e) { console.error('[kg3d] data error:', e); });
+    }
+
+    /* ── 공개 API ─────────────────────────────────────────────────── */
+    window.KnowledgeGraph3D = {
+        init: function (opts) {
+            if (!opts || !opts.container) return;
+            var c = opts.container;
+            if (c._kg3dDispose) { c._kg3dDispose(); delete c._kg3dDispose; }
+            ensureLibs().then(function () { initGraph(opts); })
+                .catch(function (e) { console.error('[kg3d] lib error:', e); });
+        },
+    };
+
+})();

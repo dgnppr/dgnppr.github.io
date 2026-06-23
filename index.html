@@ -8,7 +8,7 @@ regenerate: true
     <p class="home-section-title">Knowledge Graph</p>
     <div class="home-kg-wrap">
         <div id="home-kg-container" class="home-kg-container"></div>
-        <div class="kg-modal__hint" aria-hidden="true">드래그로 이동 &middot; 스크롤로 확대/축소 &middot; 클릭으로 미리보기</div>
+        <div class="kg-modal__hint" aria-hidden="true">드래그로 이동 &middot; 스크롤로 확대/축소 &middot; 클릭으로 연결 보기</div>
         <button class="home-kg-expand" data-kg-open aria-label="전체 지식 그래프 보기">
             <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                 <path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/>
@@ -41,29 +41,30 @@ regenerate: true
 </div>
 
 <script>
+/* 2D knowledge-graph.js → deprecated. 메인 페이지는 3D 그래프 사용. */
 (function () {
     function initHomeGraph() {
-        if (!window.KnowledgeGraph || !window.d3) return;
+        if (!window.KnowledgeGraph3D) return;
         var el = document.getElementById('home-kg-container');
         if (!el || el.dataset.kgReady) return;
         el.dataset.kgReady = '1';
-        window.KnowledgeGraph.init({ container: el, panel: null, groups: null, stats: null, search: null });
+        window.KnowledgeGraph3D.init({ container: el, search: null, groups: null, stats: null });
     }
 
-    function loadScripts() {
-        if (window.d3) { loadKg(); return; }
+    function loadKg3D() {
+        if (window.KnowledgeGraph3D) { initHomeGraph(); return; }
         var s = document.createElement('script');
-        s.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
-        s.onload = loadKg;
+        s.src = '/js/knowledge-graph-3d.js';
+        s.onload = initHomeGraph;
         document.head.appendChild(s);
     }
 
-    function loadKg() {
-        if (window.KnowledgeGraph && window.KnowledgeGraph.init) { initHomeGraph(); return; }
-        var k = document.createElement('script');
-        k.src = '/js/knowledge-graph.js';
-        k.onload = initHomeGraph;
-        document.head.appendChild(k);
+    function loadScripts() {
+        if (window.d3) { loadKg3D(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+        s.onload = loadKg3D;
+        document.head.appendChild(s);
     }
 
     if (document.readyState === 'loading') {

@@ -50,7 +50,7 @@ help:
 # ----------------------------------------
 .PHONY: install
 install:
-	bundle install
+	mise exec -- bundle install
 
 # ----------------------------------------
 # 데이터 생성
@@ -126,7 +126,7 @@ watch: data
 # ----------------------------------------
 .PHONY: inc
 inc:
-	bundle update && bundle install
+	mise exec -- bundle update && mise exec -- bundle install
 	node generateData.js
 	$(BUNDLE_CMD) --incremental --trace
 
@@ -135,7 +135,7 @@ inc:
 # ----------------------------------------
 .PHONY: back
 back:
-	bundle update && bundle install
+	mise exec -- bundle update && mise exec -- bundle install
 	node generateData.js
 	$(BUNDLE_CMD) --incremental --trace >> $(LOG) 2>&1 &
 	@pgrep -f 'jekyll serve' > $(PID_FILE)

@@ -17,7 +17,7 @@
         </div>
         <div class="kg-modal__body">
             <div id="modal-kg-container" class="kg-modal__graph">
-                <div class="kg-modal__hint" aria-hidden="true">드래그로 이동 &middot; 스크롤로 확대/축소 &middot; 클릭으로 미리보기</div>
+                <div class="kg-modal__hint" aria-hidden="true">드래그로 이동 &middot; 스크롤로 확대/축소 &middot; 클릭으로 연결 보기</div>
             </div>
             <div class="kg-modal__panel">
                 <div class="kg-modal__panel-header">
@@ -32,46 +32,58 @@
 
 <script>
 (function () {
-    if (window.d3) { loadKg(); return; }
-    var s = document.createElement('script');
-    s.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
-    s.onload = loadKg;
-    document.head.appendChild(s);
-    function loadKg() {
-        if (window.KnowledgeGraph && window.KnowledgeGraph.init) return;
-        var k = document.createElement('script');
-        k.src = '/js/knowledge-graph.js';
-        document.head.appendChild(k);
-    }
-})();
-</script>
-<script>
-(function () {
     var overlay  = document.getElementById('kg-modal-overlay');
     var closeBtn = document.getElementById('kg-modal-close');
     var searchEl = document.getElementById('modal-kg-search');
     var graphEl  = document.getElementById('modal-kg-container');
+    var groupsEl = document.getElementById('modal-kg-groups');
+    var statsEl  = document.getElementById('modal-kg-stats');
     if (!overlay) return;
 
     var initialized = false;
+
+    /* d3 → knowledge-graph-3d.js 순차 로드 후 init */
+    function loadAndInit() {
+        if (initialized) return;
+        initialized = true;
+
+        function doInit() {
+            if (!window.KnowledgeGraph3D || !window.KnowledgeGraph3D.init) return;
+            window.KnowledgeGraph3D.init({
+                container: graphEl,
+                search:    searchEl,
+                groups:    groupsEl,
+                stats:     statsEl,
+            });
+        }
+
+        function loadKg() {
+            if (window.KnowledgeGraph3D && window.KnowledgeGraph3D.init) { doInit(); return; }
+            var s = document.createElement('script');
+            s.src = '/js/knowledge-graph-3d.js';
+            s.onload = doInit;
+            document.head.appendChild(s);
+        }
+
+        if (window.d3) { loadKg(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+        s.onload = loadKg;
+        document.head.appendChild(s);
+    }
 
     function openModal() {
         overlay.classList.add('is-open');
         document.body.style.overflow = 'hidden';
         if (searchEl) { searchEl.value = ''; searchEl.focus(); }
+        document.querySelectorAll('.graph-tooltip').forEach(function (tip) {
+            tip.classList.remove('is-visible');
+        });
 
-        if (!initialized && window.KnowledgeGraph) {
-            initialized = true;
-            requestAnimationFrame(function () {
-                window.KnowledgeGraph.init({
-                    container: graphEl,
-                    search:    searchEl,
-                    groups:    document.getElementById('modal-kg-groups'),
-                    stats:     document.getElementById('modal-kg-stats'),
-                    panel:     null,
-                });
-            });
-        }
+        /* 첫 오픈에만 초기화 (requestAnimationFrame으로 컨테이너 크기 확보 후) */
+        requestAnimationFrame(function () {
+            requestAnimationFrame(loadAndInit);
+        });
     }
 
     function closeModal() {

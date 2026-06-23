@@ -1,55 +1,87 @@
-# 요청: 지식 그래프 모달 디자인 개선 + /map 페이지 대체
+# 요청: Tony Stark 스타일 3D 지식 그래프 구현
 
 ## 작업 유형
-UI 개선 (포스트 작성 없음)
-
-## 문제 정의
-- wiki 포스트 페이지 미니 지식 그래프 헤더의 expand 버튼을 누르면 전체 지식 그래프 모달이 열림
-- 모달 우측 카테고리 패널 디자인이 이상함 → 개선 필요
-- 사용자가 기존 `/map` 페이지를 이 모달로 완전히 대체하길 원함
-
-## 모달 현재 구조
-```
-[모달 오버레이 — position:fixed, inset:0, var(--color-overlay), backdrop-filter:blur(4px)]
-  └── [.kg-modal — 92vw×85vh, border-radius:14px, flex column]
-        ├── [.kg-modal__header — 검색 입력 + 닫기 버튼]
-        └── [.kg-modal__body — flex row]
-              ├── [.kg-modal__graph — flex:1, D3 그래프]
-              └── [.kg-modal__panel — width:190px, 카테고리 목록]
-```
-
-## 카테고리 패널 현재 HTML (JS 생성)
-```html
-<label class="gp-item">
-  <input type="checkbox" checked data-cat="jpa">
-  <span class="gp-dot" style="background:#22c55e"></span>
-  <span class="gp-name">jpa</span>
-  <span class="gp-count">8</span>
-</label>
-```
-현재 스타일: `_sass/_layout.scss`의 `.kg-modal__panel`, `.kg-modal__groups`, 기존 gp-item 스타일
-
-## 참고: 검색 모달 패턴 (일관성 유지 기준)
-- 파일: `_includes/searchbox.html`, `_sass/_site-menu-bar.scss`
-- 오버레이: `var(--color-overlay)`, `backdrop-filter:blur(3px)`, z-index:1000
-- 카드: `var(--color-surface)`, `border-radius:12px`, `var(--shadow-card)`
-- 전환: `opacity + visibility` 패턴
-
-## /map 대체 계획
-- 현재: `/map` → 전체 페이지 지식 그래프 (`map.html`)
-- 목표: 헤더의 map 링크를 클릭하면 모달 오픈 트리거
-- 또는: 모달을 전역 컴포넌트화하여 어느 페이지에서도 열 수 있게
-- `_includes/header.html` 에서 map 링크 수정 필요
-
-## 관련 파일
-- `_sass/_layout.scss` — .kg-modal* 스타일 (하단에 위치)
-- `_sass/_site-menu-bar.scss` — 검색 모달 패턴 참고
-- `_layouts/wiki.html` — expand 버튼, 모달 HTML, KG init 스크립트
-- `map.html` — 현재 /map 페이지
-- `_includes/header.html` — 헤더 map 링크
-- `js/knowledge-graph.js` — window.KnowledgeGraph.init(opts) 노출됨
+UI 개선 + 기능 구현 (포스트 작성 없음) — UI 개선 전용 플로우
 
 ## 목표
-1. 카테고리 패널 디자인 개선 (태그 칩 스타일 또는 토글 버튼 스타일)
-2. /map 헤더 링크 → 모달 트리거로 변경
-3. 모달을 wiki 페이지 전용이 아닌 전역 컴포넌트로 이동
+기존 D3.js 2D 지식 그래프(`/js/knowledge-graph.js`)를 토니 스타크(아이언맨) 홀로그래픽 인터페이스 스타일의 3D 지식 그래프로 완전 재구현한다.
+
+## 데이터 현황
+- 카테고리: 10개 (`data-analysis`, `data-engineering`, `design-pattern`, `essay`, `java`, `jpa`, `llm`, `retrospect`, `springboot`, `system-design`)
+- 문서: 25개
+- 태그: 23개
+- 데이터 소스: `/data/hub.json` (카테고리 → 문서 → 태그 구조)
+
+## 구현 방향
+
+### Tony Stark UI 레퍼런스
+- 아이언맨 JARVIS: 홀로그래픽 원형 UI, 사이안/블루 색상, 회전하는 링, 글로우 이펙트
+- 어벤져스 지구본/타임스톤 분석 씬: 3D 공간에 정보 노드 부유
+- 공통 요소: 다크 배경, 발광 노드, 스캔라인, HUD 요소, 디지털 파티클
+
+### 기술 스택
+- **Three.js** (CDN 사용) — 3D 렌더링 엔진
+- **3d-force-graph** (CDN: vasturiano/3d-force-graph) — 3D 포스 레이아웃
+- **EffectComposer + UnrealBloomPass** — 블룸 포스트프로세싱
+- 기존 D3.js 코드는 유지 (미니 그래프용)
+
+### 구현할 파일
+1. `/js/knowledge-graph-3d.js` — 새로운 3D 그래프 메인 로직
+2. `/_sass/components/_knowledge-graph-3d.scss` — 3D 그래프 전용 스타일
+3. `/_includes/knowledge-graph-3d-modal.html` — 3D 모달 HTML 스니펫
+4. 기존 `knowledge-graph.js`의 모달 트리거를 3D 버전으로 교체
+
+### 노드 구조
+```
+레벨 1: 카테고리 노드 (대형 구체, 각 카테고리 고유 색상, 강한 글로우)
+레벨 2: 문서 노드 (중형 구체, 카테고리 색상 계열)
+레벨 3: 태그 노드 (소형 구체, 회색 계열)
+```
+
+### 비주얼 요소
+- **배경**: 완전 블랙 (#000000) + 별 파티클 시스템
+- **노드**: 반투명 구체 with 내부 발광 + 외부 글로우 링
+- **링크**: 발광 라인 (사이안, 투명도 애니메이션)
+- **HUD 오버레이**: 코너 브래킷, 스캔라인, 상태 텍스트
+- **회전 링**: 중심부에 회전하는 원형 링 (아이언맨 반응로 모티프)
+- **파티클**: 배경 부유 파티클 (작은 빛점들)
+- **색상 팔레트**: 
+  - 주색: `#00d4ff` (JARVIS 사이안)
+  - 보조색: `#0066ff` (홀로그램 블루)
+  - 강조색: `#ff6b35` (아이언맨 레드/오렌지)
+  - 배경: `#000000` ~ `#050a14`
+
+### 인터랙션
+- 마우스 드래그: 3D 회전 (OrbitControls)
+- 스크롤: 줌인/줌아웃
+- 노드 클릭: 해당 문서 페이지로 이동 (문서 노드), 또는 카테고리 확대
+- 노드 호버: 툴팁 (제목, 태그, 업데이트 날짜)
+- 자동 회전: 마우스 조작 없을 때 천천히 자동 회전
+- 검색: 기존 검색 UI 유지 (노드 하이라이트)
+
+### HUD 요소
+```
+┌─────────────────────────────────────────────────────┐
+│ [◈ KNOWLEDGE GRAPH v3.0]        [● LIVE] [×]        │
+│                                                     │
+│  NODES: 58    LINKS: 143    FPS: 60                 │
+│                                                     │
+│          [3D 그래프 공간]                            │
+│                                                     │
+│ [FILTER: ALL ▼]  [SEARCH ________________]          │
+│                                                     │
+│ ◢████████████████████████████████████████████████◣  │
+└─────────────────────────────────────────────────────┘
+```
+
+### 모달 통합
+- 기존 `expand` 버튼 클릭 시 3D 모달 오픈 (2D 모달 대체)
+- 전체화면 지원 (F11 or fullscreen button)
+- ESC 닫기
+
+## 완성도 기준
+토니 스타크가 실제로 사용할 것 같은 수준:
+- 첫 로딩 시 애니메이션으로 노드들이 공간에 나타나며 배치됨
+- 지속적인 미세 파티클 움직임
+- 글로우 이펙트가 실제 홀로그램처럼 보임
+- 반응이 즉각적이고 부드러움 (60fps)
