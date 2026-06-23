@@ -586,6 +586,63 @@
                 controls.update();
             }, { passive: false });
 
+            /* 모바일 핀치-투-줌 */
+            var pinchDist0 = null;
+            var pinchMid0  = null;
+            renderer.domElement.addEventListener('touchstart', function (e) {
+                if (e.touches.length === 2) {
+                    var dx = e.touches[0].clientX - e.touches[1].clientX;
+                    var dy = e.touches[0].clientY - e.touches[1].clientY;
+                    pinchDist0 = Math.sqrt(dx * dx + dy * dy);
+                    pinchMid0  = {
+                        x: (e.touches[0].clientX + e.touches[1].clientX) / 2,
+                        y: (e.touches[0].clientY + e.touches[1].clientY) / 2
+                    };
+                } else {
+                    pinchDist0 = null;
+                    pinchMid0  = null;
+                }
+            }, { passive: true });
+
+            renderer.domElement.addEventListener('touchmove', function (e) {
+                if (e.touches.length !== 2 || pinchDist0 === null) return;
+                e.preventDefault();
+                var dx = e.touches[0].clientX - e.touches[1].clientX;
+                var dy = e.touches[0].clientY - e.touches[1].clientY;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                var factor = pinchDist0 / dist;  /* >1 = zoom out, <1 = zoom in */
+                pinchDist0 = dist;
+
+                var rect = renderer.domElement.getBoundingClientRect();
+                var nx = ((pinchMid0.x - rect.left) / rect.width)  *  2 - 1;
+                var ny = -((pinchMid0.y - rect.top)  / rect.height) *  2 + 1;
+
+                var zoomRay = new THREE.Raycaster();
+                zoomRay.setFromCamera(new THREE.Vector2(nx, ny), camera);
+                var d = camera.position.distanceTo(controls.target);
+                var midWorld = zoomRay.ray.at(d, new THREE.Vector3());
+
+                var camOff    = camera.position.clone().sub(midWorld).multiplyScalar(factor);
+                var targetOff = controls.target.clone().sub(midWorld).multiplyScalar(factor);
+                camera.position.copy(midWorld.clone().add(camOff));
+                controls.target.copy(midWorld.clone().add(targetOff));
+
+                var newDist = camera.position.distanceTo(controls.target);
+                if (newDist < controls.minDistance || newDist > controls.maxDistance) {
+                    var clampedDist = Math.max(controls.minDistance, Math.min(controls.maxDistance, newDist));
+                    var dir = camera.position.clone().sub(controls.target).normalize();
+                    camera.position.copy(controls.target.clone().add(dir.multiplyScalar(clampedDist)));
+                }
+                controls.update();
+            }, { passive: false });
+
+            renderer.domElement.addEventListener('touchend', function (e) {
+                if (e.touches.length < 2) {
+                    pinchDist0 = null;
+                    pinchMid0  = null;
+                }
+            }, { passive: true });
+
             function onDown(e) {
                 if (e.button !== 0) return;
                 setPtr(e);
