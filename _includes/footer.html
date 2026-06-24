@@ -101,6 +101,16 @@
     <script src="/js/code-copy.js"></script>
 </div>
 <script src="/js/lightbox.js"></script>
+<script>
+  if (new URLSearchParams(location.search).get('subscribed') === 'true') {
+    var toast = document.createElement('div');
+    toast.textContent = '구독이 완료되었습니다.';
+    toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#1a73e8;color:#fff;padding:12px 28px;border-radius:6px;font-size:14px;font-weight:500;letter-spacing:0.01em;z-index:9999;opacity:1;transition:opacity 0.5s;box-shadow:0 4px 12px rgba(26,115,232,0.3)';
+    document.body.appendChild(toast);
+    history.replaceState(null, '', location.pathname);
+    setTimeout(function() { toast.style.opacity = '0'; setTimeout(function() { toast.remove(); }, 500); }, 3000);
+  }
+</script>
 <script src="/js/heading-anchor.js"></script>
 <script src="/js/code-enhance.js"></script>
 </footer>
