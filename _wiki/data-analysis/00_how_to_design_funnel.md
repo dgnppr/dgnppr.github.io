@@ -1,8 +1,8 @@
 ---
 layout  : wiki
 title   : 올바른 Funnel 설계의 7가지 조건
-date    : 2026-06-23 00:00:00 +0900
-updated : 2026-06-23 00:00:00 +0900
+date    : 2026-06-01 00:00:00 +0900
+updated : 2026-06-01 00:00:00 +0900
 tag     : data-analysis funnel analytics
 toc     : true
 comment : true

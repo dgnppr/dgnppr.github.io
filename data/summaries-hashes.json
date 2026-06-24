@@ -1,5 +1,5 @@
 {
-  "data-engineering/00_what_is_medaliion_architecture": "106601af1bbc2c18120005b57bd37e8e",
+  "data-engineering/00_what_is_medaliion_architecture": "367f111dea9c9ad835dba9a011faca30",
   "database/00_mysql_variable_setting": "96e0d53a8b428af49fc830bc40af5736",
   "design-pattern/00_how_to_use_strategy_pattern": "4947b223541b6f5681e3e058a74cefcf",
   "design-pattern/01_circuit_breaker": "aa401b9d08c2d2828e94cea6c92a190f",
@@ -26,5 +26,6 @@
   "system-design/01_web_crawler_design": "bbed6d35d7e923905ff7e919a520d24a",
   "system-design/02_notification_system_design": "517f35dd489e713c00ac1e3453a7a074",
   "system-design/03_sns_feed_system_design": "9fcbfc08e5d4030c483d9817757dc508",
-  "data-analysis/00_how_to_design_funnel": "9bee4200b5f2c04c0e49056b8e5c905a"
+  "data-analysis/00_how_to_design_funnel": "bee863f805e3c7f32d86a3a1568fef2a",
+  "data-architect/00_what_is_ontology": "53efa7432bc0313056a9182cbe013f01"
 }

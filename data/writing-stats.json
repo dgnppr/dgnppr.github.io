@@ -1,5 +1,5 @@
 {
-  "total": 19,
+  "total": 20,
   "byMonth": {
     "2026-06": {
       "count": 2,
@@ -9,6 +9,16 @@
           "category": "data-analysis",
           "status": "draft"
         },
+        {
+          "title": "온톨로지는 데이터가 아니라 합의를 설계한다",
+          "category": "data-architect",
+          "status": "draft"
+        }
+      ]
+    },
+    "2026-05": {
+      "count": 1,
+      "posts": [
         {
           "title": "메달리언 아키텍처란 무엇인가",
           "category": "data-engineering",
@@ -133,11 +143,12 @@
     }
   },
   "byStatus": {
-    "draft": 1,
+    "draft": 2,
     "complete": 18
   },
   "byCategory": {
     "data-analysis": 1,
+    "data-architect": 1,
     "data-engineering": 1,
     "design-pattern": 2,
     "essay": 5,
@@ -149,14 +160,20 @@
   },
   "posts": [
     {
-      "title": "올바른 Funnel 설계의 7가지 조건",
+      "title": "온톨로지는 데이터가 아니라 합의를 설계한다",
       "date": "2026-06-23 00:00:00 +0900",
+      "status": "draft",
+      "category": "data-architect"
+    },
+    {
+      "title": "올바른 Funnel 설계의 7가지 조건",
+      "date": "2026-06-01 00:00:00 +0900",
       "status": "draft",
       "category": "data-analysis"
     },
     {
       "title": "메달리언 아키텍처란 무엇인가",
-      "date": "2026-06-22 00:00:00 +0900",
+      "date": "2026-05-22 00:00:00 +0900",
       "status": "complete",
       "category": "data-engineering"
     },

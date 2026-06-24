@@ -1,10 +1,10 @@
 {
   "nodes": {
-    "adr/architecture/2024-001-test-adr": {
-      "id": "adr/architecture/2024-001-test-adr",
+    "adr/architecture/2026-06-24-001-adr-guide": {
+      "id": "adr/architecture/2026-06-24-001-adr-guide",
       "type": "adr",
       "title": "ADR 시스템 가이드",
-      "path": "_adr/architecture/2024-001-test-adr.md",
+      "path": "_adr/architecture/2026-06-24-001-adr-guide.md",
       "status": "accepted",
       "tags": [
         "adr"
@@ -21,6 +21,21 @@
         "data-analysis",
         "funnel",
         "analytics"
+      ],
+      "date": "2026-06-23"
+    },
+    "concept/data-architect/00_what_is_ontology": {
+      "id": "concept/data-architect/00_what_is_ontology",
+      "type": "concept",
+      "title": "의미의 아키텍처 — 온톨로지는 데이터가 아니라 합의를 설계한다",
+      "path": "_wiki/data-architect/00_what_is_ontology.md",
+      "status": "draft",
+      "tags": [
+        "data-architecture",
+        "ontology",
+        "data-engineering",
+        "semantic-layer",
+        "llm"
       ],
       "date": "2026-06-23"
     },

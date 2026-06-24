@@ -1140,6 +1140,7 @@
     ]
   },
   "retrospect/05_2025_goodbye_kyobobook_retrospect": {
+    "hash": "7c9c1e03d90cb12d4d09f678f80475c7",
     "nodes": [
       {
         "id": "n1",
@@ -1148,27 +1149,27 @@
       },
       {
         "id": "n2",
-        "label": "동료들과 추억",
+        "label": "동료와의 추억",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "감사와 아쉬움",
-        "type": "step"
+        "label": "새로운 직장/포지션",
+        "type": ": step"
       },
       {
         "id": "n4",
-        "label": "새로운 직장",
-        "type": "step"
+        "label": "적응에 대한 두려움",
+        "type": "decision"
       },
       {
         "id": "n5",
-        "label": "두려움과 기대",
+        "label": "자신감과 믿음",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "새로운 시작 다짐",
+        "label": "성공적인 안착",
         "type": "end"
       }
     ],
@@ -1187,7 +1188,8 @@
       },
       {
         "from": "n4",
-        "to": "n5"
+        "to": "n5",
+        "label": "두려움 극복"
       },
       {
         "from": "n5",
@@ -1632,7 +1634,7 @@
     ]
   },
   "data-engineering/00_what_is_medaliion_architecture": {
-    "hash": "106601af1bbc2c18120005b57bd37e8e",
+    "hash": "367f111dea9c9ad835dba9a011faca30",
     "nodes": [
       {
         "id": "n1",
@@ -1646,7 +1648,7 @@
       },
       {
         "id": "n3",
-        "label": "Silver (Cleansed)",
+        "label": "Silver (Conformed)",
         "type": "step"
       },
       {
@@ -1661,8 +1663,8 @@
       },
       {
         "id": "n6",
-        "label": "단일 진실 원천",
-        "type": "end"
+        "label": "단일 출처(SSOT)",
+        "type": ": end"
       }
     ],
     "edges": [
@@ -1685,8 +1687,7 @@
       },
       {
         "from": "n3",
-        "to": "n6",
-        "bidirectional": true
+        "to": "n6"
       }
     ]
   }
