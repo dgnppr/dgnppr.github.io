@@ -1,80 +1,62 @@
 #!/usr/bin/env node
 /**
- * ADR 임베딩 생성기
+ * ADR 임베딩 생성기 — Qdrant 벡터 스토어
  *
- * 실행 (Vertex AI):
- *   GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json \
- *   GOOGLE_PROJECT_ID=my-project \
- *   node scripts/generate-adr-embeddings.js
+ * 사전 준비: docker compose up qdrant -d
  *
- * 실행 (Ollama):
- *   EMBEDDING_BACKEND=ollama \
+ * 실행:
  *   [OLLAMA_URL=http://localhost:11434] \
- *   node scripts/generate-adr-embeddings.js
- *
- * - 캐시: data/adr-embeddings.json (내용 변경 시에만 재계산)
- * - --force: 전체 재계산
+ *   [QDRANT_URL=http://localhost:6333] \
+ *   node scripts/generate-adr-embeddings.js [--force]
  */
 'use strict';
 const fs     = require('fs');
 const path   = require('path');
 const crypto = require('crypto');
 
-const GCP_PROJECT  = process.env.GOOGLE_PROJECT_ID;
-const GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
-const GCP_CREDS    = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-const OLLAMA_URL   = process.env.OLLAMA_URL || 'http://localhost:11434';
-const BACKEND      = process.env.EMBEDDING_BACKEND || 'vertexai';
-const FORCE        = process.argv.includes('--force');
+const OLLAMA_URL = process.env.OLLAMA_URL || 'http://localhost:11434';
+const QDRANT_URL = process.env.QDRANT_URL || 'http://localhost:6333';
+const FORCE      = process.argv.includes('--force');
+const MODEL      = 'bge-m3';
+const DIMS       = 1024;
+const COLLECTION = 'adr';
 
-const MODEL = BACKEND === 'ollama' ? 'bge-m3' : 'text-embedding-004';
-const DIMS  = BACKEND === 'ollama' ? 1024     : 768;
+const ROOT    = path.join(__dirname, '..');
+const ADR_DIR = path.join(ROOT, '_adr');
 
-if (BACKEND === 'vertexai' && (!GCP_CREDS || !GCP_PROJECT)) {
-    console.error('[오류] 환경 변수를 설정하세요:');
-    console.error('  GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json');
-    console.error('  GOOGLE_PROJECT_ID=my-project');
-    process.exit(1);
-}
-
-const backendLabel = BACKEND === 'ollama'
-    ? 'Ollama — ' + MODEL + ' (' + OLLAMA_URL + ')'
-    : 'Vertex AI — ' + MODEL + ' (' + GCP_LOCATION + ')';
-console.log('[백엔드] ' + backendLabel);
-
-const ROOT       = path.join(__dirname, '..');
-const ADR_DIR    = path.join(ROOT, '_adr');
-const CACHE_FILE = path.join(ROOT, 'data/adr-embeddings.json');
-
-function collectMarkdown(dir, results) {
-    if (!fs.existsSync(dir)) return;
-    fs.readdirSync(dir).forEach(f => {
+function collectMarkdown(dir, results = []) {
+    if (!fs.existsSync(dir)) return results;
+    for (const f of fs.readdirSync(dir)) {
         const full = path.join(dir, f);
-        if (fs.statSync(full).isDirectory()) {
-            collectMarkdown(full, results);
-        } else if (f.endsWith('.md')) {
-            results.push(full);
-        }
-    });
+        if (fs.statSync(full).isDirectory()) collectMarkdown(full, results);
+        else if (f.endsWith('.md')) results.push(full);
+    }
+    return results;
 }
 
 function slugFromPath(p) {
-    return p.replace(/.*\/_adr\//, '').replace(/\.md$/, '');
+    return path.relative(ADR_DIR, p).replace(/\.md$/, '');
+}
+
+// Qdrant point ID: slug → UUID v4 형식 (MD5 기반)
+function slugToId(slug) {
+    const h = crypto.createHash('md5').update(slug).digest('hex');
+    return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20,32)}`;
 }
 
 function parseFrontmatter(content) {
     const m = content.match(/^---\n([\s\S]*?)\n---/);
     if (!m) return {};
-    const obj = {};
-    m[1].split('\n').forEach(line => {
-        const r = /^\s*([^:]+):\s*(.+)\s*$/.exec(line);
-        if (r) obj[r[1].trim()] = r[2].trim().replace(/^["']|["']$/g, '');
-    });
-    return obj;
+    return Object.fromEntries(
+        m[1].split('\n')
+            .map(l => /^\s*([^:]+):\s*(.+)\s*$/.exec(l))
+            .filter(Boolean)
+            .map(r => [r[1].trim(), r[2].trim().replace(/^["']|["']$/g, '')])
+    );
 }
 
-function extractBody(content) {
-    return content
+function extractText(content, fm) {
+    const body = content
         .replace(/^---[\s\S]*?---\n/, '')
         .replace(/```[\s\S]*?```/g, '')
         .replace(/`[^`]+`/g, '')
@@ -85,93 +67,152 @@ function extractBody(content) {
         .replace(/\s+/g, ' ')
         .trim()
         .slice(0, 1500);
+    return [fm.title || '', fm.status || '', body].filter(Boolean).join('\n').slice(0, 2000);
 }
 
-let ai;
-async function embed(text) {
-    if (BACKEND === 'ollama') {
-        const res = await fetch(OLLAMA_URL + '/api/embeddings', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ model: MODEL, prompt: text }),
-        });
-        if (!res.ok) throw new Error('Ollama HTTP ' + res.status + ': ' + await res.text());
-        const json = await res.json();
-        if (!json.embedding) throw new Error('임베딩 응답 형식 오류');
-        return json.embedding;
-    }
-
-    if (!ai) {
-        const { GoogleGenAI } = require('@google/genai');
-        ai = new GoogleGenAI({ vertexai: true, project: GCP_PROJECT, location: GCP_LOCATION });
-    }
-    const response = await ai.models.embedContent({
-        model: MODEL,
-        contents: text,
-        config: { outputDimensionality: DIMS },
+async function embedText(text) {
+    const res = await fetch(`${OLLAMA_URL}/api/embeddings`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: MODEL, prompt: text }),
     });
-    const emb = (response.embeddings && response.embeddings[0] && response.embeddings[0].values)
-             || (response.embedding && response.embedding.values);
-    if (!emb) throw new Error('임베딩 응답 형식 오류');
-    return emb;
+    if (!res.ok) throw new Error(`Ollama HTTP ${res.status}: ${await res.text()}`);
+    const { embedding } = await res.json();
+    if (!embedding) throw new Error('임베딩 응답 형식 오류');
+    return embedding;
 }
 
-const files = [];
-collectMarkdown(ADR_DIR, files);
-console.log('총 ' + files.length + '개 ADR 파일 발견' + (FORCE ? ' (--force: 전체 재계산)' : ''));
+async function qdrant(method, endpoint, body) {
+    const res = await fetch(`${QDRANT_URL}${endpoint}`, {
+        method,
+        headers: { 'Content-Type': 'application/json' },
+        body: body ? JSON.stringify(body) : undefined,
+    });
+    if (!res.ok) throw new Error(`Qdrant ${method} ${endpoint} → HTTP ${res.status}: ${await res.text()}`);
+    return res.json();
+}
+
+async function ensureCollection() {
+    try {
+        await qdrant('GET', `/collections/${COLLECTION}`);
+        if (FORCE) {
+            await qdrant('DELETE', `/collections/${COLLECTION}`);
+            console.log('[Qdrant] 컬렉션 삭제 (--force)');
+            throw new Error('recreate');
+        }
+    } catch (e) {
+        if (e.message !== 'recreate' && !e.message.includes('404') && !e.message.includes('HTTP 404')) throw e;
+        await qdrant('PUT', `/collections/${COLLECTION}`, {
+            vectors: { size: DIMS, distance: 'Cosine' },
+        });
+        console.log('[Qdrant] 컬렉션 생성');
+    }
+}
+
+async function existingSlugs() {
+    const result = await qdrant('POST', `/collections/${COLLECTION}/points/scroll`, {
+        with_payload: ['slug'],
+        limit: 10000,
+    });
+    return new Map(
+        (result.result?.points || []).map(p => [p.payload.slug, p.id])
+    );
+}
 
 async function main() {
-    let cache = {};
-    if (fs.existsSync(CACHE_FILE)) {
-        try { cache = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8')); } catch (e) {}
-    }
+    console.log(`[백엔드] Ollama — ${MODEL} (${OLLAMA_URL})`);
+    console.log(`[벡터 스토어] Qdrant (${QDRANT_URL})`);
 
-    let cacheUpdated = false;
+    await ensureCollection();
+
+    const files = collectMarkdown(ADR_DIR);
+    console.log(`총 ${files.length}개 ADR 파일 발견${FORCE ? ' (--force: 전체 재계산)' : ''}`);
+
+    const stored = FORCE ? new Map() : await existingSlugs();
+    const validSlugs = new Set();
 
     for (const filePath of files) {
         const content = fs.readFileSync(filePath, 'utf8');
         const fm      = parseFrontmatter(content);
         const slug    = slugFromPath(filePath);
-        const body    = extractBody(content);
-        const text    = [fm.title || '', fm.status || '', body].filter(Boolean).join('\n').slice(0, 2000);
+        const text    = extractText(content, fm);
         const hash    = crypto.createHash('md5').update(text).digest('hex');
-        const cached  = cache[slug];
 
-        if (!FORCE && cached && cached.hash === hash && cached.embedding.length === DIMS) {
-            process.stdout.write('[캐시] ' + slug + '\n');
+        validSlugs.add(slug);
+
+        if (text.trim().length < 50) {
+            console.log(`[건너뜀] ${slug} (내용 부족)`);
             continue;
         }
 
-        if (text.trim().length < 50) {
-            process.stdout.write('[건너뜀] ' + slug + ' (내용 부족)\n');
-            continue;
+        // 이미 저장된 경우 hash로 변경 여부 확인
+        if (!FORCE && stored.has(slug)) {
+            const point = await qdrant('GET', `/collections/${COLLECTION}/points/${slugToId(slug)}`);
+            if (point.result?.payload?.hash === hash) {
+                console.log(`[캐시] ${slug}`);
+                continue;
+            }
         }
 
         try {
-            process.stdout.write('[임베딩] ' + slug + '... ');
-            const embedding = await embed(text);
-            cache[slug]  = { hash, embedding };
-            cacheUpdated = true;
-            process.stdout.write('완료 (' + embedding.length + '차원)\n');
-            fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
-            await new Promise(r => setTimeout(r, 200));
+            process.stdout.write(`[임베딩] ${slug}... `);
+            const vector = await embedText(text);
+            await qdrant('PUT', `/collections/${COLLECTION}/points`, {
+                points: [{
+                    id:      slugToId(slug),
+                    vector,
+                    payload: { slug, title: fm.title || slug, status: fm.status || '', tag: fm.tag || '', hash },
+                }],
+            });
+            process.stdout.write(`완료\n`);
+            await new Promise(r => setTimeout(r, 100));
         } catch (e) {
-            process.stdout.write('오류: ' + e.message + '\n');
+            process.stdout.write(`오류: ${e.message}\n`);
         }
     }
 
-    // stale 항목 제거
-    const validSlugs = new Set(files.map(f => slugFromPath(f)));
-    Object.keys(cache).forEach(k => {
-        if (!validSlugs.has(k)) { delete cache[k]; cacheUpdated = true; }
-    });
-
-    if (cacheUpdated) {
-        fs.writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
-        console.log('[저장] data/adr-embeddings.json');
+    // stale 포인트 삭제
+    const stale = [...stored.keys()].filter(s => !validSlugs.has(s));
+    if (stale.length > 0) {
+        await qdrant('POST', `/collections/${COLLECTION}/points/delete`, {
+            points: stale.map(slugToId),
+        });
+        console.log(`[삭제] stale ${stale.length}개`);
     }
 
+    // 유사 ADR 사전 계산 → data/adr-related.json
+    await generateRelated([...validSlugs]);
+
     console.log('\n완료!');
+}
+
+async function generateRelated(slugs) {
+    if (!slugs.length) return;
+    console.log('\n[관련 ADR] 생성 중...');
+    const related = {};
+
+    for (const slug of slugs) {
+        try {
+            const res = await qdrant('POST', `/collections/${COLLECTION}/points/recommend`, {
+                positive: [slugToId(slug)],
+                limit: 5,
+                with_payload: true,
+            });
+            const hits = (res.result ?? []).map(h => ({
+                slug:  h.payload.slug,
+                title: h.payload.title,
+                score: +h.score.toFixed(3),
+            }));
+            if (hits.length) related[slug] = hits;
+        } catch (e) {
+            // 포인트 없음 또는 Qdrant 오류 → 스킵
+        }
+    }
+
+    const outPath = path.join(ROOT, 'data', 'adr-related.json');
+    fs.writeFileSync(outPath, JSON.stringify(related, null, 2));
+    console.log(`[관련 ADR] data/adr-related.json (${Object.keys(related).length}개 항목)`);
+}
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

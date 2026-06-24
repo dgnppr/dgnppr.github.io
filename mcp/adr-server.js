@@ -8,10 +8,11 @@ import {
 import fs from "fs";
 import path from "path";
 
-const ADR_DIR        = path.join(import.meta.dirname, "..", "_adr");
-const EMBEDDINGS_FILE = path.join(import.meta.dirname, "..", "data", "adr-embeddings.json");
-const BACKEND        = process.env.EMBEDDING_BACKEND;
-const OLLAMA_URL     = process.env.OLLAMA_URL || "http://localhost:11434";
+const ADR_DIR    = path.join(import.meta.dirname, "..", "_adr");
+const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
+const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6333";
+const COLLECTION = "adr";
+const MODEL      = "bge-m3";
 
 function parseFrontmatter(content) {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
@@ -36,7 +37,7 @@ function buildFrontmatter(args, existingMeta = null) {
 
   return [
     "---",
-    `layout    : wiki`,
+    `layout    : adr`,
     `title     : ${args.title}`,
     `date      : ${date}`,
     `updated   : ${now}`,
@@ -48,47 +49,27 @@ function buildFrontmatter(args, existingMeta = null) {
   ].join("\n");
 }
 
-function cosine(a, b) {
-  let dot = 0, na = 0, nb = 0;
-  for (let i = 0; i < a.length; i++) {
-    dot += a[i] * b[i];
-    na  += a[i] * a[i];
-    nb  += b[i] * b[i];
-  }
-  return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
+async function embedQuery(text) {
+  const res = await fetch(`${OLLAMA_URL}/api/embeddings`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ model: MODEL, prompt: text }),
+  });
+  if (!res.ok) throw new Error(`Ollama HTTP ${res.status}: ${await res.text()}`);
+  const { embedding } = await res.json();
+  if (!embedding) throw new Error("Ollama 임베딩 응답 형식 오류");
+  return embedding;
 }
 
-let _ai;
-async function embedQuery(text) {
-  if (!BACKEND) throw new Error("EMBEDDING_BACKEND 환경변수가 설정되지 않았습니다 (vertexai | ollama)");
-
-  if (BACKEND === "ollama") {
-    const res = await fetch(`${OLLAMA_URL}/api/embeddings`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ model: "bge-m3", prompt: text }),
-    });
-    if (!res.ok) throw new Error(`Ollama HTTP ${res.status}: ${await res.text()}`);
-    const json = await res.json();
-    return json.embedding;
-  }
-
-  if (!_ai) {
-    const { GoogleGenAI } = await import("@google/genai");
-    _ai = new GoogleGenAI({
-      vertexai: true,
-      project: process.env.GOOGLE_PROJECT_ID,
-      location: process.env.GOOGLE_LOCATION || "asia-northeast3",
-    });
-  }
-  const response = await _ai.models.embedContent({
-    model: "text-embedding-004",
-    contents: text,
-    config: { outputDimensionality: 768 },
+async function qdrantSearch(vector, limit) {
+  const res = await fetch(`${QDRANT_URL}/collections/${COLLECTION}/points/search`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ vector, limit, with_payload: true }),
   });
-  const emb = response.embeddings?.[0]?.values ?? response.embedding?.values;
-  if (!emb) throw new Error("Vertex AI 임베딩 응답 형식 오류");
-  return emb;
+  if (!res.ok) throw new Error(`Qdrant HTTP ${res.status}: ${await res.text()}`);
+  const { result } = await res.json();
+  return result ?? [];
 }
 
 function collectAdrFiles(dir, base = ADR_DIR) {
@@ -246,11 +227,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   }
 
   if (name === "adr_find" || name === "adr_query") {
-    if (!fs.existsSync(EMBEDDINGS_FILE)) {
-      return { content: [{ type: "text", text: "임베딩 캐시가 없습니다. generate-adr-embeddings.js를 먼저 실행하세요." }], isError: true };
-    }
-    const cache = JSON.parse(fs.readFileSync(EMBEDDINGS_FILE, "utf-8"));
-
     let queryVec;
     try {
       queryVec = await embedQuery(args.query);
@@ -258,50 +234,37 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
       return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true };
     }
 
-    const files = collectAdrFiles(ADR_DIR);
-    const scored = files
-      .map((f) => {
-        const slug = f.replace(/\.md$/, "");
-        const cached = cache[slug];
-        if (!cached) return null;
-        return { f, score: cosine(queryVec, cached.embedding) };
-      })
-      .filter(Boolean)
-      .sort((a, b) => b.score - a.score);
+    let hits;
+    try {
+      const limit = name === "adr_find" ? 10 : (args.limit ?? 3);
+      hits = await qdrantSearch(queryVec, limit);
+    } catch (e) {
+      return { content: [{ type: "text", text: `Qdrant 오류: ${e.message}` }], isError: true };
+    }
+
+    if (!hits.length) {
+      return { content: [{ type: "text", text: `'${args.query}'에 대한 ADR을 찾을 수 없습니다.` }] };
+    }
 
     if (name === "adr_find") {
-      const results = scored.slice(0, 10).map(({ f, score }) => {
-        const content = fs.readFileSync(path.join(ADR_DIR, f), "utf-8");
-        const { meta } = parseFrontmatter(content);
-        return {
-          path: f,
-          title: meta.title || f,
-          status: meta.status || "",
-          tags: meta.tag || "",
-          score: +score.toFixed(3),
-        };
-      });
-      return {
-        content: [{
-          type: "text",
-          text: results.length
-            ? JSON.stringify(results, null, 2)
-            : `'${args.query}'에 대한 ADR을 찾을 수 없습니다.`,
-        }],
-      };
+      const results = hits.map(({ payload, score }) => ({
+        path:   payload.slug + ".md",
+        title:  payload.title,
+        status: payload.status,
+        tags:   payload.tag,
+        score:  +score.toFixed(3),
+      }));
+      return { content: [{ type: "text", text: JSON.stringify(results, null, 2) }] };
     }
 
     if (name === "adr_query") {
-      const limit = args.limit ?? 3;
-      const top = scored.slice(0, limit);
-      if (!top.length) {
-        return { content: [{ type: "text", text: `'${args.query}'에 대한 ADR을 찾을 수 없습니다.` }] };
-      }
-      const output = top.map(({ f, score }) => {
-        const content = fs.readFileSync(path.join(ADR_DIR, f), "utf-8");
+      const output = hits.map(({ payload, score }) => {
+        const filePath = path.join(ADR_DIR, payload.slug + ".md");
+        if (!fs.existsSync(filePath)) return null;
+        const content = fs.readFileSync(filePath, "utf-8");
         const { meta, body } = parseFrontmatter(content);
-        return `# ${meta.title || f}\n경로: ${f} | 유사도: ${score.toFixed(3)} | 상태: ${meta.status || "unknown"}\n태그: ${meta.tag || "(없음)"} | 결정자: ${meta.deciders || "(없음)"}\n\n${body}`;
-      }).join("\n\n---\n\n");
+        return `# ${meta.title || payload.slug}\n경로: ${payload.slug}.md | 유사도: ${score.toFixed(3)} | 상태: ${meta.status || "unknown"}\n태그: ${meta.tag || "(없음)"} | 결정자: ${meta.deciders || "(없음)"}\n\n${body}`;
+      }).filter(Boolean).join("\n\n---\n\n");
       return { content: [{ type: "text", text: output }] };
     }
   }

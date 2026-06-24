@@ -1,0 +1,12 @@
+# 로컬 개발 전용 오버라이드 — GitHub Pages에 반영되지 않음
+
+# adr/ 디렉토리를 exclude에서 제거 (빈 배열로 오버라이드)
+exclude: []
+
+collections:
+  wiki:
+    output: true
+    permalink: /:collection/:path/
+  adr:
+    output: true
+    permalink: /adr/:path/

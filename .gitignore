@@ -11,3 +11,4 @@ package-lock.json
 .claude
 resource/credentials/
 .env
+data/qdrant/

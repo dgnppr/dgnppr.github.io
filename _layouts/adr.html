@@ -1,0 +1,73 @@
+---
+layout: default
+---
+
+{% assign adrSlug = page.id | remove: '/adr/' %}
+<input type="hidden" id="adrSlug" value="{{ adrSlug }}"/>
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+</div>
+<div class="post">
+    <header class="post-header">
+        <br>
+        <h1 class="page-title">{{ page.title }}</h1>
+        <div class="history-button">
+            <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
+            <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>
+            {% if page.status %}<p>Status: <span class="post-status">{{ page.status }}</span></p>{% endif %}
+            {% if page.deciders %}<p>Deciders: {{ page.deciders }}</p>{% endif %}
+            {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
+        </div>
+        <hr>
+    </header>
+
+    <article class="post-content">
+        {{ content }}
+    </article>
+
+    <div id="adr-related-container"></div>
+    <script>
+    (function() {
+        var slugEl = document.getElementById('adrSlug');
+        if (!slugEl) return;
+        var slug = slugEl.value;
+        fetch('/data/adr-related.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
+                if (!data || !data[slug] || !data[slug].length) return;
+                var html = '<section class="related-posts"><h3 class="related-posts__heading">관련 ADR</h3><div class="related-posts__list">' +
+                    data[slug].map(function(r) {
+                        return '<a class="related-posts__item" href="/adr/' + r.slug + '/">' +
+                            r.title + ' <span style="opacity:.5;font-size:.85em">(' + Math.round(r.score * 100) + '%)</span></a>';
+                    }).join('') + '</div></section>';
+                document.getElementById('adr-related-container').innerHTML = html;
+            }).catch(function() {});
+    })();
+    </script>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+(function() {
+    var font = "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif";
+    function mermaidTheme() {
+        var dark = document.documentElement.classList.contains('dark-mode');
+        return dark
+            ? { theme: 'dark', themeVariables: { fontFamily: font, fontSize: '14px' } }
+            : { theme: 'default', themeVariables: { fontFamily: font, fontSize: '14px' } };
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        if (!document.querySelector('code.language-mermaid')) return;
+        mermaid.initialize(Object.assign({ startOnLoad: false, securityLevel: 'loose' }, mermaidTheme()));
+        document.querySelectorAll('code.language-mermaid').forEach(function(el) {
+            var pre = el.parentElement;
+            var div = document.createElement('div');
+            div.className = 'mermaid-diagram';
+            div.textContent = el.textContent;
+            pre.parentNode.replaceChild(div, pre);
+        });
+        mermaid.run({ nodes: document.querySelectorAll('.mermaid-diagram') });
+    });
+})();
+</script>
+<script src="/js/scroll.js"></script>
