@@ -1831,42 +1831,37 @@
       }
     ]
   },
-  "llm/00_what_is_transformers": {
-    "hash": "c55ec799763b80c655d8114f83748e74",
+  "llm/00_why_llm_is_decoder_only": {
+    "hash": "367a0a6c8e21d4782b47300c8af28dac",
     "nodes": [
       {
         "id": "n1",
-        "label": "Seq2Seq vs Decoder",
+        "label": "Transformer 구조",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "정보 병목 활용",
-        "type": "step"
+        "label": "Encoder-only",
+        "type": ":step"
       },
       {
         "id": "n3",
-        "label": "태스크 확장성",
-        "type": "end"
+        "label": "Decoder-only",
+        "type": "step"
       },
       {
         "id": "n4",
-        "label": "T5 1.1 기반 CT5",
-        "type": ": step"
+        "label": "Encoder+Decoder",
+        "type": "step"
       },
       {
         "id": "n5",
-        "label": "BF16 + Adafactor",
+        "label": "스케일링 & 범용성",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "도메인 어댑테이션",
-        "type": "decision"
-      },
-      {
-        "id": "n7",
-        "label": "대화 특화 모델",
+        "label": "태스크별 구조 선택",
         "type": "end"
       }
     ],
@@ -1876,25 +1871,32 @@
         "to": "n2"
       },
       {
-        "from": "n2",
-        "to": "n3",
-        "bidirectional": true
+        "from": "n1",
+        "to": "n3"
       },
       {
-        "from": "n3",
+        "from": "n1",
         "to": "n4"
       },
       {
-        "from": "n4",
+        "from": "n2",
+        "to": "n3",
+        "bidirectional": true,
+        "label": "이해 vs 생성"
+      },
+      {
+        "from": "n3",
         "to": "n5"
+      },
+      {
+        "from": "n4",
+        "to": "n5",
+        "bidirectional": true,
+        "label": "복잡도 ↔ 효율"
       },
       {
         "from": "n5",
         "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
       }
     ]
   }

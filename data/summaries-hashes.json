@@ -29,5 +29,5 @@
   "data-architect/00_what_is_ontology": "aac53707b399de73a07cf2693d4a1e45",
   "data-architect/01_how_to_implement_ontology": "fa906a1c25498735d62d426f8cf66f3f",
   "data-engineering/01_how_to_architect_medallion_well": "cdef564a1356b525aa189a96b46b2951",
-  "llm/00_what_is_transformers": "c55ec799763b80c655d8114f83748e74"
+  "llm/00_why_llm_is_decoder_only": "367a0a6c8e21d4782b47300c8af28dac"
 }
