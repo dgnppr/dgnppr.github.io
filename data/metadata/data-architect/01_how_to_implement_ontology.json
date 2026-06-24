@@ -1,0 +1,15 @@
+{
+ "type": "wiki",
+ "title": "알람 하나로 온톨로지 전체를 설계하다",
+ "parent": "data-architect",
+ "url": "/wiki/data-architect/01_how_to_implement_ontology",
+ "updated": "2026-06-23 00:00:00 +0900",
+ "tags": [
+  "data-architecture",
+  "ontology",
+  "data-engineering"
+ ],
+ "series": null,
+ "snippet": "/data-architect/00whatisontology 에서 온톨로지를 객체(명사)·링크(관계)·액션(동사) 세 계층과, 그 위에 올라타는 시간(Dynamic) 차원으로 설명했다. 이 글은 그 모든 개념이 하나의 사건 안에서 어떻게 맞물리는지를 끝까지 파고든다. --- 인시던트 2024년 12월 10일 오전 9시. 슬랙에 알람이 떴다. CHURN-ALERT VIP 고객 이탈 위험 — K씨 (userid: U-29182) | 이탈 확률 0.87 | 마지막 구매: 2024-09-15 이탈 예측 모델이 K씨를 위험군으로 분류했다. CS 자동화 시스템이 즉시 2만원 쿠폰 발송 액션을 실행했다. K씨는 쿠폰을 받고 당일 오후 웹에서 주문했다. 지표상으로는 이탈 방어 성공. 다음 날 데이터팀이 오프라인 로그를 뒤졌",
+ "children": []
+}
