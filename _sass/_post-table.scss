@@ -18,7 +18,7 @@
             font-weight: 600;
             color: var(--color-table-head-text);
             background: var(--color-table-head-bg);
-            border-color: var(--color-table-head-bg);
+            border-color: rgba(255, 255, 255, 0.18);
             letter-spacing: 0.01em;
         }
         tr:hover td {
