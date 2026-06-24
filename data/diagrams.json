@@ -1563,7 +1563,7 @@
     ]
   },
   "data-engineering/00_what_is_medaliion_architecture": {
-    "hash": "367f111dea9c9ad835dba9a011faca30",
+    "hash": "45a72272d0a897f433179cdf331680c1",
     "nodes": [
       {
         "id": "n1",
@@ -1577,7 +1577,7 @@
       },
       {
         "id": "n3",
-        "label": "Silver (Cleansed)",
+        "label": "Silver (Conformed)",
         "type": "step"
       },
       {
@@ -1592,8 +1592,8 @@
       },
       {
         "id": "n6",
-        "label": "단일 진실원천",
-        "type": "end"
+        "label": "단일 출처(SSOT)",
+        "type": ": end"
       }
     ],
     "edges": [
@@ -1828,6 +1828,73 @@
       {
         "from": "n7",
         "to": "n8"
+      }
+    ]
+  },
+  "llm/00_what_is_transformers": {
+    "hash": "c55ec799763b80c655d8114f83748e74",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "Seq2Seq vs Decoder",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "정보 병목 활용",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "태스크 확장성",
+        "type": "end"
+      },
+      {
+        "id": "n4",
+        "label": "T5 1.1 기반 CT5",
+        "type": ": step"
+      },
+      {
+        "id": "n5",
+        "label": "BF16 + Adafactor",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "도메인 어댑테이션",
+        "type": "decision"
+      },
+      {
+        "id": "n7",
+        "label": "대화 특화 모델",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3",
+        "bidirectional": true
+      },
+      {
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
       }
     ]
   }

@@ -12,3 +12,11 @@ package-lock.json
 resource/credentials/
 .env
 data/qdrant/
+data/search-index.json
+data/tag_count.json
+data/total-document-url-list.json
+data/series.json
+data/hub.json
+data/writing-stats.json
+data/tags/
+data/metadata/
