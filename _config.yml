@@ -10,7 +10,7 @@ email: dgnppr@gmail.com
 author: dragonappear
 profile: DRAGONAPPEAR
 github_username: dgnppr
-linkedin_username: DRAGONAPPEAR
+linkedin_username: dgpr
 comment-support: giscus
 
 # Build settings
@@ -45,7 +45,8 @@ collections:
         output: true
         permalink: /:collection/:path/
     adr:
-        output: false
+        output: true
+        permalink: /:collection/:path/
 
 # Comment Service
 disqus:

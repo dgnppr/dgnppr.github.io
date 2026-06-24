@@ -163,7 +163,7 @@ back: data ontology
 stop:
 	docker compose stop
 
-restart:
+restart: clean
 	docker compose restart
 
 status:

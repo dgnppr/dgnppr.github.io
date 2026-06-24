@@ -17,8 +17,8 @@ layout: default
             <p>Deciders:
                 {% assign decider_list = page.deciders | split: ' ' %}
                 {% for decider in decider_list %}
-                    {% if decider == 'dragonappear' %}
-                    <a href="https://www.linkedin.com/in/{{ site.linkedin_username | downcase }}" target="_blank" rel="noopener">Yonghyun Yoon</a>
+                    {% if decider == 'dgnppr' or decider == 'dragonappear' %}
+                    <a href="https://www.linkedin.com/in/{{ site.linkedin_username | downcase }}" target="_blank" rel="noopener">{{ decider }}</a>
                     {% else %}
                     {{ decider }}
                     {% endif %}
@@ -26,6 +26,7 @@ layout: default
                 {% endfor %}
             </p>
             {% endif %}
+            <p><span class="eta"></span></p>
             {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
         </div>
         <hr>
@@ -166,4 +167,6 @@ layout: default
     });
 })();
 </script>
+<script src="/js/reading-time.js"></script>
 <script src="/js/scroll.js"></script>
+<script>$('article').readingTime({ prependTimeString: 'Reading Time: ', minShortForm: ' minutes' });</script>
