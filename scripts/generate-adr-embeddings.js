@@ -19,10 +19,13 @@ const QDRANT_URL = process.env.QDRANT_URL || 'http://localhost:6333';
 const FORCE      = process.argv.includes('--force');
 const MODEL      = 'bge-m3';
 const DIMS       = 1024;
-const COLLECTION = 'adr';
+const COLLECTION      = 'adr';
+const WIKI_COLLECTION = 'wiki';
 
-const ROOT    = path.join(__dirname, '..');
-const ADR_DIR = path.join(ROOT, '_adr');
+const ROOT      = path.join(__dirname, '..');
+const ADR_DIR   = path.join(ROOT, '_adr');
+const WIKI_DIR  = path.join(ROOT, '_wiki');
+const POSTS_DIR = path.join(ROOT, '_posts');
 
 function collectMarkdown(dir, results = []) {
     if (!fs.existsSync(dir)) return results;
@@ -90,6 +93,45 @@ async function qdrant(method, endpoint, body) {
     });
     if (!res.ok) throw new Error(`Qdrant ${method} ${endpoint} → HTTP ${res.status}: ${await res.text()}`);
     return res.json();
+}
+
+// ── Wiki/Post 헬퍼 ────────────────────────────────────────────
+
+function collectWikiDocs() {
+    const results = [];
+    function walk(dir, type) {
+        if (!fs.existsSync(dir)) return;
+        for (const f of fs.readdirSync(dir)) {
+            const full = path.join(dir, f);
+            if (fs.statSync(full).isDirectory()) walk(full, type);
+            else if (f.endsWith('.md') && !f.startsWith('_') && f !== 'README.md') {
+                results.push({ path: full, type });
+            }
+        }
+    }
+    walk(WIKI_DIR, 'wiki');
+    walk(POSTS_DIR, 'post');
+    return results;
+}
+
+function slugFromWikiPath(p, type) {
+    if (type === 'wiki') return p.replace(/.*\/_wiki\//, '').replace(/\.md$/, '');
+    return p.replace(/.*\/_posts\//, '').replace(/\.md$/, '');
+}
+
+function urlFromWikiPath(p, type, fm) {
+    if (type === 'wiki') return p.replace(/.*\/_wiki/, '/wiki').replace(/\.md$/, '/');
+    if (fm && fm.date) {
+        const d    = fm.date.slice(0, 10).split('-').join('/');
+        const base = path.basename(p, '.md').replace(/^\d{4}-\d{2}-\d{2}-/, '');
+        return '/blog/' + d + '/' + base + '/';
+    }
+    return p.replace(/.*\/_posts/, '/blog').replace(/\.md$/, '/');
+}
+
+function slugToIdWiki(slug) {
+    const h = crypto.createHash('md5').update('wiki:' + slug).digest('hex');
+    return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20,32)}`;
 }
 
 async function ensureCollection() {
@@ -180,39 +222,75 @@ async function main() {
         console.log(`[삭제] stale ${stale.length}개`);
     }
 
-    // 유사 ADR 사전 계산 → data/adr-related.json
-    await generateRelated([...validSlugs]);
+    // wiki/post Qdrant 인덱싱 (브라우저 런타임 검색용)
+    await indexWikiDocs();
 
     console.log('\n완료!');
 }
 
-async function generateRelated(slugs) {
-    if (!slugs.length) return;
-    console.log('\n[관련 ADR] 생성 중...');
-    const related = {};
-
-    for (const slug of slugs) {
-        try {
-            const res = await qdrant('POST', `/collections/${COLLECTION}/points/recommend`, {
-                positive: [slugToId(slug)],
-                limit: 5,
-                with_payload: true,
-            });
-            const hits = (res.result ?? []).map(h => ({
-                slug:  h.payload.slug,
-                title: h.payload.title,
-                score: +h.score.toFixed(3),
-            }));
-            if (hits.length) related[slug] = hits;
-        } catch (e) {
-            // 포인트 없음 또는 Qdrant 오류 → 스킵
+async function indexWikiDocs() {
+    // wiki 컬렉션 확인/생성
+    try {
+        await qdrant('GET', `/collections/${WIKI_COLLECTION}`);
+        if (FORCE) {
+            await qdrant('DELETE', `/collections/${WIKI_COLLECTION}`);
+            console.log('[Qdrant] wiki 컬렉션 삭제 (--force)');
+            throw new Error('recreate');
         }
+    } catch (e) {
+        if (e.message !== 'recreate' && !e.message.includes('404') && !e.message.includes('HTTP 404')) throw e;
+        await qdrant('PUT', `/collections/${WIKI_COLLECTION}`, {
+            vectors: { size: DIMS, distance: 'Cosine' },
+        });
+        console.log('[Qdrant] wiki 컬렉션 생성');
     }
 
-    const outPath = path.join(ROOT, 'data', 'adr-related.json');
-    fs.writeFileSync(outPath, JSON.stringify(related, null, 2));
-    console.log(`[관련 ADR] data/adr-related.json (${Object.keys(related).length}개 항목)`);
-}
+    const docs = collectWikiDocs();
+    console.log(`\n[Wiki] ${docs.length}개 문서 인덱싱 중...`);
+
+    const wikiStored = FORCE ? new Map() : await (async () => {
+        const result = await qdrant('POST', `/collections/${WIKI_COLLECTION}/points/scroll`, {
+            with_payload: ['slug'], limit: 10000,
+        });
+        return new Map((result.result?.points || []).map(p => [p.payload.slug, p.id]));
+    })();
+
+    for (const { path: filePath, type } of docs) {
+        const content = fs.readFileSync(filePath, 'utf8');
+        const fm      = parseFrontmatter(content);
+        if (fm.public === 'false' || fm.layout === 'category') continue;
+
+        const slug = slugFromWikiPath(filePath, type);
+        const url  = urlFromWikiPath(filePath, type, fm);
+        const text = extractText(content, fm);
+        const hash = crypto.createHash('md5').update(text).digest('hex');
+
+        if (text.trim().length < 50) continue;
+
+        if (!FORCE && wikiStored.has(slug)) {
+            const point = await qdrant('GET', `/collections/${WIKI_COLLECTION}/points/${slugToIdWiki(slug)}`).catch(() => null);
+            if (point?.result?.payload?.hash === hash) {
+                console.log(`[Wiki 캐시] ${slug}`);
+                continue;
+            }
+        }
+
+        try {
+            process.stdout.write(`[Wiki 임베딩] ${slug}... `);
+            const vector = await embedText(text);
+            await qdrant('PUT', `/collections/${WIKI_COLLECTION}/points`, {
+                points: [{
+                    id: slugToIdWiki(slug),
+                    vector,
+                    payload: { slug, title: fm.title || slug, url, type, tag: fm.tag || '', hash },
+                }],
+            });
+            process.stdout.write(`완료\n`);
+            await new Promise(r => setTimeout(r, 100));
+        } catch (e) {
+            process.stdout.write(`오류: ${e.message}\n`);
+        }
+    }
 }
 
 main().catch(e => { console.error(e); process.exit(1); });

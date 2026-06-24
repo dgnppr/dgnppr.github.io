@@ -27,6 +27,8 @@
         'jpa':               '#0d9488',
         'data-engineering':  '#14b8a6',
         'design-pattern':    '#2dd4bf',
+        /* Violet — ADR */
+        'adr':               '#7c3aed',
         /* Rose/Red family */
         'code-architecture': '#be123c',
         'java':              '#e11d48',
@@ -107,12 +109,18 @@
         var H = container.clientHeight || 500;
 
         /* ── 데이터 로드 ────────────────────────────────────────── */
-        Promise.all([
+        var _urls = [
             fetch('/data/search-index.json').then(function (r) { return r.json(); }),
             fetch('/data/related.json').then(function (r) { return r.json(); }),
-        ]).then(function (results) {
+        ];
+        if (opts.extraRelatedUrl) {
+            _urls.push(fetch(opts.extraRelatedUrl).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }));
+        }
+        Promise.all(_urls).then(function (results) {
             var searchIndex = results[0];
             var related     = results[1];
+            if (results[2]) Object.assign(related, results[2]);
+            if (opts.extraRelated) Object.assign(related, opts.extraRelated);
 
             /* ── 노드 빌드 ───────────────────────────────────── */
             var nodeMap = {}, nodes = [];
@@ -130,6 +138,20 @@
                 nodes.push(n);
                 nodeMap[slug] = n;
             });
+
+            if (opts.extraNodes) {
+                opts.extraNodes.forEach(function (page) {
+                    var slug = page.slug || (page.url || '').replace(/^\/adr\//, '').replace(/\/$/, '');
+                    if (nodeMap[slug]) return;
+                    var n = {
+                        id: slug, slug: slug, title: page.title,
+                        url: page.url, type: 'adr', cat: 'adr',
+                        tags: page.tags || [], summary: '', degree: 0,
+                    };
+                    nodes.push(n);
+                    nodeMap[slug] = n;
+                });
+            }
 
             /* focusSlug 모드: 현재 노드 + 직접 연결된 이웃만 표시 */
             if (focusSlug) {

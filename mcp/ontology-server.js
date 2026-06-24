@@ -5,18 +5,24 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import fs from "fs";
 import path from "path";
 
-const ROOT         = path.join(import.meta.dirname, "..");
-const GRAPH_FILE   = path.join(ROOT, "data/ontology-graph.json");
-const EMB_CONCEPT  = path.join(ROOT, "data/embeddings.json");
-const EMB_DECISION = path.join(ROOT, "data/adr-embeddings.json");
-const BACKEND      = process.env.EMBEDDING_BACKEND;
-const OLLAMA_URL   = process.env.OLLAMA_URL || "http://localhost:11434";
+const ROOT       = path.join(import.meta.dirname, "..");
+const GRAPH_FILE = path.join(ROOT, "data/ontology-graph.json");
 
-function cosine(a, b) {
-  let dot = 0, na = 0, nb = 0;
-  for (let i = 0; i < a.length; i++) { dot += a[i]*b[i]; na += a[i]*a[i]; nb += b[i]*b[i]; }
-  return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
+// .env 우선, process.env는 fallback
+const _env = path.join(ROOT, ".env");
+if (fs.existsSync(_env)) {
+  for (const line of fs.readFileSync(_env, "utf-8").split("\n")) {
+    const m = line.match(/^([^#=\s]+)\s*=\s*(.+)$/);
+    if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim();
+  }
 }
+
+const BACKEND    = process.env.EMBEDDING_BACKEND;
+const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
+const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6333";
+
+// concept → wiki collection, adr → adr collection
+const COLLECTION = { concept: "wiki", adr: "adr" };
 
 let _ai;
 async function embedQuery(text) {
@@ -39,22 +45,18 @@ async function embedQuery(text) {
   return emb;
 }
 
+async function qdrantSearch(collection, vector, limit = 20) {
+  const res = await fetch(`${QDRANT_URL}/collections/${collection}/points/search`, {
+    method: "POST", headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ vector, limit, with_payload: true }),
+  });
+  if (!res.ok) return [];
+  return (await res.json()).result ?? [];
+}
+
 function loadGraph() {
   if (!fs.existsSync(GRAPH_FILE)) return { nodes: {}, edges: [] };
   return JSON.parse(fs.readFileSync(GRAPH_FILE, "utf-8"));
-}
-
-function loadEmbeddings() {
-  const m = new Map();
-  if (fs.existsSync(EMB_CONCEPT)) {
-    for (const [slug, v] of Object.entries(JSON.parse(fs.readFileSync(EMB_CONCEPT, "utf-8"))))
-      if (v?.embedding) m.set(`concept/${slug}`, v.embedding);
-  }
-  if (fs.existsSync(EMB_DECISION)) {
-    for (const [slug, v] of Object.entries(JSON.parse(fs.readFileSync(EMB_DECISION, "utf-8"))))
-      if (v?.embedding) m.set(`decision/${slug}`, v.embedding);
-  }
-  return m;
 }
 
 const server = new Server(
@@ -70,7 +72,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       inputSchema: {
         type: "object",
         properties: {
-          type:   { type: "string", description: "decision | concept (생략 시 전체)" },
+          type:   { type: "string", description: "adr | concept (생략 시 전체)" },
           status: { type: "string", description: "상태 필터 (예: accepted, complete)" },
           tag:    { type: "string", description: "태그 필터" },
           limit:  { type: "number", description: "최대 반환 수 (기본 50)" },
@@ -82,31 +84,30 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       description: "엔티티 ID로 노드 메타데이터와 전체 내용을 반환한다.",
       inputSchema: {
         type: "object",
-        properties: { id: { type: "string", description: "예: decision/2024-001-use-kafka" } },
+        properties: { id: { type: "string", description: "예: adr/architecture/2024-001-use-kafka" } },
         required: ["id"],
       },
     },
     {
       name: "ontology_related",
-      description: "엔티티의 관계(엣지)를 탐색한다. rel_type과 방향으로 필터링 가능.",
+      description: "텍스트 또는 엔티티 ID 기준으로 adr·wiki 양쪽을 탐색한다. Qdrant ANN(candidate gen) + 태그·그래프 시그널(re-rank). 결과는 { related_adrs, related_wiki } 두 그룹으로 반환한다. ADR 기준이면 관련 ADR + 연관 wiki, wiki 기준이면 관련 wiki + 연관 ADR.",
       inputSchema: {
         type: "object",
         properties: {
-          id:        { type: "string", description: "엔티티 ID" },
-          rel_type:  { type: "string", description: "implements | references | extends | supersedes | motivates | contradicts | involves" },
-          direction: { type: "string", description: "from | to | both (기본: both)" },
+          query: { type: "string", description: "검색할 텍스트 (query 또는 id 중 하나 필수)" },
+          id:    { type: "string", description: "기준 엔티티 ID — 본문을 쿼리로 사용하고 graph 시그널도 활성화됨" },
+          limit: { type: "number", description: "그룹당 최대 수 (기본 5)" },
         },
-        required: ["id"],
       },
     },
     {
       name: "ontology_find",
-      description: "임베딩 유사도로 관련 엔티티를 검색한다. type으로 범위 제한 가능.",
+      description: "Qdrant 유사도 검색으로 관련 엔티티를 반환한다. type으로 범위 제한 가능.",
       inputSchema: {
         type: "object",
         properties: {
           query: { type: "string", description: "검색 쿼리" },
-          type:  { type: "string", description: "decision | concept (생략 시 전체)" },
+          type:  { type: "string", description: "adr | concept (생략 시 전체)" },
           limit: { type: "number", description: "최대 반환 수 (기본 10)" },
         },
         required: ["query"],
@@ -114,11 +115,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: "ontology_decision_context",
-      description: "ADR 결정의 전체 컨텍스트: 본문 + 유사 과거 결정 + 그래프 관계. 새 ADR 작성 시 과거 결정 소환용.",
+      description: "ADR 결정의 전체 컨텍스트: 본문 + 유사 과거 결정(Qdrant) + 그래프 관계. 새 ADR 작성 시 과거 결정 소환용.",
       inputSchema: {
         type: "object",
         properties: {
-          id:    { type: "string", description: "decision 엔티티 ID (예: decision/2024-001-use-kafka)" },
+          id:    { type: "string", description: "adr 엔티티 ID (예: adr/architecture/2024-001-use-kafka)" },
           limit: { type: "number", description: "유사 결정 최대 수 (기본 5)" },
         },
         required: ["id"],
@@ -151,43 +152,107 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
   }
 
   if (name === "ontology_related") {
-    const dir = args.direction ?? "both";
-    let edges = graph.edges.filter(e =>
-      ((dir === "from" || dir === "both") && e.from === args.id) ||
-      ((dir === "to"   || dir === "both") && e.to   === args.id)
-    );
-    if (args.rel_type) edges = edges.filter(e => e.type === args.rel_type);
-    const result = edges.map(e => {
-      const peerId = e.from === args.id ? e.to : e.from;
-      return { edge: e, node: graph.nodes[peerId] ?? { id: peerId, title: "(unknown)" } };
-    });
-    return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    if (!args.query && !args.id)
+      return { content: [{ type: "text", text: "query 또는 id 중 하나 필수" }], isError: true };
+
+    let queryText = args.query ?? "";
+    let anchorTags = [];
+    if (args.id) {
+      const anchor = graph.nodes[args.id];
+      if (!anchor) return { content: [{ type: "text", text: `엔티티 없음: ${args.id}` }], isError: true };
+      const fp = path.join(ROOT, anchor.path);
+      queryText = fs.existsSync(fp)
+        ? fs.readFileSync(fp, "utf-8").replace(/^---[\s\S]*?---\n/, "").slice(0, 2000)
+        : anchor.title;
+      anchorTags = anchor.tags ?? [];
+    }
+
+    let queryVec;
+    try { queryVec = await embedQuery(queryText); }
+    catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
+
+    const edgeMap = new Map();
+    if (args.id) {
+      for (const e of graph.edges) {
+        if (e.from === args.id) edgeMap.set(e.to,   e.type);
+        if (e.to   === args.id) edgeMap.set(e.from, e.type);
+      }
+    }
+
+    // ponytail: always search both collections — ADR gets related_adrs+related_wiki, wiki gets the reverse
+    const limit = args.limit ?? 5;
+    const candidateLimit = limit * 5;
+    const [wikiHits, adrHits] = await Promise.all([
+      qdrantSearch("wiki", queryVec, candidateLimit).then(hits =>
+        hits.map(h => ({ id: `concept/${h.payload.slug}`, score: h.score, payload: h.payload }))
+      ),
+      qdrantSearch("adr", queryVec, candidateLimit).then(hits =>
+        hits.map(h => ({ id: `adr/${h.payload.slug}`, score: h.score, payload: h.payload }))
+      ),
+    ]);
+
+    const rerank = (candidates) => candidates
+      .filter(c => c.id !== args.id)
+      .map(c => {
+        const node     = graph.nodes[c.id];
+        const nodeTags = node?.tags ?? (c.payload.tag ? c.payload.tag.split(/\s+/).filter(Boolean) : []);
+        const inter    = anchorTags.filter(t => nodeTags.includes(t));
+        const unionLen = new Set([...anchorTags, ...nodeTags]).size;
+        const tag      = unionLen > 0 ? inter.length / unionLen : 0;
+        const edge     = edgeMap.get(c.id) ?? null;
+        return {
+          id:      c.id,
+          title:   node?.title ?? c.payload.title,
+          status:  node?.status ?? c.payload.status ?? "",
+          score:   +(c.score * 0.7 + tag * 0.2 + (edge ? 0.1 : 0)).toFixed(3),
+          signals: { semantic: +c.score.toFixed(3), shared_tags: inter, ...(edge ? { graph_edge: edge } : {}) },
+        };
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit);
+
+    return {
+      content: [{
+        type: "text",
+        text: JSON.stringify({
+          related_adrs: rerank(adrHits),
+          related_wiki: rerank(wikiHits),
+        }, null, 2),
+      }],
+    };
   }
 
   if (name === "ontology_find") {
-    if (!fs.existsSync(EMB_CONCEPT) && !fs.existsSync(EMB_DECISION))
-      return { content: [{ type: "text", text: "임베딩 캐시 없음. generate-embeddings.js / generate-adr-embeddings.js 먼저 실행하세요." }], isError: true };
     let queryVec;
     try { queryVec = await embedQuery(args.query); }
     catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
 
-    const embs = loadEmbeddings();
-    const scored = [];
-    for (const [id, emb] of embs) {
-      if (args.type && !id.startsWith(args.type + "/")) continue;
-      const node = graph.nodes[id];
-      if (!node) continue;
-      scored.push({ id, score: cosine(queryVec, emb), title: node.title, type: node.type, status: node.status, tags: node.tags });
-    }
-    scored.sort((a, b) => b.score - a.score);
-    const top = scored.slice(0, args.limit ?? 10).map(s => ({ ...s, score: +s.score.toFixed(3) }));
-    return { content: [{ type: "text", text: top.length ? JSON.stringify(top, null, 2) : `'${args.query}' 관련 항목 없음` }] };
+    const collections = args.type
+      ? [{ col: COLLECTION[args.type], type: args.type }]
+      : [{ col: "wiki", type: "concept" }, { col: "adr", type: "adr" }];
+
+    const hits = (
+      await Promise.all(collections.map(({ col, type }) =>
+        qdrantSearch(col, queryVec, args.limit ?? 10).then(results =>
+          results.map(h => ({
+            id:     `${type}/${h.payload.slug}`,
+            title:  h.payload.title,
+            type,
+            status: h.payload.status ?? "",
+            tags:   h.payload.tag ?? "",
+            score:  +h.score.toFixed(3),
+          }))
+        )
+      ))
+    ).flat().sort((a, b) => b.score - a.score).slice(0, args.limit ?? 10);
+
+    return { content: [{ type: "text", text: hits.length ? JSON.stringify(hits, null, 2) : `'${args.query}' 관련 항목 없음` }] };
   }
 
   if (name === "ontology_decision_context") {
     const node = graph.nodes[args.id];
-    if (!node || node.type !== "decision")
-      return { content: [{ type: "text", text: `decision 엔티티 아님: ${args.id}` }], isError: true };
+    if (!node || node.type !== "adr")
+      return { content: [{ type: "text", text: `adr 엔티티 아님: ${args.id}` }], isError: true };
 
     const fp = path.join(ROOT, node.path);
     const content = fs.existsSync(fp) ? fs.readFileSync(fp, "utf-8") : "(파일 없음)";
@@ -196,21 +261,14 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       .map(e => ({ ...e, peer: graph.nodes[e.from === args.id ? e.to : e.from] ?? { id: e.from === args.id ? e.to : e.from } }));
 
     let similar = [];
-    if (fs.existsSync(EMB_DECISION)) {
-      try {
-        const queryVec = await embedQuery(content.slice(0, 2000));
-        const embs = loadEmbeddings();
-        const scored = [];
-        for (const [id, emb] of embs) {
-          if (!id.startsWith("decision/") || id === args.id) continue;
-          const n = graph.nodes[id];
-          if (!n) continue;
-          scored.push({ id, score: cosine(queryVec, emb), title: n.title, status: n.status });
-        }
-        scored.sort((a, b) => b.score - a.score);
-        similar = scored.slice(0, args.limit ?? 5).map(s => ({ ...s, score: +s.score.toFixed(3) }));
-      } catch { /* 임베딩 불가 시 유사 결정 생략 */ }
-    }
+    try {
+      const queryVec = await embedQuery(content.replace(/^---[\s\S]*?---\n/, "").slice(0, 2000));
+      const slug = args.id.replace(/^adr\//, "");
+      similar = (await qdrantSearch("adr", queryVec, (args.limit ?? 5) + 1))
+        .filter(h => h.payload.slug !== slug)
+        .slice(0, args.limit ?? 5)
+        .map(h => ({ id: `adr/${h.payload.slug}`, title: h.payload.title, status: h.payload.status, score: +h.score.toFixed(3) }));
+    } catch { /* 임베딩 불가 시 유사 결정 생략 */ }
 
     const out = [
       `# ${node.title}`,

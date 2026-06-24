@@ -1,14 +1,13 @@
 {
   "nodes": {
-    "decision/architecture/2024-001-test-adr": {
-      "id": "decision/architecture/2024-001-test-adr",
-      "type": "decision",
-      "title": "[테스트] ADR 시스템 도입",
+    "adr/architecture/2024-001-test-adr": {
+      "id": "adr/architecture/2024-001-test-adr",
+      "type": "adr",
+      "title": "ADR 시스템 가이드",
       "path": "_adr/architecture/2024-001-test-adr.md",
       "status": "accepted",
       "tags": [
-        "adr",
-        "test"
+        "adr"
       ],
       "date": "2024-01-01"
     },

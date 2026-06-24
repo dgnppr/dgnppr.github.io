@@ -2,8 +2,6 @@
 layout: default
 ---
 
-{% assign adrSlug = page.id | remove: '/adr/' %}
-<input type="hidden" id="adrSlug" value="{{ adrSlug }}"/>
 <div class="progress-container">
     <div class="progress-bar" id="myBar"></div>
 </div>
@@ -15,36 +13,134 @@ layout: default
             <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
             <p>Updated: {{ page.updated | date: '%Y.%m.%d' }}</p>
             {% if page.status %}<p>Status: <span class="post-status">{{ page.status }}</span></p>{% endif %}
-            {% if page.deciders %}<p>Deciders: {{ page.deciders }}</p>{% endif %}
+            {% if page.deciders %}
+            <p>Deciders:
+                {% assign decider_list = page.deciders | split: ' ' %}
+                {% for decider in decider_list %}
+                    {% if decider == 'dragonappear' %}
+                    <a href="https://www.linkedin.com/in/{{ site.linkedin_username | downcase }}" target="_blank" rel="noopener">Yonghyun Yoon</a>
+                    {% else %}
+                    {{ decider }}
+                    {% endif %}
+                    {% unless forloop.last %}, {% endunless %}
+                {% endfor %}
+            </p>
+            {% endif %}
             {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
         </div>
         <hr>
     </header>
 
+    <div class="wiki-mini-graph" id="wiki-mini-graph-wrap">
+        <div class="wiki-mini-graph__header">
+            <span class="wiki-mini-graph__title">미니 지식 그래프</span>
+            <button class="wiki-mini-graph__expand" id="wiki-mini-graph-expand" aria-label="전체 지식 그래프 보기" title="전체 지식 그래프 보기">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/>
+                </svg>
+            </button>
+        </div>
+        <div class="wiki-mini-graph__canvas" id="wiki-mini-graph-canvas">
+            <div id="wiki-mini-graph"></div>
+        </div>
+    </div>
+
     <article class="post-content">
         {{ content }}
     </article>
-
-    <div id="adr-related-container"></div>
-    <script>
-    (function() {
-        var slugEl = document.getElementById('adrSlug');
-        if (!slugEl) return;
-        var slug = slugEl.value;
-        fetch('/data/adr-related.json')
-            .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(data) {
-                if (!data || !data[slug] || !data[slug].length) return;
-                var html = '<section class="related-posts"><h3 class="related-posts__heading">관련 ADR</h3><div class="related-posts__list">' +
-                    data[slug].map(function(r) {
-                        return '<a class="related-posts__item" href="/adr/' + r.slug + '/">' +
-                            r.title + ' <span style="opacity:.5;font-size:.85em">(' + Math.round(r.score * 100) + '%)</span></a>';
-                    }).join('') + '</div></section>';
-                document.getElementById('adr-related-container').innerHTML = html;
-            }).catch(function() {});
-    })();
-    </script>
 </div>
+
+<script>
+(function () {
+    var PAGE_URL = {{ page.url | jsonify }};
+    var adrSlug  = PAGE_URL.replace(/^\/adr\//, '').replace(/\/$/, '');
+    var QDRANT   = 'http://localhost:6333';
+
+    var ADR_NODES = [
+        {% for adr in site.adr %}
+        { title: {{ adr.title | jsonify }}, url: {{ adr.url | jsonify }},
+          tags: {{ adr.tag | default: '' | split: ' ' | jsonify }} },
+        {% endfor %}
+    ];
+
+    var el = document.getElementById('wiki-mini-graph');
+    if (!el) return;
+
+    function initGraph(extraRelated) {
+        function doInit() {
+            if (!window.KnowledgeGraph3D) return;
+            window.KnowledgeGraph3D.init({
+                container:    el,
+                focusSlug:    adrSlug,
+                miniMode:     true,
+                extraNodes:   ADR_NODES,
+                extraRelated: extraRelated || {},
+                search: null, groups: null, stats: null,
+            });
+        }
+        function loadKg() {
+            if (window.KnowledgeGraph3D) { doInit(); return; }
+            var s = document.createElement('script');
+            s.src = '/js/knowledge-graph-3d.js';
+            s.onload = doInit;
+            document.head.appendChild(s);
+        }
+        if (window.d3) { loadKg(); return; }
+        var sd = document.createElement('script');
+        sd.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+        sd.onload = loadKg;
+        document.head.appendChild(sd);
+    }
+
+    /* Qdrant에서 현재 ADR 벡터 → 유사 ADR + Wiki 조회 */
+    fetch(QDRANT + '/collections/adr/points/scroll', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            filter: { must: [{ key: 'slug', match: { value: adrSlug } }] },
+            with_vectors: true,
+            limit: 1,
+        }),
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+        var point = res.result && res.result.points && res.result.points[0];
+        if (!point) { initGraph({}); return; }
+        var vector = point.vector, pointId = point.id;
+
+        return Promise.all([
+            fetch(QDRANT + '/collections/adr/points/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    vector: vector, limit: 5, with_payload: true,
+                    filter: { must_not: [{ has_id: [pointId] }] },
+                }),
+            }).then(function(r) { return r.json(); }),
+            fetch(QDRANT + '/collections/wiki/points/search', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    vector: vector, limit: 5, with_payload: true,
+                    score_threshold: 0.5,
+                }),
+            }).then(function(r) { return r.json(); }).catch(function() { return { result: [] }; }),
+        ]).then(function(results) {
+            var hits = (results[0].result || []).map(function(h) {
+                return { slug: h.payload.slug, title: h.payload.title, score: +h.score.toFixed(3) };
+            }).concat(
+                (results[1].result || []).map(function(h) {
+                    return { slug: h.payload.slug, title: h.payload.title, score: +h.score.toFixed(3) };
+                })
+            );
+            var extraRelated = {};
+            if (hits.length) extraRelated[adrSlug] = hits;
+            initGraph(extraRelated);
+        });
+    })
+    .catch(function() { initGraph({}); });
+})();
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
 <script>

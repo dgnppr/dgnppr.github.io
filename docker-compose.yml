@@ -13,6 +13,8 @@ services:
       - 6333:6333
     volumes:
       - ./data/qdrant:/qdrant/storage
+    environment:
+      - QDRANT__SERVICE__ENABLE_CORS=true
 
   adr-embeddings:
     image: node:22-alpine

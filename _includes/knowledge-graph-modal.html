@@ -49,12 +49,13 @@
 
         function doInit() {
             if (!window.KnowledgeGraph3D || !window.KnowledgeGraph3D.init) return;
-            window.KnowledgeGraph3D.init({
+            var extra = window.KG_EXTRA_OPTS || {};
+            window.KnowledgeGraph3D.init(Object.assign({
                 container: graphEl,
                 search:    searchEl,
                 groups:    groupsEl,
                 stats:     statsEl,
-            });
+            }, extra));
         }
 
         function loadKg() {

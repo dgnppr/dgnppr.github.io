@@ -1,6 +1,6 @@
 {
   "entity_types": {
-    "decision": {
+    "adr": {
       "dir": "_adr",
       "description": "Architecture Decision Records"
     },

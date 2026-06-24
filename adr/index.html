@@ -4,53 +4,14 @@ title: "ADR & Knowledge Base"
 permalink: /adr/
 ---
 <style>
-/* ADR 인덱스 전용 — 기존 home-* 클래스 재활용, 추가분만 정의 */
-.adr-filter-bar {
-    display: flex;
-    gap: .35rem;
-    flex-wrap: wrap;
-    padding: .6rem 4px .8rem;
-}
-.adr-filter-btn {
-    font-size: .75rem;
-    font-weight: 600;
-    padding: .2rem .65rem;
-    border: 1px solid var(--color-border-subtle);
-    border-radius: 20px;
-    background: none;
-    color: var(--color-text-tertiary);
-    cursor: pointer;
-    transition: all .15s;
-}
-.adr-filter-btn.active,
-.adr-filter-btn:hover {
-    background: var(--color-interactive);
-    color: #fff;
-    border-color: transparent;
-}
-.adr-two-col {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    align-items: start;
-}
-@media (max-width: 760px) {
-    .adr-two-col { grid-template-columns: 1fr; }
-}
-.adr-feed-item[data-hidden="1"] { display: none; }
-.adr-feed-item.selected .home-feed-link {
-    background: var(--color-surface-hover);
-    border-radius: 4px;
-}
-.adr-feed-item .home-feed-link { cursor: pointer; }
-.adr-feed-item .home-feed-title a { text-decoration: none; color: inherit; }
 .adr-badge {
     font-size: .65rem;
-    font-weight: 600;
-    padding: 1px 6px;
-    border-radius: 8px;
+    font-weight: 700;
+    padding: 2px 7px;
+    border-radius: 20px;
     white-space: nowrap;
     flex-shrink: 0;
+    letter-spacing: .02em;
 }
 .adr-badge--proposed   { background: #fef3c7; color: #92400e; }
 .adr-badge--accepted   { background: #d1fae5; color: #065f46; }
@@ -60,8 +21,6 @@ permalink: /adr/
 .dark-mode .adr-badge--accepted   { background: #022c22; color: #6ee7b7; }
 .dark-mode .adr-badge--deprecated { background: #1e293b; color: #94a3b8; }
 .dark-mode .adr-badge--superseded { background: #450a0a; color: #fca5a5; }
-.adr-hint  { padding: 10px 4px; opacity: .35; font-size: .85rem; list-style: none; }
-.adr-empty { padding: 10px 4px; opacity: .45; font-size: .88rem; list-style: none; }
 </style>
 
 <div class="home">
@@ -78,103 +37,46 @@ permalink: /adr/
         </button>
     </div>
 
-    <!-- ② Recently Changed (ADR + wiki 혼합) -->
+    <!-- ② Recently Changed (ADR만) -->
     <p class="home-section-title" style="margin-top:2rem">Recently Changed Documents</p>
     <ul class="home-feed">
-        {% assign wiki_pub = site.wiki
-            | where: "public", true
-            | where_exp: "item", "item.layout != 'category'"
-            | where_exp: "item", "item.title != 'wiki'" %}
-        {% assign all_recent = site.adr | concat: wiki_pub | sort: 'updated' | reverse %}
-        {% for doc in all_recent limit: 10 %}
+        {% assign adr_recent = site.adr | sort: 'updated' | reverse %}
+        {% for doc in adr_recent limit: 10 %}
         <li class="home-feed-item">
             <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
                 <span class="home-feed-title">{{ doc.title }}</span>
                 <span class="home-feed-meta">
-                    {% if doc.collection == 'adr' %}
                     <span class="adr-badge adr-badge--{{ doc.status | downcase }}">{{ doc.status }}</span>
-                    {% else %}
-                    {% assign first_tag = doc.tag | split: ' ' | first %}
-                    {% if first_tag and first_tag != '' %}
-                    <span class="wiki-card-badge">{{ first_tag }}</span>
-                    {% endif %}
-                    {% endif %}
                     <time class="home-feed-date">{{ doc.updated | date: "%b %d, %Y" }}</time>
                 </span>
             </a>
         </li>
         {% endfor %}
     </ul>
-    {% assign total = all_recent.size %}
-    <div class="home-footer">
-        <span>{{ total }} documents (ADR {{ site.adr.size }} · wiki {{ wiki_pub.size }})</span>
-    </div>
-
-    <!-- ③ ADR 탐색 -->
-    <p class="home-section-title" style="margin-top:2rem">ADR Explorer</p>
-
-    <div class="adr-filter-bar">
-        <button class="adr-filter-btn active" data-filter="all">All</button>
-        <button class="adr-filter-btn" data-filter="proposed">Proposed</button>
-        <button class="adr-filter-btn" data-filter="accepted">Accepted</button>
-        <button class="adr-filter-btn" data-filter="deprecated">Deprecated</button>
-        <button class="adr-filter-btn" data-filter="superseded">Superseded</button>
-    </div>
-
-    <div class="adr-two-col">
-        <!-- 왼쪽: ADR 목록 -->
-        <div>
-            <p class="home-section-title">Architecture Decision Records</p>
-            <ul class="home-feed">
-                {% assign adr_sorted = site.adr | sort: 'date' | reverse %}
-                {% if adr_sorted.size == 0 %}
-                <li class="adr-empty">
-                    ADR이 없습니다 — <code>make adr-embeddings</code> 후 재시작하세요.
-                </li>
-                {% else %}
-                {% for adr in adr_sorted %}
-                <li class="adr-feed-item"
-                    data-status="{{ adr.status | downcase }}"
-                    data-tags="{{ adr.tag | default: '' }}"
-                    data-url="{{ adr.url }}">
-                    <div class="home-feed-link" onclick="selectAdr(this.parentElement)">
-                        <span class="home-feed-title">
-                            <a href="{{ adr.url }}" onclick="event.stopPropagation()">{{ adr.title }}</a>
-                        </span>
-                        <span class="home-feed-meta">
-                            <span class="adr-badge adr-badge--{{ adr.status | downcase }}">{{ adr.status }}</span>
-                            <time class="home-feed-date">{{ adr.date | date: "%b %d, %Y" }}</time>
-                        </span>
-                    </div>
-                </li>
-                {% endfor %}
-                {% endif %}
-            </ul>
-            {% if adr_sorted.size > 0 %}
-            <div class="home-footer"><span>{{ adr_sorted.size }} decision records</span></div>
-            {% endif %}
-        </div>
-
-        <!-- 오른쪽: 관련 콘텐츠 -->
-        <div>
-            <p class="home-section-title" id="related-panel-title">Related Content</p>
-            <ul class="home-feed" id="related-list">
-                <li class="adr-hint">← ADR을 선택하면 관련 글이 표시됩니다.</li>
-            </ul>
-        </div>
-    </div>
 
 </div>
 
-<!-- Knowledge Graph 로더 (메인 페이지와 동일) -->
+<!-- Knowledge Graph 로더 (ADR 노드 포함) -->
 <script>
+var ADR_NODES = [
+    {% for adr in site.adr %}
+    { title: {{ adr.title | jsonify }}, url: {{ adr.url | jsonify }},
+      tags: {{ adr.tag | default: '' | split: ' ' | jsonify }} },
+    {% endfor %}
+];
+/* 모달이 열릴 때 ADR 노드를 포함하도록 전역 opts 노출 */
+window.KG_EXTRA_OPTS = { extraNodes: ADR_NODES };
 (function () {
     function initHomeGraph() {
         if (!window.KnowledgeGraph3D) return;
         var el = document.getElementById('home-kg-container');
         if (!el || el.dataset.kgReady) return;
         el.dataset.kgReady = '1';
-        window.KnowledgeGraph3D.init({ container: el, search: null, groups: null, stats: null });
+        window.KnowledgeGraph3D.init({
+            container: el,
+            extraNodes: ADR_NODES,
+            search: null, groups: null, stats: null,
+        });
     }
     function loadKg3D() {
         if (window.KnowledgeGraph3D) { initHomeGraph(); return; }
@@ -196,84 +98,6 @@ permalink: /adr/
         loadScripts();
     }
 })();
-</script>
-
-<!-- ADR Explorer JS -->
-<script>
-var ALL_CONTENT = [
-    {% for item in site.wiki %}{% unless item.layout == 'category' or item.public == false or item.title == 'wiki' %}
-    { title: {{ item.title | jsonify }}, url: {{ item.url | jsonify }}, tags: {{ item.tag | default: '' | split: ' ' | jsonify }}, type: 'wiki', date: {{ item.updated | date: "%b %d, %Y" | jsonify }} },
-    {% endunless %}{% endfor %}
-    {% for post in site.posts %}
-    { title: {{ post.title | jsonify }}, url: {{ post.url | jsonify }}, tags: {{ post.tag | default: '' | split: ' ' | jsonify }}, type: 'post', date: {{ post.date | date: "%b %d, %Y" | jsonify }} },
-    {% endfor %}
-];
-var ADR_RELATED = null;
-
-fetch('/data/adr-related.json')
-    .then(function(r) { return r.ok ? r.json() : {}; })
-    .then(function(d) { ADR_RELATED = d; })
-    .catch(function() { ADR_RELATED = {}; });
-
-document.querySelectorAll('.adr-filter-btn').forEach(function(btn) {
-    btn.addEventListener('click', function() {
-        document.querySelectorAll('.adr-filter-btn').forEach(function(b) { b.classList.remove('active'); });
-        btn.classList.add('active');
-        var f = btn.dataset.filter;
-        document.querySelectorAll('.adr-feed-item').forEach(function(item) {
-            item.setAttribute('data-hidden', (f !== 'all' && item.dataset.status !== f) ? '1' : '0');
-        });
-    });
-});
-
-function selectAdr(li) {
-    document.querySelectorAll('.adr-feed-item').forEach(function(el) { el.classList.remove('selected'); });
-    li.classList.add('selected');
-
-    var tags  = (li.dataset.tags || '').split(' ').filter(Boolean);
-    var slug  = (li.dataset.url || '').replace(/^\/adr\//, '').replace(/\/$/, '');
-    var relatedAdr     = (ADR_RELATED && ADR_RELATED[slug]) || [];
-    var relatedContent = tags.length
-        ? ALL_CONTENT.filter(function(item) {
-              return item.tags.some(function(t) { return tags.indexOf(t) !== -1; });
-          }).slice(0, 8)
-        : [];
-
-    var title = document.getElementById('related-panel-title');
-    var list  = document.getElementById('related-list');
-
-    if (!relatedAdr.length && !relatedContent.length) {
-        title.textContent = 'Related Content';
-        list.innerHTML = '<li class="adr-hint">관련 콘텐츠가 없습니다.</li>';
-        return;
-    }
-
-    var tagLabel = tags.length ? ' (' + tags.map(function(t){ return '#' + t; }).join(' ') + ')' : '';
-    title.textContent = 'Related Content' + tagLabel;
-
-    var html = '';
-    relatedAdr.forEach(function(r) {
-        html += '<li><a class="home-feed-link" href="/adr/' + r.slug + '/">' +
-            '<span class="home-feed-title">' + esc(r.title) + '</span>' +
-            '<span class="home-feed-meta">' +
-                '<span class="wiki-card-badge">ADR</span>' +
-                '<span class="home-feed-date">' + Math.round(r.score * 100) + '% match</span>' +
-            '</span></a></li>';
-    });
-    relatedContent.forEach(function(item) {
-        html += '<li><a class="home-feed-link" href="' + item.url + '">' +
-            '<span class="home-feed-title">' + esc(item.title) + '</span>' +
-            '<span class="home-feed-meta">' +
-                '<span class="wiki-card-badge">' + item.type + '</span>' +
-                '<span class="home-feed-date">' + item.date + '</span>' +
-            '</span></a></li>';
-    });
-    list.innerHTML = html;
-}
-
-function esc(s) {
-    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
 </script>
 
 {% include createLink.html %}

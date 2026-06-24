@@ -30,6 +30,7 @@ help:
 	@echo "  make embeddings-force     - 위키 임베딩 강제 재계산"
 	@echo "  make adr-embeddings       - ADR 임베딩 → Qdrant + adr-related.json (로컬 전용)"
 	@echo "  make adr-embeddings-force - ADR 임베딩 강제 재계산"
+	@echo "  make ontology             - 온톨로지 그래프 재생성 (data/ontology-graph.json)"
 	@echo ""
 	@echo "Qdrant (로컬 벡터 스토어):"
 	@echo "  make adr-db-up     - Qdrant 컨테이너 시작"
@@ -97,6 +98,13 @@ summaries-force:
 	@set -a && . ./.env && set +a && node scripts/generate-summaries.js --force
 
 # ----------------------------------------
+# 온톨로지 그래프 생성
+# ----------------------------------------
+.PHONY: ontology
+ontology:
+	node scripts/generate-ontology.js
+
+# ----------------------------------------
 # 임베딩 기반 연관 포스트 생성
 # ----------------------------------------
 .PHONY: embeddings embeddings-force adr-embeddings adr-embeddings-force
@@ -134,10 +142,10 @@ adr-db-status:
 # 서버 (docker compose)
 # ----------------------------------------
 .PHONY: start back stop restart status
-start: data
+start: data ontology
 	docker compose up
 
-back: data
+back: data ontology
 	docker compose up -d
 	@echo "서버 시작 — http://$(HOST):$(PORT)"
 
