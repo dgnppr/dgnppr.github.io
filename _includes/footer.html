@@ -79,8 +79,14 @@
           action="https://fea5a0fa.sibforms.com/serve/MUIFAKShPiXOd-2qMOmKYUDkRvIQzVwvyuALYorxBPUFz_-JYj0IkB61_rLgpBrMGH8GfmEtvGeVCCBba5eL-EDcMddYunOERM2ydRYGqWRyddyMMHzvDapqB9iTPVb03ToScmYQBNcYeZT5i8GBIkEQCQEqsgCBmr2Ch4mbr7-o8Q-bomHcyXrSOZZiIWG9v2p6K2dEnjCvuERcgA=="
           method="post"
         >
-          <input type="email" name="EMAIL" placeholder="이메일 주소를 입력하세요" required aria-label="이메일 주소" />
-          <button type="submit">구독하기</button>
+          <div class="newsletter-subscribe__input-row" id="newsletter-input-row">
+            <input type="email" name="EMAIL" placeholder="이메일 주소를 입력하세요" required aria-label="이메일 주소" />
+            <button type="submit" disabled>구독하기</button>
+          </div>
+          <label class="newsletter-subscribe__consent">
+            <input type="checkbox" id="newsletter-consent" onchange="document.querySelector('.newsletter-subscribe__form button[type=submit]').disabled=!this.checked" />
+            <span>(필수) 뉴스레터 수신을 위한 개인정보 수집 및 이용에 동의합니다.</span>
+          </label>
           <input type="text" name="email_address_check" value="" style="display:none">
           <input type="hidden" name="locale" value="en">
         </form>
