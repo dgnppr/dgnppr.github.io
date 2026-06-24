@@ -1009,7 +1009,7 @@
     ]
   },
   "retrospect/01_2024_january_retrospect": {
-    "hash": "d13cd9b8bb03fb6898b04a5f9a7b0b59",
+    "hash": "5379d7ddd05662f68e46143ff991869c",
     "nodes": [
       {
         "id": "n1",
@@ -1018,27 +1018,32 @@
       },
       {
         "id": "n2",
-        "label": "스터디 참여",
-        "type": "step"
-      },
-      {
-        "id": "n3",
         "label": "시스템 디자인 학습",
         "type": "step"
       },
       {
+        "id": "n3",
+        "label": "코드 고민/개선",
+        "type": "step"
+      },
+      {
         "id": "n4",
-        "label": "CS 지식 심화",
+        "label": "책 리뷰 스터디",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "실무 적용 고민",
-        "type": "end"
+        "label": "지식 공유/토론",
+        "type": "step"
       },
       {
         "id": "n6",
-        "label": "2월 학습 계획",
+        "label": "2월 학습 목표",
+        "type": "end"
+      },
+      {
+        "id": "n7",
+        "label": "로우 레벨 이해",
         "type": "step"
       }
     ],
@@ -1052,6 +1057,10 @@
         "to": "n3"
       },
       {
+        "from": "n1",
+        "to": "n4"
+      },
+      {
         "from": "n2",
         "to": "n5"
       },
@@ -1060,21 +1069,21 @@
         "to": "n5"
       },
       {
-        "from": "n1",
-        "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n4"
-      },
-      {
         "from": "n4",
         "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n7"
+      },
+      {
+        "from": "n7",
+        "to": "n6"
       }
     ]
   },
   "retrospect/02_2024_march_3rd_retrospect": {
-    "hash": "476140f54ee89d6479aa088cfeef4ad1",
+    "hash": "652ef2a794254e72d649e59618f6d263",
     "nodes": [
       {
         "id": "n1",
@@ -1088,28 +1097,28 @@
       },
       {
         "id": "n3",
-        "label": "비즈니스 도메인 이해",
+        "label": "복잡한 시스템",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "기술적 지식 습득",
+        "label": "업무 이해",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "협업 및 소통",
+        "label": "기술 학습",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "업무 성과",
-        "type": "end"
+        "label": "협업/소통",
+        "type": "step"
       },
       {
         "id": "n7",
         "label": "책임감/부담감",
-        "type": "step"
+        "type": "end"
       }
     ],
     "edges": [
@@ -1126,7 +1135,7 @@
         "to": "n4"
       },
       {
-        "from": "n3",
+        "from": "n4",
         "to": "n5"
       },
       {
@@ -1135,16 +1144,17 @@
       },
       {
         "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n2",
         "to": "n7"
       },
       {
-        "from": "n7",
-        "to": "n6",
-        "bidirectional": true
+        "from": "n6",
+        "to": "n7"
+      },
+      {
+        "from": "n4",
+        "to": "n7",
+        "bidirectional": true,
+        "label": "업무 성과 기대"
       }
     ]
   },
@@ -1225,7 +1235,7 @@
     ]
   },
   "retrospect/04_2024_september_retrospect": {
-    "hash": "f9ccd2b783ff0a7d1e69ec20257ccba9",
+    "hash": "3eca2c9674ce6de5d50be4e85e436154",
     "nodes": [
       {
         "id": "n1",
@@ -1234,32 +1244,37 @@
       },
       {
         "id": "n2",
-        "label": "프로젝트 경험",
-        "type": "step"
-      },
-      {
-        "id": "n3",
         "label": "헥사고날 아키텍처",
         "type": "step"
       },
       {
-        "id": "n4",
+        "id": "n3",
         "label": "Circuit Breaker",
         "type": "step"
       },
       {
-        "id": "n5",
+        "id": "n4",
         "label": "출고 예정일 개선",
         "type": "step"
       },
       {
+        "id": "n5",
+        "label": "매출 증대",
+        "type": "end"
+      },
+      {
         "id": "n6",
-        "label": "개인 성장 필요성",
+        "label": "자기 성장",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "2024년 목표",
+        "label": "회사 기여",
+        "type": "step"
+      },
+      {
+        "id": "n8",
+        "label": "기술 역량 강화",
         "type": "end"
       }
     ],
@@ -1269,11 +1284,11 @@
         "to": "n2"
       },
       {
-        "from": "n2",
+        "from": "n1",
         "to": "n3"
       },
       {
-        "from": "n2",
+        "from": "n1",
         "to": "n4"
       },
       {
@@ -1282,17 +1297,24 @@
       },
       {
         "from": "n3",
-        "to": "n4",
-        "bidirectional": true,
-        "label": "시스템 개선"
+        "to": "n5"
       },
       {
-        "from": "n5",
-        "to": "n6"
+        "from": "n4",
+        "to": "n5"
       },
       {
         "from": "n6",
-        "to": "n7"
+        "to": "n7",
+        "bidirectional": true
+      },
+      {
+        "from": "n7",
+        "to": "n8"
+      },
+      {
+        "from": "n6",
+        "to": "n8"
       }
     ]
   },
@@ -1353,7 +1375,7 @@
     ]
   },
   "retrospect/06_2026_code_is_cheap": {
-    "hash": "14097e2a08c19ef03aed2be37d826124",
+    "hash": "ef70be80411f33785d3305acc13f8607",
     "nodes": [
       {
         "id": "n1",
@@ -1362,7 +1384,7 @@
       },
       {
         "id": "n2",
-        "label": "LLM 활용 증가",
+        "label": "LLM 의존성 증가",
         "type": "step"
       },
       {
@@ -1372,18 +1394,23 @@
       },
       {
         "id": "n4",
-        "label": "생산성 향상",
+        "label": "개발자 성장 둔화",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "개인 성장 둔화",
-        "type": "step"
+        "label": "LLM 활용 극대화",
+        "type": "decision"
       },
       {
         "id": "n6",
-        "label": "의식적 기록/작성",
+        "label": "생각 정리/기록",
         "type": "end"
+      },
+      {
+        "id": "n7",
+        "label": "생산성 향상",
+        "type": "step"
       }
     ],
     "edges": [
@@ -1393,16 +1420,25 @@
       },
       {
         "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n2",
         "to": "n4"
       },
       {
+        "from": "n2",
+        "to": "n7"
+      },
+      {
         "from": "n4",
-        "to": "n5",
-        "bidirectional": true
+        "to": "n7",
+        "bidirectional": true,
+        "label": "트레이드오프"
+      },
+      {
+        "from": "n1",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n5"
       },
       {
         "from": "n5",

@@ -6,7 +6,7 @@ updated : 2025-04-13 00:00:00 +0900
 tag     : retrospect
 toc     : true
 comment : true
-public  : true
+public  : false
 parent  : [[/retrospect]]
 latex   : true
 status  : complete
