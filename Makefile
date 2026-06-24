@@ -48,6 +48,17 @@ help:
 	@echo "  make mcp-back-all              - 모든 MCP 서버 백그라운드 실행"
 	@echo "  make mcp-stop-all              - 모든 MCP 서버 종료"
 	@echo "  make mcp-status-all            - 모든 MCP 서버 상태 확인"
+	@echo ""
+	@echo "Ontology MCP tools (/ontology 스킬):"
+	@echo "  related <query>          - 쿼리 텍스트로 관련 ADR + wiki 탐색"
+	@echo "  related id:<entity-id>   - 엔티티 본문 기준으로 관련 탐색"
+	@echo "  find <query>             - 임베딩 유사도 flat 리스트"
+	@echo "  get <entity-id>          - 노드 메타 + 전체 본문"
+	@echo "  entities [type]          - 전체 목록 (type: adr | concept)"
+	@echo "  entities <query>         - 시맨틱 검색으로 엔티티 탐색"
+	@echo "  decision <entity-id>     - ADR 전체 컨텍스트 (id로 조회)"
+	@echo "  decision <query>         - ADR 전체 컨텍스트 (텍스트로 자동 선택)"
+	@echo "  Entity ID format: adr/<dir>/<file> | concept/<dir>/<file>"
 
 # ----------------------------------------
 # 의존성 설치

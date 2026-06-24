@@ -68,10 +68,11 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
     {
       name: "ontology_entities",
-      description: "온톨로지 그래프에서 엔티티 목록을 반환한다. type/status/tag로 필터링 가능.",
+      description: "온톨로지 그래프에서 엔티티 목록을 반환한다. query가 있으면 임베딩 기반 시맨틱 검색, 없으면 type/status/tag 필터 목록.",
       inputSchema: {
         type: "object",
         properties: {
+          query:  { type: "string", description: "시맨틱 검색 쿼리 (주면 임베딩 기반, 생략 시 전체 목록)" },
           type:   { type: "string", description: "adr | concept (생략 시 전체)" },
           status: { type: "string", description: "상태 필터 (예: accepted, complete)" },
           tag:    { type: "string", description: "태그 필터" },
@@ -115,14 +116,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: "ontology_decision_context",
-      description: "ADR 결정의 전체 컨텍스트: 본문 + 유사 과거 결정(Qdrant) + 그래프 관계. 새 ADR 작성 시 과거 결정 소환용.",
+      description: "ADR 결정의 전체 컨텍스트: 본문 + 유사 과거 결정(Qdrant) + 그래프 관계. 새 ADR 작성 시 과거 결정 소환용. id 또는 query 중 하나 필수.",
       inputSchema: {
         type: "object",
         properties: {
           id:    { type: "string", description: "adr 엔티티 ID (예: adr/architecture/2024-001-use-kafka)" },
+          query: { type: "string", description: "텍스트로 ADR을 찾을 때 사용 — 가장 유사한 ADR을 자동 선택" },
           limit: { type: "number", description: "유사 결정 최대 수 (기본 5)" },
         },
-        required: ["id"],
       },
     },
   ],
@@ -133,6 +134,36 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const graph = loadGraph();
 
   if (name === "ontology_entities") {
+    if (args.query) {
+      let queryVec;
+      try { queryVec = await embedQuery(args.query); }
+      catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
+
+      const cols = args.type === "adr"
+        ? [{ col: "adr",  type: "adr" }]
+        : args.type === "concept"
+        ? [{ col: "wiki", type: "concept" }]
+        : [{ col: "wiki", type: "concept" }, { col: "adr", type: "adr" }];
+
+      const hits = (await Promise.all(
+        cols.map(({ col, type }) =>
+          qdrantSearch(col, queryVec, args.limit ?? 50).then(rs =>
+            rs.map(h => ({ id: `${type}/${h.payload.slug}`, score: h.score }))
+          )
+        )
+      )).flat().sort((a, b) => b.score - a.score).slice(0, args.limit ?? 50);
+
+      const result = hits.map(({ id, score }) => {
+        const n = graph.nodes[id];
+        if (!n) return null;
+        if (args.status && n.status !== args.status) return null;
+        if (args.tag    && !n.tags?.includes(args.tag)) return null;
+        return { id: n.id, type: n.type, title: n.title, status: n.status, tags: n.tags, date: n.date, score: +score.toFixed(3) };
+      }).filter(Boolean);
+
+      return { content: [{ type: "text", text: JSON.stringify(result, null, 2) }] };
+    }
+
     let nodes = Object.values(graph.nodes);
     if (args.type)   nodes = nodes.filter(n => n.type === args.type);
     if (args.status) nodes = nodes.filter(n => n.status === args.status);
@@ -250,20 +281,33 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
   }
 
   if (name === "ontology_decision_context") {
-    const node = graph.nodes[args.id];
+    if (!args.id && !args.query)
+      return { content: [{ type: "text", text: "id 또는 query 중 하나 필수" }], isError: true };
+
+    let nodeId = args.id;
+    if (!nodeId) {
+      let qVec;
+      try { qVec = await embedQuery(args.query); }
+      catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
+      const hits = await qdrantSearch("adr", qVec, 1);
+      if (!hits.length) return { content: [{ type: "text", text: `'${args.query}' 관련 ADR 없음` }] };
+      nodeId = `adr/${hits[0].payload.slug}`;
+    }
+
+    const node = graph.nodes[nodeId];
     if (!node || node.type !== "adr")
-      return { content: [{ type: "text", text: `adr 엔티티 아님: ${args.id}` }], isError: true };
+      return { content: [{ type: "text", text: `adr 엔티티 아님: ${nodeId}` }], isError: true };
 
     const fp = path.join(ROOT, node.path);
     const content = fs.existsSync(fp) ? fs.readFileSync(fp, "utf-8") : "(파일 없음)";
     const related = graph.edges
-      .filter(e => e.from === args.id || e.to === args.id)
-      .map(e => ({ ...e, peer: graph.nodes[e.from === args.id ? e.to : e.from] ?? { id: e.from === args.id ? e.to : e.from } }));
+      .filter(e => e.from === nodeId || e.to === nodeId)
+      .map(e => ({ ...e, peer: graph.nodes[e.from === nodeId ? e.to : e.from] ?? { id: e.from === nodeId ? e.to : e.from } }));
 
     let similar = [];
     try {
       const queryVec = await embedQuery(content.replace(/^---[\s\S]*?---\n/, "").slice(0, 2000));
-      const slug = args.id.replace(/^adr\//, "");
+      const slug = nodeId.replace(/^adr\//, "");
       similar = (await qdrantSearch("adr", queryVec, (args.limit ?? 5) + 1))
         .filter(h => h.payload.slug !== slug)
         .slice(0, args.limit ?? 5)
@@ -272,7 +316,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
 
     const out = [
       `# ${node.title}`,
-      `\n## 메타\n${JSON.stringify({ id: args.id, status: node.status, tags: node.tags, date: node.date }, null, 2)}`,
+      `\n## 메타\n${JSON.stringify({ id: nodeId, status: node.status, tags: node.tags, date: node.date }, null, 2)}`,
       `\n## 그래프 관계\n${JSON.stringify(related, null, 2)}`,
       `\n## 유사 과거 결정\n${JSON.stringify(similar, null, 2)}`,
       `\n## 전체 내용\n${content}`,
