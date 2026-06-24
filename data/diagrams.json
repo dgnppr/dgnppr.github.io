@@ -1832,7 +1832,7 @@
     ]
   },
   "llm/00_why_llm_is_decoder_only": {
-    "hash": "367a0a6c8e21d4782b47300c8af28dac",
+    "hash": "22a093d78687f750052c97af7a31c484",
     "nodes": [
       {
         "id": "n1",
@@ -1841,26 +1841,31 @@
       },
       {
         "id": "n2",
-        "label": "Encoder-only",
-        "type": ":step"
-      },
-      {
-        "id": "n3",
-        "label": "Decoder-only",
+        "label": "Encoder-only (BERT)",
         "type": "step"
       },
       {
+        "id": "n3",
+        "label": "Decoder-only (GPT)",
+        "type": ":step"
+      },
+      {
         "id": "n4",
-        "label": "Encoder+Decoder",
+        "label": "Encoder+Decoder (T5/CT5)",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "스케일링 & 범용성",
-        "type": "step"
+        "label": "범용 생성 vs 특화 변환",
+        "type": "decision"
       },
       {
         "id": "n6",
+        "label": "스케일링 & 학습 효율",
+        "type": "step"
+      },
+      {
+        "id": "n7",
         "label": "태스크별 구조 선택",
         "type": "end"
       }
@@ -1880,23 +1885,27 @@
       },
       {
         "from": "n2",
-        "to": "n3",
+        "to": "n5",
         "bidirectional": true,
-        "label": "이해 vs 생성"
+        "label": "이해·분류 vs 생성"
       },
       {
         "from": "n3",
-        "to": "n5"
+        "to": "n6"
       },
       {
         "from": "n4",
-        "to": "n5",
+        "to": "n6",
         "bidirectional": true,
-        "label": "복잡도 ↔ 효율"
+        "label": "정보 병목 vs 복잡도"
       },
       {
         "from": "n5",
-        "to": "n6"
+        "to": "n7"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
       }
     ]
   }
