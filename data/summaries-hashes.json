@@ -1,6 +1,5 @@
 {
-  "data-engineering/00_what_is_medaliion_architecture": "367f111dea9c9ad835dba9a011faca30",
-  "database/00_mysql_variable_setting": "96e0d53a8b428af49fc830bc40af5736",
+  "data-engineering/00_what_is_medaliion_architecture": "45a72272d0a897f433179cdf331680c1",
   "design-pattern/00_how_to_use_strategy_pattern": "4947b223541b6f5681e3e058a74cefcf",
   "design-pattern/01_circuit_breaker": "aa401b9d08c2d2828e94cea6c92a190f",
   "essay/00_is_lombok_necessary": "f7012a14ea122fd2f54ae8391aa110b7",
@@ -27,6 +26,7 @@
   "system-design/02_notification_system_design": "517f35dd489e713c00ac1e3453a7a074",
   "system-design/03_sns_feed_system_design": "9fcbfc08e5d4030c483d9817757dc508",
   "data-analysis/00_how_to_design_funnel": "bee863f805e3c7f32d86a3a1568fef2a",
-  "data-architect/00_what_is_ontology": "462079c2d72a89d6ed1f8e7ef66cd53e",
-  "data-architect/01_how_to_implement_ontology": "644645510d4f5e97ab7c896afd189339"
+  "data-architect/00_what_is_ontology": "aac53707b399de73a07cf2693d4a1e45",
+  "data-architect/01_how_to_implement_ontology": "fa906a1c25498735d62d426f8cf66f3f",
+  "data-engineering/01_how_to_architect_medallion_well": "cdef564a1356b525aa189a96b46b2951"
 }

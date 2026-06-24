@@ -3,12 +3,13 @@ layout  : wiki
 title   : 온톨로지는 데이터가 아니라 합의를 설계한다
 date    : 2026-05-27 00:00:00 +0900
 updated : 2026-05-27 00:00:00 +0900
-tag     : data-architecture ontology data-engineering
+tag     : data-architecture data-engineering ontology 
 toc     : true
 comment : true
 latex   : true
 status  : draft
 public  : true
+show-diagram: true
 parent  : [[/data-architect]]
 ---
 
@@ -107,7 +108,7 @@ parent  : [[/data-architect]]
 
 ## 8. 그늘 — 온톨로지가 실패하는 법
 
-성숙한 글이라면 한계도 말해야 한다. 온톨로지는 자주 실패하고, 실패 양상은 거의 정해져 있다.
+온톨로지는 자주 실패하고, 실패 양상은 거의 정해져 있다.
 
 가장 흔한 실패는 **온톨로지를 프로젝트로 취급하는 것**이다. 어느 플랫폼 팀이 몇 달에 걸쳐 고객·계정·거래·상품을 멋지게 모델링한다. 그런데 그 모델을 라이브 메타데이터에 연결하지 않는다. 신규 사업이 생기고, 인수로 시스템이 셋 늘고, 테이블이 폐기되어도 온톨로지는 모른다. 결국 그것은 *더 이상 존재하지 않는 비즈니스*를 모델링하게 된다. 추상화 계층을 인프라가 아니라 일회성 프로젝트로 다룬 대가다.
 

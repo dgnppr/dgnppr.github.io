@@ -1,8 +1,8 @@
 {
-  "total": 21,
+  "total": 22,
   "byMonth": {
     "2026-06": {
-      "count": 2,
+      "count": 3,
       "posts": [
         {
           "title": "올바른 Funnel 설계의 7가지 조건",
@@ -10,9 +10,14 @@
           "status": "draft"
         },
         {
-          "title": "알람 하나로 온톨로지 전체를 설계하다",
+          "title": "알람 하나로 온톨로지 전체를 훑어보기",
           "category": "data-architect",
-          "status": "writing"
+          "status": "complete"
+        },
+        {
+          "title": "ERP 업그레이드가 새벽 3시에 GMV를 0으로 만들었다",
+          "category": "data-engineering",
+          "status": "complete"
         }
       ]
     },
@@ -149,13 +154,12 @@
   },
   "byStatus": {
     "draft": 2,
-    "writing": 1,
-    "complete": 18
+    "complete": 20
   },
   "byCategory": {
     "data-analysis": 1,
     "data-architect": 2,
-    "data-engineering": 1,
+    "data-engineering": 2,
     "design-pattern": 2,
     "essay": 5,
     "java": 2,
@@ -166,10 +170,16 @@
   },
   "posts": [
     {
-      "title": "알람 하나로 온톨로지 전체를 설계하다",
+      "title": "알람 하나로 온톨로지 전체를 훑어보기",
       "date": "2026-06-23 00:00:00 +0900",
-      "status": "writing",
+      "status": "complete",
       "category": "data-architect"
+    },
+    {
+      "title": "ERP 업그레이드가 새벽 3시에 GMV를 0으로 만들었다",
+      "date": "2026-06-22 00:00:00 +0900",
+      "status": "complete",
+      "category": "data-engineering"
     },
     {
       "title": "올바른 Funnel 설계의 7가지 조건",

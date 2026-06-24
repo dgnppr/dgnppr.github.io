@@ -730,7 +730,16 @@
                         var pt = new THREE.Vector3();
                         if (ray.ray.intersectPlane(dragPlane, pt)) {
                             var dn2 = dragMesh.userData.node;
+                            var prevZ = dn2.fz !== undefined ? dn2.fz : dn2.z;
+                            var dz = pt.z - prevZ;
                             dn2.fx = pt.x; dn2.fy = pt.y; dn2.fz = pt.z;
+                            /* connected nodes Z 전파 — D3는 2D이므로 Z는 수동으로 따라오게 */
+                            if (dragConnSet && Math.abs(dz) > 0.5) {
+                                dragConnSet.forEach(function (s) {
+                                    var nb = nodeMap[s];
+                                    if (nb) nb.z += dz * 0.5;
+                                });
+                            }
                         }
                     }
                     return;

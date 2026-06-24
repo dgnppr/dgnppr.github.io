@@ -81,12 +81,12 @@
           novalidate
         >
           <div class="newsletter-subscribe__input-row" id="newsletter-input-row">
-            <input type="email" name="EMAIL" id="newsletter-email" placeholder="이메일 주소를 입력하세요" aria-label="이메일 주소" aria-describedby="newsletter-email-error" />
+            <input type="email" name="EMAIL" id="newsletter-email" placeholder="이메일" aria-label="이메일 주소" aria-describedby="newsletter-email-error" oninput="document.querySelector('.newsletter-subscribe__form button[type=submit]').disabled=(!this.value.trim()||!this.checkValidity()||!document.getElementById('newsletter-consent').checked)" />
             <button type="submit" disabled>구독하기</button>
           </div>
           <p class="newsletter-subscribe__error" id="newsletter-email-error" aria-live="polite" role="alert"></p>
           <label class="newsletter-subscribe__consent">
-            <input type="checkbox" id="newsletter-consent" onchange="document.querySelector('.newsletter-subscribe__form button[type=submit]').disabled=!this.checked" />
+            <input type="checkbox" id="newsletter-consent" onchange="var e=document.getElementById('newsletter-email');document.querySelector('.newsletter-subscribe__form button[type=submit]').disabled=(!this.checked||!e.value.trim()||!e.checkValidity())" />
             <span>(필수) 뉴스레터 수신을 위한 개인정보 수집 및 이용에 동의합니다.</span>
           </label>
           <input type="text" name="email_address_check" value="" style="display:none">
@@ -114,13 +114,6 @@
     var input = document.getElementById('newsletter-email');
     var error = document.getElementById('newsletter-email-error');
     var val = input.value.trim();
-    if (!val) {
-      e.preventDefault();
-      error.textContent = '이메일 주소를 입력해 주세요.';
-      input.classList.add('is-error');
-      input.focus();
-      return;
-    }
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
       e.preventDefault();
       error.textContent = '올바른 이메일 형식이 아닙니다.';

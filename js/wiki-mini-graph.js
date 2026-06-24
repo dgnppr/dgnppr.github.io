@@ -129,6 +129,7 @@
 
         var zoom = d3.zoom()
             .scaleExtent([0.4, 3])
+            .translateExtent([[-W * 0.4, -H * 0.4], [W * 1.4, H * 1.4]])
             .on('zoom', function (e) {
                 g.attr('transform', e.transform);
                 svg.style('cursor', e.sourceEvent && e.sourceEvent.buttons ? 'grabbing' : 'grab');
@@ -257,11 +258,15 @@
                     if (nb) { nb.fx = null; nb.fy = null; }
                 });
                 sim.force('charge').strength(0);
-                sim.force('centerX').strength(0);
-                sim.force('centerY').strength(0);
+                sim.force('centerX').strength(0.015);
+                sim.force('centerY').strength(0.02);
                 sim.force('link').strength(0.9);
             })
-            .on('drag',  function (e, d) { d.fx = e.x; d.fy = e.y; })
+            .on('drag', function (e, d) {
+                /* 노드가 그래프 영역을 크게 벗어나지 않도록 클램프 */
+                d.fx = Math.max(-W * 0.15, Math.min(W * 1.15, e.x));
+                d.fy = Math.max(-H * 0.15, Math.min(H * 1.15, e.y));
+            })
             .on('end',   function (e, d) {
                 if (!e.active) sim.alphaTarget(FLOAT_ALPHA);
                 if (!d.isCurrent) { d.fx = null; d.fy = null; }

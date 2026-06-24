@@ -1,14 +1,15 @@
 ---
 layout  : wiki
-title   : 알람 하나로 온톨로지 전체를 설계하다
+title   : 알람 하나로 온톨로지 전체를 훑어보기
 date    : 2026-06-23 00:00:00 +0900
 updated : 2026-06-23 00:00:00 +0900
-tag     : data-architecture ontology data-engineering
+tag     : data-architecture data-engineering ontology 
 toc     : true
 comment : true
 latex   : true
-status  : writing
+status  : complete
 public  : true
+show-diagram: true
 parent  : [[/data-architect]]
 ---
 
@@ -140,6 +141,31 @@ CREATE TABLE `marketeon.ontology.customer_identity` (
 ```
 
 K씨의 이메일이 CRM과 POS 모두 `kwon.jihye@gmail.com`이었다. 이메일 정규화 매칭으로 `U-29182`와 `M-00991`을 `CUST-029182` 하나에 연결한다.
+
+적재는 3단계다.
+
+**Step 1 — CRM을 시드로 canonical entity 생성.** `GENERATE_UUID()` 결과를 같은 트랜잭션에서 바로 참조할 수 없으므로 임시 테이블에 먼저 확보한다.
+
+```sql
+CREATE TEMP TABLE _crm_seed AS
+SELECT user_id, name, created_at, GENERATE_UUID() AS canonical_id
+FROM `marketeon.crm.users`;
+
+INSERT INTO `marketeon.ontology.customers` (canonical_id, display_name, created_at)
+SELECT canonical_id, name, created_at
+FROM _crm_seed;
+```
+
+**Step 2 — CRM → canonical 매핑 등록.** `_crm_seed`에 UUID가 이미 있으므로 안전하게 조인할 수 있다.
+
+```sql
+INSERT INTO `marketeon.ontology.customer_identity`
+  (source_system, source_id, canonical_id, match_rule, confidence, matched_at)
+SELECT 'crm', user_id, canonical_id, 'seed', 1.0, CURRENT_TIMESTAMP()
+FROM _crm_seed;
+```
+
+**Step 3 — POS → canonical 매핑 등록.** CRM canonical_id가 이미 `customer_identity`에 있으므로 이메일 매칭으로 연결한다.
 
 ```sql
 INSERT INTO `marketeon.ontology.customer_identity`
@@ -606,8 +632,6 @@ ts                   | event                      | status    | block_reason
 ---
 
 ## 한계
-
-솔직하게 적는다.
 
 **Identity resolution은 끝나지 않는다.** 이메일 없는 POS 회원, 게스트 주문, 전화번호가 바뀐 고객. `confidence < 0.9`인 매핑은 주당 수백 건 쌓인다. 온톨로지를 도입한다는 건 entity resolution을 영원히 운영하겠다는 선언이다.
 
