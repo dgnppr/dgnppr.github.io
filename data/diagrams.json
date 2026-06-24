@@ -880,32 +880,32 @@
     ]
   },
   "retrospect/01_2024_january_retrospect": {
-    "hash": "5379d7ddd05662f68e46143ff991869c",
+    "hash": "581e3c40f1a4d0b89e38140b34ecccf8",
     "nodes": [
       {
         "id": "n1",
-        "label": "학습 목표",
+        "label": "1월 회고",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "이론적 깊이",
-        "type": ":step"
+        "label": "시스템 디자인",
+        "type": "step"
       },
       {
         "id": "n3",
-        "label": "실무 활용 능력",
-        "type": "end"
+        "label": "코드와 패턴",
+        "type": "step"
       },
       {
         "id": "n4",
-        "label": "JVM/OS/MySQL",
-        "type": "step"
+        "label": "스터디 참여",
+        "type": ":end"
       },
       {
         "id": "n5",
-        "label": "시스템 디자인",
-        "type": "step"
+        "label": "2월 목표: Deep Dive",
+        "type": "root"
       }
     ],
     "edges": [
@@ -918,14 +918,12 @@
         "to": "n3"
       },
       {
-        "from": "n4",
-        "to": "n2",
-        "bidirectional": true
+        "from": "n1",
+        "to": "n4"
       },
       {
-        "from": "n5",
-        "to": "n2",
-        "bidirectional": true
+        "from": "n4",
+        "to": "n5"
       }
     ]
   },

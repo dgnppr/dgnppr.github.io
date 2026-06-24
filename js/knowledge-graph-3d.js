@@ -698,9 +698,20 @@
                             isDragging = true;
                             controls.enabled = false;
                             var dn = dragMesh.userData.node;
-                            dn.fx = dn.x; dn.fy = dn.y;
-                            dragConnSet = adj[dn.slug] || new Set();
-                            /* 연결 노드 fx/fy/fz 해제 → 링크 힘으로 따라오게 */
+                            dn.fx = dn.x; dn.fy = dn.y; dn.fz = dn.z;
+                            /* BFS로 전이적 연결 노드 전체 수집 */
+                            dragConnSet = (function (startSlug) {
+                                var visited = new Set(), queue = [startSlug];
+                                while (queue.length) {
+                                    var s = queue.shift();
+                                    if (visited.has(s)) continue;
+                                    visited.add(s);
+                                    (adj[s] || new Set()).forEach(function (n) { if (!visited.has(n)) queue.push(n); });
+                                }
+                                visited.delete(startSlug);
+                                return visited;
+                            })(dn.slug);
+                            /* 연결 노드 fx/fy/fz 해제 → 링크 힘으로 3D 공간에서 자유롭게 따라오게 */
                             dragConnSet.forEach(function (s) {
                                 var nb = nodeMap[s];
                                 if (nb) { nb.fx = undefined; nb.fy = undefined; nb.fz = undefined; }
@@ -766,7 +777,7 @@
                     if (dragConnSet) {
                         dragConnSet.forEach(function (s) {
                             var nb = nodeMap[s];
-                            if (nb) { nb.fx = nb.x; nb.fy = nb.y; }
+                            if (nb) { nb.fx = nb.x; nb.fy = nb.y; nb.fz = nb.z; }
                         });
                         dragConnSet = null;
                     }

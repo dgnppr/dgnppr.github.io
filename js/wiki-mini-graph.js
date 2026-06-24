@@ -234,16 +234,42 @@
             .style('pointer-events', 'none').style('user-select', 'none');
 
         // ── Drag ─────────────────────────────────────────────────
+        function getConnectedNodes(startSlug) {
+            var visited = new Set(), queue = [startSlug];
+            while (queue.length) {
+                var slug = queue.shift();
+                if (visited.has(slug)) continue;
+                visited.add(slug);
+                (adj[slug] || new Set()).forEach(function (n) { if (!visited.has(n)) queue.push(n); });
+            }
+            visited.delete(startSlug);
+            return visited;
+        }
+
         nodeEl.call(d3.drag()
             .on('start', function (e, d) {
                 e.sourceEvent.stopPropagation();
                 if (!e.active) sim.alphaTarget(0.3).restart();
                 d.fx = d.x; d.fy = d.y;
+                d._dragGroup = getConnectedNodes(d.slug);
+                d._dragGroup.forEach(function (nSlug) {
+                    var nb = nodeMap[nSlug];
+                    if (nb) { nb.fx = null; nb.fy = null; }
+                });
+                sim.force('charge').strength(0);
+                sim.force('centerX').strength(0);
+                sim.force('centerY').strength(0);
+                sim.force('link').strength(0.9);
             })
             .on('drag',  function (e, d) { d.fx = e.x; d.fy = e.y; })
             .on('end',   function (e, d) {
                 if (!e.active) sim.alphaTarget(FLOAT_ALPHA);
                 if (!d.isCurrent) { d.fx = null; d.fy = null; }
+                sim.force('charge').strength(-280);
+                sim.force('centerX').strength(0.04);
+                sim.force('centerY').strength(0.05);
+                sim.force('link').strength(0.3);
+                d._dragGroup = null;
             })
         );
 

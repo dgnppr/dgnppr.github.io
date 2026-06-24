@@ -78,11 +78,13 @@
           class="newsletter-subscribe__form"
           action="https://fea5a0fa.sibforms.com/serve/MUIFAKShPiXOd-2qMOmKYUDkRvIQzVwvyuALYorxBPUFz_-JYj0IkB61_rLgpBrMGH8GfmEtvGeVCCBba5eL-EDcMddYunOERM2ydRYGqWRyddyMMHzvDapqB9iTPVb03ToScmYQBNcYeZT5i8GBIkEQCQEqsgCBmr2Ch4mbr7-o8Q-bomHcyXrSOZZiIWG9v2p6K2dEnjCvuERcgA=="
           method="post"
+          novalidate
         >
           <div class="newsletter-subscribe__input-row" id="newsletter-input-row">
-            <input type="email" name="EMAIL" placeholder="이메일 주소를 입력하세요" required aria-label="이메일 주소" />
+            <input type="email" name="EMAIL" id="newsletter-email" placeholder="이메일 주소를 입력하세요" aria-label="이메일 주소" aria-describedby="newsletter-email-error" />
             <button type="submit" disabled>구독하기</button>
           </div>
+          <p class="newsletter-subscribe__error" id="newsletter-email-error" aria-live="polite" role="alert"></p>
           <label class="newsletter-subscribe__consent">
             <input type="checkbox" id="newsletter-consent" onchange="document.querySelector('.newsletter-subscribe__form button[type=submit]').disabled=!this.checked" />
             <span>(필수) 뉴스레터 수신을 위한 개인정보 수집 및 이용에 동의합니다.</span>
@@ -108,6 +110,32 @@
 </div>
 <script src="/js/lightbox.js"></script>
 <script>
+  document.querySelector('.newsletter-subscribe__form').addEventListener('submit', function(e) {
+    var input = document.getElementById('newsletter-email');
+    var error = document.getElementById('newsletter-email-error');
+    var val = input.value.trim();
+    if (!val) {
+      e.preventDefault();
+      error.textContent = '이메일 주소를 입력해 주세요.';
+      input.classList.add('is-error');
+      input.focus();
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val)) {
+      e.preventDefault();
+      error.textContent = '올바른 이메일 형식이 아닙니다.';
+      input.classList.add('is-error');
+      input.focus();
+      return;
+    }
+    error.textContent = '';
+    input.classList.remove('is-error');
+  });
+  document.getElementById('newsletter-email').addEventListener('input', function() {
+    this.classList.remove('is-error');
+    document.getElementById('newsletter-email-error').textContent = '';
+  });
+
   if (new URLSearchParams(location.search).get('subscribed') === 'true') {
     var toast = document.createElement('div');
     toast.textContent = '구독이 완료되었습니다.';

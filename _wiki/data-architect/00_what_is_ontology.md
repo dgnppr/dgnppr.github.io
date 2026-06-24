@@ -1,9 +1,9 @@
 ---
 layout  : wiki
 title   : 온톨로지는 데이터가 아니라 합의를 설계한다
-date    : 2026-06-23 00:00:00 +0900
-updated : 2026-06-23 00:00:00 +0900
-tag     : data-architecture ontology data-engineering semantic-layer llm
+date    : 2026-05-27 00:00:00 +0900
+updated : 2026-05-27 00:00:00 +0900
+tag     : data-architecture ontology data-engineering
 toc     : true
 comment : true
 latex   : true

@@ -14,7 +14,7 @@
   "kafka/03_kafka_producer_summary": "ebd7bc0725b8ed7e9c2885a1be19aa8f",
   "reference": "2934685b916a0abfde1f9f2c99746298",
   "retrospect/00_2023_year_retrospect": "8f2fe98284309c9d830e9b1dbb69a2db",
-  "retrospect/01_2024_january_retrospect": "5379d7ddd05662f68e46143ff991869c",
+  "retrospect/01_2024_january_retrospect": "581e3c40f1a4d0b89e38140b34ecccf8",
   "retrospect/02_2024_march_3rd_retrospect": "652ef2a794254e72d649e59618f6d263",
   "retrospect/03_2024_march_retrospect": "52ce10f5a2f6848ea120f2b8b089468b",
   "retrospect/04_2024_september_retrospect": "3eca2c9674ce6de5d50be4e85e436154",
@@ -27,5 +27,6 @@
   "system-design/02_notification_system_design": "517f35dd489e713c00ac1e3453a7a074",
   "system-design/03_sns_feed_system_design": "9fcbfc08e5d4030c483d9817757dc508",
   "data-analysis/00_how_to_design_funnel": "bee863f805e3c7f32d86a3a1568fef2a",
-  "data-architect/00_what_is_ontology": "53efa7432bc0313056a9182cbe013f01"
+  "data-architect/00_what_is_ontology": "462079c2d72a89d6ed1f8e7ef66cd53e",
+  "data-architect/01_how_to_implement_ontology": "644645510d4f5e97ab7c896afd189339"
 }
