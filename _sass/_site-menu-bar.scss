@@ -183,6 +183,36 @@ div.search {
     }
 }
 
+.search-quick-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    padding: 8px 14px 4px;
+}
+
+.search-quick-action {
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.search-quick-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    color: var(--color-text-secondary);
+    flex-shrink: 0;
+
+    svg, i { display: block; }
+}
+
 // 검색 결과
 .search-results {
     display: none;

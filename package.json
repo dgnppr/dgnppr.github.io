@@ -13,13 +13,16 @@
   },
   "scripts": {
     "test": "echo no test found",
-    "summaries": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-summaries.js",
-    "summaries:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-summaries.js --force",
-    "diagrams": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-diagrams.js",
-    "diagrams:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-diagrams.js --force",
+    "summaries": "node scripts/generate-summaries.js",
+    "summaries:force": "node scripts/generate-summaries.js --force",
+    "diagrams": "node scripts/generate-diagrams.js",
+    "diagrams:force": "node scripts/generate-diagrams.js --force",
     "stats": "node scripts/generate-writing-stats.js",
-    "embeddings": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-embeddings.js",
-    "embeddings:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-embeddings.js --force"
+    "embeddings": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-embeddings.js && GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-adr-embeddings.js",
+    "embeddings:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-embeddings.js --force && GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-adr-embeddings.js --force",
+    "adr:embeddings": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-adr-embeddings.js",
+    "adr:embeddings:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-adr-embeddings.js --force",
+    "ontology": "node scripts/generate-ontology.js"
   },
   "repository": {
     "type": "git",

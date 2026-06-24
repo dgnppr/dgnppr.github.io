@@ -96,18 +96,6 @@
                 <span class="toggle-thumb"></span>
             </span>
         </button>
-        <a href="/topics/" class="header-search-toggle" aria-label="전체보기" title="전체보기">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        </a>
-        <a href="/tags/" class="header-search-toggle" aria-label="태그" title="태그">
-            <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-        </a>
-        <button class="header-search-toggle" data-kg-open aria-label="지식 그래프" title="지식 그래프">
-            <i class="fas fa-brain header-icon-unified" aria-hidden="true"></i>
-        </button>
-        <a href="/stats/" class="header-search-toggle" aria-label="통계" title="통계">
-            <i class="fas fa-chart-bar header-icon-unified" aria-hidden="true"></i>
-        </a>
         <button id="search-toggle" class="header-search-toggle" aria-label="검색">
             <i class="fas fa-search header-icon-unified"></i>
         </button>
@@ -125,10 +113,54 @@
     var fuseInstance = null;
     var allItems = null;
 
+    var QUICK_ACTIONS = [
+        {
+            label: '전체보기',
+            url: '/topics/',
+            icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>'
+        },
+        {
+            label: '태그',
+            url: '/tags/',
+            icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>'
+        },
+        {
+            label: '지식 그래프',
+            kgOpen: true,
+            icon: '<i class="fas fa-brain" aria-hidden="true"></i>'
+        },
+        {
+            label: '통계',
+            url: '/stats/',
+            icon: '<i class="fas fa-chart-bar" aria-hidden="true"></i>'
+        }
+    ];
+
+    function showQuickActions() {
+        var results = document.getElementById('search-results');
+        if (!results) return;
+        results.innerHTML =
+            '<div class="search-quick-label">바로가기</div>' +
+            QUICK_ACTIONS.map(function(a) {
+                if (a.kgOpen) {
+                    return '<button class="search-result-item search-quick-action" data-kg-open>' +
+                        '<span class="search-quick-icon">' + a.icon + '</span>' +
+                        '<span class="search-result-main"><span class="search-result-title">' + a.label + '</span></span>' +
+                        '</button>';
+                }
+                return '<a class="search-result-item" href="' + a.url + '">' +
+                    '<span class="search-quick-icon">' + a.icon + '</span>' +
+                    '<span class="search-result-main"><span class="search-result-title">' + a.label + '</span></span>' +
+                    '</a>';
+            }).join('');
+        results.classList.add('is-open');
+    }
+
     function openSearch() {
         wrapper.classList.add('is-open');
         wrapper.setAttribute('aria-hidden', 'false');
         wrapper.querySelector('.searchInput').focus();
+        showQuickActions();
     }
 
     function closeSearch() {
@@ -240,7 +272,7 @@
         if (e.target.id !== 'local-search-input') { return; }
         var raw = e.target.value.trim();
         var results = document.getElementById('search-results');
-        if (!raw) { results.classList.remove('is-open'); results.innerHTML = ''; return; }
+        if (!raw) { showQuickActions(); return; }
         loadIndex(function () {
             var q = raw.toLowerCase();
             var matches;

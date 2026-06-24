@@ -1,0 +1,22 @@
+{
+  "entity_types": {
+    "decision": {
+      "dir": "_adr",
+      "description": "Architecture Decision Records"
+    },
+    "concept": {
+      "dir": "_wiki",
+      "layout_filter": "wiki",
+      "description": "Technical concepts and knowledge"
+    }
+  },
+  "relation_types": {
+    "implements":  "implements or realizes the target",
+    "references":  "references or cites the target",
+    "extends":     "extends or builds upon the target",
+    "supersedes":  "supersedes the target decision",
+    "motivates":   "target problem motivated this decision",
+    "contradicts": "conflicts with the target",
+    "involves":    "involves this entity"
+  }
+}

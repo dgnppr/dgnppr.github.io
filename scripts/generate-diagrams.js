@@ -2,10 +2,9 @@
 /**
  * AI 다이어그램 생성기 (JSON DAG)
  *
- * 실행 방법 — Google Gemini Vertex AI (서비스 계정):
- *   GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json \
- *   GOOGLE_PROJECT_ID=my-project \
- *   [GOOGLE_LOCATION=asia-northeast3] \
+ * 실행 방법 — LM Studio (로컬):
+ *   [LM_STUDIO_BASE_URL=http://localhost:1234/v1] \
+ *   [LM_STUDIO_MODEL=local-model] \
  *   node scripts/generate-diagrams.js
  *
  * - 이미 생성된 다이어그램은 건너뜀 (캐시)
@@ -17,20 +16,35 @@ const fs     = require('fs');
 const path   = require('path');
 const crypto = require('crypto');
 
-const GCP_PROJECT  = process.env.GOOGLE_PROJECT_ID;
-const GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
-const GCP_CREDS    = process.env.GOOGLE_APPLICATION_CREDENTIALS;
-const FORCE        = process.argv.includes('--force');
-const MODEL        = 'gemini-2.5-flash';
+// .env 로더 (shell 환경변수 우선)
+(function loadEnv() {
+    var p = path.join(__dirname, '..', '.env');
+    if (!fs.existsSync(p)) return;
+    fs.readFileSync(p, 'utf8').split('\n').forEach(function (line) {
+        var m = /^\s*([^#=\s][^=]*?)\s*=\s*(.*?)\s*$/.exec(line);
+        if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+    });
+})();
 
-if (!GCP_CREDS || !GCP_PROJECT) {
-    console.error('[오류] 환경 변수를 설정하세요:');
+var BACKEND      = process.env.LLM_BACKEND || 'lmstudio'; // 'lmstudio' | 'vertexai'
+var LM_BASE_URL  = (process.env.LM_STUDIO_BASE_URL || 'http://localhost:1234/v1').replace(/\/$/, '');
+var LM_MODEL     = process.env.LM_STUDIO_MODEL || 'gemma-4-12b-coder-fable5-composer2.5-v1';
+var GCP_PROJECT  = process.env.GOOGLE_PROJECT_ID;
+var GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
+var GCP_CREDS    = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+var FORCE        = process.argv.includes('--force');
+
+if (BACKEND === 'vertexai' && (!GCP_CREDS || !GCP_PROJECT)) {
+    console.error('[오류] vertexai 백엔드에 필요한 환경 변수를 설정하세요:');
     console.error('  GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json');
     console.error('  GOOGLE_PROJECT_ID=my-project');
     process.exit(1);
 }
 
-console.log('[백엔드] Vertex AI — ' + MODEL + ' (' + GCP_LOCATION + ')');
+var backendLabel = BACKEND === 'vertexai'
+    ? 'Vertex AI — gemini-2.5-flash (' + GCP_LOCATION + ')'
+    : 'LM Studio — ' + LM_MODEL + ' (' + LM_BASE_URL + ')';
+console.log('[백엔드] ' + backendLabel);
 
 const ROOT           = path.join(__dirname, '..');
 const DIAGRAMS_FILE  = path.join(ROOT, 'data/diagrams.json');
@@ -155,42 +169,67 @@ function buildPrompt(title, body) {
     ].join('\n');
 }
 
-// ── Vertex AI 클라이언트 ────────────────────────────────────────
-var ai;
-async function initClient() {
-    if (ai) return;
-    var { GoogleGenAI } = require('@google/genai');
-    ai = new GoogleGenAI({
-        vertexai: true,
-        project: GCP_PROJECT,
-        location: GCP_LOCATION,
-    });
+// ── LLM 클라이언트 ────────────────────────────────────────────
+var _vertexAi;
+async function generateDiagram(title, body) {
+    var prompt = buildPrompt(title, body);
+    var raw;
+
+    if (BACKEND === 'vertexai') {
+        if (!_vertexAi) {
+            var { GoogleGenAI } = require('@google/genai');
+            _vertexAi = new GoogleGenAI({ vertexai: true, project: GCP_PROJECT, location: GCP_LOCATION });
+        }
+        var response = await _vertexAi.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: prompt,
+            config: { maxOutputTokens: 1000, temperature: 0.4, topP: 0.9, thinkingConfig: { thinkingBudget: 0 } },
+        });
+        raw = (response.text || '').trim();
+    } else {
+        // lmstudio (OpenAI-compatible)
+        var res = await fetch(LM_BASE_URL + '/chat/completions', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                model: LM_MODEL,
+                messages: [{ role: 'user', content: prompt }],
+                max_tokens: 4096,
+                temperature: 0.4,
+                top_p: 0.9,
+            }),
+        });
+        if (!res.ok) throw new Error('LM Studio HTTP ' + res.status + ': ' + await res.text());
+        var data = await res.json();
+        var msg  = data.choices?.[0]?.message;
+        raw = msg?.content || extractJsonFromThinking(msg?.reasoning_content || '');
+    }
+
+    // strip markdown fences if LLM added them
+    return raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
 }
 
-async function generateDiagram(title, body) {
-    await initClient();
-    var response = await ai.models.generateContent({
-        model: MODEL,
-        contents: buildPrompt(title, body),
-        config: {
-            maxOutputTokens: 1000,
-            temperature: 0.4,
-            topP: 0.9,
-            thinkingConfig: { thinkingBudget: 0 },
-        },
-    });
-    if (!response.text) {
-        var candidate = response.candidates && response.candidates[0];
-        process.stderr.write(
-            '[빈응답] finishReason=' + (candidate && candidate.finishReason) +
-            ' promptFeedback=' + JSON.stringify(response.promptFeedback) +
-            ' safetyRatings=' + JSON.stringify(candidate && candidate.safetyRatings) + '\n'
-        );
+// thinking 모델: reasoning_content에서 nodes/edges JSON 블록만 추출
+function extractJsonFromThinking(text) {
+    var lastJson = '';
+    var depth = 0;
+    var start = -1;
+    for (var i = 0; i < text.length; i++) {
+        if (text[i] === '{') {
+            if (depth === 0) start = i;
+            depth++;
+        } else if (text[i] === '}') {
+            depth--;
+            if (depth === 0 && start !== -1) {
+                var candidate = text.slice(start, i + 1);
+                if (candidate.includes('"nodes"') && candidate.includes('"edges"')) {
+                    lastJson = candidate;
+                }
+                start = -1;
+            }
+        }
     }
-    var raw = (response.text || '').trim();
-    // strip markdown fences if LLM added them
-    raw = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/, '').trim();
-    return raw;
+    return lastJson;
 }
 
 function parseAndValidate(raw) {
@@ -311,9 +350,9 @@ async function main() {
             generated++;
             process.stdout.write('완료 (' + diagram.nodes.length + '노드, ' + diagram.edges.length + '엣지)\n');
             fs.writeFileSync(DIAGRAMS_FILE, JSON.stringify(results, null, 2));
-            await new Promise(function (r) { setTimeout(r, 600); });
         } catch (e) {
-            process.stdout.write('오류: ' + e.message + '\n');
+            var cause = e.cause ? ' (' + e.cause.message + ')' : '';
+            process.stdout.write('오류: ' + e.message + cause + '\n');
             failed++;
         }
     }

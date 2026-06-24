@@ -677,16 +677,16 @@
                             var dn = dragMesh.userData.node;
                             dn.fx = dn.x; dn.fy = dn.y;
                             dragConnSet = adj[dn.slug] || new Set();
-                            /* 연결 노드 fx/fy 해제 → 링크 힘으로 따라오게 */
+                            /* 연결 노드 fx/fy/fz 해제 → 링크 힘으로 따라오게 */
                             dragConnSet.forEach(function (s) {
                                 var nb = nodeMap[s];
-                                if (nb) { nb.fx = undefined; nb.fy = undefined; }
+                                if (nb) { nb.fx = undefined; nb.fy = undefined; nb.fz = undefined; }
                             });
-                            /* charge 약화(비연결 노드 산란 방지), 클러스터 OFF, 링크 강화 */
-                            sim.force('charge').strength(-25);
+                            /* charge 제거(반발 차단), 클러스터 OFF, 링크 최대 강화 */
+                            sim.force('charge').strength(0);
                             sim.force('clusterX').strength(0);
                             sim.force('clusterY').strength(0);
-                            sim.force('link').strength(0.5);
+                            sim.force('link').strength(1.0);
                             sim.alphaTarget(0.25).restart();
                         }
                     }

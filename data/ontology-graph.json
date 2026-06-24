@@ -1,0 +1,384 @@
+{
+  "nodes": {
+    "decision/architecture/2024-001-test-adr": {
+      "id": "decision/architecture/2024-001-test-adr",
+      "type": "decision",
+      "title": "[테스트] ADR 시스템 도입",
+      "path": "_adr/architecture/2024-001-test-adr.md",
+      "status": "accepted",
+      "tags": [
+        "adr",
+        "test"
+      ],
+      "date": "2024-01-01"
+    },
+    "concept/data-analysis/00_how_to_design_funnel": {
+      "id": "concept/data-analysis/00_how_to_design_funnel",
+      "type": "concept",
+      "title": "올바른 Funnel 설계의 7가지 조건",
+      "path": "_wiki/data-analysis/00_how_to_design_funnel.md",
+      "status": "draft",
+      "tags": [
+        "data-analysis",
+        "funnel",
+        "analytics"
+      ],
+      "date": "2026-06-23"
+    },
+    "concept/data-engineering/00_what_is_medaliion_architecture": {
+      "id": "concept/data-engineering/00_what_is_medaliion_architecture",
+      "type": "concept",
+      "title": "메달리언 아키텍처란 무엇인가",
+      "path": "_wiki/data-engineering/00_what_is_medaliion_architecture.md",
+      "status": "complete",
+      "tags": [
+        "data-engineering",
+        "design-pattern",
+        "data-architecture"
+      ],
+      "date": "2026-06-22"
+    },
+    "concept/data-engineering/01_how_to_architect_medallion_well": {
+      "id": "concept/data-engineering/01_how_to_architect_medallion_well",
+      "type": "concept",
+      "title": "메달리언 아키텍처 잘 흐르게 하기",
+      "path": "_wiki/data-engineering/01_how_to_architect_medallion_well.md",
+      "status": "draft",
+      "tags": [
+        "data-engineering",
+        "design-pattern",
+        "data-architecture"
+      ],
+      "date": "2026-06-22"
+    },
+    "concept/data-engineering/02_what_is_ontology": {
+      "id": "concept/data-engineering/02_what_is_ontology",
+      "type": "concept",
+      "title": "온톨로지란 무엇인가",
+      "path": "_wiki/data-engineering/02_what_is_ontology.md",
+      "status": "draft",
+      "tags": [
+        "data-engineering",
+        "data-architecture"
+      ],
+      "date": "2026-06-21"
+    },
+    "concept/database/00_mysql_variable_setting": {
+      "id": "concept/database/00_mysql_variable_setting",
+      "type": "concept",
+      "title": "MySQL 서버 변수 설정",
+      "path": "_wiki/database/00_mysql_variable_setting.md",
+      "status": "complete",
+      "tags": [
+        "database",
+        "mysql"
+      ],
+      "date": "2023-12-19"
+    },
+    "concept/design-pattern/00_how_to_use_strategy_pattern": {
+      "id": "concept/design-pattern/00_how_to_use_strategy_pattern",
+      "type": "concept",
+      "title": "전략 패턴을 언제, 어떻게 사용할 것인가",
+      "path": "_wiki/design-pattern/00_how_to_use_strategy_pattern.md",
+      "status": "complete",
+      "tags": [
+        "design-pattern"
+      ],
+      "date": "2024-01-31"
+    },
+    "concept/design-pattern/01_circuit_breaker": {
+      "id": "concept/design-pattern/01_circuit_breaker",
+      "type": "concept",
+      "title": "Circuit Breaker 적용기 1편",
+      "path": "_wiki/design-pattern/01_circuit_breaker.md",
+      "status": "complete",
+      "tags": [
+        "design-pattern"
+      ],
+      "date": "2024-11-19"
+    },
+    "concept/essay/00_is_lombok_necessary": {
+      "id": "concept/essay/00_is_lombok_necessary",
+      "type": "concept",
+      "title": "롬복 꼭 사용해야 하는가",
+      "path": "_wiki/essay/00_is_lombok_necessary.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "java"
+      ],
+      "date": "2023-12-21"
+    },
+    "concept/essay/01_why_redis_single_threaded": {
+      "id": "concept/essay/01_why_redis_single_threaded",
+      "type": "concept",
+      "title": "왜 레디스를 싱글 스레드로 만들었을까",
+      "path": "_wiki/essay/01_why_redis_single_threaded.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "redis",
+        "os"
+      ],
+      "date": "2023-12-24"
+    },
+    "concept/essay/02_is_system_time_really_correct": {
+      "id": "concept/essay/02_is_system_time_really_correct",
+      "type": "concept",
+      "title": "System.currentTimeMillis() 정말 정확할까",
+      "path": "_wiki/essay/02_is_system_time_really_correct.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "os",
+        "java"
+      ],
+      "date": "2023-12-31"
+    },
+    "concept/essay/03_which_jwt_algorithm_is_suitable": {
+      "id": "concept/essay/03_which_jwt_algorithm_is_suitable",
+      "type": "concept",
+      "title": "JWT 알고리즘 어떤 것을 사용하면 좋을까",
+      "path": "_wiki/essay/03_which_jwt_algorithm_is_suitable.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "algorithm",
+        "security"
+      ],
+      "date": "2024-01-06"
+    },
+    "concept/essay/04_how_to_create_text_fixture": {
+      "id": "concept/essay/04_how_to_create_text_fixture",
+      "type": "concept",
+      "title": "테스트 픽스처 어떻게 생성해야 할까",
+      "path": "_wiki/essay/04_how_to_create_text_fixture.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "test",
+        "java"
+      ],
+      "date": "2024-01-29"
+    },
+    "concept/java/00_what_is_java_virtual_thread": {
+      "id": "concept/java/00_what_is_java_virtual_thread",
+      "type": "concept",
+      "title": "JDK 21 Virtual Thread는 무엇인가",
+      "path": "_wiki/java/00_what_is_java_virtual_thread.md",
+      "status": "complete",
+      "tags": [
+        "os",
+        "java"
+      ],
+      "date": "2024-02-13"
+    },
+    "concept/java/01_producer_extends_consumer_super": {
+      "id": "concept/java/01_producer_extends_consumer_super",
+      "type": "concept",
+      "title": "제네릭 - Producer Extends, Consumer Super",
+      "path": "_wiki/java/01_producer_extends_consumer_super.md",
+      "status": "complete",
+      "tags": [
+        "java"
+      ],
+      "date": "2024-03-24"
+    },
+    "concept/jpa/00_jpa_dirty_checking": {
+      "id": "concept/jpa/00_jpa_dirty_checking",
+      "type": "concept",
+      "title": "JPA Dirty Checking 어떻게 동작할까",
+      "path": "_wiki/jpa/00_jpa_dirty_checking.md",
+      "status": "complete",
+      "tags": [
+        "spring-boot",
+        "jpa",
+        "code-analysis"
+      ],
+      "date": "2024-02-18"
+    },
+    "concept/kafka/03_kafka_producer_summary": {
+      "id": "concept/kafka/03_kafka_producer_summary",
+      "type": "concept",
+      "title": "Kafka Producer Client 요약",
+      "path": "_wiki/kafka/03_kafka_producer_summary.md",
+      "status": "complete",
+      "tags": [
+        "kafka"
+      ],
+      "date": "2025-01-03"
+    },
+    "concept/llm/00_what_is_transformers": {
+      "id": "concept/llm/00_what_is_transformers",
+      "type": "concept",
+      "title": "LLM은 왜 Encoder+Decoder 구조가 아닐까?",
+      "path": "_wiki/llm/00_what_is_transformers.md",
+      "status": "complete",
+      "tags": [
+        "agent",
+        "llm",
+        "gpt",
+        "bert"
+      ],
+      "date": "2025-05-19"
+    },
+    "concept/reference": {
+      "id": "concept/reference",
+      "type": "concept",
+      "title": "기술 비디오/아티클 모음",
+      "path": "_wiki/reference.md",
+      "status": "complete",
+      "tags": [
+        "reference"
+      ],
+      "date": "2023-12-15"
+    },
+    "concept/retrospect/00_2023_year_retrospect": {
+      "id": "concept/retrospect/00_2023_year_retrospect",
+      "type": "concept",
+      "title": "2023년 회고 - 나를 되돌아보며",
+      "path": "_wiki/retrospect/00_2023_year_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-01-12"
+    },
+    "concept/retrospect/01_2024_january_retrospect": {
+      "id": "concept/retrospect/01_2024_january_retrospect",
+      "type": "concept",
+      "title": "2024년 1월 회고 - 무엇을 공부했나",
+      "path": "_wiki/retrospect/01_2024_january_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-02-04"
+    },
+    "concept/retrospect/02_2024_march_3rd_retrospect": {
+      "id": "concept/retrospect/02_2024_march_3rd_retrospect",
+      "type": "concept",
+      "title": "2024년 3월 3주차 회고 - 새로운 회사로의 첫 출근",
+      "path": "_wiki/retrospect/02_2024_march_3rd_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-03-17"
+    },
+    "concept/retrospect/03_2024_march_retrospect": {
+      "id": "concept/retrospect/03_2024_march_retrospect",
+      "type": "concept",
+      "title": "2024년 3월 회고",
+      "path": "_wiki/retrospect/03_2024_march_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-03-30"
+    },
+    "concept/retrospect/04_2024_september_retrospect": {
+      "id": "concept/retrospect/04_2024_september_retrospect",
+      "type": "concept",
+      "title": "나는 6개월동안 어떠한 것을 했고, 남은 2024년을 어떻게 보내야할까",
+      "path": "_wiki/retrospect/04_2024_september_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-10-13"
+    },
+    "concept/retrospect/05_2025_goodbye_kyobobook_retrospect": {
+      "id": "concept/retrospect/05_2025_goodbye_kyobobook_retrospect",
+      "type": "concept",
+      "title": "Good Bye 교보문고, 새로운 시작",
+      "path": "_wiki/retrospect/05_2025_goodbye_kyobobook_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2025-04-13"
+    },
+    "concept/retrospect/06_2026_code_is_cheap": {
+      "id": "concept/retrospect/06_2026_code_is_cheap",
+      "type": "concept",
+      "title": "코드 작성 비용이 0인 시대에서 나는 어떻게 해야할까",
+      "path": "_wiki/retrospect/06_2026_code_is_cheap.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2026-06-21"
+    },
+    "concept/springboot/00_why_rollback_marked_transaction_is_unusable": {
+      "id": "concept/springboot/00_why_rollback_marked_transaction_is_unusable",
+      "type": "concept",
+      "title": "왜 롤백 마크된 트랜잭션은 재사용할 수 없을까",
+      "path": "_wiki/springboot/00_why_rollback_marked_transaction_is_unusable.md",
+      "status": "complete",
+      "tags": [
+        "spring-boot",
+        "transaction",
+        "code-analysis"
+      ],
+      "date": "2024-01-25"
+    },
+    "concept/springboot/01_how_to_handle_transaction_event_listener_exception": {
+      "id": "concept/springboot/01_how_to_handle_transaction_event_listener_exception",
+      "type": "concept",
+      "title": "@TransactionalEventListener 예외처리 어떻게 해야할까",
+      "path": "_wiki/springboot/01_how_to_handle_transaction_event_listener_exception.md",
+      "status": "complete",
+      "tags": [
+        "spring-boot",
+        "code-analysis"
+      ],
+      "date": "2024-02-21"
+    },
+    "concept/system-design/00_url_shortener_design": {
+      "id": "concept/system-design/00_url_shortener_design",
+      "type": "concept",
+      "title": "URL 단축기 시스템 디자인",
+      "path": "_wiki/system-design/00_url_shortener_design.md",
+      "status": "complete",
+      "tags": [
+        "system-design"
+      ],
+      "date": "2024-01-07"
+    },
+    "concept/system-design/01_web_crawler_design": {
+      "id": "concept/system-design/01_web_crawler_design",
+      "type": "concept",
+      "title": "웹 크롤러 시스템 디자인",
+      "path": "_wiki/system-design/01_web_crawler_design.md",
+      "status": "complete",
+      "tags": [
+        "system-design"
+      ],
+      "date": "2024-01-15"
+    },
+    "concept/system-design/02_notification_system_design": {
+      "id": "concept/system-design/02_notification_system_design",
+      "type": "concept",
+      "title": "알림 서비스 시스템 디자인",
+      "path": "_wiki/system-design/02_notification_system_design.md",
+      "status": "complete",
+      "tags": [
+        "system-design"
+      ],
+      "date": "2024-01-30"
+    },
+    "concept/system-design/03_sns_feed_system_design": {
+      "id": "concept/system-design/03_sns_feed_system_design",
+      "type": "concept",
+      "title": "SNS 피드 시스템 디자인",
+      "path": "_wiki/system-design/03_sns_feed_system_design.md",
+      "status": "complete",
+      "tags": [
+        "system-design"
+      ],
+      "date": "2024-02-15"
+    }
+  },
+  "edges": []
+}

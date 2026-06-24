@@ -2,15 +2,13 @@
 /**
  * 위키/포스트 AI 요약 생성기
  *
- * 실행 방법 — Google Gemini Vertex AI (서비스 계정):
- *   GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json \
- *   GOOGLE_PROJECT_ID=my-project \
- *   [GOOGLE_LOCATION=asia-northeast3] \
+ * 실행 방법 — LM Studio (로컬):
+ *   [LM_STUDIO_BASE_URL=http://localhost:1234/v1] \
+ *   [LM_STUDIO_MODEL=local-model] \
  *   node scripts/generate-summaries.js
  *
  * - 내용 hash 기반 캐시 (수정 시 자동 재생성, 삭제 시 stale 항목 제거)
  * - 내용이 100자 미만인 파일은 건너뜀
- * - 500ms 딜레이로 레이트 리밋 방지
  * - --force 플래그로 전체 재생성
  */
 'use strict';
@@ -18,24 +16,56 @@ const fs     = require('fs');
 const path   = require('path');
 const crypto = require('crypto');
 
+// .env 로더 (shell 환경변수 우선)
+(function loadEnv() {
+    const p = path.join(__dirname, '..', '.env');
+    if (!fs.existsSync(p)) return;
+    fs.readFileSync(p, 'utf8').split('\n').forEach(line => {
+        const m = /^\s*([^#=\s][^=]*?)\s*=\s*(.*?)\s*$/.exec(line);
+        if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+    });
+})();
+
+const BACKEND      = process.env.LLM_BACKEND || 'lmstudio'; // 'lmstudio' | 'vertexai'
+const LM_BASE_URL  = (process.env.LM_STUDIO_BASE_URL || 'http://localhost:1234/v1').replace(/\/$/, '');
+const LM_MODEL     = process.env.LM_STUDIO_MODEL || 'gemma-4-12b-coder-fable5-composer2.5-v1';
 const GCP_PROJECT  = process.env.GOOGLE_PROJECT_ID;
 const GCP_LOCATION = process.env.GOOGLE_LOCATION || 'asia-northeast3';
 const GCP_CREDS    = process.env.GOOGLE_APPLICATION_CREDENTIALS;
 const FORCE        = process.argv.includes('--force');
-const MODEL        = 'gemini-2.5-flash';
 
-if (!GCP_CREDS || !GCP_PROJECT) {
-    console.error('[오류] 환경 변수를 설정하세요:');
+if (BACKEND === 'vertexai' && (!GCP_CREDS || !GCP_PROJECT)) {
+    console.error('[오류] vertexai 백엔드에 필요한 환경 변수를 설정하세요:');
     console.error('  GOOGLE_APPLICATION_CREDENTIALS=/path/to/sa.json');
     console.error('  GOOGLE_PROJECT_ID=my-project');
     process.exit(1);
 }
 
-console.log('[백엔드] Vertex AI — ' + MODEL + ' (' + GCP_LOCATION + ')');
+const backendLabel = BACKEND === 'vertexai'
+    ? 'Vertex AI — gemini-2.5-flash (' + GCP_LOCATION + ')'
+    : 'LM Studio — ' + LM_MODEL + ' (' + LM_BASE_URL + ')';
+console.log('[백엔드] ' + backendLabel);
 
 const ROOT                = path.join(__dirname, '..');
 const SUMMARIES_FILE      = path.join(ROOT, 'data/summaries.json');
 const SUMMARIES_HASH_FILE = path.join(ROOT, 'data/summaries-hashes.json');
+
+// thinking 모델: reasoning_content에서 최종 한국어 요약만 추출
+function extractKoreanSummary(thinking) {
+    // 패턴 1: "Draft 2 ... Korean): 한국어 텍스트" 형태
+    const draft = thinking.match(/Draft\s*2[^:]*:\*?\s*([가-힯][^*\n]{50,})/);
+    if (draft) return draft[1].trim();
+
+    // 패턴 2: "Sentence 1/2/3 ...: 한국어" 라벨 분리형 → 이어붙이기
+    const sentences = [...thinking.matchAll(/Sentence\s*\d[^:]*:\*?\s*([가-힯][^*\n]+)/g)];
+    if (sentences.length >= 2) return sentences.map(s => s[1].trim()).join(' ');
+
+    // 패턴 3: 마지막 한국어 단락 (Length Check 이전)
+    const beforeCheck = thinking.split(/Length Check|Character Count/i)[0];
+    const blocks = beforeCheck.split(/\n{2,}/);
+    const korean = blocks.filter(b => (b.match(/[가-힯]/g) || []).length > 20);
+    return korean.pop()?.replace(/^[*\s]+|[*\s]+$/g, '').trim() || '';
+}
 
 function buildPrompt(title, body) {
     return [
@@ -85,30 +115,45 @@ function buildPrompt(title, body) {
     ].join('\n');
 }
 
-let ai;
-async function initClient() {
-    if (ai) return;
-    const { GoogleGenAI } = require('@google/genai');
-    ai = new GoogleGenAI({ vertexai: true, project: GCP_PROJECT, location: GCP_LOCATION });
-}
-
+let _vertexAi;
 async function generateSummary(title, body) {
-    await initClient();
-    const response = await ai.models.generateContent({
-        model: MODEL,
-        contents: buildPrompt(title, body),
-        config: { maxOutputTokens: 600, temperature: 0.45, topP: 0.9, thinkingConfig: { thinkingBudget: 0 } },
+    const prompt = buildPrompt(title, body);
+
+    if (BACKEND === 'vertexai') {
+        if (!_vertexAi) {
+            const { GoogleGenAI } = require('@google/genai');
+            _vertexAi = new GoogleGenAI({ vertexai: true, project: GCP_PROJECT, location: GCP_LOCATION });
+        }
+        const response = await _vertexAi.models.generateContent({
+            model: 'gemini-2.5-flash',
+            contents: prompt,
+            config: { maxOutputTokens: 600, temperature: 0.45, topP: 0.9, thinkingConfig: { thinkingBudget: 0 } },
+        });
+        if (!response.text) throw new Error('모델이 빈 응답을 반환했습니다.');
+        return response.text.trim();
+    }
+
+    // lmstudio (OpenAI-compatible)
+    const res = await fetch(LM_BASE_URL + '/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            model: LM_MODEL,
+            messages: [{ role: 'user', content: prompt }],
+            max_tokens: 4096,
+            temperature: 0.45,
+            top_p: 0.9,
+        }),
     });
-    if (!response.text) {
-        const candidate = response.candidates && response.candidates[0];
-        process.stderr.write(
-            '[빈응답] finishReason=' + (candidate && candidate.finishReason) +
-            ' promptFeedback=' + JSON.stringify(response.promptFeedback) +
-            ' safetyRatings=' + JSON.stringify(candidate && candidate.safetyRatings) + '\n'
-        );
+    if (!res.ok) throw new Error('LM Studio HTTP ' + res.status + ': ' + await res.text());
+    const data = await res.json();
+    const msg  = data.choices?.[0]?.message;
+    const text = msg?.content || extractKoreanSummary(msg?.reasoning_content || '');
+    if (!text) {
+        process.stderr.write('[raw] ' + JSON.stringify(data).slice(0, 500) + '\n');
         throw new Error('모델이 빈 응답을 반환했습니다.');
     }
-    return response.text.trim();
+    return text.trim();
 }
 
 function collectMarkdown(dir, results) {
@@ -191,9 +236,9 @@ async function main() {
             process.stdout.write('완료 (' + summary.length + '자)\n');
             fs.writeFileSync(SUMMARIES_FILE,      JSON.stringify(results,   null, 2));
             fs.writeFileSync(SUMMARIES_HASH_FILE, JSON.stringify(hashCache, null, 2));
-            await new Promise(r => setTimeout(r, 500));
         } catch (e) {
-            process.stdout.write('오류: ' + e.message + '\n');
+            const cause = e.cause ? ' (' + e.cause.message + ')' : '';
+            process.stdout.write('오류: ' + e.message + cause + '\n');
         }
     }
 
