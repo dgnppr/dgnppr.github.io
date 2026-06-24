@@ -245,10 +245,11 @@
 
             /* ── Three.js 씬 구성 ─────────────────────────── */
             container.style.position = 'relative';
-            var initDotClr = dark ? 'rgba(74,104,144,0.55)' : 'rgba(100,116,139,0.30)';
             container.style.backgroundColor = bgStr;
-            container.style.backgroundImage = 'radial-gradient(circle, ' + initDotClr + ' 1.2px, transparent 1.2px)';
-            container.style.backgroundSize = '28px 28px';
+            if (!dark) {
+                container.style.backgroundImage = 'radial-gradient(circle, rgba(100,116,139,0.30) 1.2px, transparent 1.2px)';
+                container.style.backgroundSize = '28px 28px';
+            }
             var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
             renderer.setSize(W, H);
@@ -273,8 +274,8 @@
                 var count = 800;
                 var pos   = new Float32Array(count * 3);
                 for (var i = 0; i < count; i++) {
-                    /* 구형 분포 — 노드 영역(~300) 바깥 600-1500 거리 */
-                    var r     = 650 + Math.random() * 850;
+                    /* 구형 분포 — 노드 영역(~300) 바깥, 더 촘촘하게 */
+                    var r     = 400 + Math.random() * 700;
                     var theta = Math.random() * Math.PI * 2;
                     var phi   = Math.acos(2 * Math.random() - 1);
                     pos[i * 3]     = r * Math.sin(phi) * Math.cos(theta);
@@ -284,11 +285,11 @@
                 var geo = new THREE.BufferGeometry();
                 geo.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
                 starPoints = new THREE.Points(geo, new THREE.PointsMaterial({
-                    color: 0xc8d8ff,
-                    size: 1.4,
+                    color: 0xe0eaff,
+                    size: 1.8,
                     sizeAttenuation: true,
                     transparent: true,
-                    opacity: dark ? 0.65 : 0,
+                    opacity: dark ? (miniMode ? 0.2 : 0.65) : 0,
                     depthWrite: false,
                 }));
                 scene.add(starPoints);
@@ -868,14 +869,17 @@
             function applyTheme() {
                 dark = isDark();
                 var bgStr2 = dark ? '#060a14' : '#f8fafc';
-                var dotClr = dark ? 'rgba(74,104,144,0.55)' : 'rgba(100,116,139,0.30)';
+
                 if (scene.fog) scene.fog.color.set(dark ? 0x060a14 : 0xf8fafc);
-                if (starPoints) starPoints.material.opacity = dark ? 0.65 : 0;
-                /* 컨테이너에 도트 격자 배경 */
+                if (starPoints) {
+                    starPoints.material.color.set(0xe0eaff);
+                    starPoints.material.opacity = dark ? (miniMode ? 0.2 : 0.65) : 0;
+                }
                 container.style.backgroundColor = bgStr2;
-                container.style.backgroundImage =
-                    'radial-gradient(circle, ' + dotClr + ' 1.2px, transparent 1.2px)';
-                container.style.backgroundSize = '28px 28px';
+                container.style.backgroundImage = dark
+                    ? 'none'
+                    : 'radial-gradient(circle, rgba(100,116,139,0.30) 1.2px, transparent 1.2px)';
+                container.style.backgroundSize = dark ? '' : '28px 28px';
 
                 /* 노드 재색상 */
                 meshes.forEach(function (m) {
