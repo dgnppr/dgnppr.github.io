@@ -21,11 +21,15 @@
     }
     /*  colorKey 형식:
      *    "type"               → --color-entity-{type} CSS 변수
-     *    "type:subcat"        → type 기준색 + subcat 해시로 hue ±25°, L ±8%
-     *    "type:subcat:file"   → 위에 추가로 file 해시로 hue ±10°, L ±6%
+     *    "type:subcat"        → type 기준색 + subcat 해시로 hue ±35°, S/L 보정
+     *    "type:subcat:file"   → 위에 추가로 file 해시로 hue ±15°, L 미세 보정
+     *
+     *  다크 배경(#060a14): L 0.55–0.82, S ≥ 0.75 으로 클램프 → 선명한 발광색
+     *  라이트 배경(#f8fafc): L 0.38–0.65, S ≥ 0.65 으로 클램프 → 포화된 중간톤
      */
     function catColor(colorKey) {
         if (_colorCache[colorKey] !== undefined) return _colorCache[colorKey];
+        var dark = isDark();
         var parts = colorKey.split(':');
         var baseType = parts[0], subcat = parts[1] || '', filename = parts[2] || '';
         var baseCss = getComputedStyle(document.documentElement)
@@ -34,21 +38,30 @@
             var base = new THREE.Color(baseCss);
             var hsl = { h: 0, s: 0, l: 0 };
             base.getHSL(hsl);
-            /* Level 2: subcat → hue ±25°, lightness ±8% */
+            /* Level 2: subcat → hue ±35°, S/L shift */
             var sh = _strHash(subcat);
-            hsl.h = (((hsl.h + (((Math.abs(sh) % 11) - 5) * (25 / 360))) % 1) + 1) % 1;
-            hsl.l = Math.max(0.22, Math.min(0.84, hsl.l + ((Math.abs(sh >> 4) % 5) - 2) * 0.04));
-            /* Level 3: filename → hue ±10°, lightness ±6% */
+            hsl.h = (((hsl.h + (((Math.abs(sh) % 15) - 7) * (35 / 360))) % 1) + 1) % 1;
+            hsl.s = Math.max(0.65, Math.min(1.0, hsl.s + ((Math.abs(sh >> 6) % 3) - 1) * 0.08));
+            hsl.l = hsl.l + ((Math.abs(sh >> 4) % 5) - 2) * 0.05;
+            /* Level 3: filename → hue ±15°, L 미세 보정 */
             if (filename) {
                 var fh = _strHash(filename);
-                hsl.h = (((hsl.h + (((Math.abs(fh) % 5) - 2) * (10 / 360))) % 1) + 1) % 1;
-                hsl.l = Math.max(0.22, Math.min(0.84, hsl.l + ((Math.abs(fh >> 3) % 3) - 1) * 0.06));
+                hsl.h = (((hsl.h + (((Math.abs(fh) % 7) - 3) * (15 / 360))) % 1) + 1) % 1;
+                hsl.l = hsl.l + ((Math.abs(fh >> 3) % 3) - 1) * 0.06;
+            }
+            /* 배경 대비 클램프 */
+            if (dark) {
+                hsl.s = Math.max(0.75, hsl.s);
+                hsl.l = Math.max(0.55, Math.min(0.82, hsl.l));
+            } else {
+                hsl.s = Math.max(0.65, hsl.s);
+                hsl.l = Math.max(0.38, Math.min(0.65, hsl.l));
             }
             var c = '#' + new THREE.Color().setHSL(hsl.h, hsl.s, hsl.l).getHexString();
             _colorCache[colorKey] = c;
             return c;
         }
-        /* type 단독 — CSS 변수 */
+        /* type 단독 — CSS 변수 그대로 반환 */
         if (baseCss) { _colorCache[colorKey] = baseCss; return baseCss; }
         /* fallback: 해시 → 고정 팔레트 */
         var FALLBACK = ['#3b82f6', '#8b5cf6', '#ef4444', '#22c55e', '#f97316', '#06b6d4'];
@@ -199,33 +212,13 @@
                 return catGroups[b].length - catGroups[a].length;
             });
 
-            var clusterR = miniMode ? 170 : 180;
-            var catCenters = {}, catZBase = {};
-            cats.forEach(function (cat, i) {
-                var angle = (i / cats.length) * 2 * Math.PI - Math.PI / 2;
-                catCenters[cat] = {
-                    x: clusterR * Math.cos(angle),
-                    y: clusterR * Math.sin(angle),
-                };
-                // Z: 카테고리마다 다른 깊이 레이어
-                catZBase[cat] = -150 + (i / Math.max(cats.length - 1, 1)) * 300;
-            });
-
-            /* ── 파도 페이즈 할당 ────────────────────────── */
+            /* ── 파도 페이즈 + Z 초기값 (균등 랜덤) ─────── */
             nodes.forEach(function (n, i) {
                 n._wavePhaseX = (i / nodes.length) * Math.PI * 2;
                 n._wavePhaseY = (i / nodes.length) * Math.PI * 2 + Math.PI * 0.5;
                 n._wavePhaseZ = (i / nodes.length) * Math.PI * 2 + Math.PI;
-            });
-            /* 카테고리 내 노드 순서 기반 Z 분산 */
-            var catCounter = {};
-            nodes.forEach(function (n) {
-                var cat = n.cat;
-                if (!catCounter[cat]) catCounter[cat] = 0;
-                var idx   = catCounter[cat]++;
-                var total = catGroups[cat].length;
-                var frac  = total > 1 ? (idx / (total - 1)) - 0.5 : 0; // -0.5 ~ +0.5
-                n.z = (catZBase[cat] || 0) + frac * 120; // ±60 단위 분산
+                /* 카테고리 무관하게 Z를 고르게 분산 */
+                n.z = -200 + (i / Math.max(nodes.length - 1, 1)) * 400;
             });
 
             /* ── 노드 반지름 ─────────────────────────────── */
@@ -409,10 +402,8 @@
                     .strength(function (d) { return 0.15 + (d.score || 0.7) * 0.3; }))
                 .force('charge',    d3.forceManyBody().strength(-(idealDist * idealDist * 0.09)).distanceMax(Math.max(350, idealDist * 5)))
                 .force('collision', d3.forceCollide().radius(function (d) { return nodeR(d) + idealDist * 0.40; }))
-                .force('clusterX',  d3.forceX().strength(miniMode ? 0.04 : 0.18)
-                    .x(function (d) { return (catCenters[d.cat] || { x: 0 }).x; }))
-                .force('clusterY',  d3.forceY().strength(miniMode ? 0.04 : 0.18)
-                    .y(function (d) { return (catCenters[d.cat] || { y: 0 }).y; }))
+                .force('centerX',   d3.forceX(0).strength(0.04))
+                .force('centerY',   d3.forceY(0).strength(0.04))
                 .alphaDecay(0.015)
                 .alphaTarget(FLOAT_ALPHA)
                 .stop();
@@ -696,12 +687,17 @@
                             dn.fx = dn.x; dn.fy = dn.y; dn.fz = dn.z;
                             /* BFS로 전이적 연결 노드 전체 수집 */
                             dragConnSet = (function (startSlug) {
-                                var visited = new Set(), queue = [startSlug];
-                                while (queue.length) {
-                                    var s = queue.shift();
-                                    if (visited.has(s)) continue;
-                                    visited.add(s);
-                                    (adj[s] || new Set()).forEach(function (n) { if (!visited.has(n)) queue.push(n); });
+                                var visited = new Set();
+                                var frontier = new Set([startSlug]);
+                                for (var hop = 0; hop < 2; hop++) {
+                                    var next = new Set();
+                                    frontier.forEach(function (s) {
+                                        if (!visited.has(s)) {
+                                            visited.add(s);
+                                            (adj[s] || new Set()).forEach(function (n) { if (!visited.has(n)) next.add(n); });
+                                        }
+                                    });
+                                    frontier = next;
                                 }
                                 visited.delete(startSlug);
                                 return visited;
@@ -711,10 +707,8 @@
                                 var nb = nodeMap[s];
                                 if (nb) { nb.fx = undefined; nb.fy = undefined; nb.fz = undefined; }
                             });
-                            /* charge 제거(반발 차단), 클러스터 OFF, 링크 최대 강화 */
+                            /* charge 제거(반발 차단), 링크 최대 강화 */
                             sim.force('charge').strength(0);
-                            sim.force('clusterX').strength(0);
-                            sim.force('clusterY').strength(0);
                             sim.force('link').strength(1.0);
                             sim.alphaTarget(0.25).restart();
                         }
@@ -787,8 +781,6 @@
                     }
                     /* 힘 원복 */
                     sim.force('charge').strength(-180);
-                    sim.force('clusterX').strength(0.2);
-                    sim.force('clusterY').strength(0.2);
                     sim.force('link').strength(function (d) { return 0.2 + (d.score || 0.7) * 0.35; });
                     sim.alphaTarget(FLOAT_ALPHA);
                     dragMesh = null; isDragging = false; downAt = null;
