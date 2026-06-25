@@ -182,7 +182,7 @@ back: data ontology
 stop:
 	docker compose stop
 
-restart: clean auto-generate
+restart: clean data auto-generate
 	docker compose restart
 
 status:
