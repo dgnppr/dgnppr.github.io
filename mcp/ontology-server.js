@@ -4,6 +4,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprotocol/sdk/types.js";
 import fs from "fs";
 import path from "path";
+import { execSync, spawn } from "child_process";
 
 const ROOT       = path.join(import.meta.dirname, "..");
 const GRAPH_FILE = path.join(ROOT, "data/ontology-graph.json");
@@ -562,7 +563,24 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     const file = `${buildFrontmatter(args.type, args, existingMeta)}\n\n${args.body.trim()}\n`;
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
     fs.writeFileSync(filePath, file, "utf-8");
-    return { content: [{ type: "text", text: `저장 완료: [${args.type}] ${args.path}` }] };
+
+    // 그래프 즉시 재생성 (빠름)
+    let syncMsg = "";
+    try {
+      execSync(`node ${path.join(ROOT, "scripts/generate-ontology.js")}`, { cwd: ROOT, timeout: 15000 });
+      _tagFreqCache = null; // 인메모리 캐시 무효화
+      syncMsg = " | 그래프 재생성 완료";
+    } catch (e) {
+      syncMsg = ` | 그래프 재생성 실패: ${e.message.slice(0, 120)}`;
+    }
+
+    // 임베딩 백그라운드 업데이트 (느림 — Ollama/VertexAI 필요)
+    spawn("node", [path.join(ROOT, "scripts/generate-local-embeddings.js")], {
+      cwd: ROOT, detached: true, stdio: "ignore",
+      env: { ...process.env },
+    }).unref();
+
+    return { content: [{ type: "text", text: `저장 완료: [${args.type}] ${args.path}${syncMsg} | 임베딩 백그라운드 업데이트 중` }] };
   }
 
   // ── ontology_entities ──────────────────────────────────────────────────────
