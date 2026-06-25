@@ -12,6 +12,78 @@
       ],
       "date": "2026-06-24"
     },
+    "adr/security/2026-06-24-002-gcp-key-management-status": {
+      "id": "adr/security/2026-06-24-002-gcp-key-management-status",
+      "type": "adr",
+      "title": "GCP 인증키 관리 현황 및 보안 검토 (2025-06-25 정보보호부문장 미팅)",
+      "path": "_adr/security/2026-06-24-002-gcp-key-management-status.md",
+      "status": "proposed",
+      "tags": [
+        "gcp",
+        "security",
+        "iam",
+        "secret-manager",
+        "key-management"
+      ],
+      "date": "2026-06-24"
+    },
+    "concept/cloud/01_how_to_operate_iam_well": {
+      "id": "concept/cloud/01_how_to_operate_iam_well",
+      "type": "concept",
+      "title": "클라우드 서비스 계정 관리 철칙",
+      "path": "_wiki/cloud/01_how_to_operate_iam_well.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "iam",
+        "security"
+      ],
+      "date": "2026-06-20"
+    },
+    "concept/cloud/01_vpc_for_pca": {
+      "id": "concept/cloud/01_vpc_for_pca",
+      "type": "concept",
+      "title": "Google Cloud VPC 네트워크 설계 결정",
+      "path": "_wiki/cloud/01_vpc_for_pca.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "network",
+        "pca",
+        "system-design"
+      ],
+      "date": "2026-06-25"
+    },
+    "concept/cloud/02_authenticate_gcp_without_service_accounts": {
+      "id": "concept/cloud/02_authenticate_gcp_without_service_accounts",
+      "type": "concept",
+      "title": "SA 키 없이 GCP 인증하기",
+      "path": "_wiki/cloud/02_authenticate_gcp_without_service_accounts.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "iam",
+        "security"
+      ],
+      "date": "2026-06-25"
+    },
+    "concept/cloud/03_how_to_use_terraform": {
+      "id": "concept/cloud/03_how_to_use_terraform",
+      "type": "concept",
+      "title": "Terraform 인프라를 코드로 관리하기",
+      "path": "_wiki/cloud/03_how_to_use_terraform.md",
+      "status": "writing",
+      "tags": [
+        "cloud",
+        "terraform",
+        "iac",
+        "gcp"
+      ],
+      "date": "2026-06-25"
+    },
     "concept/data-analysis/00_how_to_design_funnel": {
       "id": "concept/data-analysis/00_how_to_design_funnel",
       "type": "concept",
@@ -25,58 +97,98 @@
       ],
       "date": "2026-06-01"
     },
-    "concept/data-architect/00_what_is_ontology": {
-      "id": "concept/data-architect/00_what_is_ontology",
-      "type": "concept",
-      "title": "온톨로지는 데이터가 아니라 합의를 설계한다",
-      "path": "_wiki/data-architect/00_what_is_ontology.md",
-      "status": "draft",
-      "tags": [
-        "data-architecture",
-        "ontology",
-        "data-engineering",
-        "semantic-layer",
-        "llm"
-      ],
-      "date": "2026-06-23"
-    },
-    "concept/data-engineering/00_what_is_medaliion_architecture": {
-      "id": "concept/data-engineering/00_what_is_medaliion_architecture",
+    "concept/data-architect/00_what_is_medaliion_architecture": {
+      "id": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "concept",
       "title": "메달리언 아키텍처란 무엇인가",
-      "path": "_wiki/data-engineering/00_what_is_medaliion_architecture.md",
+      "path": "_wiki/data-architect/00_what_is_medaliion_architecture.md",
       "status": "complete",
       "tags": [
-        "data-engineering",
+        "data-architect",
         "design-pattern",
         "data-architecture"
       ],
       "date": "2026-05-22"
     },
-    "concept/data-engineering/01_how_to_architect_medallion_well": {
-      "id": "concept/data-engineering/01_how_to_architect_medallion_well",
+    "concept/data-architect/01_how_to_architect_medallion_well": {
+      "id": "concept/data-architect/01_how_to_architect_medallion_well",
       "type": "concept",
-      "title": "메달리언 아키텍처 잘 흐르게 하기",
-      "path": "_wiki/data-engineering/01_how_to_architect_medallion_well.md",
-      "status": "draft",
+      "title": "ERP 업그레이드가 새벽 3시에 GMV를 0으로 만들었다",
+      "path": "_wiki/data-architect/01_how_to_architect_medallion_well.md",
+      "status": "complete",
       "tags": [
-        "data-engineering",
+        "data-architect",
         "design-pattern",
         "data-architecture"
       ],
       "date": "2026-06-22"
     },
-    "concept/database/00_mysql_variable_setting": {
-      "id": "concept/database/00_mysql_variable_setting",
+    "concept/data-architect/02_how_to_architect_medallion_well": {
+      "id": "concept/data-architect/02_how_to_architect_medallion_well",
       "type": "concept",
-      "title": "MySQL 서버 변수 설정",
-      "path": "_wiki/database/00_mysql_variable_setting.md",
+      "title": "메달리언 레이어 무엇을 어디에 둘 것인가",
+      "path": "_wiki/data-architect/02_how_to_architect_medallion_well.md",
       "status": "complete",
       "tags": [
-        "database",
-        "mysql"
+        "data-architect",
+        "data-architecture",
+        "design-pattern"
       ],
-      "date": "2023-12-19"
+      "date": "2026-06-25"
+    },
+    "concept/data-architect/03_medallion_advanced_patterns": {
+      "id": "concept/data-architect/03_medallion_advanced_patterns",
+      "type": "concept",
+      "title": "메달리언 실전 패턴과 안티패턴 SQL로 고도화하기",
+      "path": "_wiki/data-architect/03_medallion_advanced_patterns.md",
+      "status": "complete",
+      "tags": [
+        "data-architect",
+        "data-architecture",
+        "design-pattern"
+      ],
+      "date": "2026-06-25"
+    },
+    "concept/data-architect/04_what_is_ontology": {
+      "id": "concept/data-architect/04_what_is_ontology",
+      "type": "concept",
+      "title": "온톨로지는 데이터가 아니라 합의를 설계한다",
+      "path": "_wiki/data-architect/04_what_is_ontology.md",
+      "status": "draft",
+      "tags": [
+        "data-architecture",
+        "data-engineering",
+        "ontology"
+      ],
+      "date": "2026-05-27"
+    },
+    "concept/data-architect/05_how_to_implement_ontology": {
+      "id": "concept/data-architect/05_how_to_implement_ontology",
+      "type": "concept",
+      "title": "알람 하나로 온톨로지 전체를 훑어보기",
+      "path": "_wiki/data-architect/05_how_to_implement_ontology.md",
+      "status": "complete",
+      "tags": [
+        "data-architecture",
+        "data-engineering",
+        "ontology"
+      ],
+      "date": "2026-06-23"
+    },
+    "concept/data-architect/06_ontology_core_concepts": {
+      "id": "concept/data-architect/06_ontology_core_concepts",
+      "type": "concept",
+      "title": "온톨로지의 문법 — Wikidata로 명사·관계·표준·시제를 끝까지 파다",
+      "path": "_wiki/data-architect/06_ontology_core_concepts.md",
+      "status": "complete",
+      "tags": [
+        "data-architecture",
+        "data-engineering",
+        "ontology",
+        "knowledge-graph",
+        "wikidata"
+      ],
+      "date": "2026-06-25"
     },
     "concept/design-pattern/00_how_to_use_strategy_pattern": {
       "id": "concept/design-pattern/00_how_to_use_strategy_pattern",
@@ -211,19 +323,19 @@
       ],
       "date": "2025-01-03"
     },
-    "concept/llm/00_what_is_transformers": {
-      "id": "concept/llm/00_what_is_transformers",
+    "concept/llm/00_why_llm_is_decoder_only": {
+      "id": "concept/llm/00_why_llm_is_decoder_only",
       "type": "concept",
       "title": "LLM은 왜 Encoder+Decoder 구조가 아닐까?",
-      "path": "_wiki/llm/00_what_is_transformers.md",
+      "path": "_wiki/llm/00_why_llm_is_decoder_only.md",
       "status": "complete",
       "tags": [
-        "agent",
         "llm",
         "gpt",
-        "bert"
+        "bert",
+        "transformer"
       ],
-      "date": "2025-05-19"
+      "date": "2026-06-25"
     },
     "concept/reference": {
       "id": "concept/reference",

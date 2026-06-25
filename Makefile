@@ -150,6 +150,25 @@ adr-db-status:
 	@curl -sf http://localhost:6333/healthz && echo "Qdrant 실행 중" || echo "Qdrant 중지됨"
 
 # ----------------------------------------
+# 변경된 문서 자동 감지 → 데이터 재생성
+# ----------------------------------------
+.PHONY: auto-generate
+auto-generate:
+	@CHANGED=$$(git diff --name-only HEAD; git diff --cached --name-only; git ls-files --others --exclude-standard); \
+	DOC_CHANGED=$$(echo "$$CHANGED" | grep -E '^(_wiki|_adr|_posts)/'); \
+	if [ -n "$$DOC_CHANGED" ]; then \
+		CF=$$(echo "$$DOC_CHANGED" | tr '\n' ':' | sed 's/:$$//'); \
+		echo "[auto] 변경 파일: $$CF"; \
+		set -a && . ./.env && set +a; \
+		$(MAKE) adr-embeddings; \
+		CHANGED_FILES="$$CF" node scripts/generate-diagrams.js || true; \
+		CHANGED_FILES="$$CF" node scripts/generate-summaries.js || true; \
+		node scripts/generate-ontology.js; \
+	else \
+		echo "[auto] 변경된 문서 없음 — 데이터 생성 스킵"; \
+	fi
+
+# ----------------------------------------
 # 서버 (docker compose)
 # ----------------------------------------
 .PHONY: start back stop restart status
@@ -163,7 +182,7 @@ back: data ontology
 stop:
 	docker compose stop
 
-restart: clean
+restart: clean auto-generate
 	docker compose restart
 
 status:
