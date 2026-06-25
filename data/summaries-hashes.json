@@ -34,5 +34,7 @@
   "data-architect/03_medallion_advanced_patterns": "11ef7d10eeb915e11354f167396024a8",
   "data-architect/04_what_is_ontology": "aac53707b399de73a07cf2693d4a1e45",
   "data-architect/05_how_to_implement_ontology": "5d9bd3b927b5ef3f550a7781b40564d6",
-  "data-architect/06_ontology_core_concepts": "e8e6768ef3ebb49d2662d21144a26470"
+  "data-architect/06_ontology_core_concepts": "e8e6768ef3ebb49d2662d21144a26470",
+  "cloud/01_how_to_operate_iam_well": "806bedc75a7db1e94a4809759ba7334e",
+  "cloud/02_authenticate_gcp_without_service_accounts": "b4df68cb5045b6146d79bb52e779911f"
 }

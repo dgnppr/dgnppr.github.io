@@ -2014,5 +2014,143 @@
         "to": "n6"
       }
     ]
+  },
+  "cloud/01_how_to_operate_iam_well": {
+    "hash": "806bedc75a7db1e94a4809759ba7334e",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "계정 관리 원칙",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "사람/서비스 분리",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "Keyless 운영",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "전용 계정 할당",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "최소 권한 원칙",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "그룹 기반 관리",
+        "type": "step"
+      },
+      {
+        "id": "n7",
+        "label": "권한 경계 설정",
+        "type": "step"
+      },
+      {
+        "id": "n8",
+        "label": "감사 및 정기 정리",
+        "type": "step"
+      },
+      {
+        "id": "n9",
+        "label": "네이밍 컨벤션",
+        "type": "step"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
+      },
+      {
+        "from": "n7",
+        "to": "n8"
+      },
+      {
+        "from": "n8",
+        "to": "n9"
+      }
+    ]
+  },
+  "cloud/02_authenticate_gcp_without_service_accounts": {
+    "hash": "b4df68cb5045b6146d79bb52e779911f",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "ADC 탐색 순서",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "로컬 개발용 사람계정",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "GitLab CI WIF/OIDC",
+        "type": ":step"
+      },
+      {
+        "id": "n4",
+        "label": "SA 경유 방식 A",
+        "type": "decision"
+      },
+      {
+        "id": "n5",
+        "label": "직접 역할 부여 B",
+        "type": "decision"
+      },
+      {
+        "id": "n6",
+        "label": "운영계 IAM 분리",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n1",
+        "to": "n3"
+      },
+      {
+        "from": "n4",
+        "to": "n5",
+        "bidirectional": true
+      },
+      {
+        "from": "n3",
+        "to": "n6"
+      }
+    ]
   }
 }
