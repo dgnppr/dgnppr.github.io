@@ -40,5 +40,6 @@
   "retrospect/05_2025_goodbye_kyobobook_retrospect": "e64d05106f3f1426e3e5d060158af338",
   "retrospect/06_2026_code_is_cheap": "f57137e353bc7395cfef89c09e87e5af",
   "architecture/2026-06-24-001-adr-guide": "2ff2a06b2bde4b9207d13f3c82d1b285",
-  "security/2026-06-24-002-gcp-key-management-status": "c2088b915525456a80f1b05bc147d4df"
+  "security/2026-06-24-002-gcp-key-management-status": "c2088b915525456a80f1b05bc147d4df",
+  "data-engineering/00_how_to_use_dataform_well": "ab6672f89ecbc5fb075a367c2c6efdfd"
 }

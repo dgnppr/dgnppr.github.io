@@ -55,19 +55,21 @@ $dark-color:        #1E1F22;
     --color-badge-blog:          #82b782;
     --color-badge-tag:           #f59e0b;
 
-    // Entity type colors
-    --color-entity-wiki:         #1d4ed8;
+    // Entity type colors  (hue wheel: blue → violet → red → green → orange → cyan)
+    --color-entity-concept:      #2563eb;   // concept (= wiki)
+    --color-entity-concept-bg:   #eff6ff;
+    --color-entity-wiki:         #2563eb;
     --color-entity-wiki-bg:      #eff6ff;
     --color-entity-insight:      #7c3aed;
     --color-entity-insight-bg:   #f5f3ff;
-    --color-entity-problem:      #b91c1c;
+    --color-entity-problem:      #dc2626;
     --color-entity-problem-bg:   #fef2f2;
-    --color-entity-tool:         #166534;
+    --color-entity-tool:         #16a34a;
     --color-entity-tool-bg:      #f0fdf4;
-    --color-entity-event:        #0e7490;
-    --color-entity-event-bg:     #ecfeff;
-    --color-entity-adr:          #374151;
-    --color-entity-adr-bg:       #f9fafb;
+    --color-entity-event:        #ea580c;
+    --color-entity-event-bg:     #fff7ed;
+    --color-entity-adr:          #0891b2;
+    --color-entity-adr-bg:       #ecfeff;
     --color-entity-blog:         #059669;
     --color-entity-blog-bg:      #ecfdf5;
 
@@ -110,19 +112,21 @@ html.dark-mode {
 
     --color-badge-wiki:          #669DFD;
 
-    // Entity type colors (dark mode)
-    --color-entity-wiki:         #93c5fd;
-    --color-entity-wiki-bg:      #1a2a40;
-    --color-entity-insight:      #c4b5fd;
-    --color-entity-insight-bg:   #2d1f4e;
-    --color-entity-problem:      #fca5a5;
-    --color-entity-problem-bg:   #3b1515;
-    --color-entity-tool:         #86efac;
-    --color-entity-tool-bg:      #14311e;
-    --color-entity-event:        #67e8f9;
-    --color-entity-event-bg:     #0c2d33;
-    --color-entity-adr:          #9ca3af;
-    --color-entity-adr-bg:       #2b2d30;
+    // Entity type colors dark mode  (vibrant, hue-spread for 3D graph)
+    --color-entity-concept:      #60a5fa;   // sky blue
+    --color-entity-concept-bg:   #0f1f38;
+    --color-entity-wiki:         #60a5fa;
+    --color-entity-wiki-bg:      #0f1f38;
+    --color-entity-insight:      #a78bfa;   // vivid lavender
+    --color-entity-insight-bg:   #1e1040;
+    --color-entity-problem:      #f87171;   // coral red
+    --color-entity-problem-bg:   #3b1212;
+    --color-entity-tool:         #4ade80;   // bright emerald
+    --color-entity-tool-bg:      #0d2818;
+    --color-entity-event:        #fb923c;   // vivid orange
+    --color-entity-event-bg:     #321608;
+    --color-entity-adr:          #22d3ee;   // bright cyan
+    --color-entity-adr-bg:       #072630;
     --color-entity-blog:         #34d399;
     --color-entity-blog-bg:      #022c22;
 

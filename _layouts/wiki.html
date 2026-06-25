@@ -149,12 +149,28 @@ layout: default
         var nameEl = document.getElementById('thisName');
         if (!nameEl) return;
         var slug = nameEl.value;
-        fetch('/data/related.json')
+        var TYPE_URL_PREFIX = { concept: '/wiki/', insight: '/insight/', problem: '/problem/', tool: '/tool/', event: '/event/', adr: '/adr/' };
+        fetch('/data/ontology-graph.json')
             .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(data) {
-                if (!data || !data[slug] || !data[slug].length) return;
+            .then(function(graph) {
+                if (!graph) return;
+                var focalNode = (graph.nodes || {})[slug] ||
+                    Object.values(graph.nodes || {}).find(function(n) { return n && n.id && n.id.replace(/^[^\/]+\//, '') === slug; });
+                if (!focalNode) return;
+                var focalId = focalNode.id;
+                var related = (graph.edges || [])
+                    .filter(function(e) { return e.from === focalId || e.to === focalId; })
+                    .map(function(e) {
+                        var otherId = e.from === focalId ? e.to : e.from;
+                        var n = (graph.nodes || {})[otherId];
+                        if (!n) return null;
+                        var url = n.url || (TYPE_URL_PREFIX[n.type] || '/wiki/') + n.id.replace(/^[^\/]+\//, '') + '/';
+                        return { url: url, title: n.title || otherId };
+                    })
+                    .filter(Boolean);
+                if (!related.length) return;
                 var html = '<section class="related-posts"><h3 class="related-posts__heading">관련 글</h3><div class="related-posts__list">' +
-                    data[slug].map(function(r) {
+                    related.map(function(r) {
                         return '<a class="related-posts__item" href="' + r.url + '">' + r.title + '</a>';
                     }).join('') + '</div></section>';
                 document.getElementById('related-posts-container').innerHTML = html;

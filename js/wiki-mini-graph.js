@@ -28,28 +28,42 @@
 
     // ── Load data ────────────────────────────────────────────────
     Promise.all([
-        fetch('/data/related.json').then(function (r) { return r.json(); }),
+        fetch('/data/ontology-graph.json').then(function (r) { return r.json(); }),
         fetch('/data/summaries.json').then(function (r) { return r.json(); }).catch(function () { return {}; }),
     ]).then(function (results) {
-        var related   = results[0];
+        var graph     = results[0];
         var summaries = results[1];
 
-        var relatedEntries = related[currentSlug] || [];
-        if (relatedEntries.length === 0) { hideGraph(); return; }
+        // URL 생성 (knowledge-graph-3d.js와 동일 로직)
+        var TYPE_URL_PREFIX = {
+            concept: '/wiki/', insight: '/insight/', problem: '/problem/',
+            tool: '/tool/', event: '/event/', adr: '/adr/'
+        };
+        function buildNodeUrl(n) {
+            if (n.url) return n.url;
+            var prefix = TYPE_URL_PREFIX[n.type] || '/wiki/';
+            return prefix + n.id.replace(/^[^\/]+\//, '') + '/';
+        }
 
-        // slug → score (현재 글 기준)
-        var scoreBySlug = {};
-        relatedEntries.forEach(function (r) {
-            if (r.score !== undefined) scoreBySlug[r.slug] = r.score;
-        });
-        // related 노드끼리의 cross-score
-        relatedEntries.forEach(function (r) {
-            (related[r.slug] || []).forEach(function (rr) {
-                if (rr.score !== undefined) {
-                    var key = [r.slug, rr.slug].sort().join('|||');
-                    if (!scoreBySlug[key]) scoreBySlug[key] = rr.score;
-                }
+        // 현재 슬러그로 온톨로지 노드 탐색 (type prefix 없는 slug 하위 호환)
+        var focalNode = (graph.nodes || {})[currentSlug] ||
+            Object.values(graph.nodes || {}).find(function (n) {
+                return n && n.id && n.id.replace(/^[^\/]+\//, '') === currentSlug;
             });
+        if (!focalNode) { hideGraph(); return; }
+        var focalId = focalNode.id;
+
+        // 현재 노드와 직접 연결된 엣지
+        var directEdges = (graph.edges || []).filter(function (e) {
+            return e.from === focalId || e.to === focalId;
+        });
+        if (directEdges.length === 0) { hideGraph(); return; }
+
+        // 이웃 노드별 가중치 (툴팁용)
+        var scoreByNodeId = {};
+        directEdges.forEach(function (e) {
+            var otherId = e.from === focalId ? e.to : e.from;
+            scoreByNodeId[otherId] = e.weight !== undefined ? e.weight : 0.5;
         });
 
         // ── 현재 페이지 제목 ──────────────────────────────────────
@@ -58,51 +72,47 @@
             if (h1) return h1.textContent.trim();
             return document.title.split(' - ')[0].trim() || currentSlug;
         })();
-        var selfUrl = window.location.pathname;
+        var selfUrl = focalNode.url || window.location.pathname;
 
-        // ── 노드 구성: self + related ─────────────────────────────
+        // ── 노드 구성: self + 직접 이웃 ──────────────────────────
         var nodeMap = {};
         var nodes = [];
 
-        var selfNode = { id: currentSlug, slug: currentSlug, title: selfTitle, url: selfUrl, isCurrent: true, degree: 0 };
-        nodeMap[currentSlug] = selfNode;
+        var selfNode = { id: focalId, slug: focalId, title: selfTitle, url: selfUrl, isCurrent: true, degree: 0 };
+        nodeMap[focalId] = selfNode;
         nodes.push(selfNode);
 
-        relatedEntries.forEach(function (r) {
-            var n = { id: r.slug, slug: r.slug, title: r.title, url: r.url, isCurrent: false, degree: 0 };
-            nodeMap[r.slug] = n;
-            nodes.push(n);
+        directEdges.forEach(function (e) {
+            var otherId = e.from === focalId ? e.to : e.from;
+            if (nodeMap[otherId]) return;
+            var n = (graph.nodes || {})[otherId];
+            if (!n) return;
+            nodeMap[otherId] = { id: otherId, slug: otherId, title: n.title || otherId, url: buildNodeUrl(n), isCurrent: false, degree: 0 };
+            nodes.push(nodeMap[otherId]);
         });
 
         // ── 링크 구성 ─────────────────────────────────────────────
         var seen = new Set(), links = [], adj = {};
 
-        function addLink(aSlug, bSlug, score) {
-            var key = [aSlug, bSlug].sort().join('|||');
+        function addLink(aId, bId, score, relType) {
+            var key = [aId, bId].sort().join('|||');
             if (seen.has(key)) return;
-            if (!nodeMap[aSlug] || !nodeMap[bSlug]) return;
+            if (!nodeMap[aId] || !nodeMap[bId]) return;
             seen.add(key);
-            links.push({ source: aSlug, target: bSlug, score: score });
-            nodeMap[aSlug].degree++;
-            nodeMap[bSlug].degree++;
-            if (!adj[aSlug]) adj[aSlug] = new Set();
-            if (!adj[bSlug]) adj[bSlug] = new Set();
-            adj[aSlug].add(bSlug);
-            adj[bSlug].add(aSlug);
+            links.push({ source: aId, target: bId, score: score, relType: relType });
+            nodeMap[aId].degree++;
+            nodeMap[bId].degree++;
+            if (!adj[aId]) adj[aId] = new Set();
+            if (!adj[bId]) adj[bId] = new Set();
+            adj[aId].add(bId);
+            adj[bId].add(aId);
         }
 
-        // self → related
-        relatedEntries.forEach(function (r) { addLink(currentSlug, r.slug, scoreBySlug[r.slug]); });
-
-        // related 노드 간 교차 연결
-        relatedEntries.forEach(function (r) {
-            var rRelated = related[r.slug] || [];
-            rRelated.forEach(function (rr) {
-                if (nodeMap[rr.slug]) {
-                    var crossKey = [r.slug, rr.slug].sort().join('|||');
-                    addLink(r.slug, rr.slug, scoreBySlug[crossKey]);
-                }
-            });
+        // 가시 노드 집합 내 모든 엣지 (직접 + 이웃 간 교차)
+        (graph.edges || []).forEach(function (e) {
+            if (nodeMap[e.from] && nodeMap[e.to]) {
+                addLink(e.from, e.to, e.weight !== undefined ? e.weight : 0.5, e.type);
+            }
         });
 
         if (nodes.length < 2) { hideGraph(); return; }
@@ -179,7 +189,7 @@
 
         var linkScoreEl = g.selectAll('text.mg-link-score').data(links).join('text')
             .attr('class', 'mg-link-score')
-            .text(function (d) { return d.score !== undefined ? d.score.toFixed(3) : ''; })
+            .text(function (d) { return d.relType || (d.score !== undefined ? d.score.toFixed(2) : ''); })
             .attr('font-size', '8px')
             .attr('font-family', 'system-ui,-apple-system,sans-serif')
             .attr('text-anchor', 'middle')
@@ -368,15 +378,15 @@
             linkScoreEl.attr('opacity', 0);
         }
 
-        function pinNode(d, summaries, scoreBySlug) {
+        function pinNode(d, summaries, scoreByNodeId) {
             pinnedSlug = d.slug;
             activeSlug = d.slug;
             highlightNode(d);
 
             var cleanTitle = d.title.replace(/^[“”„‟]|[“”„‟]$/g, '');
-            var score = !d.isCurrent ? scoreBySlug[d.slug] : undefined;
+            var score = !d.isCurrent ? scoreByNodeId[d.slug] : undefined;
             var scoreHtml = score !== undefined
-                ? '<div class="kg-tip-summary">유사도 <b>' + score.toFixed(3) + '</b></div>'
+                ? '<div class=”kg-tip-summary”>가중치 <b>' + score.toFixed(2) + '</b></div>'
                 : '';
             var sum = (summaries[d.slug] || summaries[d.id] || '').trim();
             var sumHtml = sum
@@ -395,7 +405,7 @@
                 if (pinnedSlug === d.slug) {
                     if (!d.isCurrent) window.location.href = d.url;
                 } else {
-                    pinNode(d, summaries, scoreBySlug);
+                    pinNode(d, summaries, scoreByNodeId);
                 }
             });
 

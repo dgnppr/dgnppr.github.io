@@ -26,8 +26,7 @@ help:
 	@echo "  make diagrams-force      - 모든 다이어그램 강제 재생성"
 	@echo "  make summaries           - AI 요약 생성 (캐시 있으면 스킵)"
 	@echo "  make summaries-force     - 모든 요약 강제 재생성"
-	@echo "  make embeddings          - GitHub Pages용 파일 임베딩 → related.json"
-	@echo "  make embeddings-force    - 파일 임베딩 강제 재계산"
+	@echo "  [deprecated] embeddings / embeddings-force — generate-embeddings.js.deprecated 참조"
 	@echo "  make local-embeddings    - 전체 문서 Qdrant 인덱싱 (wiki/insight/problem/tool/event/adr)"
 	@echo "  make local-embeddings-force - 강제 재인덱싱"
 	@echo "  make ontology            - 온톨로지 그래프 재생성 (data/ontology-graph.json)"
@@ -47,18 +46,23 @@ help:
 	@echo "  make mcp-test    - MCP 서버 동작 확인"
 	@echo ""
 	@echo "/ontology 스킬 명령:"
-	@echo "  doc list [type]            - 문서 목록 (type: wiki|insight|problem|tool|event|adr)"
+	@echo "  doc list [type]            - 문서 목록 (type: concept|insight|problem|tool|event|adr)"
 	@echo "  doc search <query> [type]  - 키워드 검색"
 	@echo "  doc find <query> [type]    - 임베딩 유사도 검색 (Qdrant)"
 	@echo "  doc query <query> [type]   - 임베딩 검색 후 본문 반환"
 	@echo "  doc read <type> <path>     - 특정 문서 읽기"
 	@echo "  doc write <type> <path>    - 문서 작성/수정"
-	@echo "  related <query>            - 관련 ADR + wiki 탐색"
+	@echo "  related <query|id:...>     - hybrid 탐색 (그래프+임베딩, 전체 타입)"
+	@echo "  related id:<id> mode:graph - 순수 온톨로지 워크"
+	@echo "  neighborhood <id> [content]- N-hop 그래프 워크 + 이행 추론 엣지"
 	@echo "  find <query>               - 임베딩 유사도 flat 리스트"
-	@echo "  get <entity-id>            - 노드 메타 + 전체 본문"
+	@echo "  get <entity-id>            - 노드 메타 + 전체 본문 + 관계"
 	@echo "  entities [type|query]      - 엔티티 목록 또는 시맨틱 검색"
-	@echo "  decision <id|query>        - ADR 전체 컨텍스트"
-	@echo "  Entity ID: adr/<dir>/<file> | concept/<dir>/<file>"
+	@echo "  decision <id|query>        - ADR 컨텍스트 (유사 과거 결정 포함)"
+	@echo "  gaps [type]                - 그래프 gap 분석 (고립·미작성·동기없는 ADR)"
+	@echo "  act <id> <action>          - gap → doc_write blueprint 생성"
+	@echo "  Entity ID: concept/<dir>/<file> | insight/<dir>/<file> | adr/<dir>/<file>"
+	@echo "  Actions: extend|implement|challenge|deepen|ground|motivate|resolve|extract|review|supersede"
 
 # ----------------------------------------
 # 의존성 설치
@@ -118,14 +122,7 @@ ontology:
 # ----------------------------------------
 # 임베딩 생성
 # ----------------------------------------
-.PHONY: embeddings embeddings-force local-embeddings local-embeddings-force
-
-# GitHub Pages용: 파일 기반 related.json
-embeddings:
-	@set -a && . ./.env && set +a && node scripts/generate-embeddings.js
-
-embeddings-force:
-	@set -a && . ./.env && set +a && node scripts/generate-embeddings.js --force
+.PHONY: local-embeddings local-embeddings-force
 
 # 로컬 전용: 전체 문서 → Qdrant (wiki + adr 컬렉션)
 local-embeddings:

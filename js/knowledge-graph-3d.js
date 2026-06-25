@@ -14,36 +14,50 @@
        테마 전환 시 캐시 초기화로 자동 반영
     ─────────────────────────────────────────────────────────────── */
     var _colorCache = {};
-    /* wiki 서브카테고리 전용 팔레트 — 충분히 다양한 색조 10종 */
-    var WIKI_PALETTE = [
-        '#1d4ed8', '#4f46e5', '#0f766e', '#0e7490', '#7c3aed',
-        '#be123c', '#b45309', '#166534', '#0369a1', '#9333ea',
-    ];
-    function catColor(cat) {
-        if (_colorCache[cat] !== undefined) return _colorCache[cat];
-        /* entity type CSS 변수 우선 (wiki/insight/problem/tool/event/adr/blog) */
-        var cssVal = getComputedStyle(document.documentElement)
-            .getPropertyValue('--color-entity-' + cat).trim();
-        if (cssVal) { _colorCache[cat] = cssVal; return cssVal; }
-        /* wiki 서브카테고리: 이름 해시 → 팔레트 */
+    function _strHash(s) {
         var h = 0;
-        for (var i = 0; i < cat.length; i++) h = (h * 31 + cat.charCodeAt(i)) | 0;
-        var c = WIKI_PALETTE[Math.abs(h) % WIKI_PALETTE.length];
-        _colorCache[cat] = c;
-        return c;
+        for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
+        return h;
+    }
+    /*  colorKey 형식:
+     *    "type"               → --color-entity-{type} CSS 변수
+     *    "type:subcat"        → type 기준색 + subcat 해시로 hue ±25°, L ±8%
+     *    "type:subcat:file"   → 위에 추가로 file 해시로 hue ±10°, L ±6%
+     */
+    function catColor(colorKey) {
+        if (_colorCache[colorKey] !== undefined) return _colorCache[colorKey];
+        var parts = colorKey.split(':');
+        var baseType = parts[0], subcat = parts[1] || '', filename = parts[2] || '';
+        var baseCss = getComputedStyle(document.documentElement)
+            .getPropertyValue('--color-entity-' + baseType).trim();
+        if (baseCss && subcat) {
+            var base = new THREE.Color(baseCss);
+            var hsl = { h: 0, s: 0, l: 0 };
+            base.getHSL(hsl);
+            /* Level 2: subcat → hue ±25°, lightness ±8% */
+            var sh = _strHash(subcat);
+            hsl.h = (((hsl.h + (((Math.abs(sh) % 11) - 5) * (25 / 360))) % 1) + 1) % 1;
+            hsl.l = Math.max(0.22, Math.min(0.84, hsl.l + ((Math.abs(sh >> 4) % 5) - 2) * 0.04));
+            /* Level 3: filename → hue ±10°, lightness ±6% */
+            if (filename) {
+                var fh = _strHash(filename);
+                hsl.h = (((hsl.h + (((Math.abs(fh) % 5) - 2) * (10 / 360))) % 1) + 1) % 1;
+                hsl.l = Math.max(0.22, Math.min(0.84, hsl.l + ((Math.abs(fh >> 3) % 3) - 1) * 0.06));
+            }
+            var c = '#' + new THREE.Color().setHSL(hsl.h, hsl.s, hsl.l).getHexString();
+            _colorCache[colorKey] = c;
+            return c;
+        }
+        /* type 단독 — CSS 변수 */
+        if (baseCss) { _colorCache[colorKey] = baseCss; return baseCss; }
+        /* fallback: 해시 → 고정 팔레트 */
+        var FALLBACK = ['#3b82f6', '#8b5cf6', '#ef4444', '#22c55e', '#f97316', '#06b6d4'];
+        var fc = FALLBACK[Math.abs(_strHash(colorKey)) % FALLBACK.length];
+        _colorCache[colorKey] = fc;
+        return fc;
     }
     function isDark() { return document.documentElement.classList.contains('dark-mode'); }
-    /* CSS 변수가 이미 테마별 색상을 담고 있으므로 Three.Color 변환만 수행 */
-    function themedColor(cat) {
-        return new THREE.Color(catColor(cat));
-    }
-    function getCategory(url, type) {
-        if (type === 'blog') return 'blog';
-        if (type !== 'wiki') return type || 'default'; // insight/problem/tool/event/adr
-        var m = url.match(/^\/wiki\/([^\/]+)/);
-        return m ? m[1] : 'default';
-    }
-
+    function themedColor(colorKey) { return new THREE.Color(catColor(colorKey)); }
     /* ── CDN 로드 ───────────────────────────────────────────────── */
     function loadScript(src) {
         return new Promise(function (res, rej) {
@@ -93,57 +107,54 @@
         var H = container.clientHeight || 500;
 
         /* ── 데이터 로드 ────────────────────────────────────────── */
-        var _urls = [
-            fetch('/data/search-index.json').then(function (r) { return r.json(); }),
-            fetch('/data/related.json').then(function (r) { return r.json(); }),
-        ];
-        if (opts.extraRelatedUrl) {
-            _urls.push(fetch(opts.extraRelatedUrl).then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }));
+        var TYPE_URL_PREFIX = {
+            concept: '/wiki/', insight: '/insight/', problem: '/problem/',
+            tool: '/tool/', event: '/event/', adr: '/adr/'
+        };
+        function buildNodeUrl(n) {
+            if (n.url) return n.url;
+            var prefix = TYPE_URL_PREFIX[n.type] || '/wiki/';
+            return prefix + n.id.replace(/^[^\/]+\//, '') + '/';
         }
-        Promise.all(_urls).then(function (results) {
-            var searchIndex = results[0];
-            var related     = results[1];
-            if (results[2]) Object.assign(related, results[2]);
-            if (opts.extraRelated) Object.assign(related, opts.extraRelated);
 
+        fetch('/data/ontology-graph.json').then(function (r) { return r.json(); })
+        .then(function (graph) {
             /* ── 노드 빌드 ───────────────────────────────────── */
             var nodeMap = {}, nodes = [];
-            searchIndex.forEach(function (page) {
-                if (page.type === 'tag') return;
-                if (page.type === 'wiki' && /^\/wiki\/[^\/]+\/?$/.test(page.url)) return;
-                var slug = page.url.replace(/^\/(wiki|insight|problem|tool|event|adr|posts|blog)\//, '');
-                var cat  = getCategory(page.url, page.type);
-                var n = {
-                    id: slug, slug: slug, title: page.title,
-                    url: page.url, type: page.type || 'wiki',
-                    cat: cat, tags: page.tags || [],
-                    summary: page.summary || '', degree: 0,
+            Object.values(graph.nodes || {}).forEach(function (n) {
+                if (!n || !n.id) return;
+                var type     = n.type || 'concept';
+                var idParts  = n.id.split('/');
+                var subcat   = idParts[1] || '';
+                var filename = idParts[2] || '';
+                var node = {
+                    id: n.id, slug: n.id, title: n.title || n.id,
+                    url: buildNodeUrl(n), type: type,
+                    cat: type, tags: n.tags || [],
+                    colorKey: subcat ? (type + ':' + subcat + (filename ? ':' + filename : '')) : type,
+                    summary: n.summary || '', degree: 0,
                 };
-                nodes.push(n);
-                nodeMap[slug] = n;
+                nodes.push(node);
+                nodeMap[n.id] = node;
             });
-
-            if (opts.extraNodes) {
-                opts.extraNodes.forEach(function (page) {
-                    var slug = page.slug || (page.url || '').replace(/^\/(wiki|insight|problem|tool|event|adr|posts|blog)\//, '').replace(/\/$/, '');
-                    if (nodeMap[slug]) return;
-                    var n = {
-                        id: slug, slug: slug, title: page.title,
-                        url: page.url, type: 'adr', cat: 'adr',
-                        tags: page.tags || [], summary: '', degree: 0,
-                    };
-                    nodes.push(n);
-                    nodeMap[slug] = n;
-                });
-            }
 
             /* focusSlug 모드: 현재 노드 + 직접 연결된 이웃만 표시 */
             if (focusSlug) {
-                var focalSlugs = new Set([focusSlug]);
-                (related[focusSlug] || []).forEach(function (r) { focalSlugs.add(r.slug); });
-                nodes = nodes.filter(function (n) { return focalSlugs.has(n.slug); });
+                var allEdges = graph.edges || [];
+                /* type-prefix 없는 focusSlug 하위 호환 (e.g. "java/00_virtual_thread") */
+                var focalNode = nodeMap[focusSlug] || Object.values(nodeMap).find(function (n) {
+                    return n.id.replace(/^[^\/]+\//, '') === focusSlug;
+                });
+                var focalId = focalNode ? focalNode.id : focusSlug;
+                focusSlug = focalId;
+                var focalSet = new Set([focalId]);
+                allEdges.forEach(function (e) {
+                    if (e.from === focalId) focalSet.add(e.to);
+                    if (e.to === focalId) focalSet.add(e.from);
+                });
+                nodes = nodes.filter(function (n) { return focalSet.has(n.id); });
                 nodeMap = {};
-                nodes.forEach(function (n) { nodeMap[n.slug] = n; });
+                nodes.forEach(function (n) { nodeMap[n.id] = n; });
                 /* 관련 노드 없으면 위젯 숨김 */
                 if (nodes.length <= 1) {
                     var wrap = container.closest('[id$="-wrap"]') || container.parentElement;
@@ -154,31 +165,28 @@
 
             /* ── 링크 빌드 ──────────────────────────────────── */
             var seen = new Set(), links = [], adj = {};
-            var scoreMap = {};
+            var REL_WEIGHT = {
+                extends: 0.85, implements: 0.80, 'part-of': 0.75,
+                supersedes: 0.70, motivates: 0.70, 'caused-by': 0.65,
+                'learned-from': 0.65, references: 0.60, contradicts: 0.55,
+                involves: 0.50, 'used-in': 0.55, related: 0.45,
+            };
 
-            function addLink(a, b) {
+            function addLink(a, b, relType) {
                 var key = [a, b].sort().join('|||');
                 if (seen.has(key)) return;
                 seen.add(key);
                 var an = nodeMap[a], bn = nodeMap[b];
                 if (!an || !bn) return;
-                links.push({ source: a, target: b });
+                links.push({ source: a, target: b,
+                    score: REL_WEIGHT[relType] || 0.5, relType: relType });
                 an.degree++; bn.degree++;
                 if (!adj[a]) adj[a] = new Set();
                 if (!adj[b]) adj[b] = new Set();
                 adj[a].add(b); adj[b].add(a);
             }
-            Object.keys(related).forEach(function (src) {
-                (related[src] || []).forEach(function (rel) {
-                    addLink(src, rel.slug);
-                    if (rel.score !== undefined) {
-                        var k = [src, rel.slug].sort().join('|||');
-                        if (!scoreMap[k]) scoreMap[k] = rel.score;
-                    }
-                });
-            });
-            links.forEach(function (l) {
-                l.score = scoreMap[[l.source, l.target].sort().join('|||')];
+            (graph.edges || []).forEach(function (e) {
+                addLink(e.from, e.to, e.type);
             });
 
             /* ── 카테고리 클러스터 (2D 방식, 3D 좌표로 변환) ── */
@@ -292,7 +300,7 @@
 
             nodes.forEach(function (n) {
                 var r   = nodeR(n);
-                var col = themedColor(n.cat);
+                var col = themedColor(n.colorKey || n.cat);
 
                 var isFocal = focusSlug && n.slug === focusSlug;
                 var visR = isFocal ? r * 2.2 : r * 1.5;
@@ -378,7 +386,7 @@
                         (dark
                             ? 'color:#e2e8f0;background:rgba(13,17,23,0.88);border:1px solid rgba(51,65,85,0.5);'
                             : 'color:#334155;background:rgba(248,250,252,0.88);border:1px solid rgba(226,232,240,0.7);');
-                    scoreDiv.textContent = l.score.toFixed(3);
+                    scoreDiv.textContent = l.relType || l.score.toFixed(2);
                     labelsEl.appendChild(scoreDiv);
                 }
                 linkObjs.push({ sId: sId, tId: tId, sm: sm, tm: tm,
@@ -891,7 +899,7 @@
 
                 /* 노드 재색상 */
                 meshes.forEach(function (m) {
-                    var col = themedColor(m.userData.node.cat);
+                    var col = themedColor(m.userData.node.colorKey || m.userData.node.cat);
                     m.material.color.set(col);
                     if (m.userData.borderMesh) m.userData.borderMesh.material.color.set(col);
                     if (m.userData.haloMesh)   m.userData.haloMesh.material.color.set(col);

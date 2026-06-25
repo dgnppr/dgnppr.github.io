@@ -44,6 +44,7 @@ for (const [type, cfg] of Object.entries(SCHEMA.entity_types)) {
     const raw  = fs.readFileSync(fp, 'utf8');
     const meta = parseFm(raw);
     if (cfg.layout_filter && meta.layout !== cfg.layout_filter) continue;
+    if (meta.public === false) continue;
     const slug = path.relative(base, fp).replace(/\.md$/, '');
     const id   = `${type}/${slug}`;
     const node = {
