@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : event
 title   : 2024년 3월 3주차 회고 - 새로운 회사로의 첫 출근
 date    : 2024-03-17 00:00:00 +0900
 updated : 2024-03-17 00:00:00 +0900
@@ -11,6 +11,8 @@ parent  : [[/retrospect]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: extends, target: /event/retrospect/01_2024_january_retrospect }
 ---
 
 ## 새로운 시작

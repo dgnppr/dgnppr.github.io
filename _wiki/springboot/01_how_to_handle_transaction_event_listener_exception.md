@@ -12,6 +12,8 @@ parent  : [[/spring-boot]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: extends, target: /wiki/springboot/00_why_rollback_marked_transaction_is_unusable }
 ---
 
 * TOC

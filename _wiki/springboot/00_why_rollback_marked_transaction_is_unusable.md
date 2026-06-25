@@ -12,6 +12,8 @@ parent  : [[/spring-boot]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: references, target: /wiki/jpa/00_jpa_dirty_checking }
 ---
 
 * TOC

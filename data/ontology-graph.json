@@ -70,20 +70,6 @@
       ],
       "date": "2026-06-25"
     },
-    "concept/cloud/03_how_to_use_terraform": {
-      "id": "concept/cloud/03_how_to_use_terraform",
-      "type": "concept",
-      "title": "Terraform 인프라를 코드로 관리하기",
-      "path": "_wiki/cloud/03_how_to_use_terraform.md",
-      "status": "writing",
-      "tags": [
-        "cloud",
-        "terraform",
-        "iac",
-        "gcp"
-      ],
-      "date": "2026-06-25"
-    },
     "concept/data-analysis/00_how_to_design_funnel": {
       "id": "concept/data-analysis/00_how_to_design_funnel",
       "type": "concept",
@@ -212,70 +198,6 @@
       ],
       "date": "2024-11-19"
     },
-    "concept/essay/00_is_lombok_necessary": {
-      "id": "concept/essay/00_is_lombok_necessary",
-      "type": "concept",
-      "title": "롬복 꼭 사용해야 하는가",
-      "path": "_wiki/essay/00_is_lombok_necessary.md",
-      "status": "complete",
-      "tags": [
-        "essay",
-        "java"
-      ],
-      "date": "2023-12-21"
-    },
-    "concept/essay/01_why_redis_single_threaded": {
-      "id": "concept/essay/01_why_redis_single_threaded",
-      "type": "concept",
-      "title": "왜 레디스를 싱글 스레드로 만들었을까",
-      "path": "_wiki/essay/01_why_redis_single_threaded.md",
-      "status": "complete",
-      "tags": [
-        "essay",
-        "redis",
-        "os"
-      ],
-      "date": "2023-12-24"
-    },
-    "concept/essay/02_is_system_time_really_correct": {
-      "id": "concept/essay/02_is_system_time_really_correct",
-      "type": "concept",
-      "title": "System.currentTimeMillis() 정말 정확할까",
-      "path": "_wiki/essay/02_is_system_time_really_correct.md",
-      "status": "complete",
-      "tags": [
-        "essay",
-        "os",
-        "java"
-      ],
-      "date": "2023-12-31"
-    },
-    "concept/essay/03_which_jwt_algorithm_is_suitable": {
-      "id": "concept/essay/03_which_jwt_algorithm_is_suitable",
-      "type": "concept",
-      "title": "JWT 알고리즘 어떤 것을 사용하면 좋을까",
-      "path": "_wiki/essay/03_which_jwt_algorithm_is_suitable.md",
-      "status": "complete",
-      "tags": [
-        "essay",
-        "algorithm",
-        "security"
-      ],
-      "date": "2024-01-06"
-    },
-    "concept/essay/04_how_to_create_text_fixture": {
-      "id": "concept/essay/04_how_to_create_text_fixture",
-      "type": "concept",
-      "title": "테스트 픽스처 어떻게 생성해야 할까",
-      "path": "_wiki/essay/04_how_to_create_text_fixture.md",
-      "status": "complete",
-      "tags": [
-        "essay",
-        "test",
-        "java"
-      ],
-      "date": "2024-01-29"
-    },
     "concept/java/00_what_is_java_virtual_thread": {
       "id": "concept/java/00_what_is_java_virtual_thread",
       "type": "concept",
@@ -348,83 +270,6 @@
       ],
       "date": "2023-12-15"
     },
-    "concept/retrospect/00_2023_year_retrospect": {
-      "id": "concept/retrospect/00_2023_year_retrospect",
-      "type": "concept",
-      "title": "2023년 회고 - 나를 되돌아보며",
-      "path": "_wiki/retrospect/00_2023_year_retrospect.md",
-      "status": "complete",
-      "tags": [
-        "retrospect"
-      ],
-      "date": "2024-01-12"
-    },
-    "concept/retrospect/01_2024_january_retrospect": {
-      "id": "concept/retrospect/01_2024_january_retrospect",
-      "type": "concept",
-      "title": "2024년 1월 회고 - 무엇을 공부했나",
-      "path": "_wiki/retrospect/01_2024_january_retrospect.md",
-      "status": "complete",
-      "tags": [
-        "retrospect"
-      ],
-      "date": "2024-02-04"
-    },
-    "concept/retrospect/02_2024_march_3rd_retrospect": {
-      "id": "concept/retrospect/02_2024_march_3rd_retrospect",
-      "type": "concept",
-      "title": "2024년 3월 3주차 회고 - 새로운 회사로의 첫 출근",
-      "path": "_wiki/retrospect/02_2024_march_3rd_retrospect.md",
-      "status": "complete",
-      "tags": [
-        "retrospect"
-      ],
-      "date": "2024-03-17"
-    },
-    "concept/retrospect/03_2024_march_retrospect": {
-      "id": "concept/retrospect/03_2024_march_retrospect",
-      "type": "concept",
-      "title": "2024년 3월 회고",
-      "path": "_wiki/retrospect/03_2024_march_retrospect.md",
-      "status": "complete",
-      "tags": [
-        "retrospect"
-      ],
-      "date": "2024-03-30"
-    },
-    "concept/retrospect/04_2024_september_retrospect": {
-      "id": "concept/retrospect/04_2024_september_retrospect",
-      "type": "concept",
-      "title": "나는 6개월동안 어떠한 것을 했고, 남은 2024년을 어떻게 보내야할까",
-      "path": "_wiki/retrospect/04_2024_september_retrospect.md",
-      "status": "complete",
-      "tags": [
-        "retrospect"
-      ],
-      "date": "2024-10-13"
-    },
-    "concept/retrospect/05_2025_goodbye_kyobobook_retrospect": {
-      "id": "concept/retrospect/05_2025_goodbye_kyobobook_retrospect",
-      "type": "concept",
-      "title": "Good Bye 교보문고, 새로운 시작",
-      "path": "_wiki/retrospect/05_2025_goodbye_kyobobook_retrospect.md",
-      "status": "complete",
-      "tags": [
-        "retrospect"
-      ],
-      "date": "2025-04-13"
-    },
-    "concept/retrospect/06_2026_code_is_cheap": {
-      "id": "concept/retrospect/06_2026_code_is_cheap",
-      "type": "concept",
-      "title": "코드 작성 비용이 0인 시대에서 나는 어떻게 해야할까",
-      "path": "_wiki/retrospect/06_2026_code_is_cheap.md",
-      "status": "complete",
-      "tags": [
-        "retrospect"
-      ],
-      "date": "2026-06-21"
-    },
     "concept/springboot/00_why_rollback_marked_transaction_is_unusable": {
       "id": "concept/springboot/00_why_rollback_marked_transaction_is_unusable",
       "type": "concept",
@@ -493,7 +338,346 @@
         "system-design"
       ],
       "date": "2024-02-15"
+    },
+    "insight/data-architect/07_ontology_core_examples": {
+      "id": "insight/data-architect/07_ontology_core_examples",
+      "type": "insight",
+      "title": "온톨로지를 살아있게 두는 법 — 베스트 프랙티스와 안티패턴",
+      "path": "_insight/data-architect/07_ontology_core_examples.md",
+      "status": "complete",
+      "tags": [
+        "data-architecture",
+        "data-engineering",
+        "ontology"
+      ],
+      "date": "2026-06-25"
+    },
+    "insight/essay/00_is_lombok_necessary": {
+      "id": "insight/essay/00_is_lombok_necessary",
+      "type": "insight",
+      "title": "롬복 꼭 사용해야 하는가",
+      "path": "_insight/essay/00_is_lombok_necessary.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "java"
+      ],
+      "date": "2023-12-21"
+    },
+    "insight/essay/01_why_redis_single_threaded": {
+      "id": "insight/essay/01_why_redis_single_threaded",
+      "type": "insight",
+      "title": "왜 레디스를 싱글 스레드로 만들었을까",
+      "path": "_insight/essay/01_why_redis_single_threaded.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "redis",
+        "os"
+      ],
+      "date": "2023-12-24"
+    },
+    "insight/essay/02_is_system_time_really_correct": {
+      "id": "insight/essay/02_is_system_time_really_correct",
+      "type": "insight",
+      "title": "System.currentTimeMillis() 정말 정확할까",
+      "path": "_insight/essay/02_is_system_time_really_correct.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "os",
+        "java"
+      ],
+      "date": "2023-12-31"
+    },
+    "insight/essay/03_which_jwt_algorithm_is_suitable": {
+      "id": "insight/essay/03_which_jwt_algorithm_is_suitable",
+      "type": "insight",
+      "title": "JWT 알고리즘 어떤 것을 사용하면 좋을까",
+      "path": "_insight/essay/03_which_jwt_algorithm_is_suitable.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "algorithm",
+        "security"
+      ],
+      "date": "2024-01-06"
+    },
+    "insight/essay/04_how_to_create_text_fixture": {
+      "id": "insight/essay/04_how_to_create_text_fixture",
+      "type": "insight",
+      "title": "테스트 픽스처 어떻게 생성해야 할까",
+      "path": "_insight/essay/04_how_to_create_text_fixture.md",
+      "status": "complete",
+      "tags": [
+        "essay",
+        "test",
+        "java"
+      ],
+      "date": "2024-01-29"
+    },
+    "tool/cloud/03_how_to_use_terraform": {
+      "id": "tool/cloud/03_how_to_use_terraform",
+      "type": "tool",
+      "title": "Terraform 인프라를 코드로 관리하기",
+      "path": "_tool/cloud/03_how_to_use_terraform.md",
+      "status": "writing",
+      "tags": [
+        "cloud",
+        "terraform",
+        "iac",
+        "gcp"
+      ],
+      "date": "2026-06-25"
+    },
+    "event/retrospect/00_2023_year_retrospect": {
+      "id": "event/retrospect/00_2023_year_retrospect",
+      "type": "event",
+      "title": "2023년 회고 - 나를 되돌아보며",
+      "path": "_event/retrospect/00_2023_year_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-01-12"
+    },
+    "event/retrospect/01_2024_january_retrospect": {
+      "id": "event/retrospect/01_2024_january_retrospect",
+      "type": "event",
+      "title": "2024년 1월 회고 - 무엇을 공부했나",
+      "path": "_event/retrospect/01_2024_january_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-02-04"
+    },
+    "event/retrospect/02_2024_march_3rd_retrospect": {
+      "id": "event/retrospect/02_2024_march_3rd_retrospect",
+      "type": "event",
+      "title": "2024년 3월 3주차 회고 - 새로운 회사로의 첫 출근",
+      "path": "_event/retrospect/02_2024_march_3rd_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-03-17"
+    },
+    "event/retrospect/03_2024_march_retrospect": {
+      "id": "event/retrospect/03_2024_march_retrospect",
+      "type": "event",
+      "title": "2024년 3월 회고",
+      "path": "_event/retrospect/03_2024_march_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-03-30"
+    },
+    "event/retrospect/04_2024_september_retrospect": {
+      "id": "event/retrospect/04_2024_september_retrospect",
+      "type": "event",
+      "title": "나는 6개월동안 어떠한 것을 했고, 남은 2024년을 어떻게 보내야할까",
+      "path": "_event/retrospect/04_2024_september_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2024-10-13"
+    },
+    "event/retrospect/05_2025_goodbye_kyobobook_retrospect": {
+      "id": "event/retrospect/05_2025_goodbye_kyobobook_retrospect",
+      "type": "event",
+      "title": "Good Bye 교보문고, 새로운 시작",
+      "path": "_event/retrospect/05_2025_goodbye_kyobobook_retrospect.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2025-04-13"
+    },
+    "event/retrospect/06_2026_code_is_cheap": {
+      "id": "event/retrospect/06_2026_code_is_cheap",
+      "type": "event",
+      "title": "코드 작성 비용이 0인 시대에서 나는 어떻게 해야할까",
+      "path": "_event/retrospect/06_2026_code_is_cheap.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2026-06-21"
     }
   },
-  "edges": []
+  "edges": [
+    {
+      "from": "adr/security/2026-06-24-002-gcp-key-management-status",
+      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "type": "references"
+    },
+    {
+      "from": "adr/security/2026-06-24-002-gcp-key-management-status",
+      "to": "/wiki/cloud/02_authenticate_gcp_without_service_accounts",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/01_vpc_for_pca",
+      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/02_authenticate_gcp_without_service_accounts",
+      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-analysis/00_how_to_design_funnel",
+      "to": "/wiki/data-architect/00_what_is_medaliion_architecture",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-architect/01_how_to_architect_medallion_well",
+      "to": "/wiki/data-architect/00_what_is_medaliion_architecture",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/02_how_to_architect_medallion_well",
+      "to": "/wiki/data-architect/00_what_is_medaliion_architecture",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/02_how_to_architect_medallion_well",
+      "to": "/wiki/data-architect/01_how_to_architect_medallion_well",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/03_medallion_advanced_patterns",
+      "to": "/wiki/data-architect/02_how_to_architect_medallion_well",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/03_medallion_advanced_patterns",
+      "to": "/wiki/data-architect/01_how_to_architect_medallion_well",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/04_what_is_ontology",
+      "to": "/wiki/data-architect/03_medallion_advanced_patterns",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/05_how_to_implement_ontology",
+      "to": "/wiki/data-architect/04_what_is_ontology",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/06_ontology_core_concepts",
+      "to": "/wiki/data-architect/04_what_is_ontology",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/06_ontology_core_concepts",
+      "to": "/wiki/data-architect/05_how_to_implement_ontology",
+      "type": "extends"
+    },
+    {
+      "from": "concept/design-pattern/01_circuit_breaker",
+      "to": "/wiki/design-pattern/00_how_to_use_strategy_pattern",
+      "type": "references"
+    },
+    {
+      "from": "concept/java/00_what_is_java_virtual_thread",
+      "to": "/insight/essay/01_why_redis_single_threaded",
+      "type": "references"
+    },
+    {
+      "from": "concept/springboot/00_why_rollback_marked_transaction_is_unusable",
+      "to": "/wiki/jpa/00_jpa_dirty_checking",
+      "type": "references"
+    },
+    {
+      "from": "concept/springboot/01_how_to_handle_transaction_event_listener_exception",
+      "to": "/wiki/springboot/00_why_rollback_marked_transaction_is_unusable",
+      "type": "extends"
+    },
+    {
+      "from": "insight/data-architect/07_ontology_core_examples",
+      "to": "/wiki/data-architect/06_ontology_core_concepts",
+      "type": "extends"
+    },
+    {
+      "from": "insight/data-architect/07_ontology_core_examples",
+      "to": "/wiki/data-architect/05_how_to_implement_ontology",
+      "type": "learned-from"
+    },
+    {
+      "from": "insight/essay/00_is_lombok_necessary",
+      "to": "/wiki/jpa/00_jpa_dirty_checking",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/01_why_redis_single_threaded",
+      "to": "/wiki/java/00_what_is_java_virtual_thread",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/02_is_system_time_really_correct",
+      "to": "/wiki/java/00_what_is_java_virtual_thread",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/03_which_jwt_algorithm_is_suitable",
+      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/04_how_to_create_text_fixture",
+      "to": "/wiki/jpa/00_jpa_dirty_checking",
+      "type": "references"
+    },
+    {
+      "from": "tool/cloud/03_how_to_use_terraform",
+      "to": "/wiki/cloud/01_vpc_for_pca",
+      "type": "implements"
+    },
+    {
+      "from": "tool/cloud/03_how_to_use_terraform",
+      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "type": "references"
+    },
+    {
+      "from": "event/retrospect/01_2024_january_retrospect",
+      "to": "/event/retrospect/00_2023_year_retrospect",
+      "type": "extends"
+    },
+    {
+      "from": "event/retrospect/02_2024_march_3rd_retrospect",
+      "to": "/event/retrospect/01_2024_january_retrospect",
+      "type": "extends"
+    },
+    {
+      "from": "event/retrospect/03_2024_march_retrospect",
+      "to": "/event/retrospect/02_2024_march_3rd_retrospect",
+      "type": "extends"
+    },
+    {
+      "from": "event/retrospect/04_2024_september_retrospect",
+      "to": "/event/retrospect/03_2024_march_retrospect",
+      "type": "extends"
+    },
+    {
+      "from": "event/retrospect/05_2025_goodbye_kyobobook_retrospect",
+      "to": "/event/retrospect/04_2024_september_retrospect",
+      "type": "extends"
+    },
+    {
+      "from": "event/retrospect/06_2026_code_is_cheap",
+      "to": "/event/retrospect/05_2025_goodbye_kyobobook_retrospect",
+      "type": "extends"
+    },
+    {
+      "from": "event/retrospect/06_2026_code_is_cheap",
+      "to": "/wiki/data-architect/04_what_is_ontology",
+      "type": "learned-from"
+    }
+  ]
 }

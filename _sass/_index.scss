@@ -155,3 +155,149 @@
     padding: 8px;
 }
 
+// ── Entity type badges ──────────────────────────────────────────────────────
+
+@mixin entity-badge($color-var, $bg-var) {
+    color: var(#{$color-var});
+    background: var(#{$bg-var});
+}
+
+.home-feed-type {
+    display: inline-block;
+    font-size: 0.62rem;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    padding: 1px 6px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    white-space: nowrap;
+
+    &--wiki    { @include entity-badge(--color-entity-wiki, --color-entity-wiki-bg); }
+    &--insight { @include entity-badge(--color-entity-insight, --color-entity-insight-bg); }
+    &--problem { @include entity-badge(--color-entity-problem, --color-entity-problem-bg); }
+    &--tool    { @include entity-badge(--color-entity-tool, --color-entity-tool-bg); }
+    &--event   { @include entity-badge(--color-entity-event, --color-entity-event-bg); }
+    &--adr     { @include entity-badge(--color-entity-adr, --color-entity-adr-bg); }
+}
+
+// ── Topics / Hub page ────────────────────────────────────────────────────────
+
+.hub-page {
+    padding: 0 16px;
+
+    @media (min-width: 800px) {
+        padding: 0 4px;
+    }
+}
+
+.hub-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--color-text-heading);
+    margin: 1.2rem 0 0.8rem;
+}
+
+.hub-section {
+    margin-bottom: 2rem;
+}
+
+.hub-section-title {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    border-bottom: 1px solid var(--color-border-subtle);
+    padding-bottom: 0.4rem;
+    margin-bottom: 1rem;
+}
+
+.hub-entity-grid,
+.hub-wiki-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+
+    @media (min-width: 640px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @media (min-width: 1024px) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+.hub-cat {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 8px;
+    padding: 1rem;
+
+    &:hover {
+        border-color: var(--color-border);
+    }
+}
+
+.hub-cat__name {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--color-text-heading);
+    margin: 0 0 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: capitalize;
+}
+
+.hub-cat__count {
+    font-weight: 400;
+    color: var(--color-text-tertiary);
+    font-size: 0.8rem;
+}
+
+.hub-cat__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.hub-doc-link {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    padding: 3px 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:hover {
+        color: var(--color-interactive);
+    }
+}
+
+.hub-doc-summary {
+    display: none;
+}
+
+.hub-type-badge {
+    display: inline-block;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    padding: 1px 5px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+
+    &--wiki    { @include entity-badge(--color-entity-wiki, --color-entity-wiki-bg); }
+    &--insight { @include entity-badge(--color-entity-insight, --color-entity-insight-bg); }
+    &--problem { @include entity-badge(--color-entity-problem, --color-entity-problem-bg); }
+    &--tool    { @include entity-badge(--color-entity-tool, --color-entity-tool-bg); }
+    &--event   { @include entity-badge(--color-entity-event, --color-entity-event-bg); }
+    &--adr     { @include entity-badge(--color-entity-adr, --color-entity-adr-bg); }
+}
+

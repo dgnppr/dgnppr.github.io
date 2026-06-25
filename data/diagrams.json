@@ -69,217 +69,36 @@
     ]
   },
   "design-pattern/01_circuit_breaker": {
-    "hash": "aa401b9d08c2d2828e94cea6c92a190f",
+    "hash": "8e6fbd172a8a627f371b56bc9d018580",
     "nodes": [
       {
         "id": "n1",
-        "label": "공통 토픽 사용",
+        "label": "컨슈머 랙",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "제휴사별 전용 토픽",
-        "type": ":step"
-      },
-      {
-        "id": "n3",
-        "label": "운영/관리 부담",
+        "label": "제휴사 API 타임아웃",
         "type": "step"
       },
       {
-        "id": "n4",
+        "id": "n3",
         "label": "Convoy Effect",
         "type": "step"
       },
       {
-        "id": "n5",
-        "label": "Circuit Breaker",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "장애 격리 성공",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2",
-        "bidirectional": true,
-        "label": "운영 편의성"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      }
-    ]
-  },
-  "essay/00_is_lombok_necessary": {
-    "hash": "f7012a14ea122fd2f54ae8391aa110b7",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "롬복 도입",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "편의성 vs 위험",
-        "type": ":bidirectional"
-      },
-      {
-        "id": "n3",
-        "label": "어노테이션 기반 생성",
-        "type": "step"
-      },
-      {
         "id": "n4",
-        "label": "컴파일 시점 코드 생성",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "보일러플레이트 제거",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      }
-    ]
-  },
-  "essay/01_why_redis_single_threaded": {
-    "hash": "ba249c15db98ee02adc0b02620d5a9fd",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "싱글스레드 설계",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "동기화 비용 제거",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "컨텍스트 스위치 감소",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "메모리/네트워크 병목",
-        "type": ": step"
-      },
-      {
-        "id": "n5",
-        "label": "I/O 서브스레드 활용",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "UNLINK 지연 삭제",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "성능 ↔ 복잡도",
-        "type": "decision"
-      },
-      {
-        "id": "n8",
-        "label": "멀티스레드 확장안",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n1",
-        "to": "n3"
-      },
-      {
-        "from": "n1",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n2",
-        "to": "n7",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n7",
-        "bidirectional": true
-      },
-      {
-        "from": "n7",
-        "to": "n8"
-      }
-    ]
-  },
-  "essay/02_is_system_time_really_correct": {
-    "hash": "b919bab777fecf1550e9ac598ccd9be8",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "currentTimeMillis",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "CLOCK_REALTIME",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "NTP/adjtime",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "하드웨어 오차",
+        "label": "공통 토픽 운영",
         "type": "decision"
       },
       {
         "id": "n5",
-        "label": "Instant.now()",
-        "type": "end"
+        "label": "컨슈머 수 확장",
+        "type": "step"
       },
       {
         "id": "n6",
-        "label": "AWS Time Sync",
+        "label": "서킷 브레이커 도입",
         "type": "end"
       }
     ],
@@ -294,118 +113,8 @@
         "bidirectional": true
       },
       {
-        "from": "n2",
+        "from": "n3",
         "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5",
-        "label": "성능/단순"
-      }
-    ]
-  },
-  "essay/03_which_jwt_algorithm_is_suitable": {
-    "hash": "8d1f3c89eea578076af6116c7b41fa9f",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "JWT 알고리즘 선택",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "HS (대칭키)",
-        "type": ":step"
-      },
-      {
-        "id": "n3",
-        "label": "RS (비대칭키)",
-        "type": ":step"
-      },
-      {
-        "id": "n4",
-        "label": "보안 vs 속도",
-        "type": ":decision"
-      },
-      {
-        "id": "n5",
-        "label": "256bit 권장",
-        "type": ":end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n1",
-        "to": "n3"
-      },
-      {
-        "from": "n2",
-        "to": "n3",
-        "bidirectional": true,
-        "label": "속도 vs 보안"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      }
-    ]
-  },
-  "essay/04_how_to_create_text_fixture": {
-    "hash": "213a2b11c3f5a595c880cc3649485c8b",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "테스트 픽스쳐 생성",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "메서드 내 정의",
-        "type": ":step"
-      },
-      {
-        "id": "n3",
-        "label": "의도 명확성",
-        "type": "end"
-      },
-      {
-        "id": "n4",
-        "label": "중복 및 복잡",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "팩토리/빌더",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "Enum Fixture",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "Fixture Monkey",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n2",
-        "to": "n4",
-        "bidirectional": true
       },
       {
         "from": "n4",
@@ -414,15 +123,11 @@
       {
         "from": "n5",
         "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
       }
     ]
   },
   "java/00_what_is_java_virtual_thread": {
-    "hash": "08786ca013f38d4e0f1c0e3e95eac2c9",
+    "hash": "73fbfb8a5fd4d4334b796a44f46d281b",
     "nodes": [
       {
         "id": "n1",
@@ -437,26 +142,21 @@
       {
         "id": "n3",
         "label": "가상 스레드 도입",
-        "type": ":step"
+        "type": "decision"
       },
       {
         "id": "n4",
-        "label": "carrier-thread 기반",
+        "label": "스케줄링 기반 운용",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "I/O vs CPU 성능",
-        "type": "decision"
-      },
-      {
-        "id": "n6",
-        "label": "I/O 바운드 최적",
+        "label": "I/O 바운드 성능 향상",
         "type": "end"
       },
       {
-        "id": "n7",
-        "label": "CPU 바운드 한계",
+        "id": "n6",
+        "label": "CPU 바운드 오버헤드",
         "type": "end"
       }
     ],
@@ -478,14 +178,8 @@
         "to": "n5"
       },
       {
-        "from": "n5",
-        "to": "n6",
-        "label": "I/O 바운드"
-      },
-      {
-        "from": "n5",
-        "to": "n7",
-        "label": "CPU 바운드"
+        "from": "n4",
+        "to": "n6"
       }
     ]
   },
@@ -722,473 +416,8 @@
     ]
   },
   "reference": "\"\"",
-  "retrospect/00_2023_year_retrospect": {
-    "hash": "8f2fe98284309c9d830e9b1dbb69a2db",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "2023 회고",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "기술 면접 복기",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "부족함 자각",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "CS 기초 강화",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "엔지니어링 덕목",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "자양분 시간",
-        "type": "end"
-      },
-      {
-        "id": "n7",
-        "label": "논리적 집착",
-        "type": "step"
-      },
-      {
-        "id": "n8",
-        "label": "성장형 행복",
-        "type": ": end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n1",
-        "to": "n7"
-      },
-      {
-        "from": "n7",
-        "to": "n8"
-      }
-    ]
-  },
-  "retrospect/01_2024_january_retrospect": {
-    "hash": "581e3c40f1a4d0b89e38140b34ecccf8",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "1월 회고",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "시스템 디자인",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "코드 고민",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "스터디 참여",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "2월 목표",
-        "type": ":end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n1",
-        "to": "n3"
-      },
-      {
-        "from": "n1",
-        "to": "n4"
-      },
-      {
-        "from": "n2",
-        "to": "n5"
-      },
-      {
-        "from": "n3",
-        "to": "n5"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      }
-    ]
-  },
-  "retrospect/02_2024_march_3rd_retrospect": {
-    "hash": "652ef2a794254e72d649e59618f6d263",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "신규 입사 및 온보딩",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "제휴 주문 도메인",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "마이그레이션 아키텍처",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "상품 연동 및 관리",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "협업 커뮤니케이션",
-        "type": "decision"
-      },
-      {
-        "id": "n6",
-        "label": "비즈니스 도메인 분석",
-        "type": ": step"
-      },
-      {
-        "id": "n7",
-        "label": "프로그래밍 vs 업무",
-        "type": "step"
-      },
-      {
-        "id": "n8",
-        "label": "협업과 동료 존중",
-        "type": "step"
-      },
-      {
-        "id": "n9",
-        "label": "대체 불가능한 인력",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n7",
-        "to": "n8",
-        "bidirectional": true
-      },
-      {
-        "from": "n8",
-        "to": "n9"
-      }
-    ]
-  },
-  "retrospect/03_2024_march_retrospect": {
-    "hash": "52ce10f5a2f6848ea120f2b8b089468b",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "제휴주문 도메인",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "통신 프로토콜 핵심",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "데이터 정합성 확보",
-        "type": ":end"
-      },
-      {
-        "id": "n4",
-        "label": "비즈니스 이해도",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "협업 커뮤니케이션",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "기술 스택 분석",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "EDA 구조 개선",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n4",
-        "to": "n5",
-        "bidirectional": true
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
-      }
-    ]
-  },
-  "retrospect/04_2024_september_retrospect": {
-    "hash": "3eca2c9674ce6de5d50be4e85e436154",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "신입 6개월 회고",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "기술적 개선 성과",
-        "type": ":step"
-      },
-      {
-        "id": "n3",
-        "label": "헥사고날 아키텍처",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "Circuit Breaker",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "비즈니스 로직 개선",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "성장 마인드셋",
-        "type": "decision"
-      },
-      {
-        "id": "n7",
-        "label": "자기계발 & 기록",
-        "type": "step"
-      },
-      {
-        "id": "n8",
-        "label": "2024 목표 달성",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n2",
-        "to": "n4"
-      },
-      {
-        "from": "n3",
-        "to": "n5"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
-      },
-      {
-        "from": "n7",
-        "to": "n8"
-      }
-    ]
-  },
-  "retrospect/05_2025_goodbye_kyobobook_retrospect": {
-    "hash": "7c9c1e03d90cb12d4d09f678f80475c7",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "교보문고 여정 종료",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "동료와의 유대",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "새로운 환경/포지션",
-        "type": ": step"
-      },
-      {
-        "id": "n4",
-        "label": "적응에 대한 두려움",
-        "type": "decision"
-      },
-      {
-        "id": "n5",
-        "label": "자신감과 믿음",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "최선을 다하는 태도",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n1",
-        "to": "n3"
-      },
-      {
-        "from": "n2",
-        "to": "n3",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      }
-    ]
-  },
-  "retrospect/06_2026_code_is_cheap": {
-    "hash": "ef70be80411f33785d3305acc13f8607",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "코드 작성 비용 0",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "LLM 위임과 생산성",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "고뇌와 성장 정체",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "문제 해결 능력",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "의식적 기록과 설계",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      }
-    ]
-  },
   "springboot/00_why_rollback_marked_transaction_is_unusable": {
-    "hash": "17d74278571e3243210c58568865730c",
+    "hash": "0cd82a01fb87ceef6fd8865c36c83851",
     "nodes": [
       {
         "id": "n1",
@@ -1197,28 +426,28 @@
       },
       {
         "id": "n2",
-        "label": "Rollback-only 마킹",
-        "type": ":step"
+        "label": "프록시를 통한 호출",
+        "type": "step"
       },
       {
         "id": "n3",
+        "label": "롤백 마킹 (setRollbackOnly)",
+        "type": ": step"
+      },
+      {
+        "id": "n4",
         "label": "UnexpectedRollbackException",
         "type": "end"
       },
       {
-        "id": "n4",
-        "label": "트랜잭션 원자성",
+        "id": "n5",
+        "label": "트랜잭션 원자성 보장",
         "type": "step"
       },
       {
-        "id": "n5",
-        "label": "우회 방법 선택",
-        "type": "decision"
-      },
-      {
         "id": "n6",
-        "label": "독립 트랜잭션/예외처리",
-        "type": "end"
+        "label": "우회 방안 (전파/예외처리)",
+        "type": "decision"
       }
     ],
     "edges": [
@@ -1231,13 +460,13 @@
         "to": "n3"
       },
       {
-        "from": "n4",
-        "to": "n2",
-        "bidirectional": true
+        "from": "n3",
+        "to": "n4"
       },
       {
         "from": "n3",
-        "to": "n5"
+        "to": "n5",
+        "bidirectional": true
       },
       {
         "from": "n5",
@@ -1246,11 +475,11 @@
     ]
   },
   "springboot/01_how_to_handle_transaction_event_listener_exception": {
-    "hash": "18c71cf4e14a646f992b703334fe0153",
+    "hash": "5d41435cf889794c37463f8c52391e7e",
     "nodes": [
       {
         "id": "n1",
-        "label": "@TransactionalEventListener",
+        "label": "TransactionalEventListener",
         "type": "root"
       },
       {
@@ -1260,8 +489,8 @@
       },
       {
         "id": "n3",
-        "label": "beforeCommit 예외 흡수",
-        "type": ": step"
+        "label": "beforeCommit 예외 묵음",
+        "type": ":step"
       },
       {
         "id": "n4",
@@ -1270,17 +499,17 @@
       },
       {
         "id": "n5",
-        "label": "@Async 비동기 분리",
+        "label": "CustomSynchronization 구현",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "커스텀 AsyncExceptionHandler",
+        "label": "@Async + AsyncExceptionHandler",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "예외 제어 성공",
+        "label": "비동기 예외 격리",
         "type": "end"
       }
     ],
@@ -1300,11 +529,16 @@
       {
         "from": "n4",
         "to": "n5",
-        "label": "예외 전파 필요"
+        "label": "직접 전파"
+      },
+      {
+        "from": "n4",
+        "to": "n6",
+        "label": "비동기 분리"
       },
       {
         "from": "n5",
-        "to": "n6"
+        "to": "n7"
       },
       {
         "from": "n6",
@@ -1700,7 +934,7 @@
     ]
   },
   "data-architect/01_how_to_architect_medallion_well": {
-    "hash": "0c802e08d412a6adca245c754bfbf58a",
+    "hash": "f545700e53ecf443572ec4adfbff491a",
     "nodes": [
       {
         "id": "n1",
@@ -1719,7 +953,7 @@
       },
       {
         "id": "n4",
-        "label": "DQ 모니터링 공백",
+        "label": "DQ 모니터링 부재",
         "type": "step"
       },
       {
@@ -1729,12 +963,17 @@
       },
       {
         "id": "n6",
-        "label": "Silver 번역 레이어",
+        "label": "Bronze (Raw)",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "Gold 소비자 보호",
+        "label": "Silver (번역/DQ)",
+        "type": "step"
+      },
+      {
+        "id": "n8",
+        "label": "Gold (비즈니스)",
         "type": "end"
       }
     ],
@@ -1769,57 +1008,42 @@
       },
       {
         "from": "n6",
-        "to": "n7"
+        "to": "n7",
+        "bidirectional": true
+      },
+      {
+        "from": "n7",
+        "to": "n8"
       }
     ]
   },
   "data-architect/02_how_to_architect_medallion_well": {
-    "hash": "8e47b1e524ece40270ad6fc7ffb7a6a4",
+    "hash": "979c764e14d749d90ed23a0f399a0f69",
     "nodes": [
       {
         "id": "n1",
-        "label": "메달리언 레이어 설계",
+        "label": "메달리언 레이어",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "Bronze: 복원성 기준",
+        "label": "Bronze (원시)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Silver vs Gold 4규칙",
-        "type": ":decision"
+        "label": "Silver (정합)",
+        "type": "step"
       },
       {
         "id": "n4",
-        "label": "이상태/사실 구분",
+        "label": "Gold (집계)",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "재사용성/변동성",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "데이터 흐름 원칙",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "멱등성과 MERGE",
-        "type": "step"
-      },
-      {
-        "id": "n8",
-        "label": "증분 vs 전체 재처리",
-        "type": "decision"
-      },
-      {
-        "id": "n9",
-        "label": "실전 패턴/안티패턴",
-        "type": "step"
+        "label": "멱등성 MERGE",
+        "type": ":end"
       }
     ],
     "edges": [
@@ -1833,18 +1057,24 @@
       },
       {
         "from": "n3",
-        "to": "n4",
-        "label": "무엇인가(사실)"
+        "to": "n4"
+      },
+      {
+        "from": "n2",
+        "to": "n3",
+        "bidirectional": true,
+        "label": "사실 vs 지표"
       },
       {
         "from": "n3",
-        "to": "n5",
-        "label": "얼마인가/변동"
+        "to": "n4",
+        "bidirectional": true,
+        "label": "엔티티 vs 마트"
       }
     ]
   },
   "data-architect/04_what_is_ontology": {
-    "hash": "aac53707b399de73a07cf2693d4a1e45",
+    "hash": "8cfc0ddd3b134f96ca8dc10583d96e9b",
     "nodes": [
       {
         "id": "n1",
@@ -1853,26 +1083,21 @@
       },
       {
         "id": "n2",
-        "label": "전통적 BI 한계",
-        "type": "step"
-      },
-      {
-        "id": "n3",
         "label": "시맨틱 레이어",
         "type": "step"
       },
       {
+        "id": "n3",
+        "label": "온톨로지",
+        "type": "step"
+      },
+      {
         "id": "n4",
-        "label": "온톨로지 (ER)",
-        "type": "decision"
+        "label": "동일성 해소",
+        "type": ":step"
       },
       {
         "id": "n5",
-        "label": "동일성 해소",
-        "type": ": step"
-      },
-      {
-        "id": "n6",
         "label": "의미의 SCD2",
         "type": "end"
       }
@@ -1880,54 +1105,65 @@
     "edges": [
       {
         "from": "n1",
-        "to": "n2"
+        "to": "n2",
+        "bidirectional": true,
+        "label": "지표 계약"
+      },
+      {
+        "from": "n1",
+        "to": "n3",
+        "bidirectional": true,
+        "label": "지식 표현"
       },
       {
         "from": "n2",
-        "to": "n3"
+        "to": "n3",
+        "bidirectional": true
       },
       {
         "from": "n3",
-        "to": "n4",
-        "bidirectional": true,
-        "label": "계층 차이"
+        "to": "n4"
       },
       {
         "from": "n4",
         "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
       }
     ]
   },
   "data-architect/05_how_to_implement_ontology": {
-    "hash": "5d9bd3b927b5ef3f550a7781b40564d6",
+    "hash": "c2c5fdcf9d8560fcf3f503a5a9110160",
     "nodes": [
       {
         "id": "n1",
-        "label": "인시던트: 잘못된 쿠폰"
+        "label": "인시던트: 중복 쿠폰"
       },
       {
         "id": "n2",
-        "label": "4가지 부재 (Identity/Link/Action Guard/Definition)"
+        "label": "4가지 부재 (Identity, Link, Action Guard, Definition)"
       },
       {
         "id": "n3",
-        "label": "온톨로지 vs 시맨틱 레이어"
+        "label": "semantic layer vs ontology"
       },
       {
         "id": "n4",
-        "label": "온톨로지 설계 (Entity+Id, Link, Definition, Action)"
+        "label": "ontology 설계 4단계"
       },
       {
         "id": "n5",
-        "label": "Dynamic Layer: 결정 → 데이터 피드백"
+        "label": "link: 관계의 추상화"
       },
       {
         "id": "n6",
-        "label": "에이전트 월드모델"
+        "label": "action: 정책 기반 게이트"
+      },
+      {
+        "id": "n7",
+        "label": "dynamic layer (feedback loop)"
+      },
+      {
+        "id": "n8",
+        "label": "agent world model"
       }
     ],
     "edges": [
@@ -1948,17 +1184,30 @@
         "to": "n5"
       },
       {
-        "from": "n5",
+        "from": "n4",
         "to": "n6"
+      },
+      {
+        "from": "n5",
+        "to": "n6",
+        "bidirectional": true
+      },
+      {
+        "from": "n6",
+        "to": "n7"
+      },
+      {
+        "from": "n7",
+        "to": "n8"
       }
     ]
   },
   "data-architect/06_ontology_core_concepts": {
-    "hash": "d179f272dbbb82776a6692c56a106292",
+    "hash": "a0005b51c4848934d17ebe0ed6991b3e",
     "nodes": [
       {
         "id": "n1",
-        "label": "두 세계의 개념",
+        "label": "Wikidata 모델링",
         "type": "root"
       },
       {
@@ -1973,17 +1222,17 @@
       },
       {
         "id": "n4",
-        "label": "P131(instance) vs P279(subclass)",
+        "label": "P13 vs P279",
         "type": ":decision"
       },
       {
         "id": "n5",
-        "label": "추론과 transitive closure",
+        "label": "추론(Inference)",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "SPARQL 추론 결과",
+        "label": "SPARQL 전개",
         "type": "end"
       }
     ],
@@ -2095,7 +1344,7 @@
     ]
   },
   "cloud/02_authenticate_gcp_without_service_accounts": {
-    "hash": "b4df68cb5045b6146d79bb52e779911f",
+    "hash": "ba28a140bcb8c8a8c17a5cfb1d38672e",
     "nodes": [
       {
         "id": "n1",
@@ -2104,12 +1353,12 @@
       },
       {
         "id": "n2",
-        "label": "로컬 개발용 사람계정",
+        "label": "로컬 개발 계정",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "GitLab CI WIF/OIDC",
+        "label": "GitLab WIF/OIDC",
         "type": ":step"
       },
       {
@@ -2124,8 +1373,8 @@
       },
       {
         "id": "n6",
-        "label": "운영계 IAM 분리",
-        "type": "end"
+        "label": "운영계 IAM 조건",
+        "type": "step"
       }
     ],
     "edges": [
@@ -2140,55 +1389,51 @@
       {
         "from": "n4",
         "to": "n5",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n6"
+        "bidirectional": true,
+        "label": "권한 분리 vs 관리"
       }
     ]
   },
   "data-architect/03_medallion_advanced_patterns": {
-    "hash": "11ef7d10eeb915e11354f167396024a8",
+    "hash": "155c64d0a4116fddf4cb5ed16b9e77a8",
     "nodes": [
       {
         "id": "n1",
-        "label": "메달리언 SQL 패턴",
+        "label": "메달리언 레이어 룰",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "WAP (검증 전 교체)",
+        "label": "실전 패턴 (구현)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "SCD Type 2 (이력 관리)",
-        "type": "step"
+        "label": "안티패턴 (증상)"
       },
       {
         "id": "n4",
-        "label": "Late-Arriving Data 처리",
-        "type": "step"
+        "label": "WAP vs 오염",
+        "type": "decision"
       },
       {
         "id": "n5",
+        "label": "SCD2 vs 삭제",
+        "type": "decision"
+      },
+      {
+        "id": "n6",
+        "label": "Late-Arriving 갱신",
+        "type": "step"
+      },
+      {
+        "id": "n7",
         "label": "Identity Resolution",
         "type": "step"
       },
       {
-        "id": "n6",
-        "label": "Gold 2-Tier 구조",
-        "type": ": step"
-      },
-      {
-        "id": "n7",
-        "label": "로직 표류 (안티패턴)",
-        "type": "decision"
-      },
-      {
         "id": "n8",
-        "label": "중복 정의 및 누락",
+        "label": "Gold 2-Tier 분리",
         "type": "end"
       }
     ],
@@ -2198,30 +1443,40 @@
         "to": "n2"
       },
       {
-        "from": "n2",
+        "from": "n1",
         "to": "n3"
       },
       {
-        "from": "n3",
+        "from": "n2",
         "to": "n4"
       },
       {
-        "from": "n4",
+        "from": "n2",
         "to": "n5"
       },
       {
-        "from": "n5",
+        "from": "n2",
         "to": "n6"
       },
       {
-        "from": "n6",
-        "to": "n7",
-        "bidirectional": true,
-        "label": "구조적 결함"
+        "from": "n2",
+        "to": "n7"
       },
       {
-        "from": "n7",
+        "from": "n3",
         "to": "n8"
+      },
+      {
+        "from": "n4",
+        "to": "n8",
+        "bidirectional": true,
+        "label": "안티패턴 대비"
+      },
+      {
+        "from": "n5",
+        "to": "n8",
+        "bidirectional": true,
+        "label": "안티패턴 대비"
       }
     ]
   }

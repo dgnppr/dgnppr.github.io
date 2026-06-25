@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : event
 title   : 2024년 1월 회고 - 무엇을 공부했나
 date    : 2024-02-04 00:00:00 +0900
 updated : 2024-02-04 00:00:00 +0900
@@ -11,6 +11,8 @@ parent  : [[/retrospect]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: extends, target: /event/retrospect/00_2023_year_retrospect }
 ---
 
 * TOC

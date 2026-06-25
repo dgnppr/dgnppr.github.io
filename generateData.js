@@ -2,6 +2,8 @@
 'use strict';
 const fs = require('fs');
 
+const ENTITY_TYPES = new Set(['insight', 'problem', 'tool', 'event', 'adr']);
+
 main();
 
 function cleanDir(dir) {
@@ -21,6 +23,11 @@ function main() {
 
     getFiles('./_wiki', 'wiki', list);
     getFiles('./_posts', 'blog', list);
+    getFiles('./_insight', 'insight', list);
+    getFiles('./_problem', 'problem', list);
+    getFiles('./_tool', 'tool', list);
+    getFiles('./_event', 'event', list);
+    getFiles('./_adr', 'adr', list);
 
     const dataList = list.map(file => collectData(file))
         .filter(row => row != null)
@@ -84,6 +91,7 @@ function saveTagFiles(tagMap, pageMap) {
         seen[tag.toLowerCase()] = true;
         const collection = tagMap[tag].map(({ fileName }) => {
             const data = pageMap[fileName];
+            // wiki uses fileName as key for legacy metadata path; all others use URL
             return data.type === 'wiki' ? fileName : data.url;
         });
         fs.writeFileSync(`./data/tags/${tag}.json`, JSON.stringify(collection, null, 1));
@@ -151,20 +159,28 @@ function saveSeries(pageMap) {
 
 function saveHubData(pageMap) {
     const categories = {};
-    Object.values(pageMap).forEach(page => {
-        if (page.type !== 'wiki') return;
-        const match = page.url.match(/^\/wiki\/([^/]+)\/[^/]+$/);
-        if (!match) return;
-        const cat = match[1];
-        if (!categories[cat]) categories[cat] = { name: cat, docs: [] };
-        categories[cat].docs.push({
+
+    const addDoc = (key, page, type) => {
+        if (!categories[key]) categories[key] = { name: key, type, docs: [] };
+        categories[key].docs.push({
             title: page.title,
             url: page.url,
             summary: page.summary || '',
             updated: page.updated || '',
             tags: page.tags || [],
         });
+    };
+
+    Object.values(pageMap).forEach(page => {
+        if (page.type === 'wiki') {
+            const match = page.url.match(/^\/wiki\/([^/]+)\/[^/]+$/);
+            if (!match) return;
+            addDoc(match[1], page, 'wiki');
+        } else if (ENTITY_TYPES.has(page.type)) {
+            addDoc(page.type, page, page.type);
+        }
     });
+
     Object.values(categories).forEach(c => c.docs.sort((a, b) => b.updated.localeCompare(a.updated)));
     fs.writeFileSync('./data/hub.json', JSON.stringify(categories));
     console.log('The file "./data/hub.json" has been saved.');
@@ -173,8 +189,10 @@ function saveHubData(pageMap) {
 function parseInfo(file, info) {
     if (info === null) return undefined;
 
+    const collectionDir = { wiki: '_wiki', blog: '_posts', insight: '_insight', problem: '_problem', tool: '_tool', event: '_event', adr: '_adr' };
+    const base = collectionDir[file.type] || '_wiki';
     const obj = {
-        fileName: file.path.replace(/^\.\/_wiki\/(.+)?\.md$/, '$1'),
+        fileName: file.path.replace(new RegExp(`^\\.\/${base}\\/(.+)?\\.md$`), '$1'),
         type: file.type,
         url: '',
         modified: fs.statSync(file.path).mtime,
@@ -193,6 +211,9 @@ function parseInfo(file, info) {
         obj.url += obj.fileName.replace(/^.*[/]\d{4}-\d{2}-\d{2}-([^/]*)\.md$/, '$1');
     } else if (file.type === 'wiki') {
         obj.url = file.path.replace(/^\.\/_wiki/, '/wiki').replace(/\.md$/, '');
+    } else {
+        // insight, problem, tool, event, adr — /:collection/:path
+        obj.url = file.path.replace(/^\.\/_[^/]+/, `/${file.type}`).replace(/\.md$/, '');
     }
 
     if (obj.tag) obj.tag = obj.tag.split(/\s+/);
@@ -200,6 +221,7 @@ function parseInfo(file, info) {
 }
 
 function getFiles(dir, type, array) {
+    if (!fs.existsSync(dir)) return;
     fs.readdirSync(dir).forEach(fileName => {
         const subPath = `${dir}/${fileName}`;
         if (fs.lstatSync(subPath).isDirectory()) {

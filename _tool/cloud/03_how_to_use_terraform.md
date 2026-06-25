@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : tool
 title   : Terraform 인프라를 코드로 관리하기
 date    : 2026-06-25 00:00:00 +0900
 updated : 2026-06-25 00:00:00 +0900
@@ -10,6 +10,9 @@ latex   : true
 status  : writing
 public  : true
 parent  : [[/cloud]]
+relations:
+  - { type: implements, target: /wiki/cloud/01_vpc_for_pca }
+  - { type: references, target: /wiki/cloud/01_how_to_operate_iam_well }
 ---
 
 ## Terraform이란

@@ -11,6 +11,9 @@ status  : complete
 public  : true
 show-diagram: true
 parent  : [[/data-architect]]
+relations:
+  - { type: extends, target: /wiki/data-architect/04_what_is_ontology }
+  - { type: extends, target: /wiki/data-architect/05_how_to_implement_ontology }
 ---
 
 > [[/data-architect/05_how_to_implement_ontology]] 에서 "Customer는 *엔티티*다", "구매를 *관계*로 표현한다", "쿠폰 발송은 *행위*다"라고 썼다. 그 단어들을 엄밀히 구분하지 않은 채로. 1편이 알람 하나로 온톨로지를 훑었다면, 이 글은 그 안에서 매번 미끄러졌던 개념들의 경계를 못 박는다.

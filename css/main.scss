@@ -55,6 +55,20 @@ $dark-color:        #1E1F22;
     --color-badge-blog:          #82b782;
     --color-badge-tag:           #f59e0b;
 
+    // Entity type colors
+    --color-entity-wiki:         #1d4ed8;
+    --color-entity-wiki-bg:      #eff6ff;
+    --color-entity-insight:      #7c3aed;
+    --color-entity-insight-bg:   #f5f3ff;
+    --color-entity-problem:      #b91c1c;
+    --color-entity-problem-bg:   #fef2f2;
+    --color-entity-tool:         #166534;
+    --color-entity-tool-bg:      #f0fdf4;
+    --color-entity-event:        #0e7490;
+    --color-entity-event-bg:     #ecfeff;
+    --color-entity-adr:          #374151;
+    --color-entity-adr-bg:       #f9fafb;
+
     --shadow-card:               0 24px 64px rgba(0, 0, 0, 0.22);
     --color-overlay:             rgba(0, 0, 0, 0.45);
 }
@@ -93,6 +107,20 @@ html.dark-mode {
     --color-toc-active:          #669DFD;
 
     --color-badge-wiki:          #669DFD;
+
+    // Entity type colors (dark mode)
+    --color-entity-wiki:         #93c5fd;
+    --color-entity-wiki-bg:      #1a2a40;
+    --color-entity-insight:      #c4b5fd;
+    --color-entity-insight-bg:   #2d1f4e;
+    --color-entity-problem:      #fca5a5;
+    --color-entity-problem-bg:   #3b1515;
+    --color-entity-tool:         #86efac;
+    --color-entity-tool-bg:      #14311e;
+    --color-entity-event:        #67e8f9;
+    --color-entity-event-bg:     #0c2d33;
+    --color-entity-adr:          #9ca3af;
+    --color-entity-adr-bg:       #2b2d30;
 
     --shadow-card:               0 24px 64px rgba(0, 0, 0, 0.5);
     --color-overlay:             rgba(0, 0, 0, 0.6);

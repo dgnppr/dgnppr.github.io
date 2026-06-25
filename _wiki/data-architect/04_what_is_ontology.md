@@ -11,6 +11,8 @@ status  : draft
 public  : true
 show-diagram: true
 parent  : [[/data-architect]]
+relations:
+  - { type: extends, target: /wiki/data-architect/03_medallion_advanced_patterns }
 ---
 
 > 시맨틱 웹의 실패에서 AI 에이전트의 월드모델까지, 데이터 아키텍트의 시선으로 다시 읽는 온톨로지

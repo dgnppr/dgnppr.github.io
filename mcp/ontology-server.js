@@ -21,8 +21,8 @@ const BACKEND    = process.env.EMBEDDING_BACKEND;
 const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
 const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6333";
 
-// concept → wiki collection, adr → adr collection
-const COLLECTION = { concept: "wiki", adr: "adr" };
+// entity types that live in the wiki Qdrant collection
+const WIKI_ENTITY_TYPES = new Set(["concept", "insight", "problem", "tool", "event"]);
 
 let _ai;
 async function embedQuery(text) {
@@ -73,7 +73,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         type: "object",
         properties: {
           query:  { type: "string", description: "시맨틱 검색 쿼리 (주면 임베딩 기반, 생략 시 전체 목록)" },
-          type:   { type: "string", description: "adr | concept (생략 시 전체)" },
+          type:   { type: "string", description: "adr | concept | insight | problem | tool | event (생략 시 전체)" },
           status: { type: "string", description: "상태 필터 (예: accepted, complete)" },
           tag:    { type: "string", description: "태그 필터" },
           limit:  { type: "number", description: "최대 반환 수 (기본 50)" },
@@ -108,7 +108,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         type: "object",
         properties: {
           query: { type: "string", description: "검색 쿼리" },
-          type:  { type: "string", description: "adr | concept (생략 시 전체)" },
+          type:  { type: "string", description: "adr | concept | insight | problem | tool | event (생략 시 전체)" },
           limit: { type: "number", description: "최대 반환 수 (기본 10)" },
         },
         required: ["query"],
@@ -141,14 +141,17 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
 
       const cols = args.type === "adr"
         ? [{ col: "adr",  type: "adr" }]
-        : args.type === "concept"
-        ? [{ col: "wiki", type: "concept" }]
-        : [{ col: "wiki", type: "concept" }, { col: "adr", type: "adr" }];
+        : args.type && WIKI_ENTITY_TYPES.has(args.type)
+        ? [{ col: "wiki", type: args.type }]
+        : [{ col: "wiki", type: null }, { col: "adr", type: "adr" }];
 
       const hits = (await Promise.all(
         cols.map(({ col, type }) =>
           qdrantSearch(col, queryVec, args.limit ?? 50).then(rs =>
-            rs.map(h => ({ id: `${type}/${h.payload.slug}`, score: h.score }))
+            rs.map(h => ({
+              id: `${h.payload.entity_type || type || 'concept'}/${h.payload.slug}`,
+              score: h.score,
+            }))
           )
         )
       )).flat().sort((a, b) => b.score - a.score).slice(0, args.limit ?? 50);
@@ -156,6 +159,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       const result = hits.map(({ id, score }) => {
         const n = graph.nodes[id];
         if (!n) return null;
+        if (args.type   && n.type   !== args.type)   return null;
         if (args.status && n.status !== args.status) return null;
         if (args.tag    && !n.tags?.includes(args.tag)) return null;
         return { id: n.id, type: n.type, title: n.title, status: n.status, tags: n.tags, date: n.date, score: +score.toFixed(3) };
@@ -215,7 +219,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     const candidateLimit = limit * 5;
     const [wikiHits, adrHits] = await Promise.all([
       qdrantSearch("wiki", queryVec, candidateLimit).then(hits =>
-        hits.map(h => ({ id: `concept/${h.payload.slug}`, score: h.score, payload: h.payload }))
+        hits.map(h => ({ id: `${h.payload.entity_type || 'concept'}/${h.payload.slug}`, score: h.score, payload: h.payload }))
       ),
       qdrantSearch("adr", queryVec, candidateLimit).then(hits =>
         hits.map(h => ({ id: `adr/${h.payload.slug}`, score: h.score, payload: h.payload }))
@@ -258,24 +262,32 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     try { queryVec = await embedQuery(args.query); }
     catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
 
-    const collections = args.type
-      ? [{ col: COLLECTION[args.type], type: args.type }]
-      : [{ col: "wiki", type: "concept" }, { col: "adr", type: "adr" }];
+    const collections = args.type === "adr"
+      ? [{ col: "adr", type: "adr" }]
+      : args.type && WIKI_ENTITY_TYPES.has(args.type)
+      ? [{ col: "wiki", type: args.type }]
+      : [{ col: "wiki", type: null }, { col: "adr", type: "adr" }];
 
     const hits = (
       await Promise.all(collections.map(({ col, type }) =>
         qdrantSearch(col, queryVec, args.limit ?? 10).then(results =>
-          results.map(h => ({
-            id:     `${type}/${h.payload.slug}`,
-            title:  h.payload.title,
-            type,
-            status: h.payload.status ?? "",
-            tags:   h.payload.tag ?? "",
-            score:  +h.score.toFixed(3),
-          }))
+          results.map(h => {
+            const resolvedType = h.payload.entity_type || type || 'concept';
+            return {
+              id:     `${resolvedType}/${h.payload.slug}`,
+              title:  h.payload.title,
+              type:   resolvedType,
+              status: h.payload.status ?? "",
+              tags:   h.payload.tag ?? "",
+              score:  +h.score.toFixed(3),
+            };
+          })
         )
       ))
-    ).flat().sort((a, b) => b.score - a.score).slice(0, args.limit ?? 10);
+    ).flat()
+      .filter(h => !args.type || h.type === args.type)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, args.limit ?? 10);
 
     return { content: [{ type: "text", text: hits.length ? JSON.stringify(hits, null, 2) : `'${args.query}' 관련 항목 없음` }] };
   }

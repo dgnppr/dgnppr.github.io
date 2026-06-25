@@ -8,16 +8,18 @@ adsense: false
 <div class="home">
     <p class="home-section-title">All Documents</p>
     <ul class="home-feed">
-        {% assign documents = site.wiki | sort: 'updated' | reverse %}
+        {% assign all_docs = site.wiki | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event %}
+        {% assign documents = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | sort: 'updated' | reverse %}
         {% for doc in documents %}
-        {% if doc.public != false and doc.title != 'wiki' and doc.layout != 'category' %}
         <li class="home-feed-item">
             <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
                 <span class="home-feed-title">{{ doc.title }}</span>
-                <time class="home-feed-date">{% include weekday.html d=doc.updated short=true %}, {{ doc.updated | date: "%b %d, %Y" }}</time>
+                <span class="home-feed-meta">
+                    <span class="home-feed-type home-feed-type--{{ doc.layout }}">{{ doc.layout }}</span>
+                    <time class="home-feed-date">{% include weekday.html d=doc.updated short=true %}, {{ doc.updated | date: "%b %d, %Y" }}</time>
+                </span>
             </a>
         </li>
-        {% endif %}
         {% endfor %}
     </ul>
 </div>

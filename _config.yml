@@ -45,6 +45,18 @@ collections:
     adr:
         output: true
         permalink: /:collection/:path/
+    insight:
+        output: true
+        permalink: /:collection/:path/
+    problem:
+        output: true
+        permalink: /:collection/:path/
+    tool:
+        output: true
+        permalink: /:collection/:path/
+    event:
+        output: true
+        permalink: /:collection/:path/
 
 # Comment Service
 disqus:

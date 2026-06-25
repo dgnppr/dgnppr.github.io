@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : insight
 title   : 롬복 꼭 사용해야 하는가
 summary : 
 date    : 2023-12-21 00:00:00 +0900
@@ -12,6 +12,8 @@ parent  : [[/essay]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: references, target: /wiki/jpa/00_jpa_dirty_checking }
 ---
 
 * TOC

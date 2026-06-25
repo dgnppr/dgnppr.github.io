@@ -34,7 +34,7 @@ for (const [type, cfg] of Object.entries(SCHEMA.entity_types)) {
     if (cfg.layout_filter && meta.layout !== cfg.layout_filter) continue;
     const slug = path.relative(base, fp).replace(/\.md$/, '');
     const id   = `${type}/${slug}`;
-    nodes[id] = {
+    const node = {
       id,
       type,
       title:  meta.title  || slug,
@@ -43,6 +43,11 @@ for (const [type, cfg] of Object.entries(SCHEMA.entity_types)) {
       tags:   meta.tag ? String(meta.tag).split(/\s+/).filter(Boolean) : [],
       date:   meta.date ? String(meta.date).split(' ')[0] : '',
     };
+    if (meta.valid_from)  node.valid_from  = String(meta.valid_from).split(' ')[0];
+    if (meta.valid_to)    node.valid_to    = String(meta.valid_to).split(' ')[0];
+    if (meta.confidence)  node.confidence  = String(meta.confidence);
+    if (meta.supersedes)  node.supersedes  = String(meta.supersedes);
+    nodes[id] = node;
     const rels = Array.isArray(meta.relations) ? meta.relations : [];
     for (const r of rels) {
       if (r?.type && r?.target) edges.push({ from: id, to: String(r.target), type: r.type });

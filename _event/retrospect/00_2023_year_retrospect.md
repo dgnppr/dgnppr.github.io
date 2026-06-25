@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : event
 title   : 2023년 회고 - 나를 되돌아보며
 summary :
 date    : 2024-01-12 00:00:00 +0900

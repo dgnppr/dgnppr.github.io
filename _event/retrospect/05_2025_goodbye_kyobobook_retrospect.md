@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : event
 title   : Good Bye 교보문고, 새로운 시작
 date    : 2025-04-13 00:00:00 +0900
 updated : 2025-04-13 00:00:00 +0900
@@ -11,6 +11,8 @@ parent  : [[/retrospect]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: extends, target: /event/retrospect/04_2024_september_retrospect }
 ---
 
 * TOC

@@ -11,6 +11,8 @@ status  : complete
 public  : true
 show-diagram: true
 parent  : [[/data-architect]]
+relations:
+  - { type: extends, target: /wiki/data-architect/04_what_is_ontology }
 ---
 
 > [[/data-architect/04_what_is_ontology]] 에서 온톨로지를 **객체(명사)·링크(관계)·액션(동사)** 세 계층과, 그 위에 올라타는 **시간(Dynamic)** 차원으로 설명했다. 이 글은 그 모든 개념이 하나의 사건 안에서 어떻게 맞물리는지를 끝까지 파고든다.

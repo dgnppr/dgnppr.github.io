@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : event
 title   : 코드 작성 비용이 0인 시대에서 나는 어떻게 해야할까 
 date    : 2026-06-21 00:00:00 +0900
 updated : 2026-06-21 00:00:00 +0900
@@ -11,6 +11,9 @@ parent  : [[/retrospect]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: extends, target: /event/retrospect/05_2025_goodbye_kyobobook_retrospect }
+  - { type: learned-from, target: /wiki/data-architect/04_what_is_ontology }
 ---
 
 * TOC

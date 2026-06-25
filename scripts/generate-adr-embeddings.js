@@ -22,10 +22,17 @@ const DIMS       = 1024;
 const COLLECTION      = 'adr';
 const WIKI_COLLECTION = 'wiki';
 
-const ROOT      = path.join(__dirname, '..');
-const ADR_DIR   = path.join(ROOT, '_adr');
-const WIKI_DIR  = path.join(ROOT, '_wiki');
-const POSTS_DIR = path.join(ROOT, '_posts');
+const ROOT        = path.join(__dirname, '..');
+const ADR_DIR     = path.join(ROOT, '_adr');
+const WIKI_DIR    = path.join(ROOT, '_wiki');
+const POSTS_DIR   = path.join(ROOT, '_posts');
+const INSIGHT_DIR = path.join(ROOT, '_insight');
+const PROBLEM_DIR = path.join(ROOT, '_problem');
+const TOOL_DIR    = path.join(ROOT, '_tool');
+const EVENT_DIR   = path.join(ROOT, '_event');
+
+// Maps directory type to ontology entity_type stored in Qdrant payload
+const ENTITY_TYPE = { wiki: 'concept', post: 'post', insight: 'insight', problem: 'problem', tool: 'tool', event: 'event' };
 
 function collectMarkdown(dir, results = []) {
     if (!fs.existsSync(dir)) return results;
@@ -109,24 +116,37 @@ function collectWikiDocs() {
             }
         }
     }
-    walk(WIKI_DIR, 'wiki');
-    walk(POSTS_DIR, 'post');
+    walk(WIKI_DIR,    'wiki');
+    walk(POSTS_DIR,   'post');
+    walk(INSIGHT_DIR, 'insight');
+    walk(PROBLEM_DIR, 'problem');
+    walk(TOOL_DIR,    'tool');
+    walk(EVENT_DIR,   'event');
     return results;
 }
 
 function slugFromWikiPath(p, type) {
-    if (type === 'wiki') return p.replace(/.*\/_wiki\//, '').replace(/\.md$/, '');
-    return p.replace(/.*\/_posts\//, '').replace(/\.md$/, '');
+    if (type === 'wiki')    return p.replace(/.*\/_wiki\//, '').replace(/\.md$/, '');
+    if (type === 'post')    return p.replace(/.*\/_posts\//, '').replace(/\.md$/, '');
+    if (type === 'insight') return p.replace(/.*\/_insight\//, '').replace(/\.md$/, '');
+    if (type === 'problem') return p.replace(/.*\/_problem\//, '').replace(/\.md$/, '');
+    if (type === 'tool')    return p.replace(/.*\/_tool\//, '').replace(/\.md$/, '');
+    if (type === 'event')   return p.replace(/.*\/_event\//, '').replace(/\.md$/, '');
+    return path.basename(p, '.md');
 }
 
 function urlFromWikiPath(p, type, fm) {
     if (type === 'wiki') return p.replace(/.*\/_wiki/, '/wiki').replace(/\.md$/, '/');
-    if (fm && fm.date) {
-        const d    = fm.date.slice(0, 10).split('-').join('/');
-        const base = path.basename(p, '.md').replace(/^\d{4}-\d{2}-\d{2}-/, '');
-        return '/blog/' + d + '/' + base + '/';
+    if (type === 'post') {
+        if (fm && fm.date) {
+            const d    = fm.date.slice(0, 10).split('-').join('/');
+            const base = path.basename(p, '.md').replace(/^\d{4}-\d{2}-\d{2}-/, '');
+            return '/blog/' + d + '/' + base + '/';
+        }
+        return p.replace(/.*\/_posts/, '/blog').replace(/\.md$/, '/');
     }
-    return p.replace(/.*\/_posts/, '/blog').replace(/\.md$/, '/');
+    // New entity types: /{type}/{slug}/
+    return '/' + type + '/' + slugFromWikiPath(p, type) + '/';
 }
 
 function slugToIdWiki(slug) {
@@ -282,7 +302,7 @@ async function indexWikiDocs() {
                 points: [{
                     id: slugToIdWiki(slug),
                     vector,
-                    payload: { slug, title: fm.title || slug, url, type, tag: fm.tag || '', hash },
+                    payload: { slug, title: fm.title || slug, url, type, entity_type: ENTITY_TYPE[type] || 'concept', tag: fm.tag || '', hash },
                 }],
             });
             process.stdout.write(`완료\n`);

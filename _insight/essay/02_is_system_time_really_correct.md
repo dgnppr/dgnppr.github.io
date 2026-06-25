@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : insight
 title   : System.currentTimeMillis() 정말 정확할까
 summary :
 date    : 2023-12-31 00:00:00 +0900
@@ -12,6 +12,8 @@ parent  : [[/essay]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: references, target: /wiki/java/00_what_is_java_virtual_thread }
 ---
 
 * TOC

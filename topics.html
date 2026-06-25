@@ -10,24 +10,44 @@ permalink: /topics/
   </div>
 </div>
 <script>
+var ENTITY_ORDER = ['insight', 'problem', 'tool', 'event', 'adr'];
+var ENTITY_LABELS = { insight: 'Insight', problem: 'Problem', tool: 'Tool', event: 'Event', adr: 'ADR' };
+
 (function() {
     fetch('/data/hub.json')
         .then(function(r) { return r.json(); })
         .then(function(data) {
             var grid = document.getElementById('hub-grid');
-            var cats = Object.keys(data).sort();
-            if (!cats.length) { grid.innerHTML = '<p>문서가 없습니다.</p>'; return; }
-            grid.innerHTML = cats.map(function(cat) {
+            if (!Object.keys(data).length) { grid.innerHTML = '<p>문서가 없습니다.</p>'; return; }
+
+            // Split entity types vs wiki categories
+            var entityCats = ENTITY_ORDER.filter(function(k) { return data[k]; });
+            var wikiCats = Object.keys(data).filter(function(k) { return !ENTITY_ORDER.includes(k); }).sort();
+
+            function renderCat(cat, label, typeClass) {
                 var c = data[cat];
-                var label = cat.replace(/-/g, ' ');
-                return '<section class="hub-cat">' +
-                    '<h2 class="hub-cat__name">' + label + ' <span class="hub-cat__count">(' + c.docs.length + ')</span></h2>' +
+                return '<section class="hub-cat hub-cat--' + typeClass + '">' +
+                    '<h2 class="hub-cat__name">' +
+                    '<span class="hub-type-badge hub-type-badge--' + typeClass + '">' + typeClass + '</span>' +
+                    label + ' <span class="hub-cat__count">(' + c.docs.length + ')</span></h2>' +
                     '<ul class="hub-cat__list">' +
                     c.docs.map(function(d) {
                         return '<li><a class="hub-doc-link" href="' + d.url + '">' + d.title + '</a>' +
                             (d.summary ? '<span class="hub-doc-summary">' + d.summary + '</span>' : '') + '</li>';
                     }).join('') + '</ul></section>';
+            }
+
+            var entityHtml = entityCats.map(function(cat) {
+                return renderCat(cat, ENTITY_LABELS[cat] || cat, cat);
             }).join('');
+
+            var wikiHtml = wikiCats.map(function(cat) {
+                return renderCat(cat, cat.replace(/-/g, ' '), 'wiki');
+            }).join('');
+
+            grid.innerHTML =
+                (entityHtml ? '<div class="hub-section"><h2 class="hub-section-title">Knowledge Entities</h2><div class="hub-entity-grid">' + entityHtml + '</div></div>' : '') +
+                (wikiHtml   ? '<div class="hub-section"><h2 class="hub-section-title">Concepts</h2><div class="hub-wiki-grid">' + wikiHtml + '</div></div>' : '');
         })
         .catch(function() {
             document.getElementById('hub-grid').innerHTML = '<p>데이터를 불러올 수 없습니다.</p>';

@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : insight
 title   : 테스트 픽스처 어떻게 생성해야 할까
 summary :
 date    : 2024-01-29 00:00:00 +0900
@@ -12,6 +12,8 @@ parent  : [[/essay]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: references, target: /wiki/jpa/00_jpa_dirty_checking }
 ---
 
 * TOC

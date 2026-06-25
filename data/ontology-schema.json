@@ -8,15 +8,39 @@
       "dir": "_wiki",
       "layout_filter": "wiki",
       "description": "Technical concepts and knowledge"
+    },
+    "insight": {
+      "dir": "_insight",
+      "layout_filter": "insight",
+      "description": "Atomic belief statements — single propositions extracted from experience"
+    },
+    "problem": {
+      "dir": "_problem",
+      "layout_filter": "problem",
+      "description": "Problems encountered — root causes, context, impact"
+    },
+    "tool": {
+      "dir": "_tool",
+      "layout_filter": "tool",
+      "description": "Tools and technologies used or evaluated"
+    },
+    "event": {
+      "dir": "_event",
+      "layout_filter": "event",
+      "description": "Significant events — incidents, milestones, decisions in context"
     }
   },
   "relation_types": {
-    "implements":  "implements or realizes the target",
-    "references":  "references or cites the target",
-    "extends":     "extends or builds upon the target",
-    "supersedes":  "supersedes the target decision",
-    "motivates":   "target problem motivated this decision",
-    "contradicts": "conflicts with the target",
-    "involves":    "involves this entity"
+    "implements":   "implements or realizes the target",
+    "references":   "references or cites the target",
+    "extends":      "extends or builds upon the target",
+    "supersedes":   "supersedes the target decision",
+    "motivates":    "target problem motivated this decision",
+    "contradicts":  "conflicts with the target",
+    "involves":     "involves this entity",
+    "caused-by":    "this event/problem was caused by the target",
+    "learned-from": "this insight was learned from the target event/problem",
+    "part-of":      "this entity is a component of the target",
+    "used-in":      "this tool/concept is used in the target project/concept"
   }
 }

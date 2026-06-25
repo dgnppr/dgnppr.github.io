@@ -1,5 +1,5 @@
 ---
-layout  : wiki
+layout  : event
 title   : 나는 6개월동안 어떠한 것을 했고, 남은 2024년을 어떻게 보내야할까
 date    : 2024-10-13 00:00:00 +0900
 updated : 2024-10-13 00:00:00 +0900
@@ -11,6 +11,8 @@ parent  : [[/retrospect]]
 latex   : true
 status  : complete
 show-diagram: true
+relations:
+  - { type: extends, target: /event/retrospect/03_2024_march_retrospect }
 ---
 
 * TOC
