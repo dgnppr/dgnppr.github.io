@@ -200,8 +200,9 @@ Claude Code에 `~/.claude.json`으로 등록된 단일 MCP 서버. 11개 도구 
 | `ontology_related query\|id` | 전체 타입 탐색 → entity_type별 그룹핑 반환 |
 | `ontology_find query [type]` | Qdrant 유사도 flat 리스트 |
 | `ontology_decision_context id\|query` | ADR 전체 컨텍스트 (과거 유사 결정 포함) |
+| `ontology_neighborhood id [hops]` | N-hop 그래프 워크 — 선언 엣지 + 이행 추론 엣지, 본문 포함 옵션 |
 
-`ontology_related` re-rank: `semantic×0.52 + idf_tag×0.18 + typed_edge(~0.18) + 2hop(~0.08) + type_affinity(~0.05) + recency(~0.03)`
+`ontology_related` mode: `hybrid`(기본) = 그래프 워크 1순위 + Qdrant 미연결 보완 | `graph` = 순수 온톨로지 | `semantic` = Qdrant만. 결과 `layer`: `"both"` | `"graph"` | `"semantic"`
 
 ### `/ontology` 스킬 사용 예시
 

@@ -28,6 +28,8 @@ const ACTION_TYPES = SCHEMA.action_types ?? {};
 // ontology 타입 → doc_write 타입 매핑
 const ONTOLOGY_TO_DOCTYPE = { concept: "wiki", insight: "insight", problem: "problem", tool: "tool", event: "event", adr: "adr" };
 
+const INFERENCE_RULES = SCHEMA.inference_rules ?? [];
+
 // ── Re-rank 상수 ──────────────────────────────────────────────────────────────
 
 // relation type별 직접 엣지 가중치 (0~0.15)
@@ -66,6 +68,58 @@ function getTagFrequencies(graph) {
   }
   _tagFreqCache = freq;
   return freq;
+}
+
+// ── 온톨로지 그래프 유틸리티 ────────────────────────────────────────────────────
+
+// 선언된 엣지에서 이행 추론 엣지 생성
+function inferEdges(edges) {
+  const inferred = [];
+  for (const rule of INFERENCE_RULES) {
+    const [rel1, rel2] = rule.chain;
+    for (const e1 of edges) {
+      if (e1.type !== rel1) continue;
+      for (const e2 of edges) {
+        if (e2.type !== rel2 || e1.to !== e2.from || e1.from === e2.to) continue;
+        inferred.push({ from: e1.from, to: e2.to, type: rule.infers, weight: rule.weight, inferred: true, via: [e1.type, e2.type] });
+      }
+    }
+  }
+  return inferred;
+}
+
+// BFS 그래프 워크: id → {score, hop, path}
+function graphWalk(graph, anchorId, hops = 2, withInferred = true) {
+  const allEdges = withInferred ? [...graph.edges, ...inferEdges(graph.edges)] : graph.edges;
+  const visited  = new Map(); // id → {score, hop, path}
+  const queue    = [{ id: anchorId, hop: 0, score: 1.0, path: [] }];
+  const seen     = new Set([anchorId]);
+
+  while (queue.length) {
+    const { id, hop, score, path } = queue.shift();
+    if (hop > 0) visited.set(id, { score, hop, path: [...path] });
+    if (hop >= hops) continue;
+
+    for (const e of allEdges) {
+      let nextId, edgeType = e.type, direction;
+      if (e.from === id) { nextId = e.to;   direction = "outbound"; }
+      else if (e.to === id) { nextId = e.from; direction = "inbound"; }
+      else continue;
+      if (seen.has(nextId)) continue;
+      seen.add(nextId);
+
+      const baseWeight = e.inferred ? (e.weight ?? 0.05) : (EDGE_WEIGHTS[edgeType] ?? 0.05);
+      const hopDecay   = hop === 0 ? 1.0 : 0.55;
+      const dirBonus   = direction === "inbound" ? 1.2 : 1.0;
+
+      queue.push({
+        id: nextId, hop: hop + 1,
+        score: score * baseWeight * hopDecay * dirBonus,
+        path: [...path, { from: id, to: nextId, type: edgeType, direction, inferred: e.inferred ?? false }],
+      });
+    }
+  }
+  return visited;
 }
 
 // .env 우선, process.env는 fallback
@@ -309,13 +363,14 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: "ontology_related",
-      description: "텍스트 또는 엔티티 ID 기준으로 전체 엔티티 타입(concept/insight/problem/tool/event/adr)을 탐색한다. Qdrant ANN + 태그·그래프 시그널 re-rank. 결과는 entity_type별로 그룹핑해 반환한다.",
+      description: "텍스트 또는 엔티티 ID 기준으로 관련 엔티티를 탐색한다. mode: hybrid(기본)=그래프 워크 우선+임베딩 보완, graph=순수 온톨로지 워크, semantic=Qdrant 유사도만. 결과는 entity_type별 그룹핑.",
       inputSchema: {
         type: "object",
         properties: {
           query: { type: "string", description: "검색할 텍스트 (query 또는 id 중 하나 필수)" },
           id:    { type: "string", description: "기준 엔티티 ID — 본문을 쿼리로 사용하고 graph 시그널도 활성화됨" },
           limit: { type: "number", description: "타입당 최대 수 (기본 5)" },
+          mode: { type: "string", description: "graph | semantic | hybrid (기본: hybrid). graph=순수 그래프 워크, semantic=Qdrant만, hybrid=그래프 우선+임베딩 보완" },
         },
       },
     },
@@ -342,6 +397,20 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           query: { type: "string", description: "텍스트로 ADR을 찾을 때 사용 — 가장 유사한 ADR을 자동 선택" },
           limit: { type: "number", description: "유사 결정 최대 수 (기본 5)" },
         },
+      },
+    },
+    {
+      name: "ontology_neighborhood",
+      description: "엔티티 ID 기준으로 N-hop 이웃 노드를 순수 그래프 워크로 탐색한다. 선언된 엣지 + 추론 엣지(이행 규칙) 포함. include_content=true면 각 노드의 전체 본문도 반환.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          id:              { type: "string",  description: "기준 엔티티 ID" },
+          hops:            { type: "number",  description: "탐색 깊이 (기본 2)" },
+          include_content: { type: "boolean", description: "각 노드 본문 포함 여부 (기본 false)" },
+          limit:           { type: "number",  description: "최대 반환 수 (기본 20)" },
+        },
+        required: ["id"],
       },
     },
     {
@@ -555,143 +624,111 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     if (!args.query && !args.id)
       return { content: [{ type: "text", text: "query 또는 id 중 하나 필수" }], isError: true };
 
-    const graph = loadGraph();
+    const graph   = loadGraph();
+    const mode    = args.mode ?? "hybrid";
+    const limit   = args.limit ?? 5;
+
+    // anchor 설정
     let queryText = args.query ?? "";
     let anchorTags = [];
     if (args.id) {
       const anchor = graph.nodes[args.id];
       if (!anchor) return { content: [{ type: "text", text: `엔티티 없음: ${args.id}` }], isError: true };
       const fp = path.join(ROOT, anchor.path);
-      queryText = fs.existsSync(fp)
+      queryText  = fs.existsSync(fp)
         ? fs.readFileSync(fp, "utf-8").replace(/^---[\s\S]*?---\n/, "").slice(0, 2000)
         : anchor.title;
       anchorTags = anchor.tags ?? [];
     }
 
-    let queryVec;
-    try { queryVec = await embedQuery(queryText); }
-    catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
-
-    const edgeMap = new Map(); // id → {type, direction}
-    if (args.id) {
-      for (const e of graph.edges) {
-        if (e.from === args.id) edgeMap.set(e.to,   { type: e.type, direction: "outbound" });
-        if (e.to   === args.id) edgeMap.set(e.from, { type: e.type, direction: "inbound"  });
-      }
-    }
-
-    const limit = args.limit ?? 5;
-    const candidateLimit = limit * 10;
-
-    // anchor node 메타 (타입, 날짜)
     const anchorNode = args.id ? graph.nodes[args.id] : null;
     const anchorType = anchorNode?.type ?? null;
     const tagFreq    = getTagFrequencies(graph);
     const totalNodes = Object.keys(graph.nodes).length || 1;
 
-    // 2-hop 이웃 맵 구성: id → best edge weight (직접 엣지의 절반)
-    const hop2Map = new Map();
-    if (args.id) {
-      for (const [neighborId] of edgeMap) {
-        for (const e of graph.edges) {
-          const nextId = e.from === neighborId ? e.to
-                       : e.to   === neighborId ? e.from
-                       : null;
-          if (!nextId || nextId === args.id || edgeMap.has(nextId)) continue;
-          const w = (EDGE_WEIGHTS[e.type] ?? 0.05) * 0.45; // 2-hop은 직접 엣지의 45%
-          if ((hop2Map.get(nextId) ?? 0) < w) hop2Map.set(nextId, w);
-        }
+    // ── Graph layer ──────────────────────────────────────────────────────────
+    let graphMap = new Map(); // id → {score, hop, path}
+    if (args.id) graphMap = graphWalk(graph, args.id, 2, true);
+    const maxGraphScore = Math.max(...[...graphMap.values()].map(v => v.score), 1e-9);
+
+    // ── Semantic layer ────────────────────────────────────────────────────────
+    const semanticMap = new Map(); // id → {score, payload}
+    if (mode !== "graph") {
+      let queryVec;
+      try { queryVec = await embedQuery(queryText); }
+      catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
+
+      const candidateLimit = limit * 12;
+      const [wikiHits, adrHits] = await Promise.all([
+        qdrantSearch("wiki", queryVec, candidateLimit).then(hits =>
+          hits.map(h => ({ id: `${h.payload.entity_type || "concept"}/${h.payload.slug}`, score: h.score, payload: h.payload }))
+        ),
+        qdrantSearch("adr", queryVec, candidateLimit).then(hits =>
+          hits.map(h => ({ id: `adr/${h.payload.slug}`, score: h.score, payload: h.payload }))
+        ),
+      ]);
+      for (const hit of [...wikiHits, ...adrHits]) {
+        if (hit.id !== args.id) semanticMap.set(hit.id, { score: hit.score, payload: hit.payload });
       }
     }
 
-    const [wikiHits, adrHits] = await Promise.all([
-      qdrantSearch("wiki", queryVec, candidateLimit).then(hits =>
-        hits.map(h => ({ id: `${h.payload.entity_type || "concept"}/${h.payload.slug}`, score: h.score, payload: h.payload }))
-      ),
-      qdrantSearch("adr", queryVec, candidateLimit).then(hits =>
-        hits.map(h => ({ id: `adr/${h.payload.slug}`, score: h.score, payload: h.payload }))
-      ),
-    ]);
+    // ── Hybrid merge ─────────────────────────────────────────────────────────
+    const allIds = new Set([...graphMap.keys(), ...semanticMap.keys()]);
+    allIds.delete(args.id);
 
-    const rerank = (candidate) => {
-      const node      = graph.nodes[candidate.id];
-      const candType  = candidate.payload.entity_type || "concept";
-      const nodeTags  = node?.tags ?? (candidate.payload.tag ? candidate.payload.tag.split(/\s+/).filter(Boolean) : []);
+    const candidates = [...allIds].map(id => {
+      const g       = graphMap.get(id);
+      const s       = semanticMap.get(id);
+      const node    = graph.nodes[id];
+      const gNorm   = g ? g.score / maxGraphScore : 0;
+      const sSem    = s ? s.score : 0;
+      const candType = node?.type ?? s?.payload?.entity_type ?? "concept";
 
-      // 1) Semantic (Qdrant cosine)
-      const sem = candidate.score;
-
-      // 2) Tag similarity — IDF 가중 Jaccard (희소 태그 = 더 강한 신호)
+      // IDF tag similarity (semantic layer용)
+      const nodeTags = node?.tags ?? (s?.payload?.tag ? String(s.payload.tag).split(/\s+/).filter(Boolean) : []);
       const inter    = anchorTags.filter(t => nodeTags.includes(t));
       const unionSet = new Set([...anchorTags, ...nodeTags]);
-      const idfSum   = inter.reduce((s, t) => s + Math.log((totalNodes + 1) / ((tagFreq[t] ?? 0) + 1)), 0);
-      const idfNorm  = unionSet.size > 0 ? idfSum / (unionSet.size * Math.log(totalNodes + 1)) : 0;
-      const tag      = Math.min(idfNorm, 1);
+      const idfSum   = inter.reduce((sum, t) => sum + Math.log((totalNodes + 1) / ((tagFreq[t] ?? 0) + 1)), 0);
+      const tagScore = unionSet.size > 0 ? Math.min(idfSum / (unionSet.size * Math.log(totalNodes + 1)), 1) : 0;
 
-      // 3) Direct edge (typed weight, direction-aware)
-      const edgeInfo     = edgeMap.get(candidate.id);
-      const edgeWeight   = edgeInfo ? (EDGE_WEIGHTS[edgeInfo.type] ?? 0.05) : 0;
-      // inbound(이쪽이 날 참조) vs outbound(내가 이쪽 참조) — inbound가 더 강한 신호
-      const edgeBonus    = edgeInfo?.direction === "inbound" ? edgeWeight * 1.2 : edgeWeight;
-
-      // 4) 2-hop transitive
-      const hop2 = hop2Map.get(candidate.id) ?? 0;
-
-      // 5) Entity type affinity (anchor type 기준)
+      // type affinity
       const affinity = anchorType ? (TYPE_AFFINITY[anchorType]?.[candType] ?? 0) : 0;
 
-      // 6) Recency (최근 2년 이내 완성 문서 미세 가산, 최대 0.03)
-      let recency = 0;
-      const dateStr = node?.date ?? candidate.payload.date;
-      if (dateStr) {
-        const daysAgo = (Date.now() - new Date(dateStr).getTime()) / 86400000;
-        const isComplete = (node?.status ?? candidate.payload.status) === "complete";
-        recency = isComplete ? Math.exp(-daysAgo / 730) * 0.03 : 0;
+      let finalScore;
+      if (mode === "graph")    finalScore = gNorm + affinity;
+      else if (mode === "semantic") finalScore = sSem * 0.70 + tagScore * 0.18 + affinity;
+      else {
+        // hybrid: 그래프 우선, 임베딩은 미연결 발견용
+        if (g && s) finalScore = gNorm * 0.55 + sSem * 0.35 + tagScore * 0.05 + affinity;
+        else if (g) finalScore = gNorm * 0.80 + tagScore * 0.05 + affinity;
+        else        finalScore = sSem  * 0.45 + tagScore * 0.10 + affinity; // undiscovered
       }
 
-      // 최종 점수 (합계 최대 ~1.0)
-      const score = +(
-        sem      * 0.52 +
-        tag      * 0.18 +
-        Math.min(edgeBonus, 0.18) +   // direct edge, 상한 0.18
-        Math.min(hop2,      0.08) +   // 2-hop, 상한 0.08
-        affinity                   +  // 0~0.05
-        recency                       // 0~0.03
-      ).toFixed(3);
-
       return {
-        id:      candidate.id,
-        type:    candType,
-        title:   node?.title ?? candidate.payload.title,
-        status:  node?.status ?? candidate.payload.status ?? "",
-        score,
+        id,
+        type:   candType,
+        title:  node?.title ?? s?.payload?.title ?? id,
+        status: node?.status ?? s?.payload?.status ?? "",
+        score:  +finalScore.toFixed(3),
+        layer:  g && s ? "both" : g ? "graph" : "semantic",
         signals: {
-          semantic:    +sem.toFixed(3),
-          tag_idf:     +tag.toFixed(3),
-          shared_tags: inter,
-          ...(edgeInfo  ? { direct_edge: { type: edgeInfo.type, direction: edgeInfo.direction, weight: +edgeBonus.toFixed(3) } } : {}),
-          ...(hop2 > 0  ? { hop2_weight: +hop2.toFixed(3) } : {}),
-          ...(affinity  ? { type_affinity: affinity } : {}),
-          ...(recency   ? { recency: +recency.toFixed(3) } : {}),
+          ...(g ? { graph: { hop: g.hop, normalized: +gNorm.toFixed(3), path: g.path } } : {}),
+          ...(s ? { semantic: +sSem.toFixed(3) } : {}),
+          ...(inter.length ? { shared_tags: inter } : {}),
+          ...(affinity     ? { type_affinity: affinity } : {}),
+          ...(g?.path?.some(p => p.inferred) ? { has_inferred_edge: true } : {}),
         },
       };
-    };
+    }).sort((a, b) => b.score - a.score);
 
     // entity_type별 그룹핑
-    const allCandidates = [...wikiHits, ...adrHits]
-      .filter(c => c.id !== args.id)
-      .map(rerank)
-      .sort((a, b) => b.score - a.score);
-
     const grouped = {};
-    for (const item of allCandidates) {
+    for (const item of candidates) {
       if (!grouped[item.type]) grouped[item.type] = [];
       if (grouped[item.type].length < limit) grouped[item.type].push(item);
     }
 
-    return {
-      content: [{ type: "text", text: JSON.stringify(grouped, null, 2) }],
-    };
+    return { content: [{ type: "text", text: JSON.stringify({ mode, ...grouped }, null, 2) }] };
   }
 
   // ── ontology_find ──────────────────────────────────────────────────────────
@@ -908,6 +945,51 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       ],
     };
     return { content: [{ type: "text", text: JSON.stringify(out, null, 2) }] };
+  }
+
+  // ── ontology_neighborhood ──────────────────────────────────────────────────
+  if (name === "ontology_neighborhood") {
+    const graph = loadGraph();
+    const node  = graph.nodes[args.id];
+    if (!node) return { content: [{ type: "text", text: `엔티티 없음: ${args.id}` }], isError: true };
+
+    const hops   = args.hops  ?? 2;
+    const limit  = args.limit ?? 20;
+    const walkResult = graphWalk(graph, args.id, hops, true);
+
+    const maxScore = Math.max(...[...walkResult.values()].map(v => v.score), 1e-9);
+
+    const neighbors = [...walkResult.entries()]
+      .map(([id, { score, hop, path: ePath }]) => {
+        const n    = graph.nodes[id];
+        const item = {
+          id,
+          type:     n?.type ?? "unknown",
+          title:    n?.title ?? id,
+          status:   n?.status ?? "",
+          hop,
+          score:    +(score / maxScore).toFixed(3),
+          relation_path: ePath,
+          has_inferred:  ePath.some(p => p.inferred),
+        };
+        if (args.include_content && n?.path) {
+          const fp = path.join(ROOT, n.path);
+          if (fs.existsSync(fp)) item.content = fs.readFileSync(fp, "utf-8");
+        }
+        return item;
+      })
+      .sort((a, b) => b.score - a.score)
+      .slice(0, limit);
+
+    const directCount   = neighbors.filter(n => n.hop === 1 && !n.has_inferred).length;
+    const hop2Count     = neighbors.filter(n => n.hop === 2 && !n.has_inferred).length;
+    const inferredCount = neighbors.filter(n => n.has_inferred).length;
+
+    return { content: [{ type: "text", text: JSON.stringify({
+      anchor:    { id: args.id, type: node.type, title: node.title, tags: node.tags },
+      neighbors,
+      summary:   `직접 ${directCount}개, 2-hop ${hop2Count}개, 추론 ${inferredCount}개 (총 ${neighbors.length}개)`,
+    }, null, 2) }] };
   }
 
   return { content: [{ type: "text", text: `알 수 없는 도구: ${name}` }], isError: true };

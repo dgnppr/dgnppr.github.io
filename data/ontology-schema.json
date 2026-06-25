@@ -49,6 +49,44 @@
     "part-of":      "this entity is a component of the target",
     "used-in":      "this tool/concept is used in the target project/concept"
   },
+  "inference_rules": [
+    {
+      "chain": ["extends", "extends"],
+      "infers": "extends",
+      "weight": 0.60,
+      "description": "A extends B, B extends C ⟹ A transitively extends C"
+    },
+    {
+      "chain": ["part-of", "part-of"],
+      "infers": "part-of",
+      "weight": 0.60,
+      "description": "A is part of B, B is part of C ⟹ A is part of C"
+    },
+    {
+      "chain": ["implements", "extends"],
+      "infers": "related",
+      "weight": 0.50,
+      "description": "A implements B which extends C ⟹ A is related to C"
+    },
+    {
+      "chain": ["learned-from", "caused-by"],
+      "infers": "related",
+      "weight": 0.50,
+      "description": "A learned from event B which was caused by C ⟹ A is related to C"
+    },
+    {
+      "chain": ["motivates", "caused-by"],
+      "infers": "related",
+      "weight": 0.40,
+      "description": "problem A motivates decision B, event C caused A ⟹ B is related to C"
+    },
+    {
+      "chain": ["used-in", "implements"],
+      "infers": "related",
+      "weight": 0.40,
+      "description": "tool A used in B, B implements C ⟹ A is related to C"
+    }
+  ],
   "action_types": {
     "extend": {
       "description": "이 개념을 확장·심화하는 새 문서 작성",

@@ -1,9 +1,10 @@
 ---
 layout: default
 adsense: false
-regenerate: true
 ---
-
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+</div>
 <div class="home">
     <p class="home-section-title">Knowledge Graph</p>
     <div class="home-kg-wrap">
@@ -16,33 +17,25 @@ regenerate: true
         </button>
     </div>
 
-    <p class="home-section-title" style="margin-top:2rem">Recently Changed Documents</p>
+    <p class="home-section-title" style="margin-top:2rem">All Documents</p>
     <ul class="home-feed">
         {% assign all_docs = site.wiki | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event | concat: site.adr %}
         {% assign documents = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | sort: 'updated' | reverse %}
-        {% for doc in documents limit: 10 %}
+        {% for doc in documents %}
         <li class="home-feed-item">
             <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
                 <span class="home-feed-title">{{ doc.title }}</span>
                 <span class="home-feed-meta">
-                    {% assign first_tag = doc.tag | split: ' ' | first %}
-                    {% if first_tag and first_tag != '' %}
-                    <span class="home-feed-tag">{{ first_tag }}</span>
-                    {% endif %}
                     <time class="home-feed-date">{% include weekday.html d=doc.updated short=true %}, {{ doc.updated | date: "%b %d, %Y" }}</time>
                 </span>
             </a>
         </li>
         {% endfor %}
     </ul>
-    <div class="home-footer">
-        {% assign count = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | size %}
-        <a href="/all-documents/">View all documents ({{ count }} items) →</a>
-    </div>
 </div>
-
+{% include createLink.html %}
+<script src="/js/scroll.js"></script>
 <script>
-/* 2D knowledge-graph-2d-deprecated.js → deprecated. 메인 페이지는 3D 그래프 사용. */
 (function () {
     function initHomeGraph() {
         if (!window.KnowledgeGraph3D) return;
@@ -75,4 +68,3 @@ regenerate: true
     }
 })();
 </script>
-{% include createLink.html %}
