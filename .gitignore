@@ -21,3 +21,6 @@ data/writing-stats.json
 data/tags/
 data/metadata/
 _workspace
+_adr/**
+!_adr/architecture/
+!_adr/architecture/2026-06-24-001-adr-guide.md
