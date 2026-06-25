@@ -1954,11 +1954,11 @@
     ]
   },
   "data-architect/06_ontology_core_concepts": {
-    "hash": "e8e6768ef3ebb49d2662d21144a26470",
+    "hash": "d179f272dbbb82776a6692c56a106292",
     "nodes": [
       {
         "id": "n1",
-        "label": "Wikidata 모델",
+        "label": "두 세계의 개념",
         "type": "root"
       },
       {
@@ -1973,18 +1973,18 @@
       },
       {
         "id": "n4",
-        "label": "P31 (instance of)",
-        "type": "step"
+        "label": "P131(instance) vs P279(subclass)",
+        "type": ":decision"
       },
       {
         "id": "n5",
-        "label": "P279 (subclass of)",
+        "label": "추론과 transitive closure",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "추론(Inference)",
-        "type": ":end"
+        "label": "SPARQL 추론 결과",
+        "type": "end"
       }
     ],
     "edges": [
@@ -2001,13 +2001,8 @@
         "to": "n4"
       },
       {
-        "from": "n3",
-        "to": "n5",
-        "bidirectional": true
-      },
-      {
         "from": "n4",
-        "to": "n6"
+        "to": "n5"
       },
       {
         "from": "n5",
@@ -2150,6 +2145,83 @@
       {
         "from": "n3",
         "to": "n6"
+      }
+    ]
+  },
+  "data-architect/03_medallion_advanced_patterns": {
+    "hash": "11ef7d10eeb915e11354f167396024a8",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "메달리언 SQL 패턴",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "WAP (검증 전 교체)",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "SCD Type 2 (이력 관리)",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "Late-Arriving Data 처리",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "Identity Resolution",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "Gold 2-Tier 구조",
+        "type": ": step"
+      },
+      {
+        "id": "n7",
+        "label": "로직 표류 (안티패턴)",
+        "type": "decision"
+      },
+      {
+        "id": "n8",
+        "label": "중복 정의 및 누락",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7",
+        "bidirectional": true,
+        "label": "구조적 결함"
+      },
+      {
+        "from": "n7",
+        "to": "n8"
       }
     ]
   }
