@@ -29,5 +29,9 @@
   "data-architect/00_what_is_ontology": "aac53707b399de73a07cf2693d4a1e45",
   "data-architect/01_how_to_implement_ontology": "fa906a1c25498735d62d426f8cf66f3f",
   "data-engineering/01_how_to_architect_medallion_well": "cdef564a1356b525aa189a96b46b2951",
-  "llm/00_why_llm_is_decoder_only": "22a093d78687f750052c97af7a31c484"
+  "llm/00_why_llm_is_decoder_only": "22a093d78687f750052c97af7a31c484",
+  "cloud/01_vpc_for_pca": "3f75aee4ff76cdd7a61417767d3a985c",
+  "cloud": "7f3aa3786efb57a25f0049ad1911ba55",
+  "data-architect/02_ontology_core_concepts": "1e1037d88dc44bef9e8ed127c1fa0388",
+  "data-engineering/02_how_to_architect_medallion_well": "44304f34e0bbaf66ed6c72c68aae77c3"
 }

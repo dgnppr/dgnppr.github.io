@@ -1908,5 +1908,139 @@
         "to": "n7"
       }
     ]
+  },
+  "data-architect/02_ontology_core_concepts": {
+    "hash": "1e1037d88dc44bef9e8ed127c1fa0388",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "Entity vs Object",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "IRI (Global ID)",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "Type vs Instance",
+        "type": ":step"
+      },
+      {
+        "id": "n4",
+        "label": "TBox/ABox 경계",
+        "type": "decision"
+      },
+      {
+        "id": "n5",
+        "label": "Ontology as Query",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "Schema extension",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2",
+        "bidirectional": true,
+        "label": "scope contrast"
+      },
+      {
+        "from": "n3",
+        "to": "n4",
+        "bidirectional": true,
+        "label": "meta-class"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      }
+    ]
+  },
+  "data-engineering/02_how_to_architect_medallion_well": {
+    "hash": "44304f34e0bbaf66ed6c72c68aae77c3",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "메달리언 레이어 설계",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "Bronze (적재 메타)",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "Silver (사실 정합)",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "Gold (집계/KPI)",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "변환 위치 단일화",
+        "type": ":decision"
+      },
+      {
+        "id": "n6",
+        "label": "멱등성 MERGE",
+        "type": "step"
+      },
+      {
+        "id": "n7",
+        "label": "증분 vs 전체 재처리",
+        "type": "decision"
+      },
+      {
+        "id": "n8",
+        "label": "안티패턴 제거",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n3",
+        "to": "n5",
+        "bidirectional": true,
+        "label": "사실 vs 집계"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
+      },
+      {
+        "from": "n7",
+        "to": "n8"
+      }
+    ]
   }
 }

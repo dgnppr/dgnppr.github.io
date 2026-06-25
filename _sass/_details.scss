@@ -1,35 +1,62 @@
 /*
 접기/펼치기
 
-접기/펼치기는 다음과 같이 html 태그를 사용하는 기능으로, 클릭해서 펼치고 접을 수 있다.
-<details><summary> 접는 내용 </summary></div></details>
- */
+클릭해서 펼치고 접을 수 있다. 내부 마크다운 렌더를 위해 div[markdown="1"] 패턴을 쓴다.
+<details><summary>제목</summary><div markdown="1"> 접는 내용 </div></details>
+*/
 summary {
-    color: var(--color-text-tertiary);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    font-weight: 600;
+    padding: 4px 2px;
+    list-style: none;
+
+    &::-webkit-details-marker {
+        display: none;
+    }
+
+    &::before {
+        content: "▸";
+        display: inline-block;
+        margin-right: 0.5em;
+        color: var(--color-text-tertiary);
+        transition: transform 0.15s ease;
+    }
+}
+
+details[open] > summary::before {
+    transform: rotate(90deg);
 }
 
 details {
-    border: 1px dashed var(--color-border);
-    padding: 2px;
-    margin-bottom:5px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 6px;
+    padding: 8px 14px;
+    margin: 1.2em 0;
+    background: var(--color-surface-muted);
+
+    > div {
+        margin-top: 8px;
+    }
 }
 
 details[open] > div {
     opacity: 0;
-    animation-name: slideDown;
-    animation-duration: 0.5s;
-    animation-delay: 0.2s;
-    animation-fill-mode: forwards;
+    animation: slideDown 0.5s 0.2s forwards;
 }
 
 @keyframes slideDown {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+    from { opacity: 0; }
+    to   { opacity: 1; }
 }
 
+@media (prefers-reduced-motion: reduce) {
+    details[open] > div {
+        animation: none;
+        opacity: 1;
+    }
 
+    summary::before {
+        transition: none;
+    }
+}
