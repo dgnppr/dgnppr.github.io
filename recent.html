@@ -8,7 +8,7 @@ adsense: false
 <div class="home">
     <p class="home-section-title">All Documents</p>
     <ul class="home-feed">
-        {% assign all_docs = site.wiki | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event %}
+        {% assign all_docs = site.wiki | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event | concat: site.adr %}
         {% assign documents = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | sort: 'updated' | reverse %}
         {% for doc in documents %}
         <li class="home-feed-item">

@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 /**
- * ADR 임베딩 생성기 — Qdrant 벡터 스토어
+ * 로컬 임베딩 생성기 — Qdrant 벡터 스토어 (wiki/insight/problem/tool/event/adr)
  *
  * 사전 준비: docker compose up qdrant -d
  *
  * 실행:
  *   [OLLAMA_URL=http://localhost:11434] \
  *   [QDRANT_URL=http://localhost:6333] \
- *   node scripts/generate-adr-embeddings.js [--force]
+ *   node scripts/generate-local-embeddings.js [--force]
  */
 'use strict';
 const fs     = require('fs');

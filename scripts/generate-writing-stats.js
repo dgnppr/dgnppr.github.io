@@ -25,8 +25,13 @@ function collectMarkdown(dir, results) {
 }
 
 const files = [];
-collectMarkdown(path.join(ROOT, '_wiki'), files);
-collectMarkdown(path.join(ROOT, '_posts'), files);
+collectMarkdown(path.join(ROOT, '_wiki'),    files);
+collectMarkdown(path.join(ROOT, '_posts'),   files);
+collectMarkdown(path.join(ROOT, '_insight'), files);
+collectMarkdown(path.join(ROOT, '_problem'), files);
+collectMarkdown(path.join(ROOT, '_tool'),    files);
+collectMarkdown(path.join(ROOT, '_event'),   files);
+collectMarkdown(path.join(ROOT, '_adr'),     files);
 console.log('[수집] 총 ' + files.length + '개 파일 발견');
 
 const wikiDir = path.join(ROOT, '_wiki');
@@ -58,8 +63,12 @@ function parseYaml(yaml) {
 }
 
 function getCategoryFromPath(filePath) {
-    const match = filePath.match(categoryRegex);
-    return match ? match[1] : 'other';
+    if (filePath.includes('/_wiki/')) {
+        const match = filePath.match(categoryRegex);
+        return match ? match[1] : 'other';
+    }
+    const entityMatch = filePath.match(/\/_?(insight|problem|tool|event|adr)\//);
+    return entityMatch ? entityMatch[1] : 'other';
 }
 
 const stats = {

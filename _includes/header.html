@@ -21,7 +21,7 @@
         site.baseurl | prepend: site.url }}" />
 
     {% assign og_type = "website" %}
-    {% if page.layout == 'wiki' or page.layout == 'post' or page.layout == 'document' %}
+    {% if page.layout == 'wiki' or page.layout == 'post' or page.layout == 'document' or page.layout == 'insight' or page.layout == 'problem' or page.layout == 'tool' or page.layout == 'event' or page.layout == 'adr' %}
       {% assign og_type = "article" %}
     {% endif %}
     {% assign og_title = page.title | default: site.title %}

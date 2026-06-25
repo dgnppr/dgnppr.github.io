@@ -85,18 +85,27 @@ function collectMarkdown(dir, type, results) {
 }
 
 function slugFromPath(p, type) {
-    if (type === 'wiki') return p.replace(/.*\/_wiki\//, '').replace(/\.md$/, '');
-    return p.replace(/.*\/_posts\//, '').replace(/\.md$/, '');
+    if (type === 'wiki')    return p.replace(/.*\/_wiki\//, '').replace(/\.md$/, '');
+    if (type === 'blog')    return p.replace(/.*\/_posts\//, '').replace(/\.md$/, '');
+    if (type === 'insight') return p.replace(/.*\/_insight\//, '').replace(/\.md$/, '');
+    if (type === 'problem') return p.replace(/.*\/_problem\//, '').replace(/\.md$/, '');
+    if (type === 'tool')    return p.replace(/.*\/_tool\//, '').replace(/\.md$/, '');
+    if (type === 'event')   return p.replace(/.*\/_event\//, '').replace(/\.md$/, '');
+    if (type === 'adr')     return p.replace(/.*\/_adr\//, '').replace(/\.md$/, '');
+    return path.basename(p, '.md');
 }
 
 function urlFromPath(p, type, fm) {
     if (type === 'wiki') return p.replace(/.*\/_wiki/, '/wiki').replace(/\.md$/, '');
-    if (fm && fm.date) {
-        const d    = fm.date.slice(0, 10).replace(/-/g, '/');
-        const base = path.basename(p, '.md').replace(/^\d{4}-\d{2}-\d{2}-/, '');
-        return '/blog/' + d + '/' + base;
+    if (type === 'blog') {
+        if (fm && fm.date) {
+            const d    = fm.date.slice(0, 10).replace(/-/g, '/');
+            const base = path.basename(p, '.md').replace(/^\d{4}-\d{2}-\d{2}-/, '');
+            return '/blog/' + d + '/' + base;
+        }
+        return p.replace(/.*\/_posts/, '/blog').replace(/\.md$/, '');
     }
-    return p.replace(/.*\/_posts/, '/blog').replace(/\.md$/, '');
+    return '/' + type + '/' + slugFromPath(p, type);
 }
 
 function parseFrontmatter(content) {
@@ -145,7 +154,9 @@ function tokenize(text) {
 }
 
 function categoryOf(slug, type) {
-    return type === 'wiki' ? slug.split('/')[0] : 'blog';
+    if (type === 'wiki') return slug.split('/')[0];
+    if (type === 'blog') return 'blog';
+    return type;
 }
 
 function titleToks(title) {
@@ -240,8 +251,13 @@ function optimizeWeights(rawSignals, docs, evalData) {
 // ── 메인 ──────────────────────────────────────────────────────
 
 const files = [];
-collectMarkdown(path.join(ROOT, '_wiki'),  'wiki', files);
-collectMarkdown(path.join(ROOT, '_posts'), 'blog', files);
+collectMarkdown(path.join(ROOT, '_wiki'),    'wiki',    files);
+collectMarkdown(path.join(ROOT, '_posts'),   'blog',    files);
+collectMarkdown(path.join(ROOT, '_insight'), 'insight', files);
+collectMarkdown(path.join(ROOT, '_problem'), 'problem', files);
+collectMarkdown(path.join(ROOT, '_tool'),    'tool',    files);
+collectMarkdown(path.join(ROOT, '_event'),   'event',   files);
+collectMarkdown(path.join(ROOT, '_adr'),     'adr',     files);
 console.log('총 ' + files.length + '개 파일 발견' + (FORCE ? ' (--force: 전체 재계산)' : ''));
 
 async function main() {

@@ -2,7 +2,7 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "{% if page.layout == 'wiki' %}TechArticle{% else %}BlogPosting{% endif %}",
+  "@type": "{% if page.layout == 'wiki' or page.layout == 'insight' or page.layout == 'problem' or page.layout == 'tool' or page.layout == 'event' or page.layout == 'adr' %}TechArticle{% else %}BlogPosting{% endif %}",
   "headline": {{ page.title | jsonify }},
   "description": {{ page.summary | default: site.description | default: "" | jsonify }},
   "datePublished": "{{ page.date | date: '%Y-%m-%dT%H:%M:%S+09:00' }}",

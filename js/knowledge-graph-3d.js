@@ -8,54 +8,38 @@
     var WAVE_PERIOD  = 4000;
     var LABEL_NORMAL = 0.8;
 
-    /* ── 5-family 색상 팔레트 ─────────────────────────────────────
-       Indigo / Blue / Teal / Rose / Amber + Slate(neutral)
-       패밀리 안에서 명도 gradient로 카테고리 구분
+    /* ── 동적 색상 시스템 ─────────────────────────────────────────
+       entity type → CSS 변수(--color-entity-*)
+       wiki 서브카테고리 → 이름 해시 → 팔레트
+       테마 전환 시 캐시 초기화로 자동 반영
     ─────────────────────────────────────────────────────────────── */
-    var CAT_COLOR = {
-        /* Indigo family */
-        'ai-agent':          '#4f46e5',
-        'llm':               '#6366f1',
-        'retrospect':        '#818cf8',
-        /* Blue family */
-        'database':          '#1d4ed8',
-        'msa':               '#3b82f6',
-        'system-design':     '#60a5fa',
-        /* Teal family */
-        'spring-boot':       '#0f766e',
-        'springboot':        '#0f766e',
-        'jpa':               '#0d9488',
-        'data-engineering':  '#14b8a6',
-        'design-pattern':    '#2dd4bf',
-        /* Violet — ADR */
-        'adr':               '#7c3aed',
-        /* Rose/Red family */
-        'code-architecture': '#be123c',
-        'java':              '#e11d48',
-        'kafka':             '#fb7185',
-        /* Amber family */
-        'jvm':               '#b45309',
-        'blog':              '#d97706',
-        'essay':             '#f59e0b',
-        /* Neutral */
-        'reference':         '#64748b',
-    };
-    function catColor(c) { return CAT_COLOR[c] || '#64748b'; }
-    function isDark()    { return document.documentElement.classList.contains('dark-mode'); }
-    /* 다크모드에서 살짝 톤다운한 Three.Color 반환 */
-    function themedColor(cat, darkMode) {
-        var col = new THREE.Color(catColor(cat));
-        if (darkMode) {
-            var r = col.r, g = col.g, b = col.b;
-            var avg = (r + g + b) / 3;
-            col.r = (r + (avg - r) * 0.08) * 0.88;
-            col.g = (g + (avg - g) * 0.08) * 0.88;
-            col.b = (b + (avg - b) * 0.08) * 0.88;
-        }
-        return col;
+    var _colorCache = {};
+    /* wiki 서브카테고리 전용 팔레트 — 충분히 다양한 색조 10종 */
+    var WIKI_PALETTE = [
+        '#1d4ed8', '#4f46e5', '#0f766e', '#0e7490', '#7c3aed',
+        '#be123c', '#b45309', '#166534', '#0369a1', '#9333ea',
+    ];
+    function catColor(cat) {
+        if (_colorCache[cat] !== undefined) return _colorCache[cat];
+        /* entity type CSS 변수 우선 (wiki/insight/problem/tool/event/adr/blog) */
+        var cssVal = getComputedStyle(document.documentElement)
+            .getPropertyValue('--color-entity-' + cat).trim();
+        if (cssVal) { _colorCache[cat] = cssVal; return cssVal; }
+        /* wiki 서브카테고리: 이름 해시 → 팔레트 */
+        var h = 0;
+        for (var i = 0; i < cat.length; i++) h = (h * 31 + cat.charCodeAt(i)) | 0;
+        var c = WIKI_PALETTE[Math.abs(h) % WIKI_PALETTE.length];
+        _colorCache[cat] = c;
+        return c;
+    }
+    function isDark() { return document.documentElement.classList.contains('dark-mode'); }
+    /* CSS 변수가 이미 테마별 색상을 담고 있으므로 Three.Color 변환만 수행 */
+    function themedColor(cat) {
+        return new THREE.Color(catColor(cat));
     }
     function getCategory(url, type) {
         if (type === 'blog') return 'blog';
+        if (type !== 'wiki') return type || 'default'; // insight/problem/tool/event/adr
         var m = url.match(/^\/wiki\/([^\/]+)/);
         return m ? m[1] : 'default';
     }
@@ -127,7 +111,7 @@
             searchIndex.forEach(function (page) {
                 if (page.type === 'tag') return;
                 if (page.type === 'wiki' && /^\/wiki\/[^\/]+\/?$/.test(page.url)) return;
-                var slug = page.url.replace(/^\/(wiki|posts|blog)\//, '');
+                var slug = page.url.replace(/^\/(wiki|insight|problem|tool|event|adr|posts|blog)\//, '');
                 var cat  = getCategory(page.url, page.type);
                 var n = {
                     id: slug, slug: slug, title: page.title,
@@ -141,7 +125,7 @@
 
             if (opts.extraNodes) {
                 opts.extraNodes.forEach(function (page) {
-                    var slug = page.slug || (page.url || '').replace(/^\/adr\//, '').replace(/\/$/, '');
+                    var slug = page.slug || (page.url || '').replace(/^\/(wiki|insight|problem|tool|event|adr|posts|blog)\//, '').replace(/\/$/, '');
                     if (nodeMap[slug]) return;
                     var n = {
                         id: slug, slug: slug, title: page.title,
@@ -308,7 +292,7 @@
 
             nodes.forEach(function (n) {
                 var r   = nodeR(n);
-                var col = themedColor(n.cat, dark);
+                var col = themedColor(n.cat);
 
                 var isFocal = focusSlug && n.slug === focusSlug;
                 var visR = isFocal ? r * 2.2 : r * 1.5;
@@ -887,6 +871,7 @@
 
             /* ── 다크모드 감지 + 전체 재테마 ─────────────── */
             function applyTheme() {
+                _colorCache = {}; // CSS 변수 재로드
                 dark = isDark();
                 var bgStr2 = dark ? '#060a14' : '#f8fafc';
 
@@ -903,7 +888,7 @@
 
                 /* 노드 재색상 */
                 meshes.forEach(function (m) {
-                    var col = themedColor(m.userData.node.cat, dark);
+                    var col = themedColor(m.userData.node.cat);
                     m.material.color.set(col);
                     if (m.userData.borderMesh) m.userData.borderMesh.material.color.set(col);
                     if (m.userData.haloMesh)   m.userData.haloMesh.material.color.set(col);

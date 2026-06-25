@@ -18,14 +18,13 @@ regenerate: true
 
     <p class="home-section-title" style="margin-top:2rem">Recently Changed Documents</p>
     <ul class="home-feed">
-        {% assign all_docs = site.wiki | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event %}
+        {% assign all_docs = site.wiki | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event | concat: site.adr %}
         {% assign documents = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | sort: 'updated' | reverse %}
         {% for doc in documents limit: 10 %}
         <li class="home-feed-item">
             <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
                 <span class="home-feed-title">{{ doc.title }}</span>
                 <span class="home-feed-meta">
-                    <span class="home-feed-type home-feed-type--{{ doc.layout }}">{{ doc.layout }}</span>
                     {% assign first_tag = doc.tag | split: ' ' | first %}
                     {% if first_tag and first_tag != '' %}
                     <span class="home-feed-tag">{{ first_tag }}</span>
@@ -43,7 +42,7 @@ regenerate: true
 </div>
 
 <script>
-/* 2D knowledge-graph.js → deprecated. 메인 페이지는 3D 그래프 사용. */
+/* 2D knowledge-graph-2d-deprecated.js → deprecated. 메인 페이지는 3D 그래프 사용. */
 (function () {
     function initHomeGraph() {
         if (!window.KnowledgeGraph3D) return;

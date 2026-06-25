@@ -2,7 +2,7 @@
 layout: default
 ---
 
-{% assign thisName = page.id | remove: '/wiki/' %}
+{% assign thisName = page.id | remove: '/wiki/' | remove: '/insight/' | remove: '/problem/' | remove: '/tool/' | remove: '/event/' | remove: '/adr/' %}
 <input type="hidden" id="thisName" value="{{ thisName }}"/>
 <div class="progress-container">
     <div class="progress-bar" id="myBar"></div>
@@ -65,7 +65,17 @@ layout: default
         <div class="diagram__content" id="diagram-content"></div>
     </div>
 
-    {% assign wiki_sorted = site.wiki | where_exp: "item", "item.public != false" | where_exp: "item", "item.layout != 'category'" | where_exp: "item", "item.title != 'wiki'" | sort: 'updated' | reverse %}
+    {% if page.layout == 'insight' %}
+      {% assign wiki_sorted = site.insight | where_exp: "item", "item.public != false" | sort: 'updated' | reverse %}
+    {% elsif page.layout == 'problem' %}
+      {% assign wiki_sorted = site.problem | where_exp: "item", "item.public != false" | sort: 'updated' | reverse %}
+    {% elsif page.layout == 'tool' %}
+      {% assign wiki_sorted = site.tool | where_exp: "item", "item.public != false" | sort: 'updated' | reverse %}
+    {% elsif page.layout == 'event' %}
+      {% assign wiki_sorted = site.event | where_exp: "item", "item.public != false" | sort: 'updated' | reverse %}
+    {% else %}
+      {% assign wiki_sorted = site.wiki | where_exp: "item", "item.public != false" | where_exp: "item", "item.layout != 'category'" | where_exp: "item", "item.title != 'wiki'" | sort: 'updated' | reverse %}
+    {% endif %}
     {% for wdoc in wiki_sorted %}
         {% if wdoc.url == page.url %}
             {% unless forloop.last %}

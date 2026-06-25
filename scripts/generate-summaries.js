@@ -169,12 +169,25 @@ function collectMarkdown(dir, results) {
 }
 
 const files = [];
-collectMarkdown(path.join(ROOT, '_wiki'), files);
-collectMarkdown(path.join(ROOT, '_posts'), files);
+collectMarkdown(path.join(ROOT, '_wiki'),    files);
+collectMarkdown(path.join(ROOT, '_posts'),   files);
+collectMarkdown(path.join(ROOT, '_insight'), files);
+collectMarkdown(path.join(ROOT, '_problem'), files);
+collectMarkdown(path.join(ROOT, '_tool'),    files);
+collectMarkdown(path.join(ROOT, '_event'),   files);
+collectMarkdown(path.join(ROOT, '_adr'),     files);
 console.log('총 ' + files.length + '개 파일 발견' + (FORCE ? ' (--force: 전체 재생성)' : ''));
 
 function slugFromPath(p) {
-    return p.replace(/.*\/_wiki\//, '').replace(/.*\/_posts\//, '').replace(/\.md$/, '');
+    return p
+        .replace(/.*\/_wiki\//, '')
+        .replace(/.*\/_posts\//, '')
+        .replace(/.*\/_insight\//, '')
+        .replace(/.*\/_problem\//, '')
+        .replace(/.*\/_tool\//, '')
+        .replace(/.*\/_event\//, '')
+        .replace(/.*\/_adr\//, '')
+        .replace(/\.md$/, '');
 }
 
 function extractTitle(content) {
