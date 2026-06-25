@@ -421,23 +421,26 @@
                 .force('centerX',   d3.forceX(0).strength(0.04))
                 .force('centerY',   d3.forceY(0).strength(0.04))
                 .alphaDecay(0.015)
-                .alphaTarget(FLOAT_ALPHA)
+                .alphaTarget(0)
                 .stop();
 
-            sim.tick(400);
             zoomToFit();
-            sim.restart();
+            sim.stop(); /* 구면 위치 고정 — 드래그 시에만 재시작 */
 
-            /* ── 초기 카메라 zoom-to-fit ────────────────── */
+            /* ── 초기 카메라 zoom-to-fit (3D 구면 기준) ── */
             function zoomToFit() {
                 var maxR = 1;
                 nodes.forEach(function (n) {
-                    var r = Math.sqrt((n.x || 0) * (n.x || 0) + (n.y || 0) * (n.y || 0));
+                    var r = Math.sqrt(
+                        (n.x || 0) * (n.x || 0) +
+                        (n.y || 0) * (n.y || 0) +
+                        (n.z || 0) * (n.z || 0)
+                    );
                     if (r > maxR) maxR = r;
                 });
                 var fovHalfRad = FOV * 0.5 * Math.PI / 180;
-                var z = maxR / Math.tan(fovHalfRad) * 1.15 + 60;
-                camera.position.set(0, 0, Math.max(150, z));
+                var z = maxR / Math.tan(fovHalfRad) * 1.25 + 80;
+                camera.position.set(0, 0, Math.max(200, z));
                 camera.lookAt(0, 0, 0);
                 if (controls) {
                     controls.target.set(0, 0, 0);
@@ -795,10 +798,10 @@
                         });
                         dragConnSet = null;
                     }
-                    /* 힘 원복 */
+                    /* 힘 원복 후 자연 감쇠 → 정지 */
                     sim.force('charge').strength(-180);
                     sim.force('link').strength(function (d) { return 0.2 + (d.score || 0.7) * 0.35; });
-                    sim.alphaTarget(FLOAT_ALPHA);
+                    sim.alphaTarget(0).alpha(0.15);
                     dragMesh = null; isDragging = false; downAt = null;
                     return;
                 }
