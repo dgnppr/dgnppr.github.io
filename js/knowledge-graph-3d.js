@@ -212,13 +212,11 @@
                 return catGroups[b].length - catGroups[a].length;
             });
 
-            /* ── 파도 페이즈 + Z 초기값 (균등 랜덤) ─────── */
+            /* ── 파도 페이즈 초기값 ────────────────────────── */
             nodes.forEach(function (n, i) {
                 n._wavePhaseX = (i / nodes.length) * Math.PI * 2;
                 n._wavePhaseY = (i / nodes.length) * Math.PI * 2 + Math.PI * 0.5;
                 n._wavePhaseZ = (i / nodes.length) * Math.PI * 2 + Math.PI;
-                /* 카테고리 무관하게 Z를 고르게 분산 */
-                n.z = -200 + (i / Math.max(nodes.length - 1, 1)) * 400;
             });
 
             /* ── 노드 반지름 ─────────────────────────────── */
@@ -390,6 +388,24 @@
             /* ── D3 시뮬레이션 ──────────────────────────────── */
             /* 고정 기본 간격 — 노드 수 무관하게 가독성 유지, 카메라가 줌아웃으로 수용 */
             var idealDist = miniMode ? 110 : 80;
+
+            /* ── 초기 위치: 피보나치 구면 배치 ──────────────
+             *  황금각(golden angle) 배분으로 구면 위에 균등하게 분포.
+             *  반지름 R = sqrt(N) × idealDist × 0.45 로 노드 수에 비례하되 컴팩트하게.
+             */
+            (function () {
+                var N = nodes.length;
+                var R = Math.max(80, Math.sqrt(N) * idealDist * 0.45);
+                var golden = Math.PI * (1 + Math.sqrt(5)); // 황금각 × 2π
+                nodes.forEach(function (n, i) {
+                    var k   = i + 0.5;
+                    var phi = Math.acos(1 - 2 * k / N);          // 위도
+                    var th  = golden * k;                          // 경도
+                    n.x = R * Math.sin(phi) * Math.cos(th);
+                    n.y = R * Math.sin(phi) * Math.sin(th);
+                    n.z = R * Math.cos(phi);
+                });
+            })();
 
             var sim = d3.forceSimulation(nodes)
                 .force('link', d3.forceLink(links)
