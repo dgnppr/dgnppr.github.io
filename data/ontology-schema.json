@@ -2,32 +2,38 @@
   "entity_types": {
     "adr": {
       "dir": "_adr",
-      "description": "Architecture Decision Records"
+      "description": "Architecture Decision Records",
+      "default_actions": ["motivate", "implement", "review", "supersede"]
     },
     "concept": {
       "dir": "_wiki",
       "layout_filter": "wiki",
-      "description": "Technical concepts and knowledge"
+      "description": "Technical concepts and knowledge",
+      "default_actions": ["extend", "implement", "challenge", "deepen"]
     },
     "insight": {
       "dir": "_insight",
       "layout_filter": "insight",
-      "description": "Atomic belief statements — single propositions extracted from experience"
+      "description": "Atomic belief statements — single propositions extracted from experience",
+      "default_actions": ["challenge", "ground", "extend"]
     },
     "problem": {
       "dir": "_problem",
       "layout_filter": "problem",
-      "description": "Problems encountered — root causes, context, impact"
+      "description": "Problems encountered — root causes, context, impact",
+      "default_actions": ["motivate", "resolve", "extract"]
     },
     "tool": {
       "dir": "_tool",
       "layout_filter": "tool",
-      "description": "Tools and technologies used or evaluated"
+      "description": "Tools and technologies used or evaluated",
+      "default_actions": ["implement", "extend", "compare"]
     },
     "event": {
       "dir": "_event",
       "layout_filter": "event",
-      "description": "Significant events — incidents, milestones, decisions in context"
+      "description": "Significant events — incidents, milestones, decisions in context",
+      "default_actions": ["extract", "retrospect"]
     }
   },
   "relation_types": {
@@ -35,12 +41,84 @@
     "references":   "references or cites the target",
     "extends":      "extends or builds upon the target",
     "supersedes":   "supersedes the target decision",
-    "motivates":    "target problem motivated this decision",
+    "motivates":    "this problem motivated the target decision",
     "contradicts":  "conflicts with the target",
     "involves":     "involves this entity",
     "caused-by":    "this event/problem was caused by the target",
     "learned-from": "this insight was learned from the target event/problem",
     "part-of":      "this entity is a component of the target",
     "used-in":      "this tool/concept is used in the target project/concept"
+  },
+  "action_types": {
+    "extend": {
+      "description": "이 개념을 확장·심화하는 새 문서 작성",
+      "creates": "concept",
+      "relation": "extends",
+      "valid_on": ["concept", "tool", "insight"],
+      "gap_trigger": "outbound extends 없음"
+    },
+    "implement": {
+      "description": "이 개념/결정을 구현하는 결정 기록 작성",
+      "creates": "adr",
+      "relation": "implements",
+      "valid_on": ["concept", "adr"],
+      "gap_trigger": "implements 엣지 없음"
+    },
+    "challenge": {
+      "description": "이 insight/개념에 반박하는 대안 관점 작성",
+      "creates": "insight",
+      "relation": "contradicts",
+      "valid_on": ["insight", "concept"],
+      "gap_trigger": "contradicts 엣지 없음"
+    },
+    "deepen": {
+      "description": "이 concept의 하위 개념 또는 구성 요소 기록",
+      "creates": "concept",
+      "relation": "part-of",
+      "valid_on": ["concept"],
+      "gap_trigger": "part-of inbound 없음"
+    },
+    "ground": {
+      "description": "이 insight의 출처가 된 event 또는 problem 기록",
+      "creates": "event",
+      "relation": "learned-from",
+      "valid_on": ["insight"],
+      "gap_trigger": "learned-from 엣지 없음 (출처 불명)"
+    },
+    "motivate": {
+      "description": "이 ADR 결정을 유발한 problem 기록",
+      "creates": "problem",
+      "relation": "motivates",
+      "valid_on": ["adr"],
+      "gap_trigger": "motivates inbound 없음 (ADR 동기 불명)"
+    },
+    "resolve": {
+      "description": "이 problem의 해결 결정 작성",
+      "creates": "adr",
+      "relation": "motivates",
+      "valid_on": ["problem"],
+      "gap_trigger": "motivates outbound 없음 (미해결 문제)"
+    },
+    "extract": {
+      "description": "이 event/problem에서 insight 추출",
+      "creates": "insight",
+      "relation": "learned-from",
+      "valid_on": ["event", "problem"],
+      "gap_trigger": "learned-from inbound 없음 (학습 미추출)"
+    },
+    "review": {
+      "description": "오래된 결정 재검토 — 갱신 또는 대체 결정 작성",
+      "creates": "adr",
+      "relation": "supersedes",
+      "valid_on": ["adr"],
+      "gap_trigger": "adr 작성 후 2년 이상 경과"
+    },
+    "supersede": {
+      "description": "이 ADR을 대체하는 새 결정 작성",
+      "creates": "adr",
+      "relation": "supersedes",
+      "valid_on": ["adr"],
+      "gap_trigger": "deprecated/superseded 상태"
+    }
   }
 }

@@ -21,6 +21,13 @@ const ALL_TYPES  = Object.keys(ENTITY_DIRS);
 // generate-local-embeddings.js와 동일한 entity_type 매핑
 const QDRANT_ENTITY_TYPE = { wiki: "concept", insight: "insight", problem: "problem", tool: "tool", event: "event" };
 
+// ontology-schema.json에서 action 정의 로드 (SSOT)
+const SCHEMA = JSON.parse(fs.readFileSync(path.join(ROOT, "data/ontology-schema.json"), "utf-8"));
+const ACTION_TYPES = SCHEMA.action_types ?? {};
+
+// ontology 타입 → doc_write 타입 매핑
+const ONTOLOGY_TO_DOCTYPE = { concept: "wiki", insight: "insight", problem: "problem", tool: "tool", event: "event", adr: "adr" };
+
 // ── Re-rank 상수 ──────────────────────────────────────────────────────────────
 
 // relation type별 직접 엣지 가중치 (0~0.15)
@@ -150,6 +157,9 @@ function resolveTypes(type) {
 
 function buildFrontmatter(type, args, existingMeta = null) {
   const now = formatDate(new Date());
+  const relLines = args.relations?.length
+    ? ["relations:", ...args.relations.map(r => `  - type: ${r.type}\n    target: ${r.target}`)]
+    : [];
   if (type === "adr") {
     return [
       "---",
@@ -161,6 +171,7 @@ function buildFrontmatter(type, args, existingMeta = null) {
       `status    : ${args.status ?? "proposed"}`,
       `deciders  : ${args.deciders ?? ""}`,
       `public    : false`,
+      ...relLines,
       "---",
     ].join("\n");
   }
@@ -178,6 +189,7 @@ function buildFrontmatter(type, args, existingMeta = null) {
     `status  : ${args.status ?? "draft"}`,
     `public  : ${args.public ?? true}`,
     ...(category ? [`parent  : [[/${category}]]`] : []),
+    ...relLines,
     "---",
   ].join("\n");
 }
@@ -265,7 +277,8 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           tag:      { type: "string", description: "태그 (공백 구분, 선택)" },
           status:   { type: "string", description: "wiki 계열: draft|writing|complete / adr: proposed|accepted|deprecated|superseded" },
           public:   { type: "boolean", description: "공개 여부 (wiki 계열 전용, 기본: true)" },
-          deciders: { type: "string", description: "결정 참여자 (adr 전용, 선택)" },
+          deciders:  { type: "string", description: "결정 참여자 (adr 전용, 선택)" },
+          relations: { type: "array", description: "그래프 관계 (ontology_act 결과를 그대로 전달)", items: { type: "object", properties: { type: { type: "string" }, target: { type: "string" } }, required: ["type", "target"] } },
         },
         required: ["type", "path", "title", "body"],
       },
@@ -329,6 +342,30 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           query: { type: "string", description: "텍스트로 ADR을 찾을 때 사용 — 가장 유사한 ADR을 자동 선택" },
           limit: { type: "number", description: "유사 결정 최대 수 (기본 5)" },
         },
+      },
+    },
+    {
+      name: "ontology_gaps",
+      description: "온톨로지 그래프의 gap을 분석한다: 고립 노드, referenced-but-missing 문서, 타입별 액션 기회(motivate/ground/resolve/extract/review). 그래프를 행동으로 전환하는 시작점.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          type:  { type: "string", description: "특정 엔티티 타입으로 필터 (adr|concept|insight|problem|tool|event, 생략 시 전체)" },
+          limit: { type: "number", description: "최대 반환 수 (기본 20)" },
+        },
+      },
+    },
+    {
+      name: "ontology_act",
+      description: "엔티티 ID와 액션 타입으로 새 문서 blueprint를 생성한다. doc_write에 바로 전달 가능한 인자 구조를 반환. 액션: extend|implement|challenge|deepen|ground|motivate|resolve|extract|review|supersede",
+      inputSchema: {
+        type: "object",
+        properties: {
+          id:     { type: "string", description: "액션을 적용할 엔티티 ID (예: concept/data-engineering/00_medallion)" },
+          action: { type: "string", description: "수행할 액션 타입 (extend|implement|challenge|deepen|ground|motivate|resolve|extract|review|supersede)" },
+          title:  { type: "string", description: "생성할 문서 제목 (생략 시 자동 추론)" },
+        },
+        required: ["id", "action"],
       },
     },
   ],
@@ -729,6 +766,148 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       `\n## 전체 내용\n${content}`,
     ].join("\n");
     return { content: [{ type: "text", text: out }] };
+  }
+
+  // ── ontology_gaps ──────────────────────────────────────────────────────────
+  if (name === "ontology_gaps") {
+    const graph = loadGraph();
+    const nodeIds = new Set(Object.keys(graph.nodes));
+    const gaps = [];
+
+    // 1. referenced-but-missing (broken edges)
+    for (const e of graph.edges) {
+      if (!nodeIds.has(e.to)) {
+        gaps.push({
+          priority: "critical",
+          gap_type: "missing_target",
+          from_id: e.from,
+          from_title: graph.nodes[e.from]?.title ?? e.from,
+          missing_id: e.to,
+          relation: e.type,
+          action: "write",
+          reason: `${e.from} → ${e.to} (${e.type}) 참조하지만 문서 없음`,
+        });
+      }
+    }
+
+    // 2. orphan nodes (no edges)
+    const connectedIds = new Set(graph.edges.flatMap(e => [e.from, e.to]));
+    for (const [id, node] of Object.entries(graph.nodes)) {
+      if (!connectedIds.has(id)) {
+        const defaultActions = SCHEMA.entity_types[node.type]?.default_actions ?? [];
+        gaps.push({
+          priority: "high",
+          gap_type: "orphan",
+          node: { id, type: node.type, title: node.title, status: node.status },
+          suggested_actions: defaultActions,
+          action: "link",
+          reason: "관계 없는 고립 노드",
+        });
+      }
+    }
+
+    // 3. action opportunities (type-specific)
+    for (const [id, node] of Object.entries(graph.nodes)) {
+      const outbound = graph.edges.filter(e => e.from === id);
+      const inbound  = graph.edges.filter(e => e.to   === id);
+
+      // adr without motivating problem
+      if (node.type === "adr" && !inbound.some(e => e.type === "motivates")) {
+        gaps.push({ priority: "medium", gap_type: "action_opportunity", node: { id, type: node.type, title: node.title }, action: "motivate", reason: "이 ADR에 연결된 problem 없음" });
+      }
+      // adr older than 2 years
+      if (node.type === "adr" && node.date && node.status === "accepted") {
+        const daysOld = (Date.now() - new Date(node.date).getTime()) / 86400000;
+        if (daysOld > 730) gaps.push({ priority: "low", gap_type: "action_opportunity", node: { id, type: node.type, title: node.title }, action: "review", reason: `작성 후 ${Math.floor(daysOld / 365)}년 이상 경과 — 재검토 필요` });
+      }
+      // insight without grounding
+      if (node.type === "insight" && !outbound.some(e => e.type === "learned-from")) {
+        gaps.push({ priority: "medium", gap_type: "action_opportunity", node: { id, type: node.type, title: node.title }, action: "ground", reason: "이 insight의 출처 event/problem 없음" });
+      }
+      // problem without resolution
+      if (node.type === "problem" && !outbound.some(e => e.type === "motivates")) {
+        gaps.push({ priority: "medium", gap_type: "action_opportunity", node: { id, type: node.type, title: node.title }, action: "resolve", reason: "이 problem의 해결 결정 없음" });
+      }
+      // event without extracted insight
+      if (node.type === "event" && !inbound.some(e => e.type === "learned-from")) {
+        gaps.push({ priority: "low", gap_type: "action_opportunity", node: { id, type: node.type, title: node.title }, action: "extract", reason: "이 event에서 insight 미추출" });
+      }
+    }
+
+    // filter + sort
+    let result = args.type ? gaps.filter(g => (g.node?.type ?? g.from_id?.split("/")[0]) === args.type) : gaps;
+    const ORDER = { critical: 0, high: 1, medium: 2, low: 3 };
+    result.sort((a, b) => (ORDER[a.priority] ?? 4) - (ORDER[b.priority] ?? 4));
+    return { content: [{ type: "text", text: JSON.stringify(result.slice(0, args.limit ?? 20), null, 2) }] };
+  }
+
+  // ── ontology_act ───────────────────────────────────────────────────────────
+  if (name === "ontology_act") {
+    const graph = loadGraph();
+    const node = graph.nodes[args.id];
+    if (!node) return { content: [{ type: "text", text: `엔티티 없음: ${args.id}` }], isError: true };
+
+    const actionDef = ACTION_TYPES[args.action];
+    if (!actionDef) return { content: [{ type: "text", text: `알 수 없는 action: ${args.action}. 사용 가능: ${Object.keys(ACTION_TYPES).join(", ")}` }], isError: true };
+    if (!actionDef.valid_on.includes(node.type)) return { content: [{ type: "text", text: `${args.action}은 ${node.type}에 적용 불가. 유효: ${actionDef.valid_on.join(", ")}` }], isError: true };
+
+    const creates    = actionDef.creates;
+    const relation   = actionDef.relation;
+    const docType    = ONTOLOGY_TO_DOCTYPE[creates] ?? creates;
+    const now        = new Date();
+    const year       = now.getFullYear();
+
+    // 앵커에서 카테고리 추출
+    const anchorParts    = args.id.split("/");
+    const anchorCategory = anchorParts.length > 2 ? anchorParts.slice(1, -1).join("/") : "general";
+
+    let suggestedPath, suggestedTitle;
+    if (creates === "adr") {
+      const adrFiles = collectFiles(ENTITY_DIRS.adr);
+      const maxNum   = adrFiles.reduce((mx, f) => { const m = path.basename(f).match(/(\d{3})[^/]*\.md$/); return m ? Math.max(mx, parseInt(m[1])) : mx; }, 0);
+      const nextNum  = String(maxNum + 1).padStart(3, "0");
+      const slugBase = args.title ? args.title.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "") : `${args.action}-${anchorParts[anchorParts.length - 1]}`;
+      suggestedPath  = `${anchorCategory}/${year}-${nextNum}-${slugBase}.md`;
+      suggestedTitle = args.title ?? `[${args.action}] ${node.title}`;
+    } else {
+      const dir      = ENTITY_DIRS[docType] ?? ENTITY_DIRS.wiki;
+      const catFiles = collectFiles(dir).filter(f => f.startsWith(anchorCategory + "/"));
+      const maxNum   = catFiles.reduce((mx, f) => { const m = path.basename(f).match(/^(\d+)/); return m ? Math.max(mx, parseInt(m[1])) : mx; }, -1);
+      const nextNum  = String(maxNum + 1).padStart(2, "0");
+      const slugBase = args.title ? args.title.toLowerCase().replace(/\s+/g, "_").replace(/[^a-z0-9_]/g, "") : `${args.action}_${anchorParts[anchorParts.length - 1]}`;
+      suggestedPath  = `${anchorCategory}/${nextNum}_${slugBase}.md`;
+      suggestedTitle = args.title ?? `[${args.action}] ${node.title}`;
+    }
+
+    // ground 액션은 관계 방향이 반대 (anchor insight가 new event를 learned-from)
+    const needsAnchorUpdate = args.action === "ground";
+    const relations = needsAnchorUpdate ? [] : [{ type: relation, target: args.id }];
+
+    const docWriteArgs = {
+      type:      docType,
+      path:      suggestedPath,
+      title:     suggestedTitle,
+      body:      `## 개요\n\n> ${actionDef.description}: [${node.title}](/${args.id})\n\n## 내용\n\n`,
+      tag:       node.tags?.join(" ") ?? "",
+      status:    creates === "adr" ? "proposed" : "draft",
+      ...(relations.length ? { relations } : {}),
+    };
+
+    const out = {
+      action:       args.action,
+      description:  actionDef.description,
+      anchor:       { id: args.id, type: node.type, title: node.title },
+      creates,
+      relation:     relations.length ? relation : null,
+      doc_write_args: docWriteArgs,
+      next_steps: [
+        "1. doc_write_args의 body를 채워 doc_write 호출",
+        "2. make ontology  — 그래프 갱신",
+        "3. make local-embeddings  — Qdrant 갱신",
+        ...(needsAnchorUpdate ? [`4. ${args.id} 문서에 learned-from: <new-event-id> relation 추가 후 make ontology`] : []),
+      ],
+    };
+    return { content: [{ type: "text", text: JSON.stringify(out, null, 2) }] };
   }
 
   return { content: [{ type: "text", text: `알 수 없는 도구: ${name}` }], isError: true };

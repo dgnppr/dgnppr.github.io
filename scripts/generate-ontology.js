@@ -59,6 +59,8 @@ for (const [type, cfg] of Object.entries(SCHEMA.entity_types)) {
     if (meta.valid_to)    node.valid_to    = String(meta.valid_to).split(' ')[0];
     if (meta.confidence)  node.confidence  = String(meta.confidence);
     if (meta.supersedes)  node.supersedes  = String(meta.supersedes);
+    // per-document action override (entity type의 default_actions를 덮어씀)
+    if (meta.actions)     node.actions     = Array.isArray(meta.actions) ? meta.actions : String(meta.actions).split(/\s+/).filter(Boolean);
     nodes[id] = node;
     const rels = Array.isArray(meta.relations) ? meta.relations : [];
     for (const r of rels) {

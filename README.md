@@ -225,6 +225,62 @@ Claude Code에 `~/.claude.json`으로 등록된 단일 MCP 서버. 11개 도구 
 
 ---
 
+## 액션 시스템 — 그래프 → 행동 → 그래프
+
+지식 그래프를 단순 조회가 아니라 **다음 행동의 출발점**으로 쓰는 구조.
+
+### 플라이휠
+
+```
+ontology_gaps   → gap 발견 (고립·미작성·동기 없는 ADR 등)
+ontology_act    → blueprint 생성 (doc_write에 바로 전달 가능한 인자 포함)
+doc_write       → 문서 작성 (relations 자동 포함)
+make ontology   → 그래프에 새 노드+엣지 추가
+→ 반복
+```
+
+### 액션 타입 (ontology-schema.json SSOT)
+
+| action | 적용 타입 | 결과물 | 연결 relation | gap 조건 |
+|--------|---------|--------|-------------|---------|
+| `extend` | concept·tool·insight | concept | extends | outbound extends 없음 |
+| `implement` | concept·adr | adr | implements | implements 엣지 없음 |
+| `challenge` | insight·concept | insight | contradicts | contradicts 없음 |
+| `deepen` | concept | concept | part-of | part-of inbound 없음 |
+| `ground` | insight | event | learned-from | 출처 event 없음 |
+| `motivate` | adr | problem | motivates | motivates inbound 없음 |
+| `resolve` | problem | adr | motivates | 해결 결정 없음 |
+| `extract` | event·problem | insight | learned-from | insight 미추출 |
+| `review` | adr | adr | supersedes | 2년 이상 경과 |
+| `supersede` | adr | adr | supersedes | deprecated 상태 |
+
+### 사용 예
+
+```
+# gap 탐색
+/ontology gaps              # 전체
+/ontology gaps adr          # ADR만
+
+# blueprint 생성 → 작성
+/ontology act adr/security/2026-001-gcp-key motivate
+→ doc_write_args 반환 → body 채워 doc_write 호출
+
+# 그래프 갱신
+make ontology
+make local-embeddings
+```
+
+### frontmatter actions 오버라이드
+
+entity type의 `default_actions`를 문서별로 제한:
+```yaml
+actions:
+  - extend
+  - challenge
+```
+
+---
+
 ## 로컬 개발 환경 설정
 
 ### 의존성
