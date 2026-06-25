@@ -449,6 +449,7 @@
 
             /* ── 상태 ────────────────────────────────────── */
             var pinnedNode = null, activeNode = null, resetTimer = null, activeSearch = false;
+            var lastInteract = 0, IDLE_MS = 2000;
 
             function highlight(n) {
                 activeNode = n;
@@ -652,6 +653,7 @@
 
             function onDown(e) {
                 if (e.button !== 0) return;
+                lastInteract = performance.now();
                 setPtr(e);
                 camera.updateMatrixWorld();
                 ray.setFromCamera(ptr, camera);
@@ -672,6 +674,7 @@
             }
 
             function onMove(e) {
+                lastInteract = performance.now();
                 setPtr(e);
                 if (dragMesh) {
                     /* 3px 이상 이동 시 노드 드래그 확정 → OrbitControls 비활성 */
@@ -1039,9 +1042,12 @@
                 /* 프리뷰 카드 — 노드 따라 이동, 연결 노드 안 가리는 방향 선택 */
                 if (pinnedNode) updatePreviewPos();
 
-                /* miniMode 자동 회전 — Y축 기준 서서히 회전 */
-                if (miniMode && !isDragging) {
-                    var _a = 0.004;
+                /* 자동 회전 — miniMode: 항상, 메인: idle 3초 후 */
+                var shouldRotate = isDragging ? false
+                    : miniMode ? true
+                    : (!pinnedNode && (now - lastInteract > IDLE_MS));
+                if (shouldRotate) {
+                    var _a = miniMode ? 0.004 : 0.003;
                     var _px = camera.position.x - controls.target.x;
                     var _pz = camera.position.z - controls.target.z;
                     var _c = Math.cos(_a), _s = Math.sin(_a);
