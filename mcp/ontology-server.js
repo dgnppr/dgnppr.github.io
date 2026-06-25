@@ -5,11 +5,61 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import fs from "fs";
 import path from "path";
 
-const ROOT            = path.join(import.meta.dirname, "..");
-const GRAPH_FILE      = path.join(ROOT, "data/ontology-graph.json");
-const EMBEDDINGS_FILE = path.join(ROOT, "data/embeddings.json");
-const WIKI_DIR        = path.join(ROOT, "_wiki");
-const ADR_DIR         = path.join(ROOT, "_adr");
+const ROOT       = path.join(import.meta.dirname, "..");
+const GRAPH_FILE = path.join(ROOT, "data/ontology-graph.json");
+
+const ENTITY_DIRS = {
+  wiki:    path.join(ROOT, "_wiki"),
+  insight: path.join(ROOT, "_insight"),
+  problem: path.join(ROOT, "_problem"),
+  tool:    path.join(ROOT, "_tool"),
+  event:   path.join(ROOT, "_event"),
+  adr:     path.join(ROOT, "_adr"),
+};
+const ALL_TYPES  = Object.keys(ENTITY_DIRS);
+
+// generate-local-embeddings.js와 동일한 entity_type 매핑
+const QDRANT_ENTITY_TYPE = { wiki: "concept", insight: "insight", problem: "problem", tool: "tool", event: "event" };
+
+// ── Re-rank 상수 ──────────────────────────────────────────────────────────────
+
+// relation type별 직접 엣지 가중치 (0~0.15)
+const EDGE_WEIGHTS = {
+  extends:       0.15,
+  implements:    0.15,
+  motivates:     0.12,
+  "learned-from":0.12,
+  "caused-by":   0.10,
+  supersedes:    0.10,
+  "part-of":     0.08,
+  "used-in":     0.08,
+  references:    0.06,
+  involves:      0.05,
+  contradicts:   0.04,
+};
+
+// anchor type → candidate type → 타입 친화도 보너스 (0~0.05)
+// 예: ADR 작성 컨텍스트에선 problem이 더 관련성 높음
+const TYPE_AFFINITY = {
+  adr:     { problem: 0.05, concept: 0.04, insight: 0.03, tool: 0.01, event: 0.00, adr: 0.02 },
+  problem: { insight: 0.05, adr: 0.04, event: 0.04, concept: 0.02, tool: 0.01, problem: 0.02 },
+  insight: { problem: 0.05, event: 0.04, concept: 0.03, adr: 0.02, tool: 0.00, insight: 0.02 },
+  event:   { insight: 0.05, problem: 0.04, adr: 0.03, concept: 0.01, tool: 0.00, event: 0.02 },
+  concept: { concept: 0.04, tool: 0.03, insight: 0.02, adr: 0.01, problem: 0.01, event: 0.00 },
+  tool:    { concept: 0.04, adr: 0.03, insight: 0.02, problem: 0.01, event: 0.00, tool: 0.02 },
+};
+
+// tag 전체 분포에서 희소성 계산용 캐시
+let _tagFreqCache = null;
+function getTagFrequencies(graph) {
+  if (_tagFreqCache) return _tagFreqCache;
+  const freq = {};
+  for (const n of Object.values(graph.nodes)) {
+    for (const t of (n.tags ?? [])) freq[t] = (freq[t] ?? 0) + 1;
+  }
+  _tagFreqCache = freq;
+  return freq;
+}
 
 // .env 우선, process.env는 fallback
 const _env = path.join(ROOT, ".env");
@@ -24,9 +74,7 @@ const BACKEND    = process.env.EMBEDDING_BACKEND;
 const OLLAMA_URL = process.env.OLLAMA_URL || "http://localhost:11434";
 const QDRANT_URL = process.env.QDRANT_URL || "http://localhost:6333";
 
-const WIKI_ENTITY_TYPES = new Set(["concept", "insight", "problem", "tool", "event"]);
-
-// ── Shared helpers ──────────────────────────────────────────────────────────
+// ── Helpers ──────────────────────────────────────────────────────────────────
 
 function parseFrontmatter(content) {
   const match = content.match(/^---\n([\s\S]*?)\n---/);
@@ -42,12 +90,6 @@ function parseFrontmatter(content) {
 function formatDate(d) {
   const pad = (n) => String(n).padStart(2, "0");
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} 00:00:00 +0900`;
-}
-
-function cosine(a, b) {
-  let dot = 0, na = 0, nb = 0;
-  for (let i = 0; i < a.length; i++) { dot += a[i] * b[i]; na += a[i] * a[i]; nb += b[i] * b[i]; }
-  return dot / (Math.sqrt(na) * Math.sqrt(nb) || 1);
 }
 
 let _ai;
@@ -71,16 +113,19 @@ async function embedQuery(text) {
   return emb;
 }
 
-async function qdrantSearch(collection, vector, limit = 20) {
+async function qdrantSearch(collection, vector, limit = 20, filter = null) {
+  const body = { vector, limit, with_payload: true };
+  if (filter) body.filter = filter;
   const res = await fetch(`${QDRANT_URL}/collections/${collection}/points/search`, {
     method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ vector, limit, with_payload: true }),
+    body: JSON.stringify(body),
   });
   if (!res.ok) return [];
   return (await res.json()).result ?? [];
 }
 
 function collectFiles(dir) {
+  if (!fs.existsSync(dir)) return [];
   const results = [];
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
     const fullPath = path.join(dir, entry.name);
@@ -95,14 +140,34 @@ function loadGraph() {
   return JSON.parse(fs.readFileSync(GRAPH_FILE, "utf-8"));
 }
 
-// ── Frontmatter builders ────────────────────────────────────────────────────
+function resolveTypes(type) {
+  if (!type || type === "all") return ALL_TYPES;
+  if (ENTITY_DIRS[type]) return [type];
+  return ALL_TYPES;
+}
 
-function buildWikiFrontmatter(args, existingMeta = null) {
+// ── Frontmatter builder ──────────────────────────────────────────────────────
+
+function buildFrontmatter(type, args, existingMeta = null) {
   const now = formatDate(new Date());
+  if (type === "adr") {
+    return [
+      "---",
+      `layout    : adr`,
+      `title     : ${args.title}`,
+      `date      : ${existingMeta?.date ?? now}`,
+      `updated   : ${now}`,
+      `tag       : ${args.tag ?? ""}`,
+      `status    : ${args.status ?? "proposed"}`,
+      `deciders  : ${args.deciders ?? ""}`,
+      `public    : false`,
+      "---",
+    ].join("\n");
+  }
   const category = args.path.includes("/") ? args.path.split("/")[0] : "";
   return [
     "---",
-    `layout  : wiki`,
+    `layout  : ${type}`,
     `title   : ${args.title}`,
     `date    : ${existingMeta?.date ?? now}`,
     `updated : ${now}`,
@@ -117,161 +182,102 @@ function buildWikiFrontmatter(args, existingMeta = null) {
   ].join("\n");
 }
 
-function buildAdrFrontmatter(args, existingMeta = null) {
-  const now = formatDate(new Date());
-  return [
-    "---",
-    `layout    : adr`,
-    `title     : ${args.title}`,
-    `date      : ${existingMeta?.date ?? now}`,
-    `updated   : ${now}`,
-    `tag       : ${args.tag ?? ""}`,
-    `status    : ${args.status ?? "proposed"}`,
-    `deciders  : ${args.deciders ?? ""}`,
-    `public    : false`,
-    "---",
-  ].join("\n");
-}
-
-// ── Server ──────────────────────────────────────────────────────────────────
+// ── Server ───────────────────────────────────────────────────────────────────
 
 const server = new Server(
-  { name: "dgnppr-ontology", version: "2.0.0" },
+  { name: "dgnppr-ontology", version: "3.0.0" },
   { capabilities: { tools: {} } }
 );
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
   tools: [
-    // ── Wiki ──
+    // ── Unified doc tools ──
     {
-      name: "wiki_list",
-      description: "위키의 모든 페이지 목록을 반환한다. 카테고리와 파일명 포함.",
-      inputSchema: { type: "object", properties: {} },
-    },
-    {
-      name: "wiki_read",
-      description: "위키 페이지를 읽는다. 경로는 wiki_list에서 반환된 값을 사용.",
+      name: "doc_list",
+      description: "지정한 타입(또는 전체)의 문서 목록을 반환한다. type 생략 시 모든 엔티티 타입 포함.",
       inputSchema: {
         type: "object",
-        properties: { path: { type: "string", description: "위키 파일 경로 (예: llm/00_what_is_transformers.md)" } },
-        required: ["path"],
+        properties: {
+          type: { type: "string", description: "wiki | insight | problem | tool | event | adr | all (기본: all)" },
+        },
       },
     },
     {
-      name: "wiki_search",
-      description: "위키 전체에서 키워드를 검색한다. 제목과 본문 모두 검색.",
+      name: "doc_read",
+      description: "문서를 읽는다. doc_list에서 반환된 path를 사용.",
       inputSchema: {
         type: "object",
-        properties: { query: { type: "string", description: "검색할 키워드" } },
+        properties: {
+          type: { type: "string", description: "wiki | insight | problem | tool | event | adr" },
+          path: { type: "string", description: "파일 경로 (예: llm/00_what_is_transformers.md)" },
+        },
+        required: ["type", "path"],
+      },
+    },
+    {
+      name: "doc_search",
+      description: "문서 전체 또는 특정 타입에서 키워드를 검색한다. 제목과 본문 모두 검색.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: { type: "string", description: "검색할 키워드" },
+          type:  { type: "string", description: "wiki | insight | problem | tool | event | adr | all (기본: all)" },
+        },
         required: ["query"],
       },
     },
     {
-      name: "wiki_find",
-      description: "위키에서 임베딩 유사도 기반으로 관련 문서를 반환한다. 관련도 순 목록.",
+      name: "doc_find",
+      description: "임베딩 유사도 기반으로 관련 문서 목록을 반환한다. wiki 계열은 파일 캐시, adr은 Qdrant 사용.",
       inputSchema: {
         type: "object",
-        properties: { query: { type: "string", description: "검색 키워드 또는 질문" } },
+        properties: {
+          query: { type: "string", description: "검색 키워드 또는 질문" },
+          type:  { type: "string", description: "wiki | insight | problem | tool | event | adr | all (기본: all)" },
+          limit: { type: "number", description: "최대 반환 수 (기본: 10)" },
+        },
         required: ["query"],
       },
     },
     {
-      name: "wiki_query",
-      description: "위키에서 질문과 관련된 문서의 전체 본문을 반환한다. Claude가 내용을 읽고 사용자 질문에 답하는 용도.",
+      name: "doc_query",
+      description: "임베딩 검색으로 관련 문서의 전체 본문을 반환한다. Claude가 내용을 읽고 질문에 답하는 용도.",
       inputSchema: {
         type: "object",
         properties: {
           query: { type: "string", description: "검색할 질문 또는 키워드" },
+          type:  { type: "string", description: "wiki | insight | problem | tool | event | adr | all (기본: all)" },
           limit: { type: "number", description: "반환할 최대 문서 수 (기본: 3)" },
         },
         required: ["query"],
       },
     },
     {
-      name: "wiki_write",
-      description: "위키 페이지를 생성하거나 수정한다. frontmatter는 서버가 자동 조립한다. 기존 파일 수정 시 date는 보존되고 updated만 갱신된다.",
+      name: "doc_write",
+      description: "문서를 생성하거나 수정한다. frontmatter는 서버가 자동 조립한다. 기존 파일 수정 시 date 보존, updated 갱신.",
       inputSchema: {
         type: "object",
         properties: {
-          path:   { type: "string", description: "위키 파일 경로 (예: llm/01_attention.md)" },
-          title:  { type: "string", description: "페이지 제목" },
-          body:   { type: "string", description: "본문 내용 (frontmatter 제외)" },
-          tag:    { type: "string", description: "태그 (공백 구분, 선택)" },
-          status: { type: "string", description: "상태: draft | writing | complete (기본: draft)" },
-          public: { type: "boolean", description: "공개 여부 (기본: true)" },
-        },
-        required: ["path", "title", "body"],
-      },
-    },
-    // ── ADR ──
-    {
-      name: "adr_list",
-      description: "모든 ADR 목록을 반환한다. 파일명, 제목, 상태, 결정자 포함.",
-      inputSchema: { type: "object", properties: {} },
-    },
-    {
-      name: "adr_read",
-      description: "ADR 문서를 읽는다. 경로는 adr_list에서 반환된 값을 사용.",
-      inputSchema: {
-        type: "object",
-        properties: { path: { type: "string", description: "ADR 파일 경로 (예: 2024-001-use-kafka.md)" } },
-        required: ["path"],
-      },
-    },
-    {
-      name: "adr_search",
-      description: "ADR 전체에서 키워드를 검색한다. 제목과 본문 모두 검색.",
-      inputSchema: {
-        type: "object",
-        properties: { query: { type: "string", description: "검색할 키워드" } },
-        required: ["query"],
-      },
-    },
-    {
-      name: "adr_find",
-      description: "ADR에서 임베딩 기반으로 관련 문서를 검색한다. 시맨틱 유사도 순으로 반환.",
-      inputSchema: {
-        type: "object",
-        properties: { query: { type: "string", description: "검색 질문 또는 키워드" } },
-        required: ["query"],
-      },
-    },
-    {
-      name: "adr_query",
-      description: "ADR에서 질문과 관련된 문서의 전체 본문을 반환한다. Claude가 내용을 읽고 답하는 용도.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          query: { type: "string", description: "검색할 질문 또는 키워드" },
-          limit: { type: "number", description: "반환할 최대 문서 수 (기본: 3)" },
-        },
-        required: ["query"],
-      },
-    },
-    {
-      name: "adr_write",
-      description: "ADR 문서를 생성하거나 수정한다. frontmatter는 서버가 자동 조립한다. 기존 파일 수정 시 date는 보존되고 updated만 갱신된다.",
-      inputSchema: {
-        type: "object",
-        properties: {
-          path:     { type: "string", description: "ADR 파일 경로 (예: 2024-001-use-kafka.md)" },
-          title:    { type: "string", description: "ADR 제목" },
+          type:     { type: "string", description: "wiki | insight | problem | tool | event | adr" },
+          path:     { type: "string", description: "파일 경로 (예: llm/01_attention.md 또는 2024-001-use-kafka.md)" },
+          title:    { type: "string", description: "문서 제목" },
           body:     { type: "string", description: "본문 내용 (frontmatter 제외)" },
           tag:      { type: "string", description: "태그 (공백 구분, 선택)" },
-          status:   { type: "string", description: "상태: proposed | accepted | deprecated | superseded (기본: proposed)" },
-          deciders: { type: "string", description: "결정 참여자 (공백 구분, 선택)" },
+          status:   { type: "string", description: "wiki 계열: draft|writing|complete / adr: proposed|accepted|deprecated|superseded" },
+          public:   { type: "boolean", description: "공개 여부 (wiki 계열 전용, 기본: true)" },
+          deciders: { type: "string", description: "결정 참여자 (adr 전용, 선택)" },
         },
-        required: ["path", "title", "body"],
+        required: ["type", "path", "title", "body"],
       },
     },
-    // ── Ontology ──
+    // ── Ontology tools ──
     {
       name: "ontology_entities",
       description: "온톨로지 그래프에서 엔티티 목록을 반환한다. query가 있으면 임베딩 기반 시맨틱 검색, 없으면 type/status/tag 필터 목록.",
       inputSchema: {
         type: "object",
         properties: {
-          query:  { type: "string", description: "시맨틱 검색 쿼리 (주면 임베딩 기반, 생략 시 전체 목록)" },
+          query:  { type: "string", description: "시맨틱 검색 쿼리 (생략 시 전체 목록)" },
           type:   { type: "string", description: "adr | concept | insight | problem | tool | event (생략 시 전체)" },
           status: { type: "string", description: "상태 필터 (예: accepted, complete)" },
           tag:    { type: "string", description: "태그 필터" },
@@ -290,13 +296,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
     },
     {
       name: "ontology_related",
-      description: "텍스트 또는 엔티티 ID 기준으로 adr·wiki 양쪽을 탐색한다. Qdrant ANN(candidate gen) + 태그·그래프 시그널(re-rank). 결과는 { related_adrs, related_wiki } 두 그룹으로 반환한다.",
+      description: "텍스트 또는 엔티티 ID 기준으로 전체 엔티티 타입(concept/insight/problem/tool/event/adr)을 탐색한다. Qdrant ANN + 태그·그래프 시그널 re-rank. 결과는 entity_type별로 그룹핑해 반환한다.",
       inputSchema: {
         type: "object",
         properties: {
           query: { type: "string", description: "검색할 텍스트 (query 또는 id 중 하나 필수)" },
           id:    { type: "string", description: "기준 엔티티 ID — 본문을 쿼리로 사용하고 graph 시그널도 활성화됨" },
-          limit: { type: "number", description: "그룹당 최대 수 (기본 5)" },
+          limit: { type: "number", description: "타입당 최대 수 (기본 5)" },
         },
       },
     },
@@ -331,132 +337,50 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 server.setRequestHandler(CallToolRequestSchema, async (req) => {
   const { name, arguments: args } = req.params;
 
-  // ── wiki_list ──────────────────────────────────────────────────────────────
-  if (name === "wiki_list") {
-    const pages = collectFiles(WIKI_DIR).map((f) => {
-      const { meta } = parseFrontmatter(fs.readFileSync(path.join(WIKI_DIR, f), "utf-8"));
-      return { path: f, title: meta.title || f, tags: meta.tag || "" };
-    });
-    return { content: [{ type: "text", text: JSON.stringify(pages, null, 2) }] };
-  }
-
-  // ── wiki_read ──────────────────────────────────────────────────────────────
-  if (name === "wiki_read") {
-    const filePath = path.join(WIKI_DIR, args.path);
-    if (!filePath.startsWith(WIKI_DIR))
-      return { content: [{ type: "text", text: "잘못된 경로입니다." }], isError: true };
-    if (!fs.existsSync(filePath))
-      return { content: [{ type: "text", text: `파일을 찾을 수 없습니다: ${args.path}` }], isError: true };
-    return { content: [{ type: "text", text: fs.readFileSync(filePath, "utf-8") }] };
-  }
-
-  // ── wiki_search ────────────────────────────────────────────────────────────
-  if (name === "wiki_search") {
-    const query = args.query.toLowerCase();
-    const results = [];
-    for (const f of collectFiles(WIKI_DIR)) {
-      const content = fs.readFileSync(path.join(WIKI_DIR, f), "utf-8");
-      const { meta, body } = parseFrontmatter(content);
-      const title = (meta.title || f).toLowerCase();
-      const bodyLower = body.toLowerCase();
-      if (title.includes(query) || bodyLower.includes(query)) {
-        const idx = bodyLower.indexOf(query);
-        const snippet = idx >= 0 ? body.slice(Math.max(0, idx - 80), idx + 160).replace(/\n+/g, " ") : "";
-        results.push({ path: f, title: meta.title || f, snippet });
-      }
-    }
-    return {
-      content: [{ type: "text", text: results.length ? JSON.stringify(results, null, 2) : `'${args.query}'에 대한 결과가 없습니다.` }],
-    };
-  }
-
-  // ── wiki_find / wiki_query ─────────────────────────────────────────────────
-  if (name === "wiki_find" || name === "wiki_query") {
-    if (!fs.existsSync(EMBEDDINGS_FILE))
-      return { content: [{ type: "text", text: "임베딩 캐시가 없습니다. generate-embeddings.js를 먼저 실행하세요." }], isError: true };
-    const cache = JSON.parse(fs.readFileSync(EMBEDDINGS_FILE, "utf-8"));
-
-    let queryVec;
-    try { queryVec = await embedQuery(args.query); }
-    catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
-
-    const scored = collectFiles(WIKI_DIR)
-      .map((f) => {
-        const slug = f.replace(/\.md$/, "");
-        const cached = cache[slug];
-        if (!cached) return null;
-        return { f, score: cosine(queryVec, cached.embedding) };
+  // ── doc_list ───────────────────────────────────────────────────────────────
+  if (name === "doc_list") {
+    const types = resolveTypes(args.type);
+    const pages = types.flatMap((type) =>
+      collectFiles(ENTITY_DIRS[type]).map((f) => {
+        const { meta } = parseFrontmatter(fs.readFileSync(path.join(ENTITY_DIRS[type], f), "utf-8"));
+        const entry = { type, path: f, title: meta.title || f, tags: meta.tag || "" };
+        if (type === "adr") { entry.status = meta.status || ""; entry.deciders = meta.deciders || ""; }
+        return entry;
       })
-      .filter(Boolean)
-      .sort((a, b) => b.score - a.score);
-
-    if (name === "wiki_find") {
-      const results = scored.slice(0, 10).map(({ f, score }) => {
-        const { meta } = parseFrontmatter(fs.readFileSync(path.join(WIKI_DIR, f), "utf-8"));
-        return { path: f, title: meta.title || f, tags: meta.tag || "", score: +score.toFixed(3) };
-      });
-      return {
-        content: [{ type: "text", text: results.length ? JSON.stringify(results, null, 2) : `'${args.query}'에 대한 문서를 찾을 수 없습니다.` }],
-      };
-    }
-
-    const limit = args.limit ?? 3;
-    if (!scored.length)
-      return { content: [{ type: "text", text: `'${args.query}'에 대한 위키 내용을 찾을 수 없습니다.` }] };
-    const output = scored.slice(0, limit).map(({ f, score }) => {
-      const content = fs.readFileSync(path.join(WIKI_DIR, f), "utf-8");
-      const { meta, body } = parseFrontmatter(content);
-      return `# ${meta.title || f}\n경로: ${f} | 유사도: ${score.toFixed(3)}\n태그: ${meta.tag || "(없음)"}\n\n${body}`;
-    }).join("\n\n---\n\n");
-    return { content: [{ type: "text", text: output }] };
-  }
-
-  // ── wiki_write ─────────────────────────────────────────────────────────────
-  if (name === "wiki_write") {
-    const filePath = path.resolve(WIKI_DIR, args.path);
-    if (!filePath.startsWith(WIKI_DIR + path.sep) && filePath !== WIKI_DIR)
-      return { content: [{ type: "text", text: "잘못된 경로입니다." }], isError: true };
-    if (!args.path.endsWith(".md"))
-      return { content: [{ type: "text", text: ".md 파일만 쓸 수 있습니다." }], isError: true };
-    const existingMeta = fs.existsSync(filePath) ? parseFrontmatter(fs.readFileSync(filePath, "utf-8")).meta : null;
-    const file = `${buildWikiFrontmatter(args, existingMeta)}\n\n${args.body.trim()}\n`;
-    fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    fs.writeFileSync(filePath, file, "utf-8");
-    return { content: [{ type: "text", text: `저장 완료: ${args.path}` }] };
-  }
-
-  // ── adr_list ───────────────────────────────────────────────────────────────
-  if (name === "adr_list") {
-    const pages = collectFiles(ADR_DIR).map((f) => {
-      const { meta } = parseFrontmatter(fs.readFileSync(path.join(ADR_DIR, f), "utf-8"));
-      return { path: f, title: meta.title || f, status: meta.status || "", deciders: meta.deciders || "", tags: meta.tag || "", date: meta.date || "" };
-    });
+    );
     return { content: [{ type: "text", text: JSON.stringify(pages, null, 2) }] };
   }
 
-  // ── adr_read ───────────────────────────────────────────────────────────────
-  if (name === "adr_read") {
-    const filePath = path.join(ADR_DIR, args.path);
-    if (!filePath.startsWith(ADR_DIR))
+  // ── doc_read ───────────────────────────────────────────────────────────────
+  if (name === "doc_read") {
+    const dir = ENTITY_DIRS[args.type];
+    if (!dir) return { content: [{ type: "text", text: `알 수 없는 타입: ${args.type}` }], isError: true };
+    const filePath = path.join(dir, args.path);
+    if (!filePath.startsWith(dir))
       return { content: [{ type: "text", text: "잘못된 경로입니다." }], isError: true };
     if (!fs.existsSync(filePath))
       return { content: [{ type: "text", text: `파일을 찾을 수 없습니다: ${args.path}` }], isError: true };
     return { content: [{ type: "text", text: fs.readFileSync(filePath, "utf-8") }] };
   }
 
-  // ── adr_search ─────────────────────────────────────────────────────────────
-  if (name === "adr_search") {
+  // ── doc_search ─────────────────────────────────────────────────────────────
+  if (name === "doc_search") {
     const query = args.query.toLowerCase();
+    const types = resolveTypes(args.type);
     const results = [];
-    for (const f of collectFiles(ADR_DIR)) {
-      const content = fs.readFileSync(path.join(ADR_DIR, f), "utf-8");
-      const { meta, body } = parseFrontmatter(content);
-      const title = (meta.title || f).toLowerCase();
-      const bodyLower = body.toLowerCase();
-      if (title.includes(query) || bodyLower.includes(query)) {
-        const idx = bodyLower.indexOf(query);
-        const snippet = idx >= 0 ? body.slice(Math.max(0, idx - 80), idx + 160).replace(/\n+/g, " ") : "";
-        results.push({ path: f, title: meta.title || f, status: meta.status || "", snippet });
+    for (const type of types) {
+      for (const f of collectFiles(ENTITY_DIRS[type])) {
+        const content = fs.readFileSync(path.join(ENTITY_DIRS[type], f), "utf-8");
+        const { meta, body } = parseFrontmatter(content);
+        const title = (meta.title || f).toLowerCase();
+        const bodyLower = body.toLowerCase();
+        if (title.includes(query) || bodyLower.includes(query)) {
+          const idx = bodyLower.indexOf(query);
+          const snippet = idx >= 0 ? body.slice(Math.max(0, idx - 80), idx + 160).replace(/\n+/g, " ") : "";
+          const entry = { type, path: f, title: meta.title || f, snippet };
+          if (type === "adr") entry.status = meta.status || "";
+          results.push(entry);
+        }
       }
     }
     return {
@@ -464,52 +388,81 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     };
   }
 
-  // ── adr_find / adr_query ───────────────────────────────────────────────────
-  if (name === "adr_find" || name === "adr_query") {
+  // ── doc_find / doc_query ───────────────────────────────────────────────────
+  if (name === "doc_find" || name === "doc_query") {
+    const types = resolveTypes(args.type);
+    const limit = args.limit ?? (name === "doc_find" ? 10 : 3);
+
     let queryVec;
     try { queryVec = await embedQuery(args.query); }
     catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
 
-    let hits;
-    try { hits = await qdrantSearch("adr", queryVec, name === "adr_find" ? 10 : (args.limit ?? 3)); }
-    catch (e) { return { content: [{ type: "text", text: `Qdrant 오류: ${e.message}` }], isError: true }; }
+    // Qdrant 검색: wiki 컬렉션 (wiki/insight/problem/tool/event) + adr 컬렉션
+    const searches = [];
+    const wikiTypes = types.filter((t) => QDRANT_ENTITY_TYPE[t]);
+    const hasAdr    = types.includes("adr");
 
-    if (!hits.length)
-      return { content: [{ type: "text", text: `'${args.query}'에 대한 ADR을 찾을 수 없습니다.` }] };
-
-    if (name === "adr_find") {
-      const results = hits.map(({ payload, score }) => ({
-        path: payload.slug + ".md", title: payload.title, status: payload.status, tags: payload.tag, score: +score.toFixed(3),
-      }));
-      return { content: [{ type: "text", text: JSON.stringify(results, null, 2) }] };
+    if (wikiTypes.length) {
+      const filter = wikiTypes.length < Object.keys(QDRANT_ENTITY_TYPE).length
+        ? { should: wikiTypes.map((t) => ({ key: "entity_type", match: { value: QDRANT_ENTITY_TYPE[t] } })) }
+        : null;
+      searches.push(qdrantSearch("wiki", queryVec, limit * 3, filter).then((hits) =>
+        hits.map((h) => ({
+          type: Object.keys(QDRANT_ENTITY_TYPE).find((k) => QDRANT_ENTITY_TYPE[k] === h.payload.entity_type) || "wiki",
+          f: h.payload.slug + ".md",
+          score: h.score,
+          payload: h.payload,
+        }))
+      ));
+    }
+    if (hasAdr) {
+      searches.push(qdrantSearch("adr", queryVec, limit * 3).then((hits) =>
+        hits.map((h) => ({ type: "adr", f: h.payload.slug + ".md", score: h.score, payload: h.payload }))
+      ));
     }
 
-    const output = hits.map(({ payload, score }) => {
-      const filePath = path.join(ADR_DIR, payload.slug + ".md");
+    const allResults = (await Promise.all(searches)).flat().sort((a, b) => b.score - a.score);
+
+    if (name === "doc_find") {
+      const out = allResults.slice(0, limit).map(({ type, f, score, payload }) => ({
+        type, path: f, title: payload.title, status: payload.status ?? "", tags: payload.tag ?? "", score: +score.toFixed(3),
+      }));
+      return { content: [{ type: "text", text: out.length ? JSON.stringify(out, null, 2) : `'${args.query}'에 대한 문서를 찾을 수 없습니다.` }] };
+    }
+
+    if (!allResults.length)
+      return { content: [{ type: "text", text: `'${args.query}'에 대한 내용을 찾을 수 없습니다.` }] };
+
+    const output = allResults.slice(0, limit).map(({ type, f, score, payload }) => {
+      const filePath = path.join(ENTITY_DIRS[type], f);
       if (!fs.existsSync(filePath)) return null;
       const { meta, body } = parseFrontmatter(fs.readFileSync(filePath, "utf-8"));
-      return `# ${meta.title || payload.slug}\n경로: ${payload.slug}.md | 유사도: ${score.toFixed(3)} | 상태: ${meta.status || "unknown"}\n태그: ${meta.tag || "(없음)"} | 결정자: ${meta.deciders || "(없음)"}\n\n${body}`;
+      const statusPart = type === "adr" ? ` | 상태: ${meta.status || "unknown"}` : "";
+      return `# [${type}] ${meta.title || f}\n경로: ${f} | 유사도: ${score.toFixed(3)}${statusPart}\n태그: ${meta.tag || "(없음)"}\n\n${body}`;
     }).filter(Boolean).join("\n\n---\n\n");
     return { content: [{ type: "text", text: output }] };
   }
 
-  // ── adr_write ──────────────────────────────────────────────────────────────
-  if (name === "adr_write") {
-    const filePath = path.resolve(ADR_DIR, args.path);
-    if (!filePath.startsWith(ADR_DIR + path.sep) && filePath !== ADR_DIR)
-      return { content: [{ type: "text", text: "잘못된 경로입니다." }], isError: true };
+  // ── doc_write ──────────────────────────────────────────────────────────────
+  if (name === "doc_write") {
+    const dir = ENTITY_DIRS[args.type];
+    if (!dir) return { content: [{ type: "text", text: `알 수 없는 타입: ${args.type}` }], isError: true };
     if (!args.path.endsWith(".md"))
       return { content: [{ type: "text", text: ".md 파일만 쓸 수 있습니다." }], isError: true };
+    const filePath = path.resolve(dir, args.path);
+    if (!filePath.startsWith(dir + path.sep) && filePath !== dir)
+      return { content: [{ type: "text", text: "잘못된 경로입니다." }], isError: true };
     const existingMeta = fs.existsSync(filePath) ? parseFrontmatter(fs.readFileSync(filePath, "utf-8")).meta : null;
-    const file = `${buildAdrFrontmatter(args, existingMeta)}\n\n${args.body.trim()}\n`;
+    const file = `${buildFrontmatter(args.type, args, existingMeta)}\n\n${args.body.trim()}\n`;
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
     fs.writeFileSync(filePath, file, "utf-8");
-    return { content: [{ type: "text", text: `저장 완료: ${args.path}` }] };
+    return { content: [{ type: "text", text: `저장 완료: [${args.type}] ${args.path}` }] };
   }
 
   // ── ontology_entities ──────────────────────────────────────────────────────
   if (name === "ontology_entities") {
     const graph = loadGraph();
+    const WIKI_ENTITY_TYPES = new Set(["concept", "insight", "problem", "tool", "event"]);
     if (args.query) {
       let queryVec;
       try { queryVec = await embedQuery(args.query); }
@@ -582,17 +535,38 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     try { queryVec = await embedQuery(queryText); }
     catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
 
-    const edgeMap = new Map();
+    const edgeMap = new Map(); // id → {type, direction}
     if (args.id) {
       for (const e of graph.edges) {
-        if (e.from === args.id) edgeMap.set(e.to,   e.type);
-        if (e.to   === args.id) edgeMap.set(e.from, e.type);
+        if (e.from === args.id) edgeMap.set(e.to,   { type: e.type, direction: "outbound" });
+        if (e.to   === args.id) edgeMap.set(e.from, { type: e.type, direction: "inbound"  });
       }
     }
 
-    // ponytail: always search both collections
     const limit = args.limit ?? 5;
-    const candidateLimit = limit * 5;
+    const candidateLimit = limit * 10;
+
+    // anchor node 메타 (타입, 날짜)
+    const anchorNode = args.id ? graph.nodes[args.id] : null;
+    const anchorType = anchorNode?.type ?? null;
+    const tagFreq    = getTagFrequencies(graph);
+    const totalNodes = Object.keys(graph.nodes).length || 1;
+
+    // 2-hop 이웃 맵 구성: id → best edge weight (직접 엣지의 절반)
+    const hop2Map = new Map();
+    if (args.id) {
+      for (const [neighborId] of edgeMap) {
+        for (const e of graph.edges) {
+          const nextId = e.from === neighborId ? e.to
+                       : e.to   === neighborId ? e.from
+                       : null;
+          if (!nextId || nextId === args.id || edgeMap.has(nextId)) continue;
+          const w = (EDGE_WEIGHTS[e.type] ?? 0.05) * 0.45; // 2-hop은 직접 엣지의 45%
+          if ((hop2Map.get(nextId) ?? 0) < w) hop2Map.set(nextId, w);
+        }
+      }
+    }
+
     const [wikiHits, adrHits] = await Promise.all([
       qdrantSearch("wiki", queryVec, candidateLimit).then(hits =>
         hits.map(h => ({ id: `${h.payload.entity_type || "concept"}/${h.payload.slug}`, score: h.score, payload: h.payload }))
@@ -602,28 +576,84 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       ),
     ]);
 
-    const rerank = (candidates) => candidates
+    const rerank = (candidate) => {
+      const node      = graph.nodes[candidate.id];
+      const candType  = candidate.payload.entity_type || "concept";
+      const nodeTags  = node?.tags ?? (candidate.payload.tag ? candidate.payload.tag.split(/\s+/).filter(Boolean) : []);
+
+      // 1) Semantic (Qdrant cosine)
+      const sem = candidate.score;
+
+      // 2) Tag similarity — IDF 가중 Jaccard (희소 태그 = 더 강한 신호)
+      const inter    = anchorTags.filter(t => nodeTags.includes(t));
+      const unionSet = new Set([...anchorTags, ...nodeTags]);
+      const idfSum   = inter.reduce((s, t) => s + Math.log((totalNodes + 1) / ((tagFreq[t] ?? 0) + 1)), 0);
+      const idfNorm  = unionSet.size > 0 ? idfSum / (unionSet.size * Math.log(totalNodes + 1)) : 0;
+      const tag      = Math.min(idfNorm, 1);
+
+      // 3) Direct edge (typed weight, direction-aware)
+      const edgeInfo     = edgeMap.get(candidate.id);
+      const edgeWeight   = edgeInfo ? (EDGE_WEIGHTS[edgeInfo.type] ?? 0.05) : 0;
+      // inbound(이쪽이 날 참조) vs outbound(내가 이쪽 참조) — inbound가 더 강한 신호
+      const edgeBonus    = edgeInfo?.direction === "inbound" ? edgeWeight * 1.2 : edgeWeight;
+
+      // 4) 2-hop transitive
+      const hop2 = hop2Map.get(candidate.id) ?? 0;
+
+      // 5) Entity type affinity (anchor type 기준)
+      const affinity = anchorType ? (TYPE_AFFINITY[anchorType]?.[candType] ?? 0) : 0;
+
+      // 6) Recency (최근 2년 이내 완성 문서 미세 가산, 최대 0.03)
+      let recency = 0;
+      const dateStr = node?.date ?? candidate.payload.date;
+      if (dateStr) {
+        const daysAgo = (Date.now() - new Date(dateStr).getTime()) / 86400000;
+        const isComplete = (node?.status ?? candidate.payload.status) === "complete";
+        recency = isComplete ? Math.exp(-daysAgo / 730) * 0.03 : 0;
+      }
+
+      // 최종 점수 (합계 최대 ~1.0)
+      const score = +(
+        sem      * 0.52 +
+        tag      * 0.18 +
+        Math.min(edgeBonus, 0.18) +   // direct edge, 상한 0.18
+        Math.min(hop2,      0.08) +   // 2-hop, 상한 0.08
+        affinity                   +  // 0~0.05
+        recency                       // 0~0.03
+      ).toFixed(3);
+
+      return {
+        id:      candidate.id,
+        type:    candType,
+        title:   node?.title ?? candidate.payload.title,
+        status:  node?.status ?? candidate.payload.status ?? "",
+        score,
+        signals: {
+          semantic:    +sem.toFixed(3),
+          tag_idf:     +tag.toFixed(3),
+          shared_tags: inter,
+          ...(edgeInfo  ? { direct_edge: { type: edgeInfo.type, direction: edgeInfo.direction, weight: +edgeBonus.toFixed(3) } } : {}),
+          ...(hop2 > 0  ? { hop2_weight: +hop2.toFixed(3) } : {}),
+          ...(affinity  ? { type_affinity: affinity } : {}),
+          ...(recency   ? { recency: +recency.toFixed(3) } : {}),
+        },
+      };
+    };
+
+    // entity_type별 그룹핑
+    const allCandidates = [...wikiHits, ...adrHits]
       .filter(c => c.id !== args.id)
-      .map(c => {
-        const node     = graph.nodes[c.id];
-        const nodeTags = node?.tags ?? (c.payload.tag ? c.payload.tag.split(/\s+/).filter(Boolean) : []);
-        const inter    = anchorTags.filter(t => nodeTags.includes(t));
-        const unionLen = new Set([...anchorTags, ...nodeTags]).size;
-        const tag      = unionLen > 0 ? inter.length / unionLen : 0;
-        const edge     = edgeMap.get(c.id) ?? null;
-        return {
-          id:      c.id,
-          title:   node?.title ?? c.payload.title,
-          status:  node?.status ?? c.payload.status ?? "",
-          score:   +(c.score * 0.7 + tag * 0.2 + (edge ? 0.1 : 0)).toFixed(3),
-          signals: { semantic: +c.score.toFixed(3), shared_tags: inter, ...(edge ? { graph_edge: edge } : {}) },
-        };
-      })
-      .sort((a, b) => b.score - a.score)
-      .slice(0, limit);
+      .map(rerank)
+      .sort((a, b) => b.score - a.score);
+
+    const grouped = {};
+    for (const item of allCandidates) {
+      if (!grouped[item.type]) grouped[item.type] = [];
+      if (grouped[item.type].length < limit) grouped[item.type].push(item);
+    }
 
     return {
-      content: [{ type: "text", text: JSON.stringify({ related_adrs: rerank(adrHits), related_wiki: rerank(wikiHits) }, null, 2) }],
+      content: [{ type: "text", text: JSON.stringify(grouped, null, 2) }],
     };
   }
 
@@ -633,6 +663,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     try { queryVec = await embedQuery(args.query); }
     catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
 
+    const WIKI_ENTITY_TYPES = new Set(["concept", "insight", "problem", "tool", "event"]);
     const collections = args.type === "adr"
       ? [{ col: "adr", type: "adr" }]
       : args.type && WIKI_ENTITY_TYPES.has(args.type)

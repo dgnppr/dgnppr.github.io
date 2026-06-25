@@ -24,6 +24,18 @@ function walk(dir, results = []) {
   return results;
 }
 
+// URL 경로 형식 → 온톨로지 ID 형식 정규화
+// /wiki/foo/bar → concept/foo/bar
+// /insight/foo  → insight/foo
+// /event/foo    → event/foo  등
+const URL_TO_TYPE = { wiki: 'concept', insight: 'insight', problem: 'problem', tool: 'tool', event: 'event', adr: 'adr' };
+function normalizeTarget(target) {
+  const m = String(target).match(/^\/?([^/]+)\/(.+)$/);
+  if (!m) return target;
+  const mapped = URL_TO_TYPE[m[1]];
+  return mapped ? `${mapped}/${m[2]}` : target;
+}
+
 const nodes = {}, edges = [];
 
 for (const [type, cfg] of Object.entries(SCHEMA.entity_types)) {
@@ -50,10 +62,17 @@ for (const [type, cfg] of Object.entries(SCHEMA.entity_types)) {
     nodes[id] = node;
     const rels = Array.isArray(meta.relations) ? meta.relations : [];
     for (const r of rels) {
-      if (r?.type && r?.target) edges.push({ from: id, to: String(r.target), type: r.type });
+      if (r?.type && r?.target) edges.push({ from: id, to: normalizeTarget(r.target), type: r.type });
     }
   }
 }
 
+// 엣지 무결성 검증 및 경고
+const nodeIds = new Set(Object.keys(nodes));
+let broken = 0;
+for (const e of edges) {
+  if (!nodeIds.has(e.to)) { broken++; console.warn(`[경고] 대상 노드 없음: ${e.from} → ${e.to} (${e.type})`); }
+}
+
 fs.writeFileSync(OUT, JSON.stringify({ nodes, edges }, null, 2));
-console.log(`노드: ${Object.keys(nodes).length}개  엣지: ${edges.length}개 → data/ontology-graph.json`);
+console.log(`노드: ${Object.keys(nodes).length}개  엣지: ${edges.length}개 (깨진 엣지: ${broken}개) → data/ontology-graph.json`);

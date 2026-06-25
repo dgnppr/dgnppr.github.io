@@ -511,172 +511,172 @@
   "edges": [
     {
       "from": "adr/security/2026-06-24-002-gcp-key-management-status",
-      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "to": "concept/cloud/01_how_to_operate_iam_well",
       "type": "references"
     },
     {
       "from": "adr/security/2026-06-24-002-gcp-key-management-status",
-      "to": "/wiki/cloud/02_authenticate_gcp_without_service_accounts",
+      "to": "concept/cloud/02_authenticate_gcp_without_service_accounts",
       "type": "references"
     },
     {
       "from": "concept/cloud/01_vpc_for_pca",
-      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "to": "concept/cloud/01_how_to_operate_iam_well",
       "type": "references"
     },
     {
       "from": "concept/cloud/02_authenticate_gcp_without_service_accounts",
-      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "to": "concept/cloud/01_how_to_operate_iam_well",
       "type": "extends"
     },
     {
       "from": "concept/data-analysis/00_how_to_design_funnel",
-      "to": "/wiki/data-architect/00_what_is_medaliion_architecture",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "references"
     },
     {
       "from": "concept/data-architect/01_how_to_architect_medallion_well",
-      "to": "/wiki/data-architect/00_what_is_medaliion_architecture",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "extends"
     },
     {
       "from": "concept/data-architect/02_how_to_architect_medallion_well",
-      "to": "/wiki/data-architect/00_what_is_medaliion_architecture",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "extends"
     },
     {
       "from": "concept/data-architect/02_how_to_architect_medallion_well",
-      "to": "/wiki/data-architect/01_how_to_architect_medallion_well",
+      "to": "concept/data-architect/01_how_to_architect_medallion_well",
       "type": "extends"
     },
     {
       "from": "concept/data-architect/03_medallion_advanced_patterns",
-      "to": "/wiki/data-architect/02_how_to_architect_medallion_well",
+      "to": "concept/data-architect/02_how_to_architect_medallion_well",
       "type": "extends"
     },
     {
       "from": "concept/data-architect/03_medallion_advanced_patterns",
-      "to": "/wiki/data-architect/01_how_to_architect_medallion_well",
+      "to": "concept/data-architect/01_how_to_architect_medallion_well",
       "type": "extends"
     },
     {
       "from": "concept/data-architect/04_what_is_ontology",
-      "to": "/wiki/data-architect/03_medallion_advanced_patterns",
+      "to": "concept/data-architect/03_medallion_advanced_patterns",
       "type": "extends"
     },
     {
       "from": "concept/data-architect/05_how_to_implement_ontology",
-      "to": "/wiki/data-architect/04_what_is_ontology",
+      "to": "concept/data-architect/04_what_is_ontology",
       "type": "extends"
     },
     {
       "from": "concept/data-architect/06_ontology_core_concepts",
-      "to": "/wiki/data-architect/04_what_is_ontology",
+      "to": "concept/data-architect/04_what_is_ontology",
       "type": "extends"
     },
     {
       "from": "concept/data-architect/06_ontology_core_concepts",
-      "to": "/wiki/data-architect/05_how_to_implement_ontology",
+      "to": "concept/data-architect/05_how_to_implement_ontology",
       "type": "extends"
     },
     {
       "from": "concept/design-pattern/01_circuit_breaker",
-      "to": "/wiki/design-pattern/00_how_to_use_strategy_pattern",
+      "to": "concept/design-pattern/00_how_to_use_strategy_pattern",
       "type": "references"
     },
     {
       "from": "concept/java/00_what_is_java_virtual_thread",
-      "to": "/insight/essay/01_why_redis_single_threaded",
+      "to": "insight/essay/01_why_redis_single_threaded",
       "type": "references"
     },
     {
       "from": "concept/springboot/00_why_rollback_marked_transaction_is_unusable",
-      "to": "/wiki/jpa/00_jpa_dirty_checking",
+      "to": "concept/jpa/00_jpa_dirty_checking",
       "type": "references"
     },
     {
       "from": "concept/springboot/01_how_to_handle_transaction_event_listener_exception",
-      "to": "/wiki/springboot/00_why_rollback_marked_transaction_is_unusable",
+      "to": "concept/springboot/00_why_rollback_marked_transaction_is_unusable",
       "type": "extends"
     },
     {
       "from": "insight/data-architect/07_ontology_core_examples",
-      "to": "/wiki/data-architect/06_ontology_core_concepts",
+      "to": "concept/data-architect/06_ontology_core_concepts",
       "type": "extends"
     },
     {
       "from": "insight/data-architect/07_ontology_core_examples",
-      "to": "/wiki/data-architect/05_how_to_implement_ontology",
+      "to": "concept/data-architect/05_how_to_implement_ontology",
       "type": "learned-from"
     },
     {
       "from": "insight/essay/00_is_lombok_necessary",
-      "to": "/wiki/jpa/00_jpa_dirty_checking",
+      "to": "concept/jpa/00_jpa_dirty_checking",
       "type": "references"
     },
     {
       "from": "insight/essay/01_why_redis_single_threaded",
-      "to": "/wiki/java/00_what_is_java_virtual_thread",
+      "to": "concept/java/00_what_is_java_virtual_thread",
       "type": "references"
     },
     {
       "from": "insight/essay/02_is_system_time_really_correct",
-      "to": "/wiki/java/00_what_is_java_virtual_thread",
+      "to": "concept/java/00_what_is_java_virtual_thread",
       "type": "references"
     },
     {
       "from": "insight/essay/03_which_jwt_algorithm_is_suitable",
-      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "to": "concept/cloud/01_how_to_operate_iam_well",
       "type": "references"
     },
     {
       "from": "insight/essay/04_how_to_create_text_fixture",
-      "to": "/wiki/jpa/00_jpa_dirty_checking",
+      "to": "concept/jpa/00_jpa_dirty_checking",
       "type": "references"
     },
     {
       "from": "tool/cloud/03_how_to_use_terraform",
-      "to": "/wiki/cloud/01_vpc_for_pca",
+      "to": "concept/cloud/01_vpc_for_pca",
       "type": "implements"
     },
     {
       "from": "tool/cloud/03_how_to_use_terraform",
-      "to": "/wiki/cloud/01_how_to_operate_iam_well",
+      "to": "concept/cloud/01_how_to_operate_iam_well",
       "type": "references"
     },
     {
       "from": "event/retrospect/01_2024_january_retrospect",
-      "to": "/event/retrospect/00_2023_year_retrospect",
+      "to": "event/retrospect/00_2023_year_retrospect",
       "type": "extends"
     },
     {
       "from": "event/retrospect/02_2024_march_3rd_retrospect",
-      "to": "/event/retrospect/01_2024_january_retrospect",
+      "to": "event/retrospect/01_2024_january_retrospect",
       "type": "extends"
     },
     {
       "from": "event/retrospect/03_2024_march_retrospect",
-      "to": "/event/retrospect/02_2024_march_3rd_retrospect",
+      "to": "event/retrospect/02_2024_march_3rd_retrospect",
       "type": "extends"
     },
     {
       "from": "event/retrospect/04_2024_september_retrospect",
-      "to": "/event/retrospect/03_2024_march_retrospect",
+      "to": "event/retrospect/03_2024_march_retrospect",
       "type": "extends"
     },
     {
       "from": "event/retrospect/05_2025_goodbye_kyobobook_retrospect",
-      "to": "/event/retrospect/04_2024_september_retrospect",
+      "to": "event/retrospect/04_2024_september_retrospect",
       "type": "extends"
     },
     {
       "from": "event/retrospect/06_2026_code_is_cheap",
-      "to": "/event/retrospect/05_2025_goodbye_kyobobook_retrospect",
+      "to": "event/retrospect/05_2025_goodbye_kyobobook_retrospect",
       "type": "extends"
     },
     {
       "from": "event/retrospect/06_2026_code_is_cheap",
-      "to": "/wiki/data-architect/04_what_is_ontology",
+      "to": "concept/data-architect/04_what_is_ontology",
       "type": "learned-from"
     }
   ]

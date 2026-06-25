@@ -252,7 +252,6 @@ function optimizeWeights(rawSignals, docs, evalData) {
 
 const files = [];
 collectMarkdown(path.join(ROOT, '_wiki'),    'wiki',    files);
-collectMarkdown(path.join(ROOT, '_posts'),   'blog',    files);
 collectMarkdown(path.join(ROOT, '_insight'), 'insight', files);
 collectMarkdown(path.join(ROOT, '_problem'), 'problem', files);
 collectMarkdown(path.join(ROOT, '_tool'),    'tool',    files);

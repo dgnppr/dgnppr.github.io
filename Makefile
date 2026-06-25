@@ -20,45 +20,45 @@ help:
 	@echo "  make clean      - 빌드 캐시 정리"
 	@echo ""
 	@echo "Data generation:"
-	@echo "  make add-status       - status: complete 추가 (누락된 파일만)"
-	@echo "  make stats            - 글쓰기 통계 생성 (월별, 카테고리, 상태)"
-	@echo "  make diagrams         - AI 다이어그램 생성 (Vertex AI)"
-	@echo "  make diagrams-force   - 모든 다이어그램 강제 재생성"
-	@echo "  make summaries        - AI 요약 생성 (캐시 있으면 스킵)"
-	@echo "  make summaries-force  - 모든 요약 강제 재생성"
-	@echo "  make embeddings           - 위키 임베딩 생성 → related.json (GitHub Pages용)"
-	@echo "  make embeddings-force     - 위키 임베딩 강제 재계산"
-	@echo "  make adr-embeddings       - ADR 임베딩 → Qdrant + adr-related.json (로컬 전용)"
-	@echo "  make adr-embeddings-force - ADR 임베딩 강제 재계산"
-	@echo "  make ontology             - 온톨로지 그래프 재생성 (data/ontology-graph.json)"
+	@echo "  make add-status          - status: complete 추가 (누락된 파일만)"
+	@echo "  make stats               - 글쓰기 통계 생성 (월별, 카테고리, 상태)"
+	@echo "  make diagrams            - AI 다이어그램 생성 (Vertex AI)"
+	@echo "  make diagrams-force      - 모든 다이어그램 강제 재생성"
+	@echo "  make summaries           - AI 요약 생성 (캐시 있으면 스킵)"
+	@echo "  make summaries-force     - 모든 요약 강제 재생성"
+	@echo "  make embeddings          - GitHub Pages용 파일 임베딩 → related.json"
+	@echo "  make embeddings-force    - 파일 임베딩 강제 재계산"
+	@echo "  make local-embeddings    - 전체 문서 Qdrant 인덱싱 (wiki/insight/problem/tool/event/adr)"
+	@echo "  make local-embeddings-force - 강제 재인덱싱"
+	@echo "  make ontology            - 온톨로지 그래프 재생성 (data/ontology-graph.json)"
 	@echo ""
 	@echo "Qdrant (로컬 벡터 스토어):"
-	@echo "  make adr-db-up     - Qdrant 컨테이너 시작"
-	@echo "  make adr-db-down   - Qdrant 컨테이너 중지"
-	@echo "  make adr-db-status - Qdrant 상태 확인"
+	@echo "  make qdrant-up     - Qdrant 컨테이너 시작"
+	@echo "  make qdrant-down   - Qdrant 컨테이너 중지"
+	@echo "  make qdrant-status - Qdrant 상태 확인"
 	@echo ""
-	@echo "MCP servers (wiki / adr / ontology):"
-	@echo "  make mcp-start   [SERVER=wiki] - MCP 서버 포그라운드 실행 (수동 테스트용)"
-	@echo "  make mcp-back    [SERVER=wiki] - MCP 서버 백그라운드 실행"
-	@echo "  make mcp-stop    [SERVER=wiki] - MCP 서버 종료"
-	@echo "  make mcp-log     [SERVER=wiki] - MCP 서버 로그 tail"
-	@echo "  make mcp-restart [SERVER=wiki] - MCP 서버 재시작"
-	@echo "  make mcp-status  [SERVER=wiki] - MCP 서버 상태 확인"
-	@echo "  make mcp-test    [SERVER=wiki] - MCP 서버 동작 확인"
-	@echo "  make mcp-back-all              - 모든 MCP 서버 백그라운드 실행"
-	@echo "  make mcp-stop-all              - 모든 MCP 서버 종료"
-	@echo "  make mcp-status-all            - 모든 MCP 서버 상태 확인"
+	@echo "MCP server (ontology):"
+	@echo "  make mcp-start   - MCP 서버 포그라운드 실행 (수동 테스트용)"
+	@echo "  make mcp-back    - MCP 서버 백그라운드 실행"
+	@echo "  make mcp-stop    - MCP 서버 종료"
+	@echo "  make mcp-log     - MCP 서버 로그 tail"
+	@echo "  make mcp-restart - MCP 서버 재시작"
+	@echo "  make mcp-status  - MCP 서버 상태 확인"
+	@echo "  make mcp-test    - MCP 서버 동작 확인"
 	@echo ""
-	@echo "Ontology MCP tools (/ontology 스킬):"
-	@echo "  related <query>          - 쿼리 텍스트로 관련 ADR + wiki 탐색"
-	@echo "  related id:<entity-id>   - 엔티티 본문 기준으로 관련 탐색"
-	@echo "  find <query>             - 임베딩 유사도 flat 리스트"
-	@echo "  get <entity-id>          - 노드 메타 + 전체 본문"
-	@echo "  entities [type]          - 전체 목록 (type: adr | concept)"
-	@echo "  entities <query>         - 시맨틱 검색으로 엔티티 탐색"
-	@echo "  decision <entity-id>     - ADR 전체 컨텍스트 (id로 조회)"
-	@echo "  decision <query>         - ADR 전체 컨텍스트 (텍스트로 자동 선택)"
-	@echo "  Entity ID format: adr/<dir>/<file> | concept/<dir>/<file>"
+	@echo "/ontology 스킬 명령:"
+	@echo "  doc list [type]            - 문서 목록 (type: wiki|insight|problem|tool|event|adr)"
+	@echo "  doc search <query> [type]  - 키워드 검색"
+	@echo "  doc find <query> [type]    - 임베딩 유사도 검색 (Qdrant)"
+	@echo "  doc query <query> [type]   - 임베딩 검색 후 본문 반환"
+	@echo "  doc read <type> <path>     - 특정 문서 읽기"
+	@echo "  doc write <type> <path>    - 문서 작성/수정"
+	@echo "  related <query>            - 관련 ADR + wiki 탐색"
+	@echo "  find <query>               - 임베딩 유사도 flat 리스트"
+	@echo "  get <entity-id>            - 노드 메타 + 전체 본문"
+	@echo "  entities [type|query]      - 엔티티 목록 또는 시맨틱 검색"
+	@echo "  decision <id|query>        - ADR 전체 컨텍스트"
+	@echo "  Entity ID: adr/<dir>/<file> | concept/<dir>/<file>"
 
 # ----------------------------------------
 # 의존성 설치
@@ -116,37 +116,37 @@ ontology:
 	node scripts/generate-ontology.js
 
 # ----------------------------------------
-# 임베딩 기반 연관 포스트 생성
+# 임베딩 생성
 # ----------------------------------------
-.PHONY: embeddings embeddings-force adr-embeddings adr-embeddings-force
+.PHONY: embeddings embeddings-force local-embeddings local-embeddings-force
 
-# GitHub Pages용: 파일 기반 related.json만 생성
+# GitHub Pages용: 파일 기반 related.json
 embeddings:
 	@set -a && . ./.env && set +a && node scripts/generate-embeddings.js
 
 embeddings-force:
 	@set -a && . ./.env && set +a && node scripts/generate-embeddings.js --force
 
-# 로컬 전용: ADR 임베딩 → Qdrant + data/adr-related.json
-adr-embeddings:
-	docker compose --profile tools run --rm adr-embeddings node scripts/generate-adr-embeddings.js
+# 로컬 전용: 전체 문서 → Qdrant (wiki + adr 컬렉션)
+local-embeddings:
+	@set -a && . ./.env && set +a && node scripts/generate-local-embeddings.js
 
-adr-embeddings-force:
-	docker compose --profile tools run --rm adr-embeddings node scripts/generate-adr-embeddings.js --force
+local-embeddings-force:
+	@set -a && . ./.env && set +a && node scripts/generate-local-embeddings.js --force
 
 # ----------------------------------------
-# Qdrant (ADR 벡터 스토어)
+# Qdrant (로컬 벡터 스토어)
 # ----------------------------------------
-.PHONY: adr-db-up adr-db-down adr-db-status
-adr-db-up:
+.PHONY: qdrant-up qdrant-down qdrant-status
+qdrant-up:
 	@docker compose up qdrant -d
 	@echo "Qdrant 시작 — http://localhost:6333"
 	@until curl -sf http://localhost:6333/healthz > /dev/null; do sleep 0.5; done
 
-adr-db-down:
+qdrant-down:
 	docker compose stop qdrant
 
-adr-db-status:
+qdrant-status:
 	@curl -sf http://localhost:6333/healthz && echo "Qdrant 실행 중" || echo "Qdrant 중지됨"
 
 # ----------------------------------------
@@ -155,12 +155,12 @@ adr-db-status:
 .PHONY: auto-generate
 auto-generate:
 	@CHANGED=$$(git diff --name-only HEAD; git diff --cached --name-only; git ls-files --others --exclude-standard); \
-	DOC_CHANGED=$$(echo "$$CHANGED" | grep -E '^(_wiki|_adr|_posts)/'); \
+	DOC_CHANGED=$$(echo "$$CHANGED" | grep -E '^(_wiki|_adr|_insight|_problem|_tool|_event|_posts)/'); \
 	if [ -n "$$DOC_CHANGED" ]; then \
 		CF=$$(echo "$$DOC_CHANGED" | tr '\n' ':' | sed 's/:$$//'); \
 		echo "[auto] 변경 파일: $$CF"; \
 		set -a && . ./.env && set +a; \
-		$(MAKE) adr-embeddings; \
+		$(MAKE) local-embeddings; \
 		CHANGED_FILES="$$CF" node scripts/generate-diagrams.js || true; \
 		CHANGED_FILES="$$CF" node scripts/generate-summaries.js || true; \
 		node scripts/generate-ontology.js; \
@@ -197,19 +197,16 @@ clean:
 	@echo "Cleaned."
 
 # ----------------------------------------
-# MCP servers (wiki / adr / ontology)
+# MCP server (ontology)
 # ----------------------------------------
-SERVER      ?= wiki
-MCP_BIN      = mcp/$(SERVER)-server.js
-MCP_PID      = .mcp-$(SERVER).pid
-MCP_LOG      = .mcp-$(SERVER).log
-MCP_SERVERS := wiki adr ontology
+MCP_BIN = mcp/ontology-server.js
+MCP_PID = .mcp-ontology.pid
+MCP_LOG = .mcp-ontology.log
 
-.PHONY: mcp-start mcp-back mcp-stop mcp-restart mcp-status mcp-log mcp-test \
-        mcp-back-all mcp-stop-all mcp-status-all
+.PHONY: mcp-start mcp-back mcp-stop mcp-restart mcp-status mcp-log mcp-test
 
 mcp-start:
-	@echo "MCP $(SERVER) server 시작 (Ctrl+C로 종료)"
+	@echo "MCP ontology server 시작 (Ctrl+C로 종료)"
 	node $(MCP_BIN)
 
 mcp-back:
@@ -217,36 +214,27 @@ mcp-back:
 		echo "이미 실행 중 (PID: $$(cat $(MCP_PID)))"; \
 	else \
 		node $(MCP_BIN) >> $(MCP_LOG) 2>&1 & echo $$! > $(MCP_PID); \
-		echo "MCP $(SERVER) 백그라운드 시작 (PID: $$(cat $(MCP_PID)), 로그: $(MCP_LOG))"; \
+		echo "MCP ontology 백그라운드 시작 (PID: $$(cat $(MCP_PID)), 로그: $(MCP_LOG))"; \
 	fi
 
 mcp-stop:
 	@if [ -f $(MCP_PID) ] && kill -0 "$$(cat $(MCP_PID))" 2>/dev/null; then \
-		kill "$$(cat $(MCP_PID))" && rm $(MCP_PID) && echo "MCP $(SERVER) 종료"; \
+		kill "$$(cat $(MCP_PID))" && rm $(MCP_PID) && echo "MCP ontology 종료"; \
 	else \
-		rm -f $(MCP_PID) && echo "실행 중인 MCP $(SERVER) 서버 없음"; \
+		rm -f $(MCP_PID) && echo "실행 중인 MCP ontology 서버 없음"; \
 	fi
 
 mcp-restart: mcp-stop mcp-back
 
 mcp-status:
 	@if [ -f $(MCP_PID) ] && kill -0 "$$(cat $(MCP_PID))" 2>/dev/null; then \
-		echo "MCP $(SERVER) 실행 중 (PID: $$(cat $(MCP_PID)))"; \
+		echo "MCP ontology 실행 중 (PID: $$(cat $(MCP_PID)))"; \
 	else \
-		echo "MCP $(SERVER) 중지됨"; \
+		echo "MCP ontology 중지됨"; \
 	fi
 
 mcp-log:
 	@tail -f $(MCP_LOG)
-
-mcp-back-all:
-	@for s in $(MCP_SERVERS); do $(MAKE) mcp-back SERVER=$$s; done
-
-mcp-stop-all:
-	@for s in $(MCP_SERVERS); do $(MAKE) mcp-stop SERVER=$$s; done
-
-mcp-status-all:
-	@for s in $(MCP_SERVERS); do $(MAKE) mcp-status SERVER=$$s; done
 
 mcp-test:
 	@echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"0"}}}' \

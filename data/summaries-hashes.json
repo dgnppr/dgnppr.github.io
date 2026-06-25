@@ -24,5 +24,21 @@
   "data-architect/05_how_to_implement_ontology": "c2c5fdcf9d8560fcf3f503a5a9110160",
   "data-architect/06_ontology_core_concepts": "a0005b51c4848934d17ebe0ed6991b3e",
   "cloud/01_how_to_operate_iam_well": "806bedc75a7db1e94a4809759ba7334e",
-  "cloud/02_authenticate_gcp_without_service_accounts": "ba28a140bcb8c8a8c17a5cfb1d38672e"
+  "cloud/02_authenticate_gcp_without_service_accounts": "ba28a140bcb8c8a8c17a5cfb1d38672e",
+  "data-architect/07_ontology_core_examples": "12458ec26913808612bbc8497a93bfa7",
+  "essay/00_is_lombok_necessary": "d3f6cbb95921c54a12075481de95fcab",
+  "essay/01_why_redis_single_threaded": "caee07e5cff30745694ca5b3da7b7fc1",
+  "essay/02_is_system_time_really_correct": "de792184901c578754ff6affa6bfeec1",
+  "essay/03_which_jwt_algorithm_is_suitable": "7c476c5a2c4cf0a22ba322aacd96540e",
+  "essay/04_how_to_create_text_fixture": "e92265c18d0099da2278cad05d72d966",
+  "cloud/03_how_to_use_terraform": "0d6b95bd95fca36a059c5aa1dbf996b3",
+  "retrospect/00_2023_year_retrospect": "c2bf8ad8f2f5d6fef1eadefde1012c4e",
+  "retrospect/01_2024_january_retrospect": "e00e7dd09a5b8831072c58951a225a04",
+  "retrospect/02_2024_march_3rd_retrospect": "a49deb702dade19951bd839b8f3e2118",
+  "retrospect/03_2024_march_retrospect": "29784e725d7b631c5f05c53f50549c99",
+  "retrospect/04_2024_september_retrospect": "59e2fcc67adc0bc381be760db5399fae",
+  "retrospect/05_2025_goodbye_kyobobook_retrospect": "e64d05106f3f1426e3e5d060158af338",
+  "retrospect/06_2026_code_is_cheap": "f57137e353bc7395cfef89c09e87e5af",
+  "architecture/2026-06-24-001-adr-guide": "2ff2a06b2bde4b9207d13f3c82d1b285",
+  "security/2026-06-24-002-gcp-key-management-status": "c2088b915525456a80f1b05bc147d4df"
 }
