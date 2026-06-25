@@ -13,7 +13,7 @@ show-diagram: true
 parent  : [[/data-architect]]
 ---
 
-> [[/data-architect/00_what_is_ontology]] 에서 온톨로지를 **객체(명사)·링크(관계)·액션(동사)** 세 계층과, 그 위에 올라타는 **시간(Dynamic)** 차원으로 설명했다. 이 글은 그 모든 개념이 하나의 사건 안에서 어떻게 맞물리는지를 끝까지 파고든다.
+> [[/data-architect/04_what_is_ontology]] 에서 온톨로지를 **객체(명사)·링크(관계)·액션(동사)** 세 계층과, 그 위에 올라타는 **시간(Dynamic)** 차원으로 설명했다. 이 글은 그 모든 개념이 하나의 사건 안에서 어떻게 맞물리는지를 끝까지 파고든다.
 
 ---
 
@@ -104,7 +104,7 @@ metrics:
 
 하지만 K씨 문제에는 답이 없다. `user_id`가 K씨를 완전하게 대표하지 않기 때문이다. metric이 아무리 정밀해도, 측정 **대상**이 불완전하면 측정값도 불완전하다.
 
-이것이 [[/data-architect/00_what_is_ontology]]에서 설명한 시맨틱 레이어와 온톨로지의 층위 차이다.
+이것이 [[/data-architect/04_what_is_ontology]]에서 설명한 시맨틱 레이어와 온톨로지의 층위 차이다.
 
 > **시맨틱 레이어**: "K씨의 GMV를 *어떻게 측정하는가*"를 정의한다.  
 > **온톨로지**: "K씨가 *무엇이고*, 무엇과 *연결되며*, 무슨 *행동이 가능한가*"를 정의한다.
@@ -259,7 +259,7 @@ CUST-029182   | 2024-12-08 14:23:00  | 835,000   ← 이틀 전, 83만원
 
 ### Property Definition: 정의를 코드로, 이력을 남긴다
 
-[[/data-architect/00_what_is_ontology]]에서 "의미의 SCD2"를 이야기했다. 사실 데이터가 아니라 *정의* 자체에 `valid_from`과 `valid_to`가 붙는 것. 이것을 여기서 실체화한다.
+[[/data-architect/04_what_is_ontology]]에서 "의미의 SCD2"를 이야기했다. 사실 데이터가 아니라 *정의* 자체에 `valid_from`과 `valid_to`가 붙는 것. 이것을 여기서 실체화한다.
 
 ```sql
 CREATE TABLE `marketeon.ontology.prop_def` (
@@ -449,7 +449,7 @@ K씨는 쿠폰을 받지 않았다. 그리고 이 blocked 기록은 사라지지
 
 ## Dynamic Layer: 결정이 다시 데이터가 된다
 
-[[/data-architect/00_what_is_ontology]]에서 Palantir의 3계층 중 **Dynamic Layer**를 "내려진 의사결정이 다시 데이터로 되먹임되는 층"이라고 설명했다. 이 케이스에서 그것이 실제로 일어난다.
+[[/data-architect/04_what_is_ontology]]에서 Palantir의 3계층 중 **Dynamic Layer**를 "내려진 의사결정이 다시 데이터로 되먹임되는 층"이라고 설명했다. 이 케이스에서 그것이 실제로 일어난다.
 
 K씨의 blocked 기록은 `action_log`에 쌓였다. 그리고 같은 패턴이 다른 고객들에게서도 반복됐다.
 
@@ -490,7 +490,7 @@ GROUP BY 1;
 
 이것이 Dynamic Layer다. **결정(blocked action) → 기록(action_log) → 학습(new feature) → 더 나은 결정.** 이 루프가 돌기 시작했다. 온톨로지가 없었다면 blocked 기록이 남지 않았을 것이고, 루프도 없었을 것이다.
 
-[[/data-architect/00_what_is_ontology]]에서 "대시보드는 답을 보여주고, 온톨로지는 그 답으로 세계를 바꾼다"고 했다. `action_log`가 그 메커니즘이다.
+[[/data-architect/04_what_is_ontology]]에서 "대시보드는 답을 보여주고, 온톨로지는 그 답으로 세계를 바꾼다"고 했다. `action_log`가 그 메커니즘이다.
 
 ---
 
@@ -575,7 +575,7 @@ upgrade_tier           | 등급 상향                 | TRUE    ← 연 GMV 300
 
 에이전트는 이 결과를 받아 `recommend_product`와 `upgrade_tier`만 실행한다. K씨의 테이블 스키마를 몰라도, 소스 시스템이 몇 개인지 몰라도, 링크 그래프 위에 올라탄 추상화가 K씨의 세계를 전달한다.
 
-이것이 [[/data-architect/00_what_is_ontology]]에서 말한 **"에이전트의 월드모델"** 이다. 테이블 1,000개의 스키마 대신 객체·관계·허용된 행동으로 압축된 지도. 환각이 줄고 행동이 통제 가능해진다.
+이것이 [[/data-architect/04_what_is_ontology]]에서 말한 **"에이전트의 월드모델"** 이다. 테이블 1,000개의 스키마 대신 객체·관계·허용된 행동으로 압축된 지도. 환각이 줄고 행동이 통제 가능해진다.
 
 ---
 
@@ -665,6 +665,6 @@ K씨의 알람은 2만원짜리 사건이었다. 드릴다운하자 온톨로지
 
 ## 참고
 
-- [[/data-architect/00_what_is_ontology]] — 온톨로지의 개념과 아키텍처 원리: Semantic·Kinetic·Dynamic 3계층
+- [[/data-architect/04_what_is_ontology]] — 온톨로지의 개념과 아키텍처 원리: Semantic·Kinetic·Dynamic 3계층
 - Sculley et al., [*Hidden Technical Debt in Machine Learning Systems*](https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems) (NIPS 2015) — 피처 의미 드리프트가 ML 시스템에 미치는 영향
 - Milner, [*Action calculi, or syntactic action structures*](https://link.springer.com/chapter/10.1007/3-540-57182-5_7) (MFCS 1993) — 행위(action)를 일급 시민으로 다루는 이론적 배경

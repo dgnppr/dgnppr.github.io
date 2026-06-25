@@ -1562,275 +1562,6 @@
       }
     ]
   },
-  "data-engineering/00_what_is_medaliion_architecture": {
-    "hash": "45a72272d0a897f433179cdf331680c1",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "메달리언 아키텍처",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "Bronze (Raw)",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "Silver (Conformed)",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "Gold (Curated)",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "재처리 가능성",
-        "type": "end"
-      },
-      {
-        "id": "n6",
-        "label": "단일 출처(SSOT)",
-        "type": ": end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n2",
-        "to": "n5",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n6",
-        "bidirectional": true
-      }
-    ]
-  },
-  "data-architect/00_what_is_ontology": {
-    "hash": "aac53707b399de73a07cf2693d4a1e45",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "의미의 드리프트",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "시맨틱 레이어",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "온톨로지",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "의미 vs 지표",
-        "type": ":decision"
-      },
-      {
-        "id": "n5",
-        "label": "동일성 해소",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "정의의 SCD2",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n1",
-        "to": "n3"
-      },
-      {
-        "from": "n2",
-        "to": "n4",
-        "label": "지표 계약"
-      },
-      {
-        "from": "n3",
-        "to": "n4",
-        "label": "지식 표현"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      }
-    ]
-  },
-  "data-architect/01_how_to_implement_ontology": {
-    "hash": "fa906a1c25498735d62d426f8cf66f3f",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "실체(Entity)",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "정규화 매핑",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "링크(Link)",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "속성 정의(SCD2)",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "행위(Action)",
-        "type": "decision"
-      },
-      {
-        "id": "n6",
-        "label": "차단 로그",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "동적 계층",
-        "type": ":end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n3",
-        "to": "n4",
-        "bidirectional": true
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6",
-        "label": "차단됨"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
-      }
-    ]
-  },
-  "data-engineering/01_how_to_architect_medallion_well": {
-    "hash": "cdef564a1356b525aa189a96b46b2951",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "ERP 코드 변경",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "Bronze-Gold 직결",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "정규화 레이어 부재",
-        "type": ":step"
-      },
-      {
-        "id": "n4",
-        "label": "DQ 모니터링 부재",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "Medallion 구조 도입",
-        "type": "decision"
-      },
-      {
-        "id": "n6",
-        "label": "Silver: 번역/정규화",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "Bronze: 원시 보관",
-        "type": "step"
-      },
-      {
-        "id": "n8",
-        "label": "Gold: 비즈니스 집계",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n2",
-        "to": "n5"
-      },
-      {
-        "from": "n3",
-        "to": "n5"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n5",
-        "to": "n7"
-      },
-      {
-        "from": "n6",
-        "to": "n8"
-      },
-      {
-        "from": "n7",
-        "to": "n8"
-      }
-    ]
-  },
   "llm/00_why_llm_is_decoder_only": {
     "hash": "22a093d78687f750052c97af7a31c484",
     "nodes": [
@@ -1909,52 +1640,257 @@
       }
     ]
   },
-  "data-architect/02_ontology_core_concepts": {
-    "hash": "1e1037d88dc44bef9e8ed127c1fa0388",
+  "data-architect/00_what_is_medaliion_architecture": {
+    "hash": "8a36d4ab819faafb770fe91345146f1f",
     "nodes": [
       {
         "id": "n1",
-        "label": "Entity vs Object",
+        "label": "메달리언 아키텍처",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "IRI (Global ID)",
+        "label": "Bronze (Raw)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Type vs Instance",
-        "type": ":step"
-      },
-      {
-        "id": "n4",
-        "label": "TBox/ABox 경계",
-        "type": "decision"
-      },
-      {
-        "id": "n5",
-        "label": "Ontology as Query",
+        "label": "Silver (Cleansed)",
         "type": "step"
       },
       {
+        "id": "n4",
+        "label": "Gold (Curated)",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "재처리 가능성",
+        "type": "end"
+      },
+      {
         "id": "n6",
-        "label": "Schema extension",
+        "label": "단일 진실원천",
+        "type": ": end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n2",
+        "to": "n5",
+        "bidirectional": true
+      },
+      {
+        "from": "n3",
+        "to": "n6",
+        "bidirectional": true
+      }
+    ]
+  },
+  "data-architect/01_how_to_architect_medallion_well": {
+    "hash": "0c802e08d412a6adca245c754bfbf58a",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "ERP 코드 변경",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "직접 연결 구조",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "정규화 레이어 부재",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "DQ 모니터링 공백",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "Medallion 구조 도입",
+        "type": ": decision"
+      },
+      {
+        "id": "n6",
+        "label": "Silver 번역 레이어",
+        "type": "step"
+      },
+      {
+        "id": "n7",
+        "label": "Gold 소비자 보호",
         "type": "end"
       }
     ],
     "edges": [
       {
         "from": "n1",
-        "to": "n2",
-        "bidirectional": true,
-        "label": "scope contrast"
+        "to": "n2"
+      },
+      {
+        "from": "n1",
+        "to": "n3"
+      },
+      {
+        "from": "n1",
+        "to": "n4"
+      },
+      {
+        "from": "n2",
+        "to": "n5"
+      },
+      {
+        "from": "n3",
+        "to": "n5"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
+      }
+    ]
+  },
+  "data-architect/02_how_to_architect_medallion_well": {
+    "hash": "8e47b1e524ece40270ad6fc7ffb7a6a4",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "메달리언 레이어 설계",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "Bronze: 복원성 기준",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "Silver vs Gold 4규칙",
+        "type": ":decision"
+      },
+      {
+        "id": "n4",
+        "label": "이상태/사실 구분",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "재사용성/변동성",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "데이터 흐름 원칙",
+        "type": "step"
+      },
+      {
+        "id": "n7",
+        "label": "멱등성과 MERGE",
+        "type": "step"
+      },
+      {
+        "id": "n8",
+        "label": "증분 vs 전체 재처리",
+        "type": "decision"
+      },
+      {
+        "id": "n9",
+        "label": "실전 패턴/안티패턴",
+        "type": "step"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4",
+        "label": "무엇인가(사실)"
+      },
+      {
+        "from": "n3",
+        "to": "n5",
+        "label": "얼마인가/변동"
+      }
+    ]
+  },
+  "data-architect/04_what_is_ontology": {
+    "hash": "aac53707b399de73a07cf2693d4a1e45",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "의미의 드리프트",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "전통적 BI 한계",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "시맨틱 레이어",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "온톨로지 (ER)",
+        "type": "decision"
+      },
+      {
+        "id": "n5",
+        "label": "동일성 해소",
+        "type": ": step"
+      },
+      {
+        "id": "n6",
+        "label": "의미의 SCD2",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
       },
       {
         "from": "n3",
         "to": "n4",
         "bidirectional": true,
-        "label": "meta-class"
+        "label": "계층 차이"
       },
       {
         "from": "n4",
@@ -1966,48 +1902,89 @@
       }
     ]
   },
-  "data-engineering/02_how_to_architect_medallion_well": {
-    "hash": "44304f34e0bbaf66ed6c72c68aae77c3",
+  "data-architect/05_how_to_implement_ontology": {
+    "hash": "5d9bd3b927b5ef3f550a7781b40564d6",
     "nodes": [
       {
         "id": "n1",
-        "label": "메달리언 레이어 설계",
+        "label": "인시던트: 잘못된 쿠폰"
+      },
+      {
+        "id": "n2",
+        "label": "4가지 부재 (Identity/Link/Action Guard/Definition)"
+      },
+      {
+        "id": "n3",
+        "label": "온톨로지 vs 시맨틱 레이어"
+      },
+      {
+        "id": "n4",
+        "label": "온톨로지 설계 (Entity+Id, Link, Definition, Action)"
+      },
+      {
+        "id": "n5",
+        "label": "Dynamic Layer: 결정 → 데이터 피드백"
+      },
+      {
+        "id": "n6",
+        "label": "에이전트 월드모델"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      }
+    ]
+  },
+  "data-architect/06_ontology_core_concepts": {
+    "hash": "e8e6768ef3ebb49d2662d21144a26470",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "Wikidata 모델",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "Bronze (적재 메타)",
+        "label": "Entity vs Object",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Silver (사실 정합)",
+        "label": "Type vs Instance",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "Gold (집계/KPI)",
+        "label": "P31 (instance of)",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "변환 위치 단일화",
-        "type": ":decision"
-      },
-      {
-        "id": "n6",
-        "label": "멱등성 MERGE",
+        "label": "P279 (subclass of)",
         "type": "step"
       },
       {
-        "id": "n7",
-        "label": "증분 vs 전체 재처리",
-        "type": "decision"
-      },
-      {
-        "id": "n8",
-        "label": "안티패턴 제거",
-        "type": "end"
+        "id": "n6",
+        "label": "추론(Inference)",
+        "type": ":end"
       }
     ],
     "edges": [
@@ -2026,20 +2003,15 @@
       {
         "from": "n3",
         "to": "n5",
-        "bidirectional": true,
-        "label": "사실 vs 집계"
+        "bidirectional": true
+      },
+      {
+        "from": "n4",
+        "to": "n6"
       },
       {
         "from": "n5",
         "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
-      },
-      {
-        "from": "n7",
-        "to": "n8"
       }
     ]
   }

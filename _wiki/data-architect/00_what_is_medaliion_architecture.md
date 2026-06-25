@@ -3,11 +3,11 @@ layout  : wiki
 title   : 메달리언 아키텍처란 무엇인가
 date    : 2026-05-22 00:00:00 +0900
 updated : 2026-05-22 00:00:00 +0900
-tag     : data-engineering design-pattern data-architecture 
+tag     : data-architect design-pattern data-architecture 
 toc     : true
 comment : true
 public  : true
-parent  : [[/data-engineering]]
+parent  : [[/data-architect]]
 latex   : true
 status  : complete
 show-diagram: true
