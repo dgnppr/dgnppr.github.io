@@ -211,51 +211,41 @@
     ]
   },
   "java/01_producer_extends_consumer_super": {
-    "hash": "6ab31ec9cdc9d2b6dd7bb1527be2c0c0",
+    "hash": "a528e7cae4014d74ba10b008833fdc52",
     "nodes": [
       {
         "id": "n1",
-        "label": "제네릭 API 유연성",
+        "label": "한정적 와일드카드",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "불공변 타입 제약",
+        "label": "불공변성 제약",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "한정적 와일드카드",
-        "type": ":step"
+        "label": "PECS 공식",
+        "type": ": step"
       },
       {
         "id": "n4",
-        "label": "PECS 공식",
-        "type": "decision"
-      },
-      {
-        "id": "n5",
         "label": "Producer-extends",
         "type": "step"
       },
       {
-        "id": "n6",
+        "id": "n5",
         "label": "Consumer-super",
         "type": "step"
       },
       {
-        "id": "n7",
-        "label": "와일드카드 vs 타입 매개변수",
+        "id": "n6",
+        "label": "타입 매개변수 vs 와일드카드",
         "type": "decision"
       },
       {
-        "id": "n8",
-        "label": "메소드 헬퍼 활용",
-        "type": "step"
-      },
-      {
-        "id": "n9",
-        "label": "유연한 공용 API",
+        "id": "n7",
+        "label": "유연한 API 설계",
         "type": "end"
       }
     ],
@@ -273,32 +263,21 @@
         "to": "n4"
       },
       {
-        "from": "n4",
+        "from": "n3",
         "to": "n5",
-        "bidirectional": true,
-        "label": "생산자 역할"
+        "bidirectional": true
       },
       {
         "from": "n4",
-        "to": "n6",
-        "bidirectional": true,
-        "label": "소비자 역할"
+        "to": "n6"
       },
       {
         "from": "n5",
-        "to": "n7"
+        "to": "n6"
       },
       {
         "from": "n6",
         "to": "n7"
-      },
-      {
-        "from": "n7",
-        "to": "n8"
-      },
-      {
-        "from": "n8",
-        "to": "n9"
       }
     ]
   },
@@ -924,7 +903,7 @@
     ]
   },
   "data-architect/01_how_to_architect_medallion_well": {
-    "hash": "f545700e53ecf443572ec4adfbff491a",
+    "hash": "aa133a3282a66442f24af057cd3bf184",
     "nodes": [
       {
         "id": "n1",
@@ -933,32 +912,37 @@
       },
       {
         "id": "n2",
-        "label": "Bronze-Gold 직결",
+        "label": "직접 연결 구조",
         "type": "step"
       },
       {
         "id": "n3",
         "label": "정규화 레이어 부재",
-        "type": ":step"
+        "type": "step"
       },
       {
         "id": "n4",
-        "label": "DQ 모니터링 결여",
+        "label": "DQ 모니터링 공백",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "Medallion 구조 도입",
+        "label": "Medallion 설계 선택",
         "type": "decision"
       },
       {
         "id": "n6",
-        "label": "Silver 번역 레이어",
+        "label": "Bronze (Raw)",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "장애 흡수 및 격리",
+        "label": "Silver (번역/DQ)",
+        "type": "step"
+      },
+      {
+        "id": "n8",
+        "label": "Gold (비즈니스)",
         "type": "end"
       }
     ],
@@ -992,8 +976,17 @@
         "to": "n6"
       },
       {
-        "from": "n6",
+        "from": "n5",
         "to": "n7"
+      },
+      {
+        "from": "n6",
+        "to": "n7",
+        "bidirectional": true
+      },
+      {
+        "from": "n7",
+        "to": "n8"
       }
     ]
   },
@@ -1234,7 +1227,7 @@
     ]
   },
   "cloud/01_how_to_operate_iam_well": {
-    "hash": "806bedc75a7db1e94a4809759ba7334e",
+    "hash": "549ab37df5174a6728248e3fed2829d7",
     "nodes": [
       {
         "id": "n1",
@@ -1253,38 +1246,28 @@
       },
       {
         "id": "n4",
-        "label": "워크로드별 전용",
+        "label": "워크로드 전용 계정",
         "type": "step"
       },
       {
         "id": "n5",
         "label": "최소 권한 원칙",
-        "type": ": step"
+        "type": ":step"
       },
       {
         "id": "n6",
-        "label": "그룹 기반 관리",
+        "label": "그룹/경계 관리",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "권한 경계 설정",
-        "type": "step"
-      },
-      {
-        "id": "n8",
         "label": "감사 및 정기 정리",
         "type": "step"
       },
       {
-        "id": "n9",
+        "id": "n8",
         "label": "네이밍 컨벤션",
         "type": "step"
-      },
-      {
-        "id": "n10",
-        "label": "블래스트 레디어스 최소",
-        "type": "end"
       }
     ],
     "edges": [
@@ -1315,19 +1298,11 @@
       {
         "from": "n7",
         "to": "n8"
-      },
-      {
-        "from": "n8",
-        "to": "n9"
-      },
-      {
-        "from": "n9",
-        "to": "n10"
       }
     ]
   },
   "cloud/02_authenticate_gcp_without_service_accounts": {
-    "hash": "ba28a140bcb8c8a8c17a5cfb1d38672e",
+    "hash": "8b1215d98cc2cba0a7311b79b6f09030",
     "nodes": [
       {
         "id": "n1",
@@ -1336,27 +1311,32 @@
       },
       {
         "id": "n2",
-        "label": "로컬 개발 (사람 계정)",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "GitLab CI WIF/OIDC",
+        "label": "로컬: 개인 계정",
         "type": ":step"
       },
       {
+        "id": "n3",
+        "label": "CI/CD: WIF OIDC",
+        "type": "step"
+      },
+      {
         "id": "n4",
-        "label": "SA 경유 방식 A",
+        "label": "WIF 권한 모델",
         "type": "decision"
       },
       {
         "id": "n5",
-        "label": "직접 역할 부여 B",
-        "type": "decision"
+        "label": "SA 경유 (권한 분리)",
+        "type": "step"
       },
       {
         "id": "n6",
-        "label": "환경별 인증 분리",
+        "label": "직접 역할 부여",
+        "type": "step"
+      },
+      {
+        "id": "n7",
+        "label": "운영계/개발계 분리",
         "type": "end"
       }
     ],
@@ -1374,18 +1354,24 @@
         "to": "n4"
       },
       {
-        "from": "n3",
+        "from": "n4",
         "to": "n5",
         "bidirectional": true,
-        "label": "권한/관리 트레이드오프"
+        "label": "권한 명확성"
       },
       {
         "from": "n4",
-        "to": "n6"
+        "to": "n6",
+        "bidirectional": true,
+        "label": "관리 편의성"
       },
       {
         "from": "n5",
-        "to": "n6"
+        "to": "n7"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
       }
     ]
   },

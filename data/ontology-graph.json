@@ -11,6 +11,7 @@
         "guide"
       ],
       "date": "2026-06-24",
+      "confidence": "high",
       "actions": [
         "motivate",
         "review"
@@ -445,7 +446,8 @@
         "iac",
         "gcp"
       ],
-      "date": "2026-06-25"
+      "date": "2026-06-25",
+      "confidence": "medium"
     },
     "event/retrospect/06_2026_code_is_cheap": {
       "id": "event/retrospect/06_2026_code_is_cheap",
@@ -456,7 +458,8 @@
       "tags": [
         "retrospect"
       ],
-      "date": "2026-06-21"
+      "date": "2026-06-21",
+      "confidence": "medium"
     }
   },
   "edges": [
