@@ -1540,7 +1540,7 @@
     ]
   },
   "essay/00_is_lombok_necessary": {
-    "hash": "311016e17a8f79dadad38e04b14100e8",
+    "hash": "bcfc3d03a5b6b167f9dafb835494970d",
     "nodes": [
       {
         "id": "n1",
@@ -1550,11 +1550,11 @@
       {
         "id": "n2",
         "label": "편의성 vs 위험성",
-        "type": ":decision"
+        "type": ":step"
       },
       {
         "id": "n3",
-        "label": "어노테이션 기반 생성",
+        "label": "어노테이션 기반 코드 생성",
         "type": "step"
       },
       {
@@ -1564,75 +1564,8 @@
       },
       {
         "id": "n5",
-        "label": "코드 가독성 향상",
+        "label": "보일러플레이트 제거",
         "type": "end"
-      },
-      {
-        "id": "n6",
-        "label": "런타임 문제 잠재적 발생",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n4",
-        "to": "n6"
-      },
-      {
-        "from": "n5",
-        "to": "n6",
-        "bidirectional": true
-      }
-    ]
-  },
-  "essay/01_why_redis_single_threaded": {
-    "hash": "81cf6469cf30f0b3c1ded087f8f4fe6a",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "싱글 쓰레드 설계",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "동기화/컨텍스트 비용 절감",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "CPU vs I/O 병목 판단",
-        "type": ":step"
-      },
-      {
-        "id": "n4",
-        "label": "네트워크 I/O 멀티쓰레드",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "메모리 해제 지연 처리",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "인메모리 구조의 단순함",
-        "type": "step"
       }
     ],
     "edges": [
@@ -1652,15 +1585,78 @@
       {
         "from": "n4",
         "to": "n5"
+      }
+    ]
+  },
+  "essay/01_why_redis_single_threaded": {
+    "hash": "fd1a166ea38ca14892f9513bd8018d4a",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "싱글스레드 설계",
+        "type": "root"
       },
       {
-        "from": "n5",
-        "to": "n6"
+        "id": "n2",
+        "label": "동기화 비용 제거",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "컨텍스트 스위치 감소",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "I/O 멀티플렉싱",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "비동기 I/O 처리",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "메모리/네트워크 병목",
+        "type": "decision"
+      },
+      {
+        "id": "n7",
+        "label": "커널 레벨 분산",
+        "type": "step"
+      },
+      {
+        "id": "n8",
+        "label": "싱글쓰레드 성능 달성",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n1",
+        "to": "n3"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
+      },
+      {
+        "from": "n7",
+        "to": "n8"
       }
     ]
   },
   "essay/02_is_system_time_really_correct": {
-    "hash": "443c151d6631cde23bea8618a6570539",
+    "hash": "abc5a60d801cbabe1883838c24375be2",
     "nodes": [
       {
         "id": "n1",
@@ -1674,23 +1670,18 @@
       },
       {
         "id": "n3",
-        "label": "하드웨어/OS 의존성",
-        "type": ":step"
+        "label": "시스템/하드웨어 의존성",
+        "type": "decision"
       },
       {
         "id": "n4",
-        "label": "NTP 동기화 한계",
-        "type": ":step"
+        "label": "NTP 동기화 및 오차",
+        "type": "step"
       },
       {
         "id": "n5",
-        "label": "초정밀도 부적합",
-        "type": ":end"
-      },
-      {
-        "id": "n6",
-        "label": "분산 시스템 오차",
-        "type": ":decision"
+        "label": "분산 시스템 시간 불일치",
+        "type": "end"
       }
     ],
     "edges": [
@@ -1707,14 +1698,13 @@
         "to": "n4"
       },
       {
-        "from": "n6",
-        "to": "n5",
-        "label": "오차 수용"
+        "from": "n4",
+        "to": "n5"
       }
     ]
   },
   "essay/03_which_jwt_algorithm_is_suitable": {
-    "hash": "9e851c9a2508ca7fff90db28ae08d3c4",
+    "hash": "88fe61b93382f38a49c64c731dc12067",
     "nodes": [
       {
         "id": "n1",
@@ -1723,27 +1713,27 @@
       },
       {
         "id": "n2",
-        "label": "HS (대칭키)",
+        "label": "대칭키(HS)",
         "type": ":step"
       },
       {
         "id": "n3",
-        "label": "RS (비대칭키)",
+        "label": "비대칭키(RS)",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "보안 vs 처리량",
+        "label": "보안 vs 속도",
         "type": "decision"
       },
       {
         "id": "n5",
-        "label": "256비트 권장",
+        "label": "256/512 비트 결정",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "운영적 보완",
+        "label": "상황별 최적 알고리즘",
         "type": "end"
       }
     ],
@@ -1758,13 +1748,11 @@
       },
       {
         "from": "n2",
-        "to": "n4",
-        "bidirectional": true
+        "to": "n4"
       },
       {
         "from": "n3",
-        "to": "n4",
-        "bidirectional": true
+        "to": "n4"
       },
       {
         "from": "n4",
@@ -1777,7 +1765,7 @@
     ]
   },
   "essay/04_how_to_create_text_fixture": {
-    "hash": "4b038e6e99d8bfcfe414fee0a9378d9d",
+    "hash": "46cffb96b7ef6a8149c1a21f266edfff",
     "nodes": [
       {
         "id": "n1",
@@ -1791,27 +1779,32 @@
       },
       {
         "id": "n3",
-        "label": "내부 팩토리 메서드",
-        "type": "step"
+        "label": "의도 명확성",
+        "type": "end"
       },
       {
         "id": "n4",
-        "label": "외부 팩토리 클래스",
-        "type": "step"
+        "label": "중복과 복잡성",
+        "type": "decision"
       },
       {
         "id": "n5",
-        "label": "Enum Fixture",
+        "label": "내부/외부 팩토리",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "Fixture Monkey/Instancio",
+        "label": "Enum Fixture",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "선호하는 방식",
+        "label": "라이브러리 활용",
+        "type": "step"
+      },
+      {
+        "id": "n8",
+        "label": "선호하는 전략",
         "type": "end"
       }
     ],
@@ -1826,19 +1819,28 @@
       },
       {
         "from": "n3",
-        "to": "n4"
+        "to": "n4",
+        "bidirectional": true
       },
       {
         "from": "n4",
         "to": "n5"
       },
       {
-        "from": "n5",
+        "from": "n4",
         "to": "n6"
+      },
+      {
+        "from": "n5",
+        "to": "n7"
       },
       {
         "from": "n6",
         "to": "n7"
+      },
+      {
+        "from": "n7",
+        "to": "n8"
       }
     ]
   },

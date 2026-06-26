@@ -6,7 +6,7 @@ public: true
 ---
 <div class="post">
     <h1 class="tag-page-title">All Tags</h1>
-    <ul id="tag-list" class="tag-cloud"></ul>
+    <div id="tag-list"></div>
 </div>
 
 <div class="post" id="tag-collection"></div>
@@ -20,14 +20,27 @@ public: true
             .then(function(data) {
                 if (data == null) return;
 
-                var template = '';
+                // 알파벳 첫 글자별 그루핑
+                var groups = {};
                 for (var i = 0; i < data.length; i++) {
-                    var tag = data[i];
-                    template += '<li class="tag-item" id="tag-pill-' + tag.name + '">' +
-                        '<a href="#' + tag.name + '" onclick="showTag(\'' + tag.name + '\')">' +
-                        tag.name + '<span class="tag-count">' + tag.size + '</span>' +
-                        '</a></li>';
+                    var letter = data[i].name[0].toUpperCase();
+                    if (!groups[letter]) groups[letter] = [];
+                    groups[letter].push(data[i]);
                 }
+
+                var template = '';
+                Object.keys(groups).sort().forEach(function(letter) {
+                    template += '<div class="tag-alpha-group">' +
+                        '<span class="tag-alpha-label">' + letter + '</span>' +
+                        '<ul class="tag-cloud">';
+                    groups[letter].forEach(function(tag) {
+                        template += '<li class="tag-item" id="tag-pill-' + tag.name + '">' +
+                            '<a href="#' + tag.name + '" onclick="showTag(\'' + tag.name + '\')">' +
+                            tag.name + '<span class="tag-count">' + tag.size + '</span>' +
+                            '</a></li>';
+                    });
+                    template += '</ul></div>';
+                });
                 document.getElementById('tag-list').innerHTML = template;
                 showInitTag();
             })

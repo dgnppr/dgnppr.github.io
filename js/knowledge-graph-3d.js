@@ -840,14 +840,18 @@
                         var pt = new THREE.Vector3();
                         if (ray.ray.intersectPlane(dragPlane, pt)) {
                             var dn2 = dragMesh.userData.node;
+                            var prevX = dn2.fx !== undefined ? dn2.fx : dn2.x;
+                            var prevY = dn2.fy !== undefined ? dn2.fy : dn2.y;
                             var prevZ = dn2.fz !== undefined ? dn2.fz : dn2.z;
-                            var dz = pt.z - prevZ;
+                            var dx = pt.x - prevX, dy = pt.y - prevY, dz = pt.z - prevZ;
                             dn2.fx = pt.x; dn2.fy = pt.y; dn2.fz = pt.z;
-                            /* connected nodes Z 전파 — D3는 2D이므로 Z는 수동으로 따라오게 */
-                            if (dragConnSet && Math.abs(dz) > 0.5) {
+                            if (dragConnSet) {
                                 dragConnSet.forEach(function (s) {
                                     var nb = nodeMap[s];
-                                    if (nb) nb.z += dz * 0.5;
+                                    if (!nb) return;
+                                    if (Math.abs(dx) > 0.5) nb.x += dx * 0.5;
+                                    if (Math.abs(dy) > 0.5) nb.y += dy * 0.5;
+                                    if (Math.abs(dz) > 0.5) nb.z += dz * 0.5;
                                 });
                             }
                         }
@@ -1146,7 +1150,7 @@
                         if (spLen < sphereR * 1.2 && tpLen < sphereR * 1.2) {
                             /* 구면 배치: 중점이 0.4R 이내일 때만 최소한으로 밀어냄
                              * cpLen = max(mLen, 0.8R - mLen) → B(0.5) ≥ 0.4R 보장 */
-                            var cpLen = Math.max(mLen, sphereR * 0.8 - mLen);
+                            var cpLen = Math.max(mLen, sphereR * 0.3 - mLen);
                             cpx = mx / mLen * cpLen;
                             cpy = my / mLen * cpLen;
                             cpz = mz / mLen * cpLen;

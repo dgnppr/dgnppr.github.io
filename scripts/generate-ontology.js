@@ -85,5 +85,37 @@ for (const e of edges) {
   if (!nodeIds.has(e.to)) { broken++; console.warn(`[경고] 대상 노드 없음: ${e.from} → ${e.to} (${e.type})`); }
 }
 
+// ── learning_pressure 계산 ────────────────────────────────────────────────
+// importance: 얼마나 많은 것이 이 노드에 의존하는가
+// depth:      얼마나 깊게 이해하고 있는가
+// learning_pressure = importance × (1 - depth)
+const inboundCount  = {};
+const outboundCount = {};
+for (const e of edges) {
+  if (nodeIds.has(e.to))   inboundCount[e.to]   = (inboundCount[e.to]   ?? 0) + 1;
+  if (nodeIds.has(e.from)) outboundCount[e.from] = (outboundCount[e.from] ?? 0) + 1;
+}
+
+const CONF_SCORE   = { high: 1.0, medium: 0.6, low: 0.2 };
+const STATUS_SCORE = { complete: 1.0, writing: 0.6, draft: 0.2 };
+
+for (const [id, node] of Object.entries(nodes)) {
+  const inb  = inboundCount[id]  ?? 0;
+  const outb = outboundCount[id] ?? 0;
+
+  // 중요도: inbound 참조가 핵심 신호 (남들이 이 개념에 의존)
+  const importance = inb * 2 + (outb > 0 ? 1 : 0);
+
+  // 깊이: confidence 40% + status 40% + 연결 밀도 20%
+  const confScore   = CONF_SCORE[node.confidence]   ?? 0.3;
+  const statusScore = STATUS_SCORE[node.status]      ?? 0.3;
+  const density     = Math.min(inb + outb, 6) / 6;
+  const depth       = confScore * 0.4 + statusScore * 0.4 + density * 0.2;
+
+  node.importance        = importance;
+  node.depth             = Math.round(depth * 100) / 100;
+  node.learning_pressure = Math.round(importance * (1 - depth) * 100) / 100;
+}
+
 fs.writeFileSync(OUT, JSON.stringify({ nodes, edges }, null, 2));
 console.log(`노드: ${Object.keys(nodes).length}개  엣지: ${edges.length}개 (깨진 엣지: ${broken}개) → data/ontology-graph.json`);

@@ -99,6 +99,33 @@
         <button id="search-toggle" class="header-search-toggle" aria-label="검색">
             <i class="fas fa-search header-icon-unified"></i>
         </button>
+        <div class="header-nav-wrap">
+            <button id="nav-toggle" class="header-search-toggle" aria-label="바로가기">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="3" y1="6" x2="21" y2="6"/>
+                    <line x1="3" y1="12" x2="21" y2="12"/>
+                    <line x1="3" y1="18" x2="21" y2="18"/>
+                </svg>
+            </button>
+            <div id="nav-dropdown" class="header-nav-dropdown" aria-hidden="true">
+                <a class="header-nav-item" href="/topics/">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    전체보기
+                </a>
+                <a class="header-nav-item" href="/tags/">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                    태그
+                </a>
+                <button class="header-nav-item" data-kg-open>
+                    <i class="fas fa-brain" aria-hidden="true"></i>
+                    지식 그래프
+                </button>
+                <a class="header-nav-item" href="/stats/">
+                    <i class="fas fa-chart-bar" aria-hidden="true"></i>
+                    통계
+                </a>
+            </div>
+        </div>
     </div>
 </header>
 <div id="searchbox-wrapper" class="searchbox-wrapper" aria-hidden="true">
@@ -108,59 +135,40 @@
 <script src="/js/theme-toggle.js"></script>
 <script>
 (function () {
+    var navToggle = document.getElementById('nav-toggle');
+    var navDropdown = document.getElementById('nav-dropdown');
+
+    navToggle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var isOpen = navDropdown.classList.toggle('is-open');
+        navDropdown.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    });
+
+    document.addEventListener('click', function (e) {
+        if (!navDropdown.contains(e.target) && e.target !== navToggle) {
+            navDropdown.classList.remove('is-open');
+            navDropdown.setAttribute('aria-hidden', 'true');
+        }
+    });
+
+    navDropdown.querySelectorAll('[data-kg-open]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            navDropdown.classList.remove('is-open');
+        });
+    });
+})();
+</script>
+<script>
+(function () {
     var toggle = document.getElementById('search-toggle');
     var wrapper = document.getElementById('searchbox-wrapper');
     var fuseInstance = null;
     var allItems = null;
 
-    var QUICK_ACTIONS = [
-        {
-            label: '전체보기',
-            url: '/topics/',
-            icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>'
-        },
-        {
-            label: '태그',
-            url: '/tags/',
-            icon: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>'
-        },
-        {
-            label: '지식 그래프',
-            kgOpen: true,
-            icon: '<i class="fas fa-brain" aria-hidden="true"></i>'
-        },
-        {
-            label: '통계',
-            url: '/stats/',
-            icon: '<i class="fas fa-chart-bar" aria-hidden="true"></i>'
-        }
-    ];
-
-    function showQuickActions() {
-        var results = document.getElementById('search-results');
-        if (!results) return;
-        results.innerHTML =
-            '<div class="search-quick-label">바로가기</div>' +
-            QUICK_ACTIONS.map(function(a) {
-                if (a.kgOpen) {
-                    return '<button class="search-result-item search-quick-action" data-kg-open>' +
-                        '<span class="search-quick-icon">' + a.icon + '</span>' +
-                        '<span class="search-result-main"><span class="search-result-title">' + a.label + '</span></span>' +
-                        '</button>';
-                }
-                return '<a class="search-result-item" href="' + a.url + '">' +
-                    '<span class="search-quick-icon">' + a.icon + '</span>' +
-                    '<span class="search-result-main"><span class="search-result-title">' + a.label + '</span></span>' +
-                    '</a>';
-            }).join('');
-        results.classList.add('is-open');
-    }
-
     function openSearch() {
         wrapper.classList.add('is-open');
         wrapper.setAttribute('aria-hidden', 'false');
         wrapper.querySelector('.searchInput').focus();
-        showQuickActions();
     }
 
     function closeSearch() {
@@ -272,7 +280,7 @@
         if (e.target.id !== 'local-search-input') { return; }
         var raw = e.target.value.trim();
         var results = document.getElementById('search-results');
-        if (!raw) { showQuickActions(); return; }
+        if (!raw) { results.classList.remove('is-open'); results.innerHTML = ''; return; }
         loadIndex(function () {
             var q = raw.toLowerCase();
             var matches;

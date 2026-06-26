@@ -4,7 +4,7 @@ title   : 왜 레디스를 싱글 스레드로 만들었을까
 summary :
 date    : 2023-12-24 00:00:00 +0900
 updated : 2023-12-24 00:00:00 +0900
-tag     : essay redis os
+tag     : redis os
 toc     : true
 comment : true
 public  : true

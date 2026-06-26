@@ -9,13 +9,36 @@
     letter-spacing: -0.01em;
 }
 
+.tag-alpha-group {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--color-border-subtle);
+
+    &:last-child {
+        border-bottom: none;
+    }
+}
+
+.tag-alpha-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--color-text-tertiary);
+    letter-spacing: 0.04em;
+    width: 16px;
+    flex-shrink: 0;
+    padding-top: 5px;
+}
+
 .tag-cloud {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 6px;
     padding: 0;
     list-style: none;
-    margin: 0 0 2.4rem;
+    margin: 0 0 0.2rem;
+    flex: 1;
 }
 
 .tag-item {
@@ -79,11 +102,9 @@
 
 #tag-collection {
     .tag-section h3 {
-        font-size: 0.78rem;
-        font-weight: 600;
-        color: var(--color-text-tertiary);
-        text-transform: uppercase;
-        letter-spacing: 0.07em;
+        font-size: 0.88rem;
+        font-weight: 700;
+        color: var(--color-text-heading);
         margin: 0 0 0.6rem;
         padding-bottom: 0.5rem;
         border-bottom: 1.5px solid var(--color-tag-border);
@@ -100,15 +121,22 @@
 
     .post-link {
         display: block;
-        padding: 12px 4px;
+        padding: 10px 8px;
+        margin: 0 -8px;
+        border-radius: 4px;
         text-decoration: none;
+        transition: background 0.1s ease;
 
         &:link, &:visited {
             color: inherit;
         }
 
-        &:hover .post-title {
-            color: var(--color-interactive);
+        &:hover {
+            background: var(--color-surface-hover);
+
+            .post-title {
+                color: var(--color-interactive);
+            }
         }
 
         .post-header {

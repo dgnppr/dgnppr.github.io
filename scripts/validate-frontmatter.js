@@ -26,6 +26,11 @@ const COLLECTION_MAP = {
 
 const MAX_TAGS = 5;
 
+const VALID_RELATION_TYPES = new Set([
+  'extends', 'implements', 'references', 'supersedes',
+  'motivated_by', 'resolves', 'learned_from', 'applied_to', 'related',
+]);
+
 // ── frontmatter 파싱 ────────────────────────────────────────────────────────
 
 function parseFrontmatter(src) {
@@ -38,6 +43,16 @@ function parseFrontmatter(src) {
     if (m) meta[m[1]] = m[2].trim();
   }
   return meta;
+}
+
+function parseRelationTypes(src) {
+  const fm = src.match(/^---\r?\n([\s\S]*?)\r?\n---/)?.[1];
+  if (!fm) return [];
+  const block = fm.match(/^relations:\s*\n((?:[ \t]+-[^\n]*\n?)*)/m)?.[1];
+  if (!block) return [];
+  return block.split('\n')
+    .map(l => l.match(/type:\s*([^,}\s]+)/)?.[1])
+    .filter(Boolean);
 }
 
 // ── 파일 하나 검증 ──────────────────────────────────────────────────────────
@@ -71,6 +86,13 @@ function validateFile(filePath) {
   for (const field of REQUIRED[type]) {
     if (!(field in meta) || meta[field] === '') {
       errors.push(`${rel}: '${field}' 필드 누락`);
+    }
+  }
+
+  // relations 타입 검사
+  for (const t of parseRelationTypes(src)) {
+    if (!VALID_RELATION_TYPES.has(t)) {
+      errors.push(`${rel}: relations에 잘못된 타입 '${t}' — 허용: ${[...VALID_RELATION_TYPES].join(', ')}`);
     }
   }
 

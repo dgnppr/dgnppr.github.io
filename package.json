@@ -4,6 +4,7 @@
   "description": "data generator",
   "main": "scripts/generateData.js",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.106.0",
     "@google/genai": "^2.9.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "yamljs": "^0.3.0"
