@@ -15,6 +15,7 @@ valid_from: 2024-03-11
 valid_to: 2024-03-17
 relations:
   - { type: extends, target: /event/retrospect/01_2024_january_retrospect }
+confidence  : medium
 ---
 
 ## 새로운 시작

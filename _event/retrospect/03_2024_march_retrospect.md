@@ -15,6 +15,7 @@ valid_from: 2024-03-11
 valid_to: 2024-03-31
 relations:
   - { type: extends, target: /event/retrospect/02_2024_march_3rd_retrospect }
+confidence  : medium
 ---
 
 ## 3월 무엇을 했나

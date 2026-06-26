@@ -234,37 +234,49 @@ function resolveTypes(type) {
 function buildFrontmatter(type, args, existingMeta = null) {
   const now = formatDate(new Date());
   const relLines = args.relations?.length
-    ? ["relations:", ...args.relations.map(r => `  - type: ${r.type}\n    target: ${r.target}`)]
+    ? ["relations:", ...args.relations.map(r => `  - { type: ${r.type}, target: ${r.target} }`)]
+    : [];
+  const actionsLine = args.actions?.length
+    ? [`actions    : [${args.actions.join(", ")}]`]
     : [];
   if (type === "adr") {
     return [
       "---",
-      `layout    : adr`,
-      `title     : ${args.title}`,
-      `date      : ${existingMeta?.date ?? now}`,
-      `updated   : ${now}`,
-      `tag       : ${args.tag ?? ""}`,
-      `status    : ${args.status ?? "proposed"}`,
-      `deciders  : ${args.deciders ?? ""}`,
-      `public    : false`,
+      `layout     : adr`,
+      `title      : ${args.title}`,
+      `date       : ${existingMeta?.date ?? now}`,
+      `updated    : ${now}`,
+      `tag        : ${args.tag ?? ""}`,
+      `status     : ${args.status ?? "proposed"}`,
+      `deciders   : ${args.deciders ?? ""}`,
+      `public     : false`,
+      ...(args.valid_from ? [`valid_from : ${args.valid_from}`] : []),
+      ...(args.valid_to   ? [`valid_to   : ${args.valid_to}`]   : []),
+      ...(args.supersedes ? [`supersedes : ${args.supersedes}`] : []),
+      ...actionsLine,
       ...relLines,
       "---",
     ].join("\n");
   }
   const category = args.path.includes("/") ? args.path.split("/")[0] : "";
+  const confidence = args.confidence ?? (type === "insight" ? "medium" : null);
   return [
     "---",
-    `layout  : ${type}`,
-    `title   : ${args.title}`,
-    `date    : ${existingMeta?.date ?? now}`,
-    `updated : ${now}`,
-    `tag     : ${args.tag ?? ""}`,
-    `toc     : true`,
-    `comment : true`,
-    `latex   : true`,
-    `status  : ${args.status ?? "draft"}`,
-    `public  : ${args.public ?? true}`,
-    ...(category ? [`parent  : [[/${category}]]`] : []),
+    `layout      : ${type}`,
+    `title       : ${args.title}`,
+    `date        : ${existingMeta?.date ?? now}`,
+    `updated     : ${now}`,
+    `tag         : ${args.tag ?? ""}`,
+    `toc         : true`,
+    `comment     : true`,
+    `latex       : true`,
+    `status      : ${args.status ?? "draft"}`,
+    `public      : ${args.public ?? true}`,
+    ...(category    ? [`parent      : [[/${category}]]`]    : []),
+    ...(confidence  ? [`confidence  : ${confidence}`]       : []),
+    ...(args.valid_from ? [`valid_from  : ${args.valid_from}`] : []),
+    ...(args.valid_to   ? [`valid_to    : ${args.valid_to}`]   : []),
+    ...actionsLine,
     ...relLines,
     "---",
   ].join("\n");
@@ -354,7 +366,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
           status:   { type: "string", description: "wiki 계열: draft|writing|complete / adr: proposed|accepted|deprecated|superseded" },
           public:   { type: "boolean", description: "공개 여부 (wiki 계열 전용, 기본: true)" },
           deciders:  { type: "string", description: "결정 참여자 (adr 전용, 선택)" },
-          relations: { type: "array", description: "그래프 관계 (ontology_act 결과를 그대로 전달)", items: { type: "object", properties: { type: { type: "string" }, target: { type: "string" } }, required: ["type", "target"] } },
+          confidence: { type: "string", description: "신뢰도: high | medium | low (insight 필수, 전 타입 권장)" },
+          valid_from: { type: "string", description: "유효 시작일 YYYY-MM-DD (버전·시점 의존 문서에 사용)" },
+          valid_to:   { type: "string", description: "유효 종료일 YYYY-MM-DD (만료 예정 문서에 사용)" },
+          supersedes: { type: "string", description: "대체하는 이전 ADR 엔티티 ID (adr 전용)" },
+          actions:    { type: "array", items: { type: "string" }, description: "허용 액션 오버라이드. 없으면 타입 기본값 사용" },
+          relations:  { type: "array", description: "그래프 관계 (ontology_act 결과를 그대로 전달)", items: { type: "object", properties: { type: { type: "string" }, target: { type: "string" } }, required: ["type", "target"] } },
         },
         required: ["type", "path", "title", "body"],
       },

@@ -15,6 +15,7 @@ valid_from: 2024-01-01
 valid_to: 2024-01-31
 relations:
   - { type: extends, target: /event/retrospect/00_2023_year_retrospect }
+confidence  : medium
 ---
 
 * TOC

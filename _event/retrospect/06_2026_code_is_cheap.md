@@ -13,6 +13,7 @@ status  : complete
 show-diagram: true
 relations:
   - { type: learned_from, target: /wiki/data-architect/04_what_is_ontology }
+confidence  : medium
 ---
 
 * TOC

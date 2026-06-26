@@ -170,7 +170,6 @@ function collectMarkdown(dir, results) {
 
 const files = [];
 collectMarkdown(path.join(ROOT, '_wiki'),    files);
-collectMarkdown(path.join(ROOT, '_posts'),   files);
 collectMarkdown(path.join(ROOT, '_insight'), files);
 collectMarkdown(path.join(ROOT, '_problem'), files);
 collectMarkdown(path.join(ROOT, '_tool'),    files);

@@ -1139,12 +1139,20 @@
                      */
                     var mx = (sp.x + tp.x) * 0.5, my = (sp.y + tp.y) * 0.5, mz = (sp.z + tp.z) * 0.5;
                     var mLen = Math.sqrt(mx * mx + my * my + mz * mz);
-                    var push = Math.max(0, sphereR * 0.75 - mLen);
                     var cpx, cpy, cpz;
                     if (mLen > 1) {
-                        cpx = mx / mLen * (mLen + push);
-                        cpy = my / mLen * (mLen + push);
-                        cpz = mz / mLen * (mLen + push);
+                        var spLen = Math.sqrt(sp.x*sp.x + sp.y*sp.y + sp.z*sp.z);
+                        var tpLen = Math.sqrt(tp.x*tp.x + tp.y*tp.y + tp.z*tp.z);
+                        if (spLen < sphereR * 1.2 && tpLen < sphereR * 1.2) {
+                            /* 구면 배치: 중점이 0.4R 이내일 때만 최소한으로 밀어냄
+                             * cpLen = max(mLen, 0.8R - mLen) → B(0.5) ≥ 0.4R 보장 */
+                            var cpLen = Math.max(mLen, sphereR * 0.8 - mLen);
+                            cpx = mx / mLen * cpLen;
+                            cpy = my / mLen * cpLen;
+                            cpz = mz / mLen * cpLen;
+                        } else {
+                            cpx = mx; cpy = my; cpz = mz;
+                        }
                     } else {
                         var ex = tp.x - sp.x, ey = tp.y - sp.y, ez = tp.z - sp.z;
                         var eLen = Math.sqrt(ex*ex + ey*ey + ez*ez) || 1;
@@ -1168,17 +1176,16 @@
                     /* line start (bidir only): 노드 표면 */
                     var esx = sp.x - asx * nodeVisR_s, esy = sp.y - asy * nodeVisR_s, esz = sp.z - asz * nodeVisR_s;
 
+                    /* bezier 자체를 노드 표면까지만 그림 — 중간 꺾임 방지 */
+                    var bspx = lo.arrowFrom ? esx : sp.x;
+                    var bspy = lo.arrowFrom ? esy : sp.y;
+                    var bspz = lo.arrowFrom ? esz : sp.z;
                     var SEGS = BEZIER_SEGS;
                     for (var bi = 0; bi <= SEGS; bi++) {
                         var t = bi / SEGS, mt = 1 - t;
-                        arr[bi * 3]     = mt*mt*sp.x + 2*mt*t*cpx + t*t*tp.x;
-                        arr[bi * 3 + 1] = mt*mt*sp.y + 2*mt*t*cpy + t*t*tp.y;
-                        arr[bi * 3 + 2] = mt*mt*sp.z + 2*mt*t*cpz + t*t*tp.z;
-                    }
-                    /* 끝점 override: 선이 노드 표면(=화살표 tip)에서 끝남 */
-                    arr[SEGS * 3] = epx; arr[SEGS * 3 + 1] = epy; arr[SEGS * 3 + 2] = epz;
-                    if (lo.arrowFrom) {
-                        arr[0] = esx; arr[1] = esy; arr[2] = esz;
+                        arr[bi * 3]     = mt*mt*bspx + 2*mt*t*cpx + t*t*epx;
+                        arr[bi * 3 + 1] = mt*mt*bspy + 2*mt*t*cpy + t*t*epy;
+                        arr[bi * 3 + 2] = mt*mt*bspz + 2*mt*t*cpz + t*t*epz;
                     }
                     lo.line.geometry.attributes.position.needsUpdate = true;
 

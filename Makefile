@@ -128,6 +128,13 @@ embeddings-bm25:
 	EMBEDDING_BACKEND=bm25 node scripts/generate-embeddings.js
 
 # ----------------------------------------
+# frontmatter 검증
+# ----------------------------------------
+.PHONY: validate
+validate:
+	node scripts/validate-frontmatter.js
+
+# ----------------------------------------
 # 온톨로지 그래프 생성
 # ----------------------------------------
 .PHONY: ontology

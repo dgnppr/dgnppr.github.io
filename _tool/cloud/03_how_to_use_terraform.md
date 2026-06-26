@@ -13,6 +13,7 @@ parent  : [[/cloud]]
 relations:
   - { type: implements, target: /wiki/cloud/01_vpc_for_pca }
   - { type: references, target: /wiki/cloud/01_how_to_operate_iam_well }
+confidence  : medium
 ---
 
 ## Terraform이란
