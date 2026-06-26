@@ -15,9 +15,9 @@
     <generator>Jekyll v{{ jekyll.version }}</generator>
     <language>ko-KR</language>
     <managingEditor>{{ site.author }} ({{ site.author }})</managingEditor>
-{% assign wiki_docs = site.wiki | where: "public", true | sort: "updated" | reverse %}
+{% assign wiki_docs = site.concept | where: "public", true | sort: "updated" | reverse %}
 {% for doc in wiki_docs limit: 100 %}
-  {% unless doc.title == 'wiki' or doc.url == '/wiki/' %}
+  {% unless doc.title == 'wiki' or doc.url == '/concept/' %}
     <item>
       <title>{{ doc.title | xml_escape }}</title>
       <link>{{ doc.url | prepend: site.baseurl | prepend: site.url }}</link>
