@@ -399,6 +399,7 @@
             });
 
             /* ── 링크 생성 ───────────────────────────────── */
+            var BEZIER_SEGS = 8; /* 8개 구간 = 9개 점 */
             var linkObjs = [];
             links.forEach(function (l) {
                 var sId = l.source, tId = l.target;
@@ -406,7 +407,7 @@
                 if (!sm || !tm) return;
                 var geo = new THREE.BufferGeometry();
                 geo.setAttribute('position',
-                    new THREE.Float32BufferAttribute(new Float32Array(6), 3));
+                    new THREE.Float32BufferAttribute(new Float32Array((BEZIER_SEGS + 1) * 3), 3));
                 var mat = new THREE.LineBasicMaterial({
                     color: dark ? 0xffffff : 0x334155,
                     transparent: true,
@@ -430,7 +431,8 @@
                     labelsEl.appendChild(scoreDiv);
                 }
                 linkObjs.push({ sId: sId, tId: tId, sm: sm, tm: tm,
-                                line: line, mat: mat, connected: false, dimmed: false,
+                                line: line, mat: mat,
+                                connected: false, dimmed: false,
                                 score: l.score, scoreDiv: scoreDiv });
             });
 
@@ -442,17 +444,18 @@
              *  황금각(golden angle) 배분으로 구면 위에 균등하게 분포.
              *  반지름 R = sqrt(N) × idealDist × 0.45 로 노드 수에 비례하되 컴팩트하게.
              */
+            var sphereR = 80;
             (function () {
                 var N = nodes.length;
-                var R = Math.max(80, Math.sqrt(N) * idealDist * 0.45);
+                sphereR = Math.max(80, Math.sqrt(N) * idealDist * 0.45);
                 var golden = Math.PI * (1 + Math.sqrt(5)); // 황금각 × 2π
                 nodes.forEach(function (n, i) {
                     var k   = i + 0.5;
                     var phi = Math.acos(1 - 2 * k / N);          // 위도
                     var th  = golden * k;                          // 경도
-                    n.x = R * Math.sin(phi) * Math.cos(th);
-                    n.y = R * Math.sin(phi) * Math.sin(th);
-                    n.z = R * Math.cos(phi);
+                    n.x = sphereR * Math.sin(phi) * Math.cos(th);
+                    n.y = sphereR * Math.sin(phi) * Math.sin(th);
+                    n.z = sphereR * Math.cos(phi);
                 });
             })();
 
@@ -753,17 +756,16 @@
                             controls.enabled = false;
                             var dn = dragMesh.userData.node;
                             dn.fx = dn.x; dn.fy = dn.y; dn.fz = dn.z;
-                            /* BFS로 전이적 연결 노드 전체 수집 */
+                            /* BFS — leaf까지 전체 연결 그래프 수집 */
                             dragConnSet = (function (startSlug) {
-                                var visited = new Set();
+                                var visited = new Set([startSlug]);
                                 var frontier = new Set([startSlug]);
-                                for (var hop = 0; hop < 2; hop++) {
+                                while (frontier.size > 0) {
                                     var next = new Set();
                                     frontier.forEach(function (s) {
-                                        if (!visited.has(s)) {
-                                            visited.add(s);
-                                            (adj[s] || new Set()).forEach(function (n) { if (!visited.has(n)) next.add(n); });
-                                        }
+                                        (adj[s] || new Set()).forEach(function (nb) {
+                                            if (!visited.has(nb)) { visited.add(nb); next.add(nb); }
+                                        });
                                     });
                                     frontier = next;
                                 }
@@ -1073,37 +1075,59 @@
                     ud.sprite.material.opacity = hidden ? 0 : (sel ? 0.55 : 0);
                 });
 
-                var pinnedCatCol = pinnedNode ? catColor(pinnedNode.cat) : null;
-
                 linkObjs.forEach(function (lo) {
                     if (!lo.line.visible) return;
                     var sp  = lo.sm.position, tp = lo.tm.position;
                     var arr = lo.line.geometry.attributes.position.array;
-                    arr[0] = sp.x; arr[1] = sp.y; arr[2] = sp.z;
-                    arr[3] = tp.x; arr[4] = tp.y; arr[5] = tp.z;
+
+                    /* ── Bezier 곡선: 중심 통과 방지 ───────────────────
+                     *  중점이 중심(0,0,0)에 가까울수록 바깥쪽으로 우회.
+                     *  midLen ≈ 0 (반대편 노드) → push 최대 / midLen ≈ sphereR → push ≈ 0
+                     */
+                    var mx = (sp.x + tp.x) * 0.5, my = (sp.y + tp.y) * 0.5, mz = (sp.z + tp.z) * 0.5;
+                    var mLen = Math.sqrt(mx * mx + my * my + mz * mz);
+                    var push = Math.max(0, sphereR * 0.75 - mLen);
+                    var cpx, cpy, cpz;
+                    if (mLen > 1) {
+                        cpx = mx / mLen * (mLen + push);
+                        cpy = my / mLen * (mLen + push);
+                        cpz = mz / mLen * (mLen + push);
+                    } else {
+                        /* 정반대 노드: edge 벡터와 수직인 방향으로 우회 */
+                        var ex = tp.x - sp.x, ey = tp.y - sp.y, ez = tp.z - sp.z;
+                        var eLen = Math.sqrt(ex*ex + ey*ey + ez*ez) || 1;
+                        cpx = (ey / eLen) * sphereR; cpy = -(ex / eLen) * sphereR; cpz = ez / eLen * sphereR * 0.3;
+                    }
+                    var SEGS = BEZIER_SEGS;
+                    for (var bi = 0; bi <= SEGS; bi++) {
+                        var t = bi / SEGS, mt = 1 - t;
+                        arr[bi * 3]     = mt*mt*sp.x + 2*mt*t*cpx + t*t*tp.x;
+                        arr[bi * 3 + 1] = mt*mt*sp.y + 2*mt*t*cpy + t*t*tp.y;
+                        arr[bi * 3 + 2] = mt*mt*sp.z + 2*mt*t*cpz + t*t*tp.z;
+                    }
                     lo.line.geometry.attributes.position.needsUpdate = true;
 
-                    var mat = lo.mat, d2 = dark;
+                    var mat = lo.mat;
+                    mat.color.set(dark ? 0xffffff : 0x334155);
                     if (lo.connected) {
-                        /* 선택된 노드의 catColor로 엣지 하이라이트 */
-                        mat.color.setStyle(pinnedCatCol || catColor(lo.sm.userData.node.cat));
-                        mat.opacity = 1; mat.linewidth = 2;
+                        mat.opacity = dark ? 0.55 : 0.45;
 
-                        /* 유사도 점수 레이블 위치 갱신 */
+                        /* 유사도 점수 레이블 — 곡선 중간점 기준 */
                         if (lo.scoreDiv) {
-                            _projPV.set((sp.x + tp.x) / 2, (sp.y + tp.y) / 2, (sp.z + tp.z) / 2).project(camera);
+                            var mt05 = 0.5;
+                            var lx = mt05*mt05*sp.x + 2*mt05*mt05*cpx + mt05*mt05*tp.x;
+                            var ly = mt05*mt05*sp.y + 2*mt05*mt05*cpy + mt05*mt05*tp.y;
+                            var lz = mt05*mt05*sp.z + 2*mt05*mt05*cpz + mt05*mt05*tp.z;
+                            _projPV.set(lx, ly, lz).project(camera);
                             var smx = (_projPV.x * 0.5 + 0.5) * cw;
                             var smy = (-_projPV.y * 0.5 + 0.5) * ch;
                             lo.scoreDiv.style.display = '';
                             lo.scoreDiv.style.left    = smx + 'px';
                             lo.scoreDiv.style.top     = smy + 'px';
-                            if (pinnedCatCol) lo.scoreDiv.style.color = pinnedCatCol;
                         }
                     } else {
                         if (lo.scoreDiv) lo.scoreDiv.style.display = 'none';
-                        mat.color.set(d2 ? 0xffffff : 0x334155);
-                        /* pinned 상태면 비연결 링크 완전 숨김 */
-                        mat.opacity = (pinnedNode && lo.dimmed) ? 0 : (lo.dimmed ? 0.04 : (d2 ? 0.55 : 0.45));
+                        mat.opacity = (pinnedNode && lo.dimmed) ? 0 : (lo.dimmed ? 0.04 : (dark ? 0.55 : 0.45));
                     }
                 });
 
