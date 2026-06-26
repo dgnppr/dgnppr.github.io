@@ -26,7 +26,9 @@ help:
 	@echo "  make diagrams-force      - 모든 다이어그램 강제 재생성"
 	@echo "  make summaries           - AI 요약 생성 (캐시 있으면 스킵)"
 	@echo "  make summaries-force     - 모든 요약 강제 재생성"
-	@echo "  [deprecated] embeddings / embeddings-force — generate-embeddings.js.deprecated 참조"
+	@echo "  make embeddings            - 임베딩 기반 related.json 생성 (.env EMBEDDING_BACKEND 사용)"
+	@echo "  make embeddings-force      - 모든 임베딩 강제 재생성"
+	@echo "  make embeddings-bm25       - BM25+Tag 오프라인 related.json (API 없음, CI 동일)"
 	@echo "  make local-embeddings    - 전체 문서 Qdrant 인덱싱 (wiki/insight/problem/tool/event/adr)"
 	@echo "  make local-embeddings-force - 강제 재인덱싱"
 	@echo "  make ontology            - 온톨로지 그래프 재생성 (data/ontology-graph.json)"
@@ -111,6 +113,19 @@ summaries:
 
 summaries-force:
 	@set -a && . ./.env && set +a && node scripts/generate-summaries.js --force
+
+# ----------------------------------------
+# 임베딩 생성 (related.json 폴백용)
+# ----------------------------------------
+.PHONY: embeddings embeddings-force embeddings-bm25
+embeddings:
+	@set -a && . ./.env && set +a && node scripts/generate-embeddings.js
+
+embeddings-force:
+	@set -a && . ./.env && set +a && node scripts/generate-embeddings.js --force
+
+embeddings-bm25:
+	EMBEDDING_BACKEND=bm25 node scripts/generate-embeddings.js
 
 # ----------------------------------------
 # 온톨로지 그래프 생성

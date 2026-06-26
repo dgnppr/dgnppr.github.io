@@ -30,9 +30,11 @@
     Promise.all([
         fetch('/data/ontology-graph.json').then(function (r) { return r.json(); }),
         fetch('/data/summaries.json').then(function (r) { return r.json(); }).catch(function () { return {}; }),
+        fetch('/data/related.json').then(function (r) { return r.json(); }).catch(function () { return {}; }),
     ]).then(function (results) {
-        var graph     = results[0];
-        var summaries = results[1];
+        var graph       = results[0];
+        var summaries   = results[1];
+        var relatedData = results[2];
 
         // URL 생성 (knowledge-graph-3d.js와 동일 로직)
         var TYPE_URL_PREFIX = {
@@ -45,54 +47,16 @@
             return prefix + n.id.replace(/^[^\/]+\//, '') + '/';
         }
 
-        // 현재 슬러그로 온톨로지 노드 탐색 (type prefix 없는 slug 하위 호환)
-        var focalNode = (graph.nodes || {})[currentSlug] ||
-            Object.values(graph.nodes || {}).find(function (n) {
-                return n && n.id && n.id.replace(/^[^\/]+\//, '') === currentSlug;
-            });
-        if (!focalNode) { hideGraph(); return; }
-        var focalId = focalNode.id;
-
-        // 현재 노드와 직접 연결된 엣지
-        var directEdges = (graph.edges || []).filter(function (e) {
-            return e.from === focalId || e.to === focalId;
-        });
-        if (directEdges.length === 0) { hideGraph(); return; }
-
-        // 이웃 노드별 가중치 (툴팁용)
-        var scoreByNodeId = {};
-        directEdges.forEach(function (e) {
-            var otherId = e.from === focalId ? e.to : e.from;
-            scoreByNodeId[otherId] = e.weight !== undefined ? e.weight : 0.5;
-        });
-
-        // ── 현재 페이지 제목 ──────────────────────────────────────
+        // ── 현재 페이지 제목/URL (폴백에서도 공통 사용) ──────────
         var selfTitle = (function () {
             var h1 = document.querySelector('h1');
             if (h1) return h1.textContent.trim();
             return document.title.split(' - ')[0].trim() || currentSlug;
         })();
-        var selfUrl = focalNode.url || window.location.pathname;
 
-        // ── 노드 구성: self + 직접 이웃 ──────────────────────────
-        var nodeMap = {};
-        var nodes = [];
-
-        var selfNode = { id: focalId, slug: focalId, title: selfTitle, url: selfUrl, isCurrent: true, degree: 0 };
-        nodeMap[focalId] = selfNode;
-        nodes.push(selfNode);
-
-        directEdges.forEach(function (e) {
-            var otherId = e.from === focalId ? e.to : e.from;
-            if (nodeMap[otherId]) return;
-            var n = (graph.nodes || {})[otherId];
-            if (!n) return;
-            nodeMap[otherId] = { id: otherId, slug: otherId, title: n.title || otherId, url: buildNodeUrl(n), isCurrent: false, degree: 0 };
-            nodes.push(nodeMap[otherId]);
-        });
-
-        // ── 링크 구성 ─────────────────────────────────────────────
-        var seen = new Set(), links = [], adj = {};
+        // ── 노드/링크 공유 변수 ────────────────────────────────────
+        var nodeMap = {}, nodes = [], seen = new Set(), links = [], adj = {};
+        var scoreByNodeId = {};
 
         function addLink(aId, bId, score, relType) {
             var key = [aId, bId].sort().join('|||');
@@ -108,12 +72,65 @@
             adj[bId].add(aId);
         }
 
-        // 가시 노드 집합 내 모든 엣지 (직접 + 이웃 간 교차)
-        (graph.edges || []).forEach(function (e) {
-            if (nodeMap[e.from] && nodeMap[e.to]) {
-                addLink(e.from, e.to, e.weight !== undefined ? e.weight : 0.5, e.type);
-            }
-        });
+        // ── 온톨로지 경로 ─────────────────────────────────────────
+        var focalNode = (graph.nodes || {})[currentSlug] ||
+            Object.values(graph.nodes || {}).find(function (n) {
+                return n && n.id && n.id.replace(/^[^\/]+\//, '') === currentSlug;
+            });
+        var directEdges = focalNode
+            ? (graph.edges || []).filter(function (e) {
+                return e.from === focalNode.id || e.to === focalNode.id;
+              })
+            : [];
+
+        if (focalNode && directEdges.length > 0) {
+            // ── 온톨로지 기반 ─────────────────────────────────────
+            var focalId = focalNode.id;
+            var selfUrl = focalNode.url || window.location.pathname;
+
+            directEdges.forEach(function (e) {
+                var otherId = e.from === focalId ? e.to : e.from;
+                scoreByNodeId[otherId] = e.weight !== undefined ? e.weight : 0.5;
+            });
+
+            var selfNode = { id: focalId, slug: focalId, title: selfTitle, url: selfUrl, isCurrent: true, degree: 0 };
+            nodeMap[focalId] = selfNode;
+            nodes.push(selfNode);
+
+            directEdges.forEach(function (e) {
+                var otherId = e.from === focalId ? e.to : e.from;
+                if (nodeMap[otherId]) return;
+                var n = (graph.nodes || {})[otherId];
+                if (!n) return;
+                nodeMap[otherId] = { id: otherId, slug: otherId, title: n.title || otherId, url: buildNodeUrl(n), isCurrent: false, degree: 0 };
+                nodes.push(nodeMap[otherId]);
+            });
+
+            (graph.edges || []).forEach(function (e) {
+                if (nodeMap[e.from] && nodeMap[e.to]) {
+                    addLink(e.from, e.to, e.weight !== undefined ? e.weight : 0.5, e.type);
+                }
+            });
+        } else {
+            // ── related.json 폴백 ─────────────────────────────────
+            var relatedItems = relatedData[currentSlug] || [];
+            if (!relatedItems.length) { hideGraph(); return; }
+
+            var selfNode = { id: currentSlug, slug: currentSlug, title: selfTitle, url: window.location.pathname, isCurrent: true, degree: 0 };
+            nodeMap[currentSlug] = selfNode;
+            nodes.push(selfNode);
+
+            relatedItems.forEach(function (r) {
+                if (nodeMap[r.slug]) return;
+                nodeMap[r.slug] = { id: r.slug, slug: r.slug, title: r.title, url: r.url, isCurrent: false, degree: 0 };
+                nodes.push(nodeMap[r.slug]);
+                scoreByNodeId[r.slug] = r.score || 0.5;
+            });
+
+            relatedItems.forEach(function (r) {
+                addLink(currentSlug, r.slug, r.score || 0.5, null);
+            });
+        }
 
         if (nodes.length < 2) { hideGraph(); return; }
 

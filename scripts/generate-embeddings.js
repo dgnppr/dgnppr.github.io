@@ -33,6 +33,7 @@ const FORCE        = process.argv.includes('--force');
 
 const MODEL = BACKEND === 'ollama' ? 'bge-m3'           : 'text-embedding-004';
 const DIMS  = BACKEND === 'ollama' ? 1024               : 768;
+const BM25_ONLY = BACKEND === 'bm25';
 const EVAL_TOP_N = 5; // precision@5 평가 기준 (변경 금지)
 
 const Z_SIGMA   = 1.0;
@@ -60,8 +61,8 @@ if (BACKEND === 'vertexai' && (!GCP_CREDS || !GCP_PROJECT)) {
     process.exit(1);
 }
 
-const backendLabel = BACKEND === 'ollama'
-    ? 'Ollama — ' + MODEL + ' (' + OLLAMA_URL + ')'
+const backendLabel = BM25_ONLY ? 'BM25+Tag (오프라인 — API 없음)'
+    : BACKEND === 'ollama' ? 'Ollama — ' + MODEL + ' (' + OLLAMA_URL + ')'
     : 'Vertex AI — ' + MODEL + ' (' + GCP_LOCATION + ')';
 console.log('[백엔드] ' + backendLabel);
 
@@ -280,6 +281,12 @@ async function main() {
         const tags   = fm.tag ? fm.tag.split(/\s+/).filter(Boolean) : [];
         const cached = cache[slug];
 
+        if (BM25_ONLY) {
+            if (text.trim().length >= 50)
+                docs.push({ slug, url, title: fm.title || slug, tags, embedding: [], body, bodyLen: body.length, date: fm.date || fm.updated || null, type: file.type });
+            continue;
+        }
+
         if (!FORCE && cached && cached.hash === hash && cached.embedding.length === DIMS) {
             process.stdout.write('[캐시] ' + slug + '\n');
             docs.push({ slug, url, title: fm.title || slug, tags, embedding: cached.embedding, body, bodyLen: body.length, date: fm.date || fm.updated || null, type: file.type });
@@ -350,12 +357,14 @@ async function main() {
 
     // ── 코사인 pre-pass: 분포 범위 확보 후 min-max 정규화 ────
     const rawCosines = {};
-    for (let i = 0; i < docs.length; i++) {
-        for (let j = i + 1; j < docs.length; j++) {
-            const a = docs[i], b = docs[j];
-            if (Math.min(a.bodyLen || 0, b.bodyLen || 0) < LEN_MIN) continue;
-            const key = [a.slug, b.slug].sort().join('|||');
-            rawCosines[key] = cosine(a.embedding, b.embedding);
+    if (!BM25_ONLY) {
+        for (let i = 0; i < docs.length; i++) {
+            for (let j = i + 1; j < docs.length; j++) {
+                const a = docs[i], b = docs[j];
+                if (Math.min(a.bodyLen || 0, b.bodyLen || 0) < LEN_MIN) continue;
+                const key = [a.slug, b.slug].sort().join('|||');
+                rawCosines[key] = cosine(a.embedding, b.embedding);
+            }
         }
     }
     const cosineVals  = Object.values(rawCosines);
@@ -369,9 +378,9 @@ async function main() {
         for (let j = i + 1; j < docs.length; j++) {
             const a = docs[i], b = docs[j];
             const key = [a.slug, b.slug].sort().join('|||');
-            if (!(key in rawCosines)) continue;
+            if (!BM25_ONLY && !(key in rawCosines)) continue;
 
-            const semantic = (rawCosines[key] - cosineMin) / cosineRange;
+            const semantic = BM25_ONLY ? 0 : (rawCosines[key] - cosineMin) / cosineRange;
             const keyword  = Math.min((bm25Raw[key] || 0) / bm25P99, 1.0);
 
             const aTags  = a.tags || [], bTags = b.tags || [];
@@ -388,9 +397,11 @@ async function main() {
         }
     }
 
-    // ── 가중치 최적화 (eval.json 존재 시 grid search) ────────
-    let usedWeights = { s: SEMANTIC_WEIGHT, k: KEYWORD_WEIGHT, t: TAG_WEIGHT };
-    if (fs.existsSync(EVAL_FILE)) {
+    // ── 가중치 최적화 (eval.json 존재 시 grid search, bm25 모드는 스킵) ────────
+    let usedWeights = BM25_ONLY
+        ? { s: 0, k: 0.85, t: 0.15 }
+        : { s: SEMANTIC_WEIGHT, k: KEYWORD_WEIGHT, t: TAG_WEIGHT };
+    if (!BM25_ONLY && fs.existsSync(EVAL_FILE)) {
         const evalForOpt = JSON.parse(fs.readFileSync(EVAL_FILE, 'utf8'));
         const opt = optimizeWeights(rawSignals, docs, evalForOpt);
         usedWeights = opt.weights;

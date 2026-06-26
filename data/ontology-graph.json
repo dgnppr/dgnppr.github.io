@@ -397,7 +397,7 @@
     "tool/cloud/03_how_to_use_terraform": {
       "id": "tool/cloud/03_how_to_use_terraform",
       "type": "tool",
-      "title": "Terraform 인프라를 코드로 관리하기",
+      "title": "Terraform으로 인프라를 코드로 관리하기",
       "path": "_tool/cloud/03_how_to_use_terraform.md",
       "status": "writing",
       "tags": [

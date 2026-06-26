@@ -130,8 +130,11 @@
             return prefix + n.id.replace(/^[^\/]+\//, '') + '/';
         }
 
-        fetch('/data/ontology-graph.json').then(function (r) { return r.json(); })
-        .then(function (graph) {
+        Promise.all([
+            fetch('/data/ontology-graph.json').then(function (r) { return r.json(); }),
+            fetch('/data/related.json').then(function (r) { return r.json(); }).catch(function () { return {}; }),
+        ]).then(function (results) {
+        var graph = results[0], relatedData = results[1];
             /* ── 노드 빌드 ───────────────────────────────────── */
             var nodeMap = {}, nodes = [];
             Object.values(graph.nodes || {}).forEach(function (n) {
@@ -168,11 +171,32 @@
                 nodes = nodes.filter(function (n) { return focalSet.has(n.id); });
                 nodeMap = {};
                 nodes.forEach(function (n) { nodeMap[n.id] = n; });
-                /* 관련 노드 없으면 위젯 숨김 */
+                /* 관련 노드 없으면 related.json 폴백, 그래도 없으면 위젯 숨김 */
                 if (nodes.length <= 1) {
-                    var wrap = container.closest('[id$="-wrap"]') || container.parentElement;
-                    if (wrap) wrap.style.display = 'none';
-                    return;
+                    var rawSlug = opts.focusSlug || '';
+                    var relItems = relatedData[rawSlug] || [];
+                    if (relItems.length === 0) {
+                        var wrap = container.closest('[id$="-wrap"]') || container.parentElement;
+                        if (wrap) wrap.style.display = 'none';
+                        return;
+                    }
+                    /* focal 노드가 nodeMap에 없으면 합성 노드 추가 */
+                    if (!nodeMap[focalId]) {
+                        var fn2 = { id: focalId, slug: focalId,
+                            title: document.querySelector('h1') ? document.querySelector('h1').textContent.trim() : rawSlug,
+                            url: window.location.pathname, type: 'concept', cat: 'concept',
+                            colorKey: 'concept', tags: [], degree: 0 };
+                        nodes.push(fn2); nodeMap[focalId] = fn2;
+                    }
+                    relItems.forEach(function (r) {
+                        var rid = r.slug;
+                        if (!nodeMap[rid]) {
+                            var rn = { id: rid, slug: rid, title: r.title || rid,
+                                url: r.url || ('/wiki/' + rid + '/'), type: 'concept', cat: 'concept',
+                                colorKey: 'concept', tags: [], degree: 0 };
+                            nodes.push(rn); nodeMap[rid] = rn;
+                        }
+                    });
                 }
             }
 
@@ -201,6 +225,31 @@
             (graph.edges || []).forEach(function (e) {
                 addLink(e.from, e.to, e.type);
             });
+
+            /* focusSlug 폴백: ontology 엣지 없는 미니 그래프에 related.json 엣지 주입 */
+            if (focusSlug && links.length === 0) {
+                var rawSlug2 = opts.focusSlug || '';
+                (relatedData[rawSlug2] || []).forEach(function (r) {
+                    addLink(focusSlug, r.slug, 'related');
+                });
+            }
+
+            /* full 그래프 폴백: 고립 노드(연결 없음)에 related.json 엣지 주입 */
+            if (!focusSlug) {
+                /* related.json 키(subcat/filename) → 온톨로지 노드 full ID 역매핑 */
+                var shortToId = {};
+                nodes.forEach(function (n) {
+                    shortToId[n.id.replace(/^[^\/]+\//, '')] = n.id;
+                });
+                nodes.forEach(function (n) {
+                    if (n.degree > 0) return;
+                    var shortSlug = n.id.replace(/^[^\/]+\//, '');
+                    (relatedData[shortSlug] || []).forEach(function (r) {
+                        var targetId = shortToId[r.slug] || r.slug;
+                        addLink(n.id, targetId, 'related');
+                    });
+                });
+            }
 
             /* ── 카테고리 클러스터 (2D 방식, 3D 좌표로 변환) ── */
             var catGroups = {};

@@ -1,6 +1,6 @@
 ---
 layout  : tool
-title   : Terraform 인프라를 코드로 관리하기
+title   : Terraform으로 인프라를 코드로 관리하기
 date    : 2026-06-25 00:00:00 +0900
 updated : 2026-06-25 00:00:00 +0900
 tag     : cloud terraform iac gcp
