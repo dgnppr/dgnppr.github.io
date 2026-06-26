@@ -14,7 +14,7 @@ status      : complete
 confidence  : medium
 show-diagram: true
 relations:
-  - { type: references, target: /wiki/jpa/00_jpa_dirty_checking }
+  - { type: references, target: /concept/jpa/00_jpa_dirty_checking }
 ---
 
 * TOC

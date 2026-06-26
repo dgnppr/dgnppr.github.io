@@ -14,7 +14,7 @@ status  : complete
 confidence: high
 show-diagram: true
 relations:
-  - { type: references, target: /wiki/java/00_what_is_java_virtual_thread }
+  - { type: references, target: /concept/java/00_what_is_java_virtual_thread }
 ---
 
 * TOC

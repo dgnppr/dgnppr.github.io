@@ -21,7 +21,7 @@ function main() {
     const tagMap = {};
     const pageMap = {};
 
-    getFiles('./_wiki', 'wiki', list);
+    getFiles('./_concept', 'concept', list);
     getFiles('./_posts', 'blog', list);
     getFiles('./_insight', 'insight', list);
     getFiles('./_problem', 'problem', list);
@@ -91,8 +91,8 @@ function saveTagFiles(tagMap, pageMap) {
         seen[tag.toLowerCase()] = true;
         const collection = tagMap[tag].map(({ fileName }) => {
             const data = pageMap[fileName];
-            // wiki uses fileName as key for legacy metadata path; all others use URL
-            return data.type === 'wiki' ? fileName : data.url;
+            // concept uses fileName as key for legacy metadata path; all others use URL
+            return data.type === 'concept' ? fileName : data.url;
         });
         fs.writeFileSync(`./data/tags/${tag}.json`, JSON.stringify(collection, null, 1));
     }
@@ -101,7 +101,7 @@ function saveTagFiles(tagMap, pageMap) {
 function saveMetaDataFiles(pageMap) {
     for (const page in pageMap) {
         const data = pageMap[page];
-        const fileName = data.url.replace(/^\/wiki\//, '');
+        const fileName = data.url.replace(/^\/concept\//, '');
         const dirName = `./data/metadata/${fileName}`.replace(/\/[^/]*$/, '');
         fs.mkdirSync(dirName, { recursive: true });
         fs.writeFileSync(`./data/metadata/${fileName}.json`, JSON.stringify(data, null, 1));
@@ -172,10 +172,10 @@ function saveHubData(pageMap) {
     };
 
     Object.values(pageMap).forEach(page => {
-        if (page.type === 'wiki') {
-            const match = page.url.match(/^\/wiki\/([^/]+)\/[^/]+$/);
+        if (page.type === 'concept') {
+            const match = page.url.match(/^\/concept\/([^/]+)\/[^/]+$/);
             if (!match) return;
-            addDoc(match[1], page, 'wiki');
+            addDoc(match[1], page, 'concept');
         } else if (ENTITY_TYPES.has(page.type)) {
             addDoc(page.type, page, page.type);
         }
@@ -189,8 +189,8 @@ function saveHubData(pageMap) {
 function parseInfo(file, info) {
     if (info === null) return undefined;
 
-    const collectionDir = { wiki: '_wiki', blog: '_posts', insight: '_insight', problem: '_problem', tool: '_tool', event: '_event', adr: '_adr' };
-    const base = collectionDir[file.type] || '_wiki';
+    const collectionDir = { concept: '_concept', blog: '_posts', insight: '_insight', problem: '_problem', tool: '_tool', event: '_event', adr: '_adr' };
+    const base = collectionDir[file.type] || '_concept';
     const obj = {
         fileName: file.path.replace(new RegExp(`^\\.\/${base}\\/(.+)?\\.md$`), '$1'),
         type: file.type,
@@ -209,8 +209,8 @@ function parseInfo(file, info) {
     if (file.type === 'blog') {
         obj.url = '/blog/' + obj.date.replace(/^(\d{4})-(\d{2})-(\d{2}).*$/, '$1/$2/$3/');
         obj.url += obj.fileName.replace(/^.*[/]\d{4}-\d{2}-\d{2}-([^/]*)\.md$/, '$1');
-    } else if (file.type === 'wiki') {
-        obj.url = file.path.replace(/^\.\/_wiki/, '/wiki').replace(/\.md$/, '');
+    } else if (file.type === 'concept') {
+        obj.url = file.path.replace(/^\.\/_concept/, '/concept').replace(/\.md$/, '');
     } else {
         // insight, problem, tool, event, adr — /:collection/:path
         obj.url = file.path.replace(/^\.\/_[^/]+/, `/${file.type}`).replace(/\.md$/, '');

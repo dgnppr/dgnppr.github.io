@@ -313,7 +313,7 @@ div.search {
     letter-spacing: 0.02em;
 
     &.type-index { background-color: var(--color-badge-index); }
-    &.type-wiki  { background-color: var(--color-badge-wiki); }
+    &.type-concept  { background-color: var(--color-badge-concept); }
     &.type-blog  { background-color: var(--color-badge-blog); }
     &.type-tag   { background-color: var(--color-badge-tag); }
 }

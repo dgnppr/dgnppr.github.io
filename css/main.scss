@@ -51,15 +51,14 @@ $dark-color:        #1E1F22;
     --color-toc-active:          #669DFD;
 
     --color-badge-index:         #669DFD;
-    --color-badge-wiki:          #669DFD;
+    --color-badge-concept:          #669DFD;
     --color-badge-blog:          #82b782;
     --color-badge-tag:           #f59e0b;
 
     // Entity type colors  (hue wheel: blue → violet → red → green → orange → cyan)
     --color-entity-concept:      #2563eb;   // concept (= wiki)
     --color-entity-concept-bg:   #eff6ff;
-    --color-entity-wiki:         #2563eb;
-    --color-entity-wiki-bg:      #eff6ff;
+
     --color-entity-insight:      #7c3aed;
     --color-entity-insight-bg:   #f5f3ff;
     --color-entity-problem:      #dc2626;
@@ -110,13 +109,12 @@ html.dark-mode {
 
     --color-toc-active:          #669DFD;
 
-    --color-badge-wiki:          #669DFD;
+    --color-badge-concept:          #669DFD;
 
     // Entity type colors dark mode  (vibrant, hue-spread for 3D graph)
     --color-entity-concept:      #60a5fa;   // sky blue
     --color-entity-concept-bg:   #0f1f38;
-    --color-entity-wiki:         #60a5fa;
-    --color-entity-wiki-bg:      #0f1f38;
+
     --color-entity-insight:      #a78bfa;   // vivid lavender
     --color-entity-insight-bg:   #1e1040;
     --color-entity-problem:      #f87171;   // coral red

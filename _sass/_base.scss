@@ -422,7 +422,7 @@ h5:hover .heading-anchor,
 h6:hover .heading-anchor { opacity: 1; }
 
 // ── Wiki Tooltip ─────────────────────────────────────────────────────────
-#wiki-hover-tooltip {
+#concept-hover-tooltip {
     position: absolute;
     z-index: 9999;
     background: var(--color-surface);

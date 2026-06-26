@@ -1,0 +1,500 @@
+---
+layout: default
+---
+
+{% assign thisName = page.id | remove: '/concept/' | remove: '/insight/' | remove: '/problem/' | remove: '/tool/' | remove: '/event/' | remove: '/adr/' %}
+<input type="hidden" id="thisName" value="{{ thisName }}"/>
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+</div>
+<div class="post">
+    <header class="post-header">
+        <br>
+        <h1 class="page-title">{{ page.title }}</h1>
+        {% if page.summary %}
+        <p class="title-summary">{{ page.summary }}</p>
+        {% endif %}
+        <div class="history-button">
+            <p>Created: {{ page.date | date: '%Y.%m.%d' }} {% include weekday.html d=page.date %}</p>
+            <p>Updated: {{ page.updated | date: '%Y.%m.%d' }} {% include weekday.html d=page.updated %}</p>
+            <p>Author: <a href="https://www.linkedin.com/in/{{ site.linkedin_username }}/" target="_blank" rel="noopener">Yonghyun Yoon</a></p>
+            <p><span class="eta"></span></p>
+            {% if page.status %}<p>Status: <span class="post-status">{{ page.status }}</span></p>{% endif %}
+            {% if page.note %}<p>Note: <span class="post-note">{{ page.note }}</span></p>{% endif %}
+            {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
+        </div>
+        <hr>
+    </header>
+    {% assign _url_parts = page.url | split: '/' %}
+    {% assign _concept_tag = _url_parts[2] %}
+    <div class="concept-mini-graph" id="concept-mini-graph-wrap">
+        <div class="concept-mini-graph__header">
+            <span class="concept-mini-graph__title">미니 지식 그래프</span>
+            <button class="concept-mini-graph__expand" id="concept-mini-graph-expand" aria-label="전체 지식 그래프 보기" title="전체 지식 그래프 보기">
+                <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/>
+                </svg>
+            </button>
+        </div>
+        <div class="concept-mini-graph__canvas" id="concept-mini-graph-canvas">
+            <div id="concept-mini-graph"></div>
+        </div>
+    </div>
+    <input type="hidden" id="thisTag" value="{{ _concept_tag }}"/>
+
+    <div id="ai-summary-box"></div>
+    <article class="post-content">
+        {{ content }}
+    </article>
+
+    <br/>
+
+    <div class="diagram-section" id="diagram-section" style="display:none">
+        <div class="diagram__header">
+            <svg class="diagram__icon" viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <rect x="1" y="1" width="5" height="5" rx="1"/><rect x="10" y="1" width="5" height="5" rx="1"/><rect x="5.5" y="10" width="5" height="5" rx="1"/>
+                <line x1="3.5" y1="6" x2="3.5" y2="8"/><line x1="12.5" y1="6" x2="12.5" y2="8"/><line x1="3.5" y1="8" x2="12.5" y2="8"/><line x1="8" y1="8" x2="8" y2="10"/>
+            </svg>
+            <span class="diagram__label">요약 다이어그램</span>
+        </div>
+        <div class="diagram__skeleton" id="diagram-skeleton">
+            <div class="diagram__skeleton-bar" style="width:60%"></div>
+            <div class="diagram__skeleton-bar" style="width:85%"></div>
+            <div class="diagram__skeleton-bar" style="width:45%"></div>
+        </div>
+        <div class="diagram__content" id="diagram-content"></div>
+    </div>
+
+    {% if page.layout == 'insight' %}
+      {% assign concept_sorted = site.insight | where_exp: "item", "item.public != false" | sort: 'updated' | reverse %}
+    {% elsif page.layout == 'problem' %}
+      {% assign concept_sorted = site.problem | where_exp: "item", "item.public != false" | sort: 'updated' | reverse %}
+    {% elsif page.layout == 'tool' %}
+      {% assign concept_sorted = site.tool | where_exp: "item", "item.public != false" | sort: 'updated' | reverse %}
+    {% elsif page.layout == 'event' %}
+      {% assign concept_sorted = site.event | where_exp: "item", "item.public != false" | sort: 'updated' | reverse %}
+    {% else %}
+      {% assign concept_sorted = site.concept | where_exp: "item", "item.public != false" | where_exp: "item", "item.layout != 'category'" | where_exp: "item", "item.title != 'wiki'" | sort: 'updated' | reverse %}
+    {% endif %}
+    {% for wdoc in concept_sorted %}
+        {% if wdoc.url == page.url %}
+            {% unless forloop.last %}
+                {% assign prev_idx = forloop.index0 | plus: 1 %}
+                {% assign concept_prev = concept_sorted[prev_idx] %}
+            {% endunless %}
+            {% if forloop.index0 > 0 %}
+                {% assign next_idx = forloop.index0 | minus: 1 %}
+                {% assign concept_next = concept_sorted[next_idx] %}
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    {% if concept_prev or concept_next %}
+    <nav class="concept-prev-next" aria-label="이전/다음 글">
+        {% if concept_prev %}
+        <a class="concept-prev-next-link concept-prev" href="{{ concept_prev.url }}">
+            <span class="concept-prev-next-label">← 이전글</span>
+            <span class="concept-prev-next-title">{{ concept_prev.title }}</span>
+        </a>
+        {% else %}
+        <span></span>
+        {% endif %}
+        {% if concept_next %}
+        <a class="concept-prev-next-link concept-next" href="{{ concept_next.url }}">
+            <span class="concept-prev-next-label">다음글 →</span>
+            <span class="concept-prev-next-title">{{ concept_next.title }}</span>
+        </a>
+        {% endif %}
+    </nav>
+    {% endif %}
+
+    <div id="reading-cta" class="reading-cta"></div>
+    <div id="series-nav-container"></div>
+
+    <script>
+    (function() {
+        var nameEl = document.getElementById('thisName');
+        if (!nameEl) return;
+        var slug = nameEl.value;
+        fetch('/data/series.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
+                if (!data) return;
+                var seriesName = null;
+                var items = null;
+                Object.keys(data).forEach(function(name) {
+                    data[name].forEach(function(item) {
+                        if (item.slug === slug) { seriesName = name; items = data[name]; }
+                    });
+                });
+                if (!seriesName || !items) return;
+                var idx = items.findIndex(function(i) { return i.slug === slug; });
+                var prev = idx > 0 ? items[idx - 1] : null;
+                var next = idx < items.length - 1 ? items[idx + 1] : null;
+                if (!prev && !next) return;
+                var html = '<nav class="series-nav" aria-label="시리즈 내비게이션">' +
+                    '<div class="series-nav__header"><span class="series-nav__label">시리즈: ' + seriesName + '</span>' +
+                    '<span class="series-nav__progress">' + (idx + 1) + ' / ' + items.length + '</span></div>' +
+                    '<div class="series-nav__links">' +
+                    (prev ? '<a class="series-nav__link series-nav__prev" href="' + prev.url + '">← ' + prev.title + '</a>' : '<span></span>') +
+                    (next ? '<a class="series-nav__link series-nav__next" href="' + next.url + '">' + next.title + ' →</a>' : '') +
+                    '</div></nav>';
+                document.getElementById('series-nav-container').innerHTML = html;
+            }).catch(function() {});
+    })();
+    </script>
+
+    <div id="related-posts-container"></div>
+    <script>
+    (function() {
+        var nameEl = document.getElementById('thisName');
+        if (!nameEl) return;
+        var slug = nameEl.value;
+        var TYPE_URL_PREFIX = { concept: '/concept/', insight: '/insight/', problem: '/problem/', tool: '/tool/', event: '/event/', adr: '/adr/' };
+
+        function renderRelated(items) {
+            if (!items || !items.length) return;
+            var html = '<section class="related-posts"><h3 class="related-posts__heading">관련 글</h3><div class="related-posts__list">' +
+                items.map(function(r) {
+                    return '<a class="related-posts__item" href="' + r.url + '">' + r.title + '</a>';
+                }).join('') + '</div></section>';
+            document.getElementById('related-posts-container').innerHTML = html;
+        }
+
+        function fallbackToEmbeddings() {
+            fetch('/data/related.json')
+                .then(function(r) { return r.ok ? r.json() : null; })
+                .then(function(data) {
+                    if (!data) return;
+                    var items = (data[slug] || []).map(function(r) {
+                        return { url: r.url, title: r.title };
+                    });
+                    renderRelated(items);
+                }).catch(function() {});
+        }
+
+        fetch('/data/ontology-graph.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(graph) {
+                if (!graph) { fallbackToEmbeddings(); return; }
+                var focalNode = (graph.nodes || {})[slug] ||
+                    Object.values(graph.nodes || {}).find(function(n) { return n && n.id && n.id.replace(/^[^\/]+\//, '') === slug; });
+                if (!focalNode) { fallbackToEmbeddings(); return; }
+                var focalId = focalNode.id;
+                var related = (graph.edges || [])
+                    .filter(function(e) { return e.from === focalId || e.to === focalId; })
+                    .map(function(e) {
+                        var otherId = e.from === focalId ? e.to : e.from;
+                        var n = (graph.nodes || {})[otherId];
+                        if (!n) return null;
+                        var url = n.url || (TYPE_URL_PREFIX[n.type] || '/concept/') + n.id.replace(/^[^\/]+\//, '') + '/';
+                        return { url: url, title: n.title || otherId };
+                    })
+                    .filter(Boolean);
+                if (!related.length) { fallbackToEmbeddings(); return; }
+                renderRelated(related);
+            }).catch(function() { fallbackToEmbeddings(); });
+    })();
+    </script>
+
+    {% if page.comment != false %}
+    {% include comment.html %}
+    {% endif%}
+
+    <script src="/js/reading-cta.js"></script>
+    <script>
+    (function() {
+        var nameEl = document.getElementById('thisName');
+        if (!nameEl) return;
+        var slug = nameEl.value;
+        fetch('/data/summaries.json')
+            .then(function(r) { return r.ok ? r.json() : null; })
+            .then(function(data) {
+                if (!data || !data[slug]) return;
+                var box = document.getElementById('ai-summary-box');
+                if (!box) return;
+                box.innerHTML = '<div class="ai-summary"><div class="ai-summary__header"><span class="ai-summary__icon">✦</span><span class="ai-summary__label">AI 요약</span></div><p class="ai-summary__text">' + data[slug] + '</p></div>';
+            }).catch(function() {});
+    })();
+    </script>
+</div>
+{% include createLink.html %}
+{% include createTable.html %}
+
+<script src="/js/concept-tooltip.js"></script>
+<script src="/js/focus-reading.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="/js/summary-dag.js"></script>
+<script>
+/* 미니 지식 그래프 — 3D (knowledge-graph-3d.js 재사용) */
+(function () {
+    var nameEl = document.getElementById('thisName');
+    if (!nameEl) return;
+    var currentSlug = nameEl.value;
+    if (!currentSlug) return;
+    var el = document.getElementById('concept-mini-graph');
+    if (!el) return;
+
+    function loadKg3D() {
+        if (window.KnowledgeGraph3D) {
+            window.KnowledgeGraph3D.init({
+                container:  el,
+                focusSlug:  currentSlug,
+                miniMode:   true,
+                search: null, groups: null, stats: null,
+            });
+            return;
+        }
+        var s = document.createElement('script');
+        s.src = '/js/knowledge-graph-3d.js';
+        s.onload = function () {
+            window.KnowledgeGraph3D.init({
+                container:  el,
+                focusSlug:  currentSlug,
+                miniMode:   true,
+                search: null, groups: null, stats: null,
+            });
+        };
+        document.head.appendChild(s);
+    }
+
+    if (window.d3) { loadKg3D(); return; }
+    var sd = document.createElement('script');
+    sd.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+    sd.onload = loadKg3D;
+    document.head.appendChild(sd);
+})();
+</script>
+<script src="/js/axios.min.js"></script>
+<script async src="/js/toc-highlight.js"></script>
+<script src="/js/reading-time.js"></script>
+<script>$('article').readingTime({ prependTimeString: 'Reading Time: ', minShortForm: ' minutes' });</script>
+<script src="/js/scroll.js"></script>
+<script src="/js/mermaid-deeplink.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+(function() {
+  function mermaidTheme() {
+    var dark = document.documentElement.classList.contains('dark-mode');
+    var font = "'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif";
+    return dark ? {
+      theme: 'base',
+      themeVariables: {
+        primaryColor:           '#1a2a40',
+        primaryTextColor:       '#93c5fd',
+        primaryBorderColor:     '#669DFD',
+        secondaryColor:         '#2b2d30',
+        secondaryTextColor:     '#8C96A4',
+        secondaryBorderColor:   '#636e72',
+        tertiaryColor:          '#1a2535',
+        tertiaryTextColor:      '#93c5fd',
+        tertiaryBorderColor:    '#253a5e',
+        lineColor:              '#669DFD',
+        background:             '#1E1F22',
+        mainBkg:                '#1a2a40',
+        nodeBkg:                '#1a2535',
+        nodeBorder:             '#669DFD',
+        edgeLabelBackground:    '#1E1F22',
+        clusterBkg:             '#242628',
+        clusterBorder:          '#253a5e',
+        titleColor:             '#B8C0CC',
+        actorBkg:               '#1a2a40',
+        actorBorder:            '#669DFD',
+        actorTextColor:         '#93c5fd',
+        actorLineColor:         '#669DFD',
+        signalColor:            '#669DFD',
+        signalTextColor:        '#C8CDD5',
+        activationBkgColor:     '#1a2535',
+        activationBorderColor:  '#669DFD',
+        labelBoxBkgColor:       '#1a2a40',
+        labelBoxBorderColor:    '#669DFD',
+        labelTextColor:         '#93c5fd',
+        loopTextColor:          '#93c5fd',
+        noteBkgColor:           '#2d2a1e',
+        noteTextColor:          '#fbbf24',
+        noteBorderColor:        '#92400e',
+        fontFamily:             font,
+        fontSize:               '14px',
+      }
+    } : {
+      theme: 'base',
+      themeVariables: {
+        primaryColor:           '#e8f1fb',
+        primaryTextColor:       '#2c5282',
+        primaryBorderColor:     '#90b8e8',
+        secondaryColor:         '#f0f4f8',
+        secondaryTextColor:     '#4a5568',
+        secondaryBorderColor:   '#c8d8eb',
+        tertiaryColor:          '#eef5fc',
+        tertiaryTextColor:      '#2c5282',
+        tertiaryBorderColor:    '#a8c8f0',
+        lineColor:              '#5a9fd4',
+        background:             '#FFFFFF',
+        mainBkg:                '#e8f1fb',
+        nodeBkg:                '#eef5fc',
+        nodeBorder:             '#90b8e8',
+        edgeLabelBackground:    '#f7fbff',
+        clusterBkg:             '#f0f6fc',
+        clusterBorder:          '#a8c8f0',
+        titleColor:             '#1a365d',
+        actorBkg:               '#e8f1fb',
+        actorBorder:            '#90b8e8',
+        actorTextColor:         '#2c5282',
+        actorLineColor:         '#5a9fd4',
+        signalColor:            '#5a9fd4',
+        signalTextColor:        '#2c5282',
+        activationBkgColor:     '#e8f1fb',
+        activationBorderColor:  '#90b8e8',
+        labelBoxBkgColor:       '#e8f1fb',
+        labelBoxBorderColor:    '#90b8e8',
+        labelTextColor:         '#2c5282',
+        loopTextColor:          '#2c5282',
+        noteBkgColor:           '#fef9c3',
+        noteTextColor:          '#713f12',
+        noteBorderColor:        '#fbbf24',
+        fontFamily:             font,
+        fontSize:               '14px',
+      }
+    };
+  }
+
+  function initMermaid() {
+    mermaid.initialize(Object.assign({ startOnLoad: false, securityLevel: 'loose' }, mermaidTheme()));
+    document.querySelectorAll('code.language-mermaid').forEach(function(el) {
+      var pre = el.parentElement;
+      var code = el.textContent;
+      var div = document.createElement('div');
+      div.className = 'mermaid-diagram';
+      div.textContent = code;
+      pre.parentNode.replaceChild(div, pre);
+    });
+    mermaid.run({ nodes: document.querySelectorAll('.mermaid-diagram') })
+      .then(function() {
+        if (typeof initMermaidDeeplinks === 'function') initMermaidDeeplinks();
+      }).catch(function() {});
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    if (document.querySelector('code.language-mermaid')) initMermaid();
+
+    var observer = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'class' && document.querySelector('.mermaid-diagram')) {
+          initMermaid();
+        }
+      });
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  // 요약 다이어그램: diagrams.json에 데이터가 있으면 이전글 위에 렌더링
+  var diagramData = null; // JSON DAG object
+
+  function renderSummaryDiagram() {
+    var section   = document.getElementById('diagram-section');
+    var container = document.getElementById('diagram-content');
+    var skeleton  = document.getElementById('diagram-skeleton');
+    if (!section || !container || !diagramData) return;
+
+    if (typeof SummaryDAG !== 'undefined') {
+      var ok = SummaryDAG.render(container, diagramData);
+      if (skeleton) skeleton.style.display = 'none';
+      if (ok) {
+        container.classList.add('diagram__content--visible');
+        attachDiagramZoom(container);
+      }
+      return;
+    }
+
+    if (skeleton) skeleton.style.display = 'none';
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    var section  = document.getElementById('diagram-section');
+    var skeleton = document.getElementById('diagram-skeleton');
+    if (!section) return;
+
+    var slug = (document.getElementById('thisName') || {}).value;
+    if (!slug) return;
+
+    fetch('/data/diagrams.json')
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(data) {
+        if (!data || !data[slug]) return;
+        var entry = data[slug];
+        // 구 포맷(문자열)은 무시, 새 JSON 스키마만 처리
+        if (typeof entry !== 'object' || !entry.nodes) return;
+        diagramData = entry;
+        section.style.display = '';
+        renderSummaryDiagram();
+      })
+      .catch(function() { if (skeleton) skeleton.style.display = 'none'; });
+
+    // 다크모드 전환 시 재렌더링
+    var dmObserver = new MutationObserver(function(mutations) {
+      mutations.forEach(function(m) {
+        if (m.attributeName === 'class' && diagramData) {
+          var container = document.getElementById('diagram-content');
+          if (container) container.classList.remove('diagram__content--visible');
+          setTimeout(renderSummaryDiagram, 50);
+        }
+      });
+    });
+    dmObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  });
+
+  function attachDiagramZoom(div) {
+    var svg = div.querySelector('svg');
+    if (!svg) return;
+    div.style.cursor = 'zoom-in';
+
+    var existing = document.getElementById('diagram-zoom-overlay');
+    if (existing) existing.remove();
+
+    var overlay = document.createElement('div');
+    overlay.id = 'diagram-zoom-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-label', '다이어그램 확대 보기');
+    var wrapper = document.createElement('div');
+    wrapper.id = 'diagram-zoom-wrapper';
+    var inner = document.createElement('div');
+    inner.id = 'diagram-zoom-inner';
+    var closeBtn = document.createElement('button');
+    closeBtn.id = 'diagram-zoom-close';
+    closeBtn.setAttribute('aria-label', '닫기');
+    closeBtn.innerHTML = '<svg viewBox="0 0 16 16" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="3" y1="3" x2="13" y2="13"/><line x1="13" y1="3" x2="3" y2="13"/></svg>';
+    wrapper.appendChild(inner);
+    wrapper.appendChild(closeBtn);
+    overlay.appendChild(wrapper);
+    document.body.appendChild(overlay);
+
+    function openZoom() {
+      var clone = svg.cloneNode(true);
+      clone.removeAttribute('width');
+      clone.removeAttribute('height');
+      clone.setAttribute('width', '100%');
+      clone.setAttribute('height', '100%');
+      clone.style.width = '100%';
+      clone.style.height = '100%';
+      clone.style.display = 'block';
+      inner.innerHTML = '';
+      inner.appendChild(clone);
+      overlay.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+      closeBtn.focus();
+    }
+    function closeZoom() {
+      overlay.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    div.addEventListener('click', openZoom);
+    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeZoom(); });
+    closeBtn.addEventListener('click', closeZoom);
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && overlay.classList.contains('is-open')) closeZoom();
+    });
+  }
+})();
+</script>
+

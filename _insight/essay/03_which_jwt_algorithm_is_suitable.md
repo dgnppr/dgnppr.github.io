@@ -14,7 +14,7 @@ status      : complete
 confidence  : high
 show-diagram: true
 relations:
-  - { type: references, target: /wiki/cloud/01_how_to_operate_iam_well }
+  - { type: references, target: /concept/cloud/01_how_to_operate_iam_well }
 ---
 
 * TOC

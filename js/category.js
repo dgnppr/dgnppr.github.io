@@ -55,7 +55,7 @@
                         String(_d.getDate()).padStart(2, '0') + ' ' + _dow;
                     const count = (data.children && data.children.length > 0) ? data.children.length : 0;
                     const badge = count > 0
-                        ? `<span class="wiki-card-badge" aria-label="하위 문서 ${count}개">${count}</span>`
+                        ? `<span class="concept-card-badge" aria-label="하위 문서 ${count}개">${count}</span>`
                         : '';
 
                     const html =

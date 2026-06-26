@@ -225,7 +225,17 @@ make start
 **`.env`:**
 
 ```env
-ANTHROPIC_API_KEY=sk-ant-...         # ontology_questions 사용 시 필요
+# LLM (questions / discover 도구)
+LLM_BACKEND=lmstudio                          # lmstudio | anthropic | ollama
+LM_STUDIO_BASE_URL=http://localhost:1234/v1   # lmstudio 사용 시
+LM_STUDIO_MODEL=gemma-4-12b-coder-...        # lmstudio 사용 시
+
+# Anthropic 사용 시
+# LLM_BACKEND=anthropic
+# ANTHROPIC_API_KEY=sk-ant-...
+# LLM_MODEL=claude-haiku-4-5-20251001
+
+# 임베딩
 EMBEDDING_BACKEND=ollama             # 또는 vertexai
 QDRANT_URL=http://localhost:6333
 OLLAMA_URL=http://localhost:11434
@@ -254,9 +264,14 @@ OLLAMA_URL=http://localhost:11434
 | `ontology_gaps` | 그래프 gap — 고립·미작성·액션 기회 |
 | `ontology_act` | gap → 문서 blueprint 생성 |
 | **`ontology_next`** | **learning_pressure top N — 지금 공부할 것** |
-| **`ontology_questions`** | **소크라테스 엔진 — 내가 모르는 질문 생성** |
+| **`questions`** | **소크라테스 엔진 — 미답변 질문 생성 + 저장 (LLM)** |
+| **`answered`** | **질문 답변 완료 처리 — unanswered_bonus 감소** |
+| **`studied`** | **학습 기록 추가 — study_decay 반영** |
+| **`discover`** | **글 전체 분석 — 심화할 문서 + 새로 쓸 문서 추천 (LLM)** |
+| **`blindspot`** | **지식 맹점 분석 — 다루지 않는 인접 영역 5개 (LLM)** |
+| **`ontology_eval`** | **문서 이해 깊이 LLM 평가 → learning_pressure 반영** |
 | **`ontology_landscape`** | **지식 지형도 — 강점·취약 클러스터** |
-| **`ontology_debt`** | **지식 부채 — 미작성 참조·만료 문서** |
+| **`ontology_debt`** | **지식 부채 — 미작성 참조·만료 문서·본문 언급 미작성** |
 | **`ontology_contradictions`** | **모순 탐지 — confidence 충돌·좀비 ADR** |
 
 자세한 MCP 도구 레퍼런스: [`docs/ontology-mcp.md`](docs/ontology-mcp.md)  

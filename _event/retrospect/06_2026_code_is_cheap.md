@@ -12,7 +12,7 @@ latex   : true
 status  : complete
 show-diagram: true
 relations:
-  - { type: learned_from, target: /wiki/data-architect/04_what_is_ontology }
+  - { type: learned_from, target: /concept/data-architect/04_what_is_ontology }
 confidence  : medium
 ---
 

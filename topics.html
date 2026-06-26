@@ -22,7 +22,7 @@ var ENTITY_TYPES = ['insight', 'problem', 'tool', 'event', 'adr'];
 
             // 타입별 분류
             var entityKeys = ENTITY_TYPES.filter(function(t) { return data[t]; });
-            var wikiKeys = keys.filter(function(k) { return !ENTITY_TYPES.includes(k); }).sort();
+            var conceptKeys = keys.filter(function(k) { return !ENTITY_TYPES.includes(k); }).sort();
 
             function docList(docs) {
                 return '<ul class="topic-doc-list">' +
@@ -41,9 +41,9 @@ var ENTITY_TYPES = ['insight', 'problem', 'tool', 'event', 'adr'];
                     '</section>';
             }
 
-            // wiki: 서브카테고리별로 묶어서 하나의 섹션
-            var wikiTotal = wikiKeys.reduce(function(s, k) { return s + data[k].docs.length; }, 0);
-            var wikiBody = wikiKeys.map(function(cat) {
+            // concept: 서브카테고리별로 묶어서 하나의 섹션
+            var conceptTotal = conceptKeys.reduce(function(s, k) { return s + data[k].docs.length; }, 0);
+            var conceptBody = conceptKeys.map(function(cat) {
                 var c = data[cat];
                 return '<div class="topic-subcat">' +
                     '<span class="topic-subcat__name">' + cat.replace(/-/g, ' ') + '</span>' +
@@ -58,7 +58,7 @@ var ENTITY_TYPES = ['insight', 'problem', 'tool', 'event', 'adr'];
             }).join('');
 
             grid.innerHTML =
-                (wikiKeys.length ? section('wiki', 'wiki', wikiBody, wikiTotal) : '') +
+                (conceptKeys.length ? section('concept', 'concept', conceptBody, conceptTotal) : '') +
                 entityHtml;
         })
         .catch(function() {

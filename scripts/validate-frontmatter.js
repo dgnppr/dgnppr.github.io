@@ -7,7 +7,7 @@ const path = require('path');
 // ── 타입별 필수 필드 ────────────────────────────────────────────────────────
 
 const REQUIRED = {
-  wiki:    ['layout', 'title', 'date', 'updated', 'tag', 'toc', 'comment', 'latex', 'status', 'public', 'confidence'],
+  concept: ['layout', 'title', 'date', 'updated', 'tag', 'toc', 'comment', 'latex', 'status', 'public', 'confidence'],
   insight: ['layout', 'title', 'date', 'updated', 'tag', 'toc', 'comment', 'latex', 'status', 'public', 'confidence'],
   problem: ['layout', 'title', 'date', 'updated', 'tag', 'toc', 'comment', 'latex', 'status', 'public', 'confidence'],
   tool:    ['layout', 'title', 'date', 'updated', 'tag', 'toc', 'comment', 'latex', 'status', 'public', 'confidence'],
@@ -16,7 +16,7 @@ const REQUIRED = {
 };
 
 const COLLECTION_MAP = {
-  '_wiki':    'wiki',
+  '_concept': 'concept',
   '_insight': 'insight',
   '_problem': 'problem',
   '_tool':    'tool',
@@ -62,15 +62,15 @@ function validateFile(filePath) {
 
   // 컬렉션 타입 결정 (절대경로·상대경로 모두 처리)
   const rel    = filePath.replace(/\\/g, '/');
-  const relFromRepo = rel.replace(/^.*\/((_wiki|_insight|_problem|_tool|_event|_adr)\/)/, '$1');
-  const prefix = relFromRepo.match(/^(_wiki|_insight|_problem|_tool|_event|_adr)\//)?.[1];
+  const relFromRepo = rel.replace(/^.*\/((_concept|_insight|_problem|_tool|_event|_adr)\/)/, '$1');
+  const prefix = relFromRepo.match(/^(_concept|_insight|_problem|_tool|_event|_adr)\//)?.[1];
   if (!prefix) return [];   // 대상 외 파일
 
   const type = COLLECTION_MAP[prefix];
 
-  // _wiki/*.md (카테고리 인덱스 페이지): frontmatter 검증 제외
+  // _concept/*.md (카테고리 인덱스 페이지): frontmatter 검증 제외
   const parts = relFromRepo.split('/');
-  if (prefix === '_wiki' && parts.length === 2) return [];
+  if (prefix === '_concept' && parts.length === 2) return [];
 
   let src;
   try { src = fs.readFileSync(filePath, 'utf8'); }
@@ -109,7 +109,7 @@ function validateFile(filePath) {
 
 // ── 전체 디렉토리 재귀 수집 ────────────────────────────────────────────────
 
-const COLLECTIONS = ['_wiki', '_insight', '_problem', '_tool', '_event', '_adr'];
+const COLLECTIONS = ['_concept', '_insight', '_problem', '_tool', '_event', '_adr'];
 
 function collectMarkdown(dir, out = []) {
   if (!fs.existsSync(dir)) return out;

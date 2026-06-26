@@ -59,7 +59,7 @@
     display: none;
 }
 
-.wiki-card-badge {
+.concept-card-badge {
     font-size: 0.65rem;
     font-weight: 600;
     color: var(--color-text-tertiary);
@@ -172,7 +172,7 @@
     text-transform: uppercase;
     white-space: nowrap;
 
-    &--wiki    { @include entity-badge(--color-entity-wiki, --color-entity-wiki-bg); }
+    &--concept    { @include entity-badge(--color-entity-concept, --color-entity-concept-bg); }
     &--insight { @include entity-badge(--color-entity-insight, --color-entity-insight-bg); }
     &--problem { @include entity-badge(--color-entity-problem, --color-entity-problem-bg); }
     &--tool    { @include entity-badge(--color-entity-tool, --color-entity-tool-bg); }
@@ -294,7 +294,7 @@
     text-transform: uppercase;
     flex-shrink: 0;
 
-    &--wiki    { @include entity-badge(--color-entity-wiki, --color-entity-wiki-bg); }
+    &--concept    { @include entity-badge(--color-entity-concept, --color-entity-concept-bg); }
     &--insight { @include entity-badge(--color-entity-insight, --color-entity-insight-bg); }
     &--problem { @include entity-badge(--color-entity-problem, --color-entity-problem-bg); }
     &--tool    { @include entity-badge(--color-entity-tool, --color-entity-tool-bg); }

@@ -25,7 +25,7 @@ function collectMarkdown(dir, results) {
 }
 
 const files = [];
-collectMarkdown(path.join(ROOT, '_wiki'),    files);
+collectMarkdown(path.join(ROOT, '_concept'),  files);
 collectMarkdown(path.join(ROOT, '_posts'),   files);
 collectMarkdown(path.join(ROOT, '_insight'), files);
 collectMarkdown(path.join(ROOT, '_problem'), files);
@@ -34,15 +34,15 @@ collectMarkdown(path.join(ROOT, '_event'),   files);
 collectMarkdown(path.join(ROOT, '_adr'),     files);
 console.log('[수집] 총 ' + files.length + '개 파일 발견');
 
-const wikiDir = path.join(ROOT, '_wiki');
-const categories = fs.existsSync(wikiDir)
-    ? fs.readdirSync(wikiDir).filter(item =>
-        fs.statSync(path.join(wikiDir, item)).isDirectory() && !item.startsWith('_'))
+const conceptDir = path.join(ROOT, '_concept');
+const categories = fs.existsSync(conceptDir)
+    ? fs.readdirSync(conceptDir).filter(item =>
+        fs.statSync(path.join(conceptDir, item)).isDirectory() && !item.startsWith('_'))
     : [];
 
 const categoryRegex = categories.length > 0
-    ? new RegExp('_wiki\\/(' + categories.join('|') + ')\\/')
-    : /_wiki\/([^/]+)\//;
+    ? new RegExp('_concept\\/(' + categories.join('|') + ')\\/')
+    : /_concept\/([^/]+)\//;
 
 console.log('[카테고리] ' + categories.join(', '));
 
@@ -63,7 +63,7 @@ function parseYaml(yaml) {
 }
 
 function getCategoryFromPath(filePath) {
-    if (filePath.includes('/_wiki/')) {
+    if (filePath.includes('/_concept/')) {
         const match = filePath.match(categoryRegex);
         return match ? match[1] : 'other';
     }

@@ -12,8 +12,8 @@ public  : true
 confidence: medium
 parent  : [[/data-architect]]
 relations:
-  - { type: extends, target: /wiki/data-architect/06_ontology_core_concepts }
-  - { type: learned-from, target: /wiki/data-architect/05_how_to_implement_ontology }
+  - { type: extends, target: /concept/data-architect/06_ontology_core_concepts }
+  - { type: learned_from, target: /concept/data-architect/05_how_to_implement_ontology }
 ---
 
 > [[/data-architect/04_what_is_ontology]] 는 온톨로지가 "프로젝트가 아니라 인프라로 취급될 때만 살아있다"고 §8에서 못 박았고, [[/data-architect/05_how_to_implement_ontology]] 는 그 인프라를 K씨 사건 하나로 끝까지 지었다. 그런데 04는 실패 모드를 *목록*으로 던졌고, 05는 한계를 에필로그 직전에 *고백*했다. 이 글은 그 흩어진 경고들을 개념별 **안티패턴 ↔ 베스트 프랙티스** 쌍으로 다시 줄 세운다. 잘 지은 온톨로지가 어느 지점에서 조용히 거짓말이 되는지를 보는 도감이다.

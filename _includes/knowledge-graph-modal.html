@@ -98,7 +98,7 @@
     window.openKnowledgeGraphModal = openModal;
 
     document.addEventListener('click', function (e) {
-        var trigger = e.target.closest('[data-kg-open], #wiki-mini-graph-expand');
+        var trigger = e.target.closest('[data-kg-open], #concept-mini-graph-expand');
         if (!trigger) return;
         e.preventDefault();
         openModal();

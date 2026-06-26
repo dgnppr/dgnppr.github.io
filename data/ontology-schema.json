@@ -6,8 +6,8 @@
       "default_actions": ["motivate", "implement", "review", "supersede"]
     },
     "concept": {
-      "dir": "_wiki",
-      "layout_filter": "wiki",
+      "dir": "_concept",
+      "layout_filter": "concept",
       "description": "Technical concepts and knowledge",
       "default_actions": ["extend", "implement", "challenge", "deepen"]
     },

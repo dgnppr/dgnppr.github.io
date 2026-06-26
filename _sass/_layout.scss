@@ -218,7 +218,7 @@ body {
 }
 
 // ── Wiki Mini Graph ─────────────────────────────────────────
-.wiki-mini-graph {
+.concept-mini-graph {
     margin: 0.5rem 0 1.2rem;
     border: 1px solid var(--color-border-subtle);
     border-radius: 10px;
@@ -266,13 +266,13 @@ body {
         svg    { display: block; }
         canvas { display: block; width: 100% !important; height: 100% !important; }
 
-        /* 3D 컨테이너(#wiki-mini-graph)가 full height 차지하도록 */
+        /* 3D 컨테이너(#concept-mini-graph)가 full height 차지하도록 */
         > div { width: 100%; height: 100%; }
     }
 }
 
 // ── Wiki prev/next navigation ──────────────────────────────
-.wiki-prev-next {
+.concept-prev-next {
     display: flex;
     justify-content: space-between;
     gap: 12px;
@@ -281,7 +281,7 @@ body {
     border-top: 1px solid var(--color-border-subtle);
 }
 
-.wiki-prev-next-link {
+.concept-prev-next-link {
     display: flex;
     flex-direction: column;
     gap: 4px;
@@ -301,21 +301,21 @@ body {
         background: var(--color-surface-hover);
         border-color: var(--color-interactive-hover);
 
-        .wiki-prev-next-title { color: var(--color-interactive-hover); }
+        .concept-prev-next-title { color: var(--color-interactive-hover); }
     }
 
-    &.wiki-next {
+    &.concept-next {
         text-align: right;
     }
 }
 
-.wiki-prev-next-label {
+.concept-prev-next-label {
     font-size: 0.68rem;
     color: var(--color-text-tertiary);
     font-weight: 500;
 }
 
-.wiki-prev-next-title {
+.concept-prev-next-title {
     font-size: 0.85rem;
     color: var(--color-text-heading);
     font-weight: 500;

@@ -20,11 +20,11 @@ const FORCE      = process.argv.includes('--force');
 const MODEL      = 'bge-m3';
 const DIMS       = 1024;
 const COLLECTION      = 'adr';
-const WIKI_COLLECTION = 'wiki';
+const WIKI_COLLECTION = 'concept';
 
 const ROOT        = path.join(__dirname, '..');
 const ADR_DIR     = path.join(ROOT, '_adr');
-const WIKI_DIR    = path.join(ROOT, '_wiki');
+const CONCEPT_DIR = path.join(ROOT, '_concept');
 const POSTS_DIR   = path.join(ROOT, '_posts');
 const INSIGHT_DIR = path.join(ROOT, '_insight');
 const PROBLEM_DIR = path.join(ROOT, '_problem');
@@ -32,7 +32,7 @@ const TOOL_DIR    = path.join(ROOT, '_tool');
 const EVENT_DIR   = path.join(ROOT, '_event');
 
 // Maps directory type to ontology entity_type stored in Qdrant payload
-const ENTITY_TYPE = { wiki: 'concept', post: 'post', insight: 'insight', problem: 'problem', tool: 'tool', event: 'event' };
+const ENTITY_TYPE = { concept: 'concept', post: 'post', insight: 'insight', problem: 'problem', tool: 'tool', event: 'event' };
 
 function collectMarkdown(dir, results = []) {
     if (!fs.existsSync(dir)) return results;
@@ -116,7 +116,7 @@ function collectWikiDocs() {
             }
         }
     }
-    walk(WIKI_DIR,    'wiki');
+    walk(CONCEPT_DIR, 'concept');
     walk(POSTS_DIR,   'post');
     walk(INSIGHT_DIR, 'insight');
     walk(PROBLEM_DIR, 'problem');
@@ -126,7 +126,7 @@ function collectWikiDocs() {
 }
 
 function slugFromWikiPath(p, type) {
-    if (type === 'wiki')    return p.replace(/.*\/_wiki\//, '').replace(/\.md$/, '');
+    if (type === 'concept') return p.replace(/.*\/_concept\//, '').replace(/\.md$/, '');
     if (type === 'post')    return p.replace(/.*\/_posts\//, '').replace(/\.md$/, '');
     if (type === 'insight') return p.replace(/.*\/_insight\//, '').replace(/\.md$/, '');
     if (type === 'problem') return p.replace(/.*\/_problem\//, '').replace(/\.md$/, '');
@@ -136,7 +136,7 @@ function slugFromWikiPath(p, type) {
 }
 
 function urlFromWikiPath(p, type, fm) {
-    if (type === 'wiki') return p.replace(/.*\/_wiki/, '/wiki').replace(/\.md$/, '/');
+    if (type === 'concept') return p.replace(/.*\/_concept/, '/concept').replace(/\.md$/, '/');
     if (type === 'post') {
         if (fm && fm.date) {
             const d    = fm.date.slice(0, 10).split('-').join('/');
@@ -150,7 +150,7 @@ function urlFromWikiPath(p, type, fm) {
 }
 
 function slugToIdWiki(slug) {
-    const h = crypto.createHash('md5').update('wiki:' + slug).digest('hex');
+    const h = crypto.createHash('md5').update('concept:' + slug).digest('hex');
     return `${h.slice(0,8)}-${h.slice(8,12)}-${h.slice(12,16)}-${h.slice(16,20)}-${h.slice(20,32)}`;
 }
 
@@ -254,7 +254,7 @@ async function indexWikiDocs() {
         await qdrant('GET', `/collections/${WIKI_COLLECTION}`);
         if (FORCE) {
             await qdrant('DELETE', `/collections/${WIKI_COLLECTION}`);
-            console.log('[Qdrant] wiki 컬렉션 삭제 (--force)');
+            console.log('[Qdrant] concept 컬렉션 삭제 (--force)');
             throw new Error('recreate');
         }
     } catch (e) {
@@ -262,13 +262,13 @@ async function indexWikiDocs() {
         await qdrant('PUT', `/collections/${WIKI_COLLECTION}`, {
             vectors: { size: DIMS, distance: 'Cosine' },
         });
-        console.log('[Qdrant] wiki 컬렉션 생성');
+        console.log('[Qdrant] concept 컬렉션 생성');
     }
 
     const docs = collectWikiDocs();
     console.log(`\n[Wiki] ${docs.length}개 문서 인덱싱 중...`);
 
-    const wikiStored = FORCE ? new Map() : await (async () => {
+    const conceptStored = FORCE ? new Map() : await (async () => {
         const result = await qdrant('POST', `/collections/${WIKI_COLLECTION}/points/scroll`, {
             with_payload: ['slug'], limit: 10000,
         });
@@ -287,7 +287,7 @@ async function indexWikiDocs() {
 
         if (text.trim().length < 50) continue;
 
-        if (!FORCE && wikiStored.has(slug)) {
+        if (!FORCE && conceptStored.has(slug)) {
             const point = await qdrant('GET', `/collections/${WIKI_COLLECTION}/points/${slugToIdWiki(slug)}`).catch(() => null);
             if (point?.result?.payload?.hash === hash) {
                 console.log(`[Wiki 캐시] ${slug}`);

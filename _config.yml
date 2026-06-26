@@ -39,7 +39,7 @@ paginate_path: "/blog/page:num/"
 
 # Collections
 collections:
-    wiki:
+    concept:
         output: true
         permalink: /:collection/:path/
     adr:
@@ -75,8 +75,8 @@ giscus:
 google_analytics:
   id: G-BKH26F2YQK
 
-blame: "https://github.com/dgnppr/dgnppr.github.io/blame/master/_wiki"
-edit: "https://github.com/dgnppr/dgnppr.github.io/edit/master/_wiki"
+blame: "https://github.com/dgnppr/dgnppr.github.io/blame/master/_concept"
+edit: "https://github.com/dgnppr/dgnppr.github.io/edit/master/_concept"
 issue: "https://github.com/dgnppr/dgnppr.github.io/issues/new"
 
 timezone: "Asia/Seoul"

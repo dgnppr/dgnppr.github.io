@@ -169,7 +169,7 @@ function collectMarkdown(dir, results) {
 }
 
 const files = [];
-collectMarkdown(path.join(ROOT, '_wiki'),    files);
+collectMarkdown(path.join(ROOT, '_concept'),  files);
 collectMarkdown(path.join(ROOT, '_insight'), files);
 collectMarkdown(path.join(ROOT, '_problem'), files);
 collectMarkdown(path.join(ROOT, '_tool'),    files);
@@ -179,7 +179,7 @@ console.log('총 ' + files.length + '개 파일 발견' + (FORCE ? ' (--force: �
 
 function slugFromPath(p) {
     return p
-        .replace(/.*\/_wiki\//, '')
+        .replace(/.*\/_concept\//, '')
         .replace(/.*\/_posts\//, '')
         .replace(/.*\/_insight\//, '')
         .replace(/.*\/_problem\//, '')

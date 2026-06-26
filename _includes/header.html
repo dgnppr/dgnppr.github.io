@@ -21,7 +21,7 @@
         site.baseurl | prepend: site.url }}" />
 
     {% assign og_type = "website" %}
-    {% if page.layout == 'wiki' or page.layout == 'post' or page.layout == 'document' or page.layout == 'insight' or page.layout == 'problem' or page.layout == 'tool' or page.layout == 'event' or page.layout == 'adr' %}
+    {% if page.layout == 'concept' or page.layout == 'post' or page.layout == 'document' or page.layout == 'insight' or page.layout == 'problem' or page.layout == 'tool' or page.layout == 'event' or page.layout == 'adr' %}
       {% assign og_type = "article" %}
     {% endif %}
     {% assign og_title = page.title | default: site.title %}
@@ -218,7 +218,7 @@
             .then(function (data) {
                 allItems = data.filter(function (item) {
                     if (item.type === 'tag') { return false; }
-                    if (item.type === 'wiki' && /^\/wiki\/[^/]+$/.test(item.url)) { return false; }
+                    if (item.type === 'concept' && /^\/concept\/[^/]+$/.test(item.url)) { return false; }
                     return true;
                 });
                 fuseInstance = new Fuse(allItems, {
@@ -238,7 +238,7 @@
     }
 
     function getDisplayType(item) {
-        if (item.type === 'wiki' && /^\/wiki\/[^/]+$/.test(item.url)) { return 'index'; }
+        if (item.type === 'concept' && /^\/concept\/[^/]+$/.test(item.url)) { return 'index'; }
         return item.type;
     }
 

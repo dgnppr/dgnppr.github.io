@@ -50,19 +50,19 @@ layout: default
         {% endif %}
     {% endfor %}
     {% if post_prev or post_next %}
-    <nav class="wiki-prev-next" aria-label="이전/다음 포스트">
+    <nav class="concept-prev-next" aria-label="이전/다음 포스트">
         {% if post_prev %}
-        <a class="wiki-prev-next-link wiki-prev" href="{{ post_prev.url }}">
-            <span class="wiki-prev-next-label">← 이전글</span>
-            <span class="wiki-prev-next-title">{{ post_prev.title }}</span>
+        <a class="concept-prev-next-link concept-prev" href="{{ post_prev.url }}">
+            <span class="concept-prev-next-label">← 이전글</span>
+            <span class="concept-prev-next-title">{{ post_prev.title }}</span>
         </a>
         {% else %}
         <span></span>
         {% endif %}
         {% if post_next %}
-        <a class="wiki-prev-next-link wiki-next" href="{{ post_next.url }}">
-            <span class="wiki-prev-next-label">다음글 →</span>
-            <span class="wiki-prev-next-title">{{ post_next.title }}</span>
+        <a class="concept-prev-next-link concept-next" href="{{ post_next.url }}">
+            <span class="concept-prev-next-label">다음글 →</span>
+            <span class="concept-prev-next-title">{{ post_next.title }}</span>
         </a>
         {% endif %}
     </nav>
@@ -70,7 +70,7 @@ layout: default
 
     {% include comment.html %}
 
-    <script src="/js/wiki-tooltip.js"></script>
+    <script src="/js/concept-tooltip.js"></script>
     <script async src="/js/toc-highlight.js"></script>
     <script src="/js/focus-reading.js"></script>
 </div>

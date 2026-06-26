@@ -18,7 +18,7 @@ regenerate: true
 
     <p class="home-section-title" style="margin-top:2rem">Recently Changed Documents</p>
     <ul class="home-feed">
-        {% assign all_docs = site.wiki | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event | concat: site.adr %}
+        {% assign all_docs = site.concept | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event | concat: site.adr %}
         {% assign documents = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | sort: 'updated' | reverse %}
         {% for doc in documents limit: 10 %}
         <li class="home-feed-item">

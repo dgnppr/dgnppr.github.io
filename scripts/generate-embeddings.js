@@ -86,7 +86,7 @@ function collectMarkdown(dir, type, results) {
 }
 
 function slugFromPath(p, type) {
-    if (type === 'wiki')    return p.replace(/.*\/_wiki\//, '').replace(/\.md$/, '');
+    if (type === 'concept') return p.replace(/.*\/_concept\//, '').replace(/\.md$/, '');
     if (type === 'blog')    return p.replace(/.*\/_posts\//, '').replace(/\.md$/, '');
     if (type === 'insight') return p.replace(/.*\/_insight\//, '').replace(/\.md$/, '');
     if (type === 'problem') return p.replace(/.*\/_problem\//, '').replace(/\.md$/, '');
@@ -97,7 +97,7 @@ function slugFromPath(p, type) {
 }
 
 function urlFromPath(p, type, fm) {
-    if (type === 'wiki') return p.replace(/.*\/_wiki/, '/wiki').replace(/\.md$/, '');
+    if (type === 'concept') return p.replace(/.*\/_concept/, '/concept').replace(/\.md$/, '');
     if (type === 'blog') {
         if (fm && fm.date) {
             const d    = fm.date.slice(0, 10).replace(/-/g, '/');
@@ -155,7 +155,7 @@ function tokenize(text) {
 }
 
 function categoryOf(slug, type) {
-    if (type === 'wiki') return slug.split('/')[0];
+    if (type === 'concept') return slug.split('/')[0];
     if (type === 'blog') return 'blog';
     return type;
 }
@@ -252,7 +252,7 @@ function optimizeWeights(rawSignals, docs, evalData) {
 // ── 메인 ──────────────────────────────────────────────────────
 
 const files = [];
-collectMarkdown(path.join(ROOT, '_wiki'),    'wiki',    files);
+collectMarkdown(path.join(ROOT, '_concept'), 'concept', files);
 collectMarkdown(path.join(ROOT, '_insight'), 'insight', files);
 collectMarkdown(path.join(ROOT, '_problem'), 'problem', files);
 collectMarkdown(path.join(ROOT, '_tool'),    'tool',    files);

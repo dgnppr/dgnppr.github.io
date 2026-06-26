@@ -121,12 +121,12 @@
 
         /* ── 데이터 로드 ────────────────────────────────────────── */
         var TYPE_URL_PREFIX = {
-            concept: '/wiki/', insight: '/insight/', problem: '/problem/',
+            concept: '/concept/', insight: '/insight/', problem: '/problem/',
             tool: '/tool/', event: '/event/', adr: '/adr/'
         };
         function buildNodeUrl(n) {
             if (n.url) return n.url;
-            var prefix = TYPE_URL_PREFIX[n.type] || '/wiki/';
+            var prefix = TYPE_URL_PREFIX[n.type] || '/concept/';
             return prefix + n.id.replace(/^[^\/]+\//, '') + '/';
         }
 
@@ -192,7 +192,7 @@
                         var rid = r.slug;
                         if (!nodeMap[rid]) {
                             var rn = { id: rid, slug: rid, title: r.title || rid,
-                                url: r.url || ('/wiki/' + rid + '/'), type: 'concept', cat: 'concept',
+                                url: r.url || ('/concept/' + rid + '/'), type: 'concept', cat: 'concept',
                                 colorKey: 'concept', tags: [], degree: 0 };
                             nodes.push(rn); nodeMap[rid] = rn;
                         }

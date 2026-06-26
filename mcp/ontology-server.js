@@ -10,7 +10,7 @@ const ROOT       = path.join(import.meta.dirname, "..");
 const GRAPH_FILE = path.join(ROOT, "data/ontology-graph.json");
 
 const ENTITY_DIRS = {
-  wiki:    path.join(ROOT, "_wiki"),
+  concept: path.join(ROOT, "_concept"),
   insight: path.join(ROOT, "_insight"),
   problem: path.join(ROOT, "_problem"),
   tool:    path.join(ROOT, "_tool"),
@@ -20,24 +20,44 @@ const ENTITY_DIRS = {
 const ALL_TYPES  = Object.keys(ENTITY_DIRS);
 
 // generate-local-embeddings.js와 동일한 entity_type 매핑
-const QDRANT_ENTITY_TYPE = { wiki: "concept", insight: "insight", problem: "problem", tool: "tool", event: "event" };
+const QDRANT_ENTITY_TYPE = { concept: "concept", insight: "insight", problem: "problem", tool: "tool", event: "event" };
 
 // ontology-schema.json에서 action 정의 로드 (SSOT)
 const SCHEMA = JSON.parse(fs.readFileSync(path.join(ROOT, "data/ontology-schema.json"), "utf-8"));
 const ACTION_TYPES = SCHEMA.action_types ?? {};
 
 // ontology 타입 → doc_write 타입 매핑
-const ONTOLOGY_TO_DOCTYPE = { concept: "wiki", insight: "insight", problem: "problem", tool: "tool", event: "event", adr: "adr" };
+const ONTOLOGY_TO_DOCTYPE = { concept: "concept", insight: "insight", problem: "problem", tool: "tool", event: "event", adr: "adr" };
 
 const INFERENCE_RULES = SCHEMA.inference_rules ?? [];
 
 // ── LLM 호출 헬퍼 ─────────────────────────────────────────────────────────────
-// .env: LLM_BACKEND=anthropic|ollama  LLM_MODEL=<model>
-// 우선순위: LLM_BACKEND 명시 → ANTHROPIC_API_KEY 있으면 anthropic → ollama
+// .env: LLM_BACKEND=lmstudio|anthropic|ollama
+//   lmstudio: LM_STUDIO_BASE_URL, LM_STUDIO_MODEL
+//   anthropic: ANTHROPIC_API_KEY, LLM_MODEL
+//   ollama:    OLLAMA_URL, LLM_MODEL
 async function callLLM(prompt, { maxTokens = 2048 } = {}) {
   const backend = process.env.LLM_BACKEND
     ?? (process.env.ANTHROPIC_API_KEY ? "anthropic" : "ollama");
-  const model = process.env.LLM_MODEL;
+
+  if (backend === "lmstudio") {
+    const baseUrl = process.env.LM_STUDIO_BASE_URL ?? "http://localhost:1234/v1";
+    const model   = process.env.LM_STUDIO_MODEL;
+    if (!model) throw new Error("LM_STUDIO_MODEL 환경변수 필요");
+    const resp = await fetch(`${baseUrl}/chat/completions`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model,
+        messages: [{ role: "user", content: prompt }],
+        max_tokens: maxTokens,
+        stream: false,
+      }),
+    });
+    if (!resp.ok) throw new Error(`LM Studio 오류: ${resp.statusText}`);
+    const data = await resp.json();
+    return data.choices?.[0]?.message?.content ?? "";
+  }
 
   if (backend === "anthropic") {
     const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -45,7 +65,7 @@ async function callLLM(prompt, { maxTokens = 2048 } = {}) {
     const { default: Anthropic } = await import("@anthropic-ai/sdk");
     const client = new Anthropic({ apiKey });
     const msg = await client.messages.create({
-      model: model ?? "claude-haiku-4-5-20251001",
+      model: process.env.LLM_MODEL ?? "claude-haiku-4-5-20251001",
       max_tokens: maxTokens,
       messages: [{ role: "user", content: prompt }],
     });
@@ -58,7 +78,7 @@ async function callLLM(prompt, { maxTokens = 2048 } = {}) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      model: model ?? "llama3.2",
+      model: process.env.LLM_MODEL ?? "llama3.2",
       messages: [{ role: "user", content: prompt }],
       stream: false,
     }),
@@ -335,7 +355,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       inputSchema: {
         type: "object",
         properties: {
-          type: { type: "string", description: "wiki | insight | problem | tool | event | adr | all (기본: all)" },
+          type: { type: "string", description: "concept | insight | problem | tool | event | adr | all (기본: all)" },
         },
       },
     },
@@ -345,7 +365,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       inputSchema: {
         type: "object",
         properties: {
-          type: { type: "string", description: "wiki | insight | problem | tool | event | adr" },
+          type: { type: "string", description: "concept | insight | problem | tool | event | adr" },
           path: { type: "string", description: "파일 경로 (예: llm/00_what_is_transformers.md)" },
         },
         required: ["type", "path"],
@@ -358,19 +378,19 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         type: "object",
         properties: {
           query: { type: "string", description: "검색할 키워드" },
-          type:  { type: "string", description: "wiki | insight | problem | tool | event | adr | all (기본: all)" },
+          type:  { type: "string", description: "concept | insight | problem | tool | event | adr | all (기본: all)" },
         },
         required: ["query"],
       },
     },
     {
       name: "doc_find",
-      description: "임베딩 유사도 기반으로 관련 문서 목록을 반환한다. wiki 계열은 파일 캐시, adr은 Qdrant 사용.",
+      description: "임베딩 유사도 기반으로 관련 문서 목록을 반환한다. concept 계열은 파일 캐시, adr은 Qdrant 사용.",
       inputSchema: {
         type: "object",
         properties: {
           query: { type: "string", description: "검색 키워드 또는 질문" },
-          type:  { type: "string", description: "wiki | insight | problem | tool | event | adr | all (기본: all)" },
+          type:  { type: "string", description: "concept | insight | problem | tool | event | adr | all (기본: all)" },
           limit: { type: "number", description: "최대 반환 수 (기본: 10)" },
         },
         required: ["query"],
@@ -383,7 +403,7 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
         type: "object",
         properties: {
           query: { type: "string", description: "검색할 질문 또는 키워드" },
-          type:  { type: "string", description: "wiki | insight | problem | tool | event | adr | all (기본: all)" },
+          type:  { type: "string", description: "concept | insight | problem | tool | event | adr | all (기본: all)" },
           limit: { type: "number", description: "반환할 최대 문서 수 (기본: 3)" },
         },
         required: ["query"],
@@ -395,13 +415,13 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       inputSchema: {
         type: "object",
         properties: {
-          type:     { type: "string", description: "wiki | insight | problem | tool | event | adr" },
+          type:     { type: "string", description: "concept | insight | problem | tool | event | adr" },
           path:     { type: "string", description: "파일 경로 (예: llm/01_attention.md 또는 2024-001-use-kafka.md)" },
           title:    { type: "string", description: "문서 제목" },
           body:     { type: "string", description: "본문 내용 (frontmatter 제외)" },
           tag:      { type: "string", description: "태그 (공백 구분, 선택)" },
-          status:   { type: "string", description: "wiki 계열: draft|writing|complete / adr: proposed|accepted|deprecated|superseded" },
-          public:   { type: "boolean", description: "공개 여부 (wiki 계열 전용, 기본: true)" },
+          status:   { type: "string", description: "concept 계열: draft|writing|complete / adr: proposed|accepted|deprecated|superseded" },
+          public:   { type: "boolean", description: "공개 여부 (concept 계열 전용, 기본: true)" },
           deciders:  { type: "string", description: "결정 참여자 (adr 전용, 선택)" },
           confidence: { type: "string", description: "신뢰도: high | medium | low (insight 필수, 전 타입 권장)" },
           valid_from: { type: "string", description: "유효 시작일 YYYY-MM-DD (버전·시점 의존 문서에 사용)" },
@@ -547,6 +567,51 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       },
     },
     {
+      name: "answered",
+      description: "questions로 생성된 질문을 답변 완료로 표시한다. 인덱스 미지정 시 전체 완료 처리.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          id:    { type: "string", description: "엔티티 ID" },
+          index: { type: "number", description: "완료할 질문 인덱스 (0부터, 생략 시 전체)" },
+        },
+        required: ["id"],
+      },
+    },
+    {
+      name: "studied",
+      description: "개념을 공부했음을 기록한다. learning_pressure에 study decay가 적용돼 일시적으로 낮아진다. make ontology 실행 시 반영.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          id: { type: "string", description: "공부한 엔티티 ID" },
+        },
+        required: ["id"],
+      },
+    },
+    {
+      name: "blindspot",
+      description: "내 글 전체를 LLM이 분석해 전혀 다루지 않은 인접 영역을 추천한다. query를 주면 그 주제 주변의 맹점만 탐색. .env의 LLM_BACKEND 사용.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          query: { type: "string", description: "탐색 주제 키워드 (생략 시 전체 지식 맹점 분석)" },
+        },
+      },
+    },
+    {
+      name: "ontology_eval",
+      description: "특정 문서의 이해 깊이를 LLM이 0~1로 평가한다. 결과는 depth-cache.json에 캐시되어 learning_pressure 계산에 반영된다. make ontology 후 적용. .env의 LLM_BACKEND 사용.",
+      inputSchema: {
+        type: "object",
+        properties: {
+          id:    { type: "string", description: "평가할 엔티티 ID" },
+          force: { type: "boolean", description: "캐시 무시하고 재평가 (기본 false)" },
+        },
+        required: ["id"],
+      },
+    },
+    {
       name: "ontology_debt",
       description: "지식 부채를 탐지한다: 여러 문서에서 참조되지만 미작성된 개념, 만료된 문서, 자주 쓰이는 태그인데 전용 문서가 없는 영역.",
       inputSchema: {
@@ -638,18 +703,18 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     try { queryVec = await embedQuery(args.query); }
     catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
 
-    // Qdrant 검색: wiki 컬렉션 (wiki/insight/problem/tool/event) + adr 컬렉션
+    // Qdrant 검색: concept 컬렉션 (concept/insight/problem/tool/event) + adr 컬렉션
     const searches = [];
-    const wikiTypes = types.filter((t) => QDRANT_ENTITY_TYPE[t]);
-    const hasAdr    = types.includes("adr");
+    const conceptTypes = types.filter((t) => QDRANT_ENTITY_TYPE[t]);
+    const hasAdr       = types.includes("adr");
 
-    if (wikiTypes.length) {
-      const filter = wikiTypes.length < Object.keys(QDRANT_ENTITY_TYPE).length
-        ? { should: wikiTypes.map((t) => ({ key: "entity_type", match: { value: QDRANT_ENTITY_TYPE[t] } })) }
+    if (conceptTypes.length) {
+      const filter = conceptTypes.length < Object.keys(QDRANT_ENTITY_TYPE).length
+        ? { should: conceptTypes.map((t) => ({ key: "entity_type", match: { value: QDRANT_ENTITY_TYPE[t] } })) }
         : null;
-      searches.push(qdrantSearch("wiki", queryVec, limit * 3, filter).then((hits) =>
+      searches.push(qdrantSearch("concept", queryVec, limit * 3, filter).then((hits) =>
         hits.map((h) => ({
-          type: Object.keys(QDRANT_ENTITY_TYPE).find((k) => QDRANT_ENTITY_TYPE[k] === h.payload.entity_type) || "wiki",
+          type: Object.keys(QDRANT_ENTITY_TYPE).find((k) => QDRANT_ENTITY_TYPE[k] === h.payload.entity_type) || "concept",
           f: h.payload.slug + ".md",
           score: h.score,
           payload: h.payload,
@@ -720,7 +785,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
   // ── ontology_entities ──────────────────────────────────────────────────────
   if (name === "ontology_entities") {
     const graph = loadGraph();
-    const WIKI_ENTITY_TYPES = new Set(["concept", "insight", "problem", "tool", "event"]);
+    const CONCEPT_ENTITY_TYPES = new Set(["concept", "insight", "problem", "tool", "event"]);
     if (args.query) {
       let queryVec;
       try { queryVec = await embedQuery(args.query); }
@@ -728,9 +793,9 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
 
       const cols = args.type === "adr"
         ? [{ col: "adr",  type: "adr" }]
-        : args.type && WIKI_ENTITY_TYPES.has(args.type)
-        ? [{ col: "wiki", type: args.type }]
-        : [{ col: "wiki", type: null }, { col: "adr", type: "adr" }];
+        : args.type && CONCEPT_ENTITY_TYPES.has(args.type)
+        ? [{ col: "concept", type: args.type }]
+        : [{ col: "concept", type: null }, { col: "adr", type: "adr" }];
 
       const hits = (await Promise.all(
         cols.map(({ col, type }) =>
@@ -811,15 +876,15 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
 
       const candidateLimit = limit * 12;
-      const [wikiHits, adrHits] = await Promise.all([
-        qdrantSearch("wiki", queryVec, candidateLimit).then(hits =>
+      const [conceptHits, adrHits] = await Promise.all([
+        qdrantSearch("concept", queryVec, candidateLimit).then(hits =>
           hits.map(h => ({ id: `${h.payload.entity_type || "concept"}/${h.payload.slug}`, score: h.score, payload: h.payload }))
         ),
         qdrantSearch("adr", queryVec, candidateLimit).then(hits =>
           hits.map(h => ({ id: `adr/${h.payload.slug}`, score: h.score, payload: h.payload }))
         ),
       ]);
-      for (const hit of [...wikiHits, ...adrHits]) {
+      for (const hit of [...conceptHits, ...adrHits]) {
         if (hit.id !== args.id) semanticMap.set(hit.id, { score: hit.score, payload: hit.payload });
       }
     }
@@ -895,12 +960,12 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     try { queryVec = await embedQuery(args.query); }
     catch (e) { return { content: [{ type: "text", text: `임베딩 오류: ${e.message}` }], isError: true }; }
 
-    const WIKI_ENTITY_TYPES = new Set(["concept", "insight", "problem", "tool", "event"]);
+    const CONCEPT_ENTITY_TYPES = new Set(["concept", "insight", "problem", "tool", "event"]);
     const collections = args.type === "adr"
       ? [{ col: "adr", type: "adr" }]
-      : args.type && WIKI_ENTITY_TYPES.has(args.type)
-      ? [{ col: "wiki", type: args.type }]
-      : [{ col: "wiki", type: null }, { col: "adr", type: "adr" }];
+      : args.type && CONCEPT_ENTITY_TYPES.has(args.type)
+      ? [{ col: "concept", type: args.type }]
+      : [{ col: "concept", type: null }, { col: "adr", type: "adr" }];
 
     const hits = (await Promise.all(collections.map(({ col, type }) =>
       qdrantSearch(col, queryVec, args.limit ?? 10).then(results =>
@@ -1074,7 +1139,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       suggestedPath  = `${anchorCategory}/${year}-${nextNum}-${slugBase}.md`;
       suggestedTitle = args.title ?? `[${args.action}] ${node.title}`;
     } else {
-      const dir      = ENTITY_DIRS[docType] ?? ENTITY_DIRS.wiki;
+      const dir      = ENTITY_DIRS[docType] ?? ENTITY_DIRS.concept;
       const catFiles = collectFiles(dir).filter(f => f.startsWith(anchorCategory + "/"));
       const maxNum   = catFiles.reduce((mx, f) => { const m = path.basename(f).match(/^(\d+)/); return m ? Math.max(mx, parseInt(m[1])) : mx; }, -1);
       const nextNum  = String(maxNum + 1).padStart(2, "0");
@@ -1202,8 +1267,8 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     return { content: [{ type: "text", text: JSON.stringify({ top: ranked, message: `지금 당신이 가장 공부해야 할 개념 top ${ranked.length}` }, null, 2) }] };
   }
 
-  // ── ontology_questions ─────────────────────────────────────────────────────
-  if (name === "ontology_questions") {
+  // ── questions ──────────────────────────────────────────────────────────────
+  if (name === "questions") {
     const graph = loadGraph();
     const node = graph.nodes[args.id];
     if (!node) return { content: [{ type: "text", text: `엔티티 없음: ${args.id}` }], isError: true };
@@ -1213,14 +1278,9 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     try { content = fs.readFileSync(filePath, "utf-8"); }
     catch { return { content: [{ type: "text", text: `파일 읽기 실패: ${node.path}` }], isError: true }; }
 
-    // frontmatter 제거, 본문만
     const body = content.replace(/^---[\s\S]*?---\n/, "").trim();
     if (!body) return { content: [{ type: "text", text: "본문 없음 — 내용을 먼저 작성하세요" }], isError: true };
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) return { content: [{ type: "text", text: "ANTHROPIC_API_KEY 환경변수 필요" }], isError: true };
-
-    // graph context — 연결된 노드 목록
     const connected = graph.edges
       .filter(e => e.from === args.id || e.to === args.id)
       .map(e => e.from === args.id ? `→ ${e.to} (${e.type})` : `← ${e.from} (${e.type})`);
@@ -1229,7 +1289,6 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
 
 제목: ${node.title}
 타입: ${node.type}
-confidence: ${node.confidence ?? "미설정"}
 연결된 개념: ${connected.length ? connected.join(", ") : "없음"}
 
 본문:
@@ -1244,19 +1303,33 @@ ${body.slice(0, 3000)}
 - JSON 배열로만 반환: [{"question": "...", "why": "..."}]`;
 
     try {
-      const { default: Anthropic } = await import("@anthropic-ai/sdk");
-      const client = new Anthropic({ apiKey });
-      const msg = await client.messages.create({
-        model: "claude-haiku-4-5-20251001",
-        max_tokens: 1024,
-        messages: [{ role: "user", content: prompt }],
-      });
-      const text = msg.content[0]?.text ?? "[]";
+      const text = await callLLM(prompt, { maxTokens: 1024 });
       const jsonMatch = text.match(/\[[\s\S]*\]/);
       const questions = jsonMatch ? JSON.parse(jsonMatch[0]) : [];
-      return { content: [{ type: "text", text: JSON.stringify({ id: args.id, title: node.title, learning_pressure: node.learning_pressure, questions }, null, 2) }] };
+
+      // B: questions.json에 영속화
+      const qFile = path.join(ROOT, "data/questions.json");
+      let qDB = {};
+      try { qDB = JSON.parse(fs.readFileSync(qFile, "utf-8")); } catch {}
+      const now = new Date().toISOString().slice(0, 10);
+      const existing = (qDB[args.id]?.questions ?? []).filter(q => q.answered);
+      qDB[args.id] = {
+        generated_at: now,
+        questions: [
+          ...existing,
+          ...questions.map(q => ({ ...q, answered: false, answered_at: null })),
+        ],
+      };
+      fs.writeFileSync(qFile, JSON.stringify(qDB, null, 2));
+
+      return { content: [{ type: "text", text: JSON.stringify({
+        id: args.id, title: node.title, learning_pressure: node.learning_pressure,
+        questions,
+        saved: true,
+        tip: "답변 완료 시: /ontology answered id:<id> 또는 index:<n>",
+      }, null, 2) }] };
     } catch (e) {
-      return { content: [{ type: "text", text: `API 호출 실패: ${e.message}` }], isError: true };
+      return { content: [{ type: "text", text: `LLM 호출 실패: ${e.message}` }], isError: true };
     }
   }
 
@@ -1329,6 +1402,41 @@ ${body.slice(0, 3000)}
           tag,
           ref_count: count,
           reason: `태그 '${tag}'가 ${count}개 문서에 쓰이지만 전용 concept 없음`,
+          action: "write",
+        });
+      }
+    }
+
+    // 4. 미답 질문 (B: questions.json)
+    let qDB = {};
+    try { qDB = JSON.parse(fs.readFileSync(path.join(ROOT, "data/questions.json"), "utf-8")); } catch {}
+    for (const [nodeId, data] of Object.entries(qDB)) {
+      const unanswered = (data.questions ?? []).filter(q => !q.answered);
+      if (unanswered.length > 0 && graph.nodes[nodeId]) {
+        debts.push({
+          type: "unanswered_question",
+          priority: unanswered.length >= 3 ? "high" : "medium",
+          id: nodeId,
+          title: graph.nodes[nodeId].title,
+          unanswered_count: unanswered.length,
+          generated_at: data.generated_at,
+          questions: unanswered.map(q => q.question),
+          reason: `${unanswered.length}개의 미답 질문`,
+          action: "answer",
+        });
+      }
+    }
+
+    // 5. 콘텐츠 기반 언급 개념 (본문에서 반복 등장하지만 독립 문서 없는 용어)
+    for (const item of (graph.content_mentioned_concepts ?? [])) {
+      if (item.count >= minRefs) {
+        debts.push({
+          type: "content_mentioned",
+          priority: item.count >= 5 ? "high" : "medium",
+          term: item.term,
+          mention_count: item.count,
+          mentioned_by: item.mentioned_by,
+          reason: `${item.count}개 문서 본문에서 언급되지만 독립 문서 없음`,
           action: "write",
         });
       }
@@ -1476,6 +1584,230 @@ ${body.slice(0, 3000)}
     const ORDER = { critical: 0, high: 1, medium: 2, low: 3 };
     contradictions.sort((a, b) => (ORDER[a.priority] ?? 4) - (ORDER[b.priority] ?? 4));
     return { content: [{ type: "text", text: JSON.stringify(contradictions.slice(0, args.limit ?? 20), null, 2) }] };
+  }
+
+  // ── discover ───────────────────────────────────────────────────────────────
+  if (name === "discover") {
+    const graph = loadGraph();
+    const limit = args.limit ?? 10;
+
+    // importance 순 상위 N개 문서 본문 수집
+    const topNodes = Object.values(graph.nodes)
+      .sort((a, b) => (b.importance ?? 0) - (a.importance ?? 0))
+      .slice(0, limit);
+
+    const docSummaries = [];
+    for (const node of topNodes) {
+      try {
+        const raw = fs.readFileSync(path.join(ROOT, node.path), "utf-8");
+        const body = raw.replace(/^---[\s\S]*?---\n/, "").trim().slice(0, 800);
+        if (body) docSummaries.push(`[${node.type}] ${node.title} (lp=${node.learning_pressure ?? 0})\n${body}`);
+      } catch { /* skip */ }
+    }
+
+    const contentMentioned = (graph.content_mentioned_concepts ?? []).slice(0, 15);
+
+    const prompt = `다음은 한 개발자의 기술 지식 문서들입니다.
+
+${docSummaries.join("\n\n---\n\n")}
+${contentMentioned.length ? `\n여러 문서에서 반복 언급되지만 아직 독립 문서가 없는 용어:\n${contentMentioned.map(c => `- ${c.term} (${c.count}회, ${c.mentioned_by.slice(0, 2).join(", ")} 등)`).join("\n")}` : ""}
+
+이 저자의 글을 분석해 아래 JSON만 반환하세요:
+{
+  "deepen": [{"id": "기존 문서 id", "title": "제목", "why": "왜 더 깊어야 하는지 — 글 내용 근거", "what": "구체적으로 보완해야 할 내용"}],
+  "write_new": [{"title": "새로 써야 할 문서 제목", "type": "concept|insight|problem|tool|event", "why": "왜 이게 필요한가 — 글 내용 근거", "connects_to": ["연결될 기존 개념"]}]
+}
+
+규칙:
+- deepen 3개: 이미 있는 문서인데 글 내용이 얕거나 핵심 측면이 빠진 것
+- write_new 3개: 여러 글에서 언급되지만 독립 문서가 없는 개념
+- frontmatter 값(confidence, status)이 아닌 실제 글 내용 기반 판단
+- JSON만 반환`;
+
+    try {
+      const text = await callLLM(prompt, { maxTokens: 1500 });
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      const result = jsonMatch ? JSON.parse(jsonMatch[0]) : { deepen: [], write_new: [] };
+      return { content: [{ type: "text", text: JSON.stringify({
+        ...result,
+        content_mentioned_concepts: contentMentioned.slice(0, 10),
+        analyzed_docs: docSummaries.length,
+      }, null, 2) }] };
+    } catch (e) {
+      return { content: [{ type: "text", text: `분석 실패: ${e.message}` }], isError: true };
+    }
+  }
+
+  // ── answered ───────────────────────────────────────────────────────────────
+  if (name === "answered") {
+    const qFile = path.join(ROOT, "data/questions.json");
+    let qDB = {};
+    try { qDB = JSON.parse(fs.readFileSync(qFile, "utf-8")); } catch {}
+    if (!qDB[args.id]) return { content: [{ type: "text", text: `질문 없음: ${args.id} — 먼저 /ontology questions 실행` }], isError: true };
+
+    const now = new Date().toISOString().slice(0, 10);
+    const qs = qDB[args.id].questions;
+    if (args.index !== undefined) {
+      if (!qs[args.index]) return { content: [{ type: "text", text: `인덱스 ${args.index} 없음 (총 ${qs.length}개)` }], isError: true };
+      qs[args.index].answered = true;
+      qs[args.index].answered_at = now;
+    } else {
+      qs.forEach(q => { q.answered = true; q.answered_at = now; });
+    }
+    fs.writeFileSync(qFile, JSON.stringify(qDB, null, 2));
+    const remaining = qs.filter(q => !q.answered).length;
+    return { content: [{ type: "text", text: JSON.stringify({
+      id: args.id,
+      marked: args.index !== undefined ? 1 : qs.length,
+      remaining_unanswered: remaining,
+      tip: remaining > 0 ? `${remaining}개 질문 남음 — make ontology 실행 시 learning_pressure 갱신` : "모든 질문 완료 — make ontology 실행",
+    }, null, 2) }] };
+  }
+
+  // ── studied ────────────────────────────────────────────────────────────────
+  if (name === "studied") {
+    const graph = loadGraph();
+    const node  = graph.nodes[args.id];
+    if (!node) return { content: [{ type: "text", text: `엔티티 없음: ${args.id}` }], isError: true };
+
+    const sFile = path.join(ROOT, "data/study-log.json");
+    let sLog = {};
+    try { sLog = JSON.parse(fs.readFileSync(sFile, "utf-8")); } catch {}
+    const now   = new Date().toISOString().slice(0, 10);
+    const entry = sLog[args.id] ?? { study_count: 0, history: [] };
+    entry.study_count  += 1;
+    entry.last_studied  = now;
+    entry.history       = [now, ...(entry.history ?? [])].slice(0, 30);
+    sLog[args.id] = entry;
+    fs.writeFileSync(sFile, JSON.stringify(sLog, null, 2));
+
+    return { content: [{ type: "text", text: JSON.stringify({
+      id: args.id,
+      title: node.title,
+      study_count: entry.study_count,
+      last_studied: now,
+      current_lp: node.learning_pressure,
+      tip: "make ontology 실행 시 study_decay 반영돼 learning_pressure 낮아짐",
+    }, null, 2) }] };
+  }
+
+  // ── blindspot ──────────────────────────────────────────────────────────────
+  if (name === "blindspot") {
+    const graph = loadGraph();
+    const allTopics = Object.values(graph.nodes)
+      .map(n => `[${n.type}] ${n.title}${n.tags?.length ? ` (${n.tags.join(", ")})` : ""}`)
+      .join("\n");
+
+    const query = args.query?.trim();
+    const focusClause = query
+      ? `특히 "${query}" 주제와 연관된 맹점에 집중해서`
+      : "이 개발자가 다루는 주제들 전반을 분석해";
+
+    const prompt = `다음은 한 개발자의 기술 지식 문서 목록입니다:
+
+${allTopics}
+
+${focusClause}, 전혀 다루지 않았지만 이 지식 맥락에서 중요하고 인접한 기술/개념 영역 5개를 추천하세요.
+
+JSON만 반환:
+{
+  "query": ${JSON.stringify(query ?? null)},
+  "blindspots": [
+    {
+      "area": "탐색할 영역",
+      "why": "왜 이 개발자에게 필요한가 — 현재 지식과의 연결점",
+      "starter_question": "이 영역을 탐색하기 위한 첫 번째 질문",
+      "related_existing": ["현재 문서 중 연결될 것들"]
+    }
+  ]
+}
+
+규칙:
+- 현재 문서에 이미 있는 개념은 제외
+- 현재 다루는 주제들과 논리적으로 인접한 것만
+- 너무 광범위한 분야 금지 (예: "머신러닝 전반" 대신 "온라인 피처 스토어 설계")${query ? `\n- query "${query}" 관련 영역 우선` : ""}`;
+
+    try {
+      let result;
+      for (let i = 0; i < 2 && !result; i++) {
+        const text = await callLLM(prompt, { maxTokens: 1500 });
+        const clean = text.replace(/```(?:json)?\n?/g, "").replace(/```/g, "");
+        const m = clean.match(/\{[\s\S]*\}/);
+        if (m) try { result = JSON.parse(m[0]); } catch {}
+      }
+      return { content: [{ type: "text", text: JSON.stringify(result ?? { blindspots: [] }, null, 2) }] };
+    } catch (e) {
+      return { content: [{ type: "text", text: `분석 실패: ${e.message}` }], isError: true };
+    }
+  }
+
+  // ── ontology_eval ──────────────────────────────────────────────────────────
+  if (name === "ontology_eval") {
+    const graph = loadGraph();
+    const node  = graph.nodes[args.id];
+    if (!node) return { content: [{ type: "text", text: `엔티티 없음: ${args.id}` }], isError: true };
+
+    const cacheFile = path.join(ROOT, "data/depth-cache.json");
+    let cache = {};
+    try { cache = JSON.parse(fs.readFileSync(cacheFile, "utf-8")); } catch {}
+
+    // 파일 해시로 캐시 유효성 확인
+    const filePath = path.join(ROOT, node.path);
+    let content;
+    try { content = fs.readFileSync(filePath, "utf-8"); }
+    catch { return { content: [{ type: "text", text: `파일 읽기 실패: ${node.path}` }], isError: true }; }
+
+    const body = content.replace(/^---[\s\S]*?---\n/, "").trim();
+    const hash = body.length.toString(36) + body.slice(-20).replace(/\s/g, "");
+
+    if (!args.force && cache[args.id]?.hash === hash) {
+      return { content: [{ type: "text", text: JSON.stringify({ ...cache[args.id], cached: true }, null, 2) }] };
+    }
+
+    if (!body) return { content: [{ type: "text", text: "본문 없음" }], isError: true };
+
+    const prompt = `다음 기술 문서의 이해 깊이를 평가하세요.
+
+제목: ${node.title}
+본문:
+${body.slice(0, 3000)}
+
+평가 기준:
+- 1: 정의만 있음, 예시/적용/한계 없음
+- 2: 기본 개념 있지만 얕음
+- 3: 적용 예시 있고 어느 정도 설명됨
+- 4: 실패 사례/한계/엣지 케이스 포함
+- 5: 깊은 이해 — 트레이드오프, 대안, 실전 경험 명확
+
+JSON만 반환:
+{ "score_1_to_5": <숫자>, "reason": "<한 줄 근거>", "missing": "<가장 부족한 것>" }`;
+
+    try {
+      const text = await callLLM(prompt, { maxTokens: 300 });
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      const raw = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
+      if (!raw) return { content: [{ type: "text", text: "파싱 실패" }], isError: true };
+
+      const normalized = Math.round((raw.score_1_to_5 - 1) / 4 * 100) / 100; // 1~5 → 0~1
+      const entry = {
+        score: normalized,
+        score_1_to_5: raw.score_1_to_5,
+        reason: raw.reason,
+        missing: raw.missing,
+        evaluated_at: new Date().toISOString().slice(0, 10),
+        hash,
+      };
+      cache[args.id] = entry;
+      fs.writeFileSync(cacheFile, JSON.stringify(cache, null, 2));
+
+      return { content: [{ type: "text", text: JSON.stringify({
+        id: args.id, title: node.title,
+        ...entry, cached: false,
+        tip: "make ontology 실행 시 learning_pressure에 반영됨",
+      }, null, 2) }] };
+    } catch (e) {
+      return { content: [{ type: "text", text: `평가 실패: ${e.message}` }], isError: true };
+    }
   }
 
   return { content: [{ type: "text", text: `알 수 없는 도구: ${name}` }], isError: true };
