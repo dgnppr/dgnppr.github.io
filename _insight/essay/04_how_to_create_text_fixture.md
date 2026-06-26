@@ -10,7 +10,8 @@ comment : true
 public  : true
 parent  : [[/essay]]
 latex   : true
-status  : complete
+status      : complete
+confidence  : medium
 show-diagram: true
 relations:
   - { type: references, target: /wiki/jpa/00_jpa_dirty_checking }

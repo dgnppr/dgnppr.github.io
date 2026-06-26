@@ -14,6 +14,7 @@ status  : complete
 show-diagram: true
 relations:
   - { type: references, target: /insight/essay/01_why_redis_single_threaded }
+confidence     : high
 ---
 
 * TOC

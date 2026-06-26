@@ -201,7 +201,7 @@
             }
 
             /* ── 링크 빌드 ──────────────────────────────────── */
-            var seen = new Set(), links = [], adj = {};
+            var seen = new Set(), seenDir = new Set(), links = [], adj = {};
             var REL_WEIGHT = {
                 extends: 0.85, implements: 0.80, 'part-of': 0.75,
                 supersedes: 0.70, motivates: 0.70, 'caused-by': 0.65,
@@ -210,13 +210,24 @@
             };
 
             function addLink(a, b, relType) {
-                var key = [a, b].sort().join('|||');
-                if (seen.has(key)) return;
-                seen.add(key);
+                var sortedKey = [a, b].sort().join('|||');
+                var dirKey    = a + '|||' + b;
+                if (seenDir.has(dirKey)) return;
+                seenDir.add(dirKey);
                 var an = nodeMap[a], bn = nodeMap[b];
                 if (!an || !bn) return;
+                if (seen.has(sortedKey)) {
+                    /* 역방향 엣지 — 기존 링크를 양방향으로 표시 */
+                    for (var _i = 0; _i < links.length; _i++) {
+                        if (links[_i].source === b && links[_i].target === a) {
+                            links[_i].bidir = true; break;
+                        }
+                    }
+                    return;
+                }
+                seen.add(sortedKey);
                 links.push({ source: a, target: b,
-                    score: REL_WEIGHT[relType] || 0.5, relType: relType });
+                    score: REL_WEIGHT[relType] || 0.5, relType: relType, bidir: false });
                 an.degree++; bn.degree++;
                 if (!adj[a]) adj[a] = new Set();
                 if (!adj[b]) adj[b] = new Set();
@@ -400,6 +411,22 @@
 
             /* ── 링크 생성 ───────────────────────────────── */
             var BEZIER_SEGS = 8; /* 8개 구간 = 9개 점 */
+            /* 화살표 sprite 텍스처 — 항상 카메라를 향해 가시성 보장 */
+            var ARROW_SIZE = 5; /* world units */
+            var _arrowTex = (function () {
+                var c = document.createElement('canvas');
+                c.width = 32; c.height = 48;
+                var ctx = c.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.moveTo(16, 2);
+                ctx.lineTo(30, 46);
+                ctx.lineTo(2, 46);
+                ctx.closePath();
+                ctx.fill();
+                return new THREE.CanvasTexture(c);
+            })();
+            var _spNDC = new THREE.Vector3(), _tpNDC = new THREE.Vector3();
             var linkObjs = [];
             links.forEach(function (l) {
                 var sId = l.source, tId = l.target;
@@ -409,12 +436,34 @@
                 geo.setAttribute('position',
                     new THREE.Float32BufferAttribute(new Float32Array((BEZIER_SEGS + 1) * 3), 3));
                 var mat = new THREE.LineBasicMaterial({
-                    color: dark ? 0xffffff : 0x334155,
+                    color: dark ? 0xaabbcc : 0x94a3b8,
                     transparent: true,
-                    opacity: dark ? 0.55 : 0.45,
+                    opacity: dark ? 0.4 : 0.32,
                 });
                 var line = new THREE.Line(geo, mat);
                 scene.add(line);
+
+                var arrowMatTo = new THREE.SpriteMaterial({
+                    map: _arrowTex,
+                    color: dark ? 0xaabbcc : 0x94a3b8,
+                    transparent: true, opacity: dark ? 0.4 : 0.32,
+                    depthWrite: false,
+                });
+                var arrowTo = new THREE.Sprite(arrowMatTo);
+                arrowTo.scale.set(ARROW_SIZE, ARROW_SIZE * 1.5, 1);
+                scene.add(arrowTo);
+                var arrowFrom = null, arrowMatFrom = null;
+                if (l.bidir) {
+                    arrowMatFrom = new THREE.SpriteMaterial({
+                        map: _arrowTex,
+                        color: dark ? 0xaabbcc : 0x94a3b8,
+                        transparent: true, opacity: dark ? 0.4 : 0.32,
+                        depthWrite: false,
+                    });
+                    arrowFrom = new THREE.Sprite(arrowMatFrom);
+                    arrowFrom.scale.set(ARROW_SIZE, ARROW_SIZE * 1.5, 1);
+                    scene.add(arrowFrom);
+                }
 
                 /* 유사도 점수 레이블 */
                 var scoreDiv = null;
@@ -432,6 +481,8 @@
                 }
                 linkObjs.push({ sId: sId, tId: tId, sm: sm, tm: tm,
                                 line: line, mat: mat,
+                                arrowTo: arrowTo, arrowMatTo: arrowMatTo,
+                                arrowFrom: arrowFrom, arrowMatFrom: arrowMatFrom,
                                 connected: false, dimmed: false,
                                 score: l.score, scoreDiv: scoreDiv });
             });
@@ -891,9 +942,11 @@
                                 m.userData.labelDiv.style.display = m.visible ? '' : 'none';
                         });
                         linkObjs.forEach(function (lo) {
-                            lo.line.visible =
-                                !hiddenCats.has(lo.sm.userData.node.cat) &&
-                                !hiddenCats.has(lo.tm.userData.node.cat);
+                            var vis = !hiddenCats.has(lo.sm.userData.node.cat) &&
+                                      !hiddenCats.has(lo.tm.userData.node.cat);
+                            lo.line.visible = vis;
+                            lo.arrowTo.visible = vis;
+                            if (lo.arrowFrom) lo.arrowFrom.visible = vis;
                         });
                     });
                 });
@@ -1093,11 +1146,28 @@
                         cpy = my / mLen * (mLen + push);
                         cpz = mz / mLen * (mLen + push);
                     } else {
-                        /* 정반대 노드: edge 벡터와 수직인 방향으로 우회 */
                         var ex = tp.x - sp.x, ey = tp.y - sp.y, ez = tp.z - sp.z;
                         var eLen = Math.sqrt(ex*ex + ey*ey + ez*ez) || 1;
                         cpx = (ey / eLen) * sphereR; cpy = -(ex / eLen) * sphereR; cpz = ez / eLen * sphereR * 0.3;
                     }
+
+                    /* ── 접선 방향: bezier 끝점 trim에 먼저 필요 ── */
+                    var atx = tp.x - cpx, aty = tp.y - cpy, atz = tp.z - cpz;
+                    var atLen = Math.sqrt(atx*atx + aty*aty + atz*atz) || 1;
+                    atx /= atLen; aty /= atLen; atz /= atLen;
+                    var asx = sp.x - cpx, asy = sp.y - cpy, asz = sp.z - cpz;
+                    var asLen = Math.sqrt(asx*asx + asy*asy + asz*asz) || 1;
+                    asx /= asLen; asy /= asLen; asz /= asLen;
+
+                    /* 노드 표면까지만 선을 그림 (화살표 tip과 정렬) */
+                    var nodeVisR_t = nodeR(lo.tm.userData.node) * 1.5;
+                    var nodeVisR_s = nodeR(lo.sm.userData.node) * 1.5;
+                    var HALF_H = ARROW_SIZE * 1.5 * 0.5;
+                    /* line end: 노드 표면 */
+                    var epx = tp.x - atx * nodeVisR_t, epy = tp.y - aty * nodeVisR_t, epz = tp.z - atz * nodeVisR_t;
+                    /* line start (bidir only): 노드 표면 */
+                    var esx = sp.x - asx * nodeVisR_s, esy = sp.y - asy * nodeVisR_s, esz = sp.z - asz * nodeVisR_s;
+
                     var SEGS = BEZIER_SEGS;
                     for (var bi = 0; bi <= SEGS; bi++) {
                         var t = bi / SEGS, mt = 1 - t;
@@ -1105,12 +1175,42 @@
                         arr[bi * 3 + 1] = mt*mt*sp.y + 2*mt*t*cpy + t*t*tp.y;
                         arr[bi * 3 + 2] = mt*mt*sp.z + 2*mt*t*cpz + t*t*tp.z;
                     }
+                    /* 끝점 override: 선이 노드 표면(=화살표 tip)에서 끝남 */
+                    arr[SEGS * 3] = epx; arr[SEGS * 3 + 1] = epy; arr[SEGS * 3 + 2] = epz;
+                    if (lo.arrowFrom) {
+                        arr[0] = esx; arr[1] = esy; arr[2] = esz;
+                    }
                     lo.line.geometry.attributes.position.needsUpdate = true;
 
+                    /* ── 화살표 sprite 위치/회전 ── */
+                    /* sprite center = line end - dir * HALF_H (tip이 line end와 일치) */
+                    lo.arrowTo.position.set(epx - atx*HALF_H, epy - aty*HALF_H, epz - atz*HALF_H);
+                    _spNDC.copy(sp).project(camera);
+                    _tpNDC.copy(tp).project(camera);
+                    var adx = _tpNDC.x - _spNDC.x, ady = _tpNDC.y - _spNDC.y;
+                    if (adx*adx + ady*ady > 0.0001) {
+                        lo.arrowMatTo.rotation = Math.atan2(ady, adx) - Math.PI * 0.5;
+                    }
+                    lo.arrowTo.visible = lo.line.visible;
+
+                    if (lo.arrowFrom) {
+                        lo.arrowFrom.position.set(esx - asx*HALF_H, esy - asy*HALF_H, esz - asz*HALF_H);
+                        if (adx*adx + ady*ady > 0.0001) {
+                            lo.arrowMatFrom.rotation = Math.atan2(-ady, -adx) - Math.PI * 0.5;
+                        }
+                        lo.arrowFrom.visible = lo.line.visible;
+                    }
+
                     var mat = lo.mat;
-                    mat.color.set(dark ? 0xffffff : 0x334155);
+                    var arrowColor = dark ? 0xaabbcc : 0x94a3b8;
+                    mat.color.set(arrowColor);
+                    lo.arrowMatTo.color.set(arrowColor);
+                    if (lo.arrowMatFrom) lo.arrowMatFrom.color.set(arrowColor);
                     if (lo.connected) {
-                        mat.opacity = dark ? 0.55 : 0.45;
+                        var opa = pinnedNode ? (dark ? 0.75 : 0.65) : (dark ? 0.4 : 0.32);
+                        mat.opacity = opa;
+                        lo.arrowMatTo.opacity = opa;
+                        if (lo.arrowMatFrom) lo.arrowMatFrom.opacity = opa;
 
                         /* 유사도 점수 레이블 — 곡선 중간점 기준 */
                         if (lo.scoreDiv) {
@@ -1127,7 +1227,10 @@
                         }
                     } else {
                         if (lo.scoreDiv) lo.scoreDiv.style.display = 'none';
-                        mat.opacity = (pinnedNode && lo.dimmed) ? 0 : (lo.dimmed ? 0.04 : (dark ? 0.55 : 0.45));
+                        var opa2 = (pinnedNode && lo.dimmed) ? 0 : (lo.dimmed ? 0.04 : (dark ? 0.4 : 0.32));
+                        mat.opacity = opa2;
+                        lo.arrowMatTo.opacity = opa2;
+                        if (lo.arrowMatFrom) lo.arrowMatFrom.opacity = opa2;
                     }
                 });
 

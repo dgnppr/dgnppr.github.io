@@ -14,6 +14,7 @@ show-diagram: true
 relations:
   - { type: extends, target: /wiki/data-architect/02_how_to_architect_medallion_well }
   - { type: extends, target: /wiki/data-architect/01_how_to_architect_medallion_well }
+confidence     : medium
 ---
 * TOC
 {:toc}

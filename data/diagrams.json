@@ -1,6 +1,6 @@
 {
   "design-pattern/00_how_to_use_strategy_pattern": {
-    "hash": "4947b223541b6f5681e3e058a74cefcf",
+    "hash": "c908e74a5e54ee23b545733524391484",
     "nodes": [
       {
         "id": "n1",
@@ -9,32 +9,37 @@
       },
       {
         "id": "n2",
-        "label": "변하는 부분(전략)",
+        "label": "변하는 전략 vs 고정 컨텍스트",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "안 변하는 부분(컨텍스트)",
-        "type": "step"
+        "label": "런타임 알고리즘 교체",
+        "type": ":end"
       },
       {
         "id": "n4",
-        "label": "결합도 낮추기",
-        "type": "end"
+        "label": "캡슐화 통한 데이터 보호",
+        "type": ":end"
       },
       {
         "id": "n5",
-        "label": "팩토리 패턴 결합",
+        "label": "전략 vs 템플릿 메서드",
         "type": "decision"
       },
       {
         "id": "n6",
-        "label": "조건문/싱글톤 대체",
-        "type": ":decision"
+        "label": "합성 기반 결합도 완화",
+        "type": "step"
       },
       {
         "id": "n7",
-        "label": "템플릿 메서드 비교",
+        "label": "알고리즘 수에 따른 선택",
+        "type": "decision"
+      },
+      {
+        "id": "n8",
+        "label": "팩토리 패턴 조합",
         "type": "step"
       }
     ],
@@ -44,40 +49,37 @@
         "to": "n2"
       },
       {
-        "from": "n1",
+        "from": "n2",
         "to": "n3"
       },
       {
         "from": "n2",
-        "to": "n3",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
         "to": "n4"
       },
       {
-        "from": "n2",
-        "to": "n5",
-        "label": "전략이 많을때"
+        "from": "n1",
+        "to": "n5"
       },
       {
-        "from": "n2",
-        "to": "n6",
-        "label": "자주 안변할때"
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n1",
+        "to": "n7"
       },
       {
         "from": "n7",
-        "to": "n4"
+        "to": "n8"
       }
     ]
   },
   "design-pattern/01_circuit_breaker": {
-    "hash": "8e6fbd172a8a627f371b56bc9d018580",
+    "hash": "cc5592d661263c08611aed8f6014b581",
     "nodes": [
       {
         "id": "n1",
-        "label": "공통 토픽 구조",
+        "label": "공통 토픽 사용",
         "type": "root"
       },
       {
@@ -87,22 +89,27 @@
       },
       {
         "id": "n3",
-        "label": "Convoy Effect",
+        "label": "운영/관리 부담",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "운영/개발 복잡성",
+        "label": "Convoy Effect",
         "type": "step"
       },
       {
         "id": "n5",
+        "label": "한계 및 트레이드오프",
+        "type": "decision"
+      },
+      {
+        "id": "n6",
         "label": "컨슈머 분산 처리",
         "type": "step"
       },
       {
-        "id": "n6",
-        "label": "서킷 브레이커 도입",
+        "id": "n7",
+        "label": "써킷 브레이커 도입",
         "type": "end"
       }
     ],
@@ -118,55 +125,59 @@
         "to": "n3"
       },
       {
-        "from": "n2",
-        "to": "n4"
-      },
-      {
         "from": "n3",
         "to": "n5"
       },
       {
-        "from": "n1",
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
         "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
       }
     ]
   },
   "java/00_what_is_java_virtual_thread": {
-    "hash": "73fbfb8a5fd4d4334b796a44f46d281b",
+    "hash": "f0ed4ac68da41a0fda90a41d23cc4927",
     "nodes": [
       {
         "id": "n1",
-        "label": "플랫폼 스레드 한계",
+        "label": "플랫폼 쓰레드 한계",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "I/O 블로킹 비용",
+        "label": "I/O 대기 비용 과다",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "가상 스레드 도입",
-        "type": "decision"
+        "label": "가상 쓰레드 도입",
+        "type": ":step"
       },
       {
         "id": "n4",
-        "label": "ForkJoinPool 스케줄링",
+        "label": "Carrier 스케줄링",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "I/O vs CPU 성능",
+        "label": "I/O 기반 vs CPU 바운드",
         "type": "decision"
       },
       {
         "id": "n6",
-        "label": "I/O 바운드 최적화",
+        "label": "I/O 성능 향상",
         "type": "end"
       },
       {
         "id": "n7",
-        "label": "CPU 바운드 플랫폼",
+        "label": "CPU 한계 유지",
         "type": "end"
       }
     ],
@@ -292,287 +303,37 @@
     ]
   },
   "jpa/00_jpa_dirty_checking": {
-    "hash": "86a94ac75afef2ac2ce0a54d7c1663ac",
+    "hash": "ce510a084c71fa3c1af99d397b8717aa",
     "nodes": [
       {
         "id": "n1",
-        "label": "JPA 더티 체킹",
+        "label": "더티 체킹",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "영속성 컨텍스트",
-        "type": "step"
-      },
-      {
-        "id": "n3",
         "label": "스냅샷 비교",
-        "type": ":step"
+        "type": "step"
       },
       {
-        "id": "n4",
+        "id": "n3",
         "label": "쓰기 지연 SQL",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "성능 vs 명확성",
-        "type": "decision"
-      },
-      {
-        "id": "n6",
-        "label": "명시적 saveFlush 선호",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      }
-    ]
-  },
-  "kafka/03_kafka_producer_summary": {
-    "hash": "ebd7bc0725b8ed7e9c2885a1be19aa8f",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "KafkaProducer",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "RecordAccumulator",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "Serialization",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "Partitioning",
-        "type": "decision"
-      },
-      {
-        "id": "n5",
-        "label": "Compression",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "Async Send",
         "type": ":end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5",
-        "label": "Default/Custom"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      }
-    ]
-  },
-  "reference": "\"\"",
-  "springboot/00_why_rollback_marked_transaction_is_unusable": {
-    "hash": "0cd82a01fb87ceef6fd8865c36c83851",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "공유 트랜잭션",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "트랜잭션 상태",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "롤백 마킹",
-        "type": ":setRollbackOnly"
       },
       {
         "id": "n4",
-        "label": "UnexpectedException",
-        "type": "decision"
+        "label": "성능/메모리",
+        "type": "step"
       },
       {
         "id": "n5",
-        "label": "원자성 보장",
+        "label": "예측 불가능성",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "명시적 save()",
         "type": "end"
-      },
-      {
-        "id": "n6",
-        "label": "전파/예외처리",
-        "type": "step"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n6",
-        "to": "n1",
-        "bidirectional": true,
-        "label": "우회 방법"
-      }
-    ]
-  },
-  "springboot/01_how_to_handle_transaction_event_listener_exception": {
-    "hash": "5d41435cf889794c37463f8c52391e7e",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "@TransactionalEventListener",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "TransactionPhase",
-        "type": ":step"
-      },
-      {
-        "id": "n3",
-        "label": "beforeCommit 예외 swallow",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "예외 전파 필요성",
-        "type": "decision"
-      },
-      {
-        "id": "n5",
-        "label": "@Async + AsyncExceptionHandler",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "커스텀 Synchronization 구현",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "예외 처리 분리 성공",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n4",
-        "to": "n6"
-      },
-      {
-        "from": "n5",
-        "to": "n7"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
-      }
-    ]
-  },
-  "system-design/00_url_shortener_design": {
-    "hash": "c6317c5ed29a12de1fe4ed15fbbd6a49",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "URL 단축기 설계",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "NoSQL 선택",
-        "type": ":step"
-      },
-      {
-        "id": "n3",
-        "label": "샤딩 필요성",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "단축 알고리즘",
-        "type": "decision"
-      },
-      {
-        "id": "n5",
-        "label": "변환 알고리즘",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "Snowflake ID",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "인메모리 캐시",
-        "type": "step"
       }
     ],
     "edges": [
@@ -592,6 +353,68 @@
       {
         "from": "n5",
         "to": "n6"
+      }
+    ]
+  },
+  "kafka/03_kafka_producer_summary": {
+    "hash": "2d2523d0d1f83e22c440f5e08dbe2038",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "KafkaProducer",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "send() 호출",
+        "type": ":step"
+      },
+      {
+        "id": "n3",
+        "label": "Serialization",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "Partitioning",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "Compression",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "RecordAccumulator",
+        "type": "step"
+      },
+      {
+        "id": "n7",
+        "label": "비동기 Broker 전송",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
       },
       {
         "from": "n6",
@@ -599,8 +422,182 @@
       }
     ]
   },
+  "reference": "\"\"",
+  "springboot/00_why_rollback_marked_transaction_is_unusable": {
+    "hash": "c5fee3188c42a0b866347c70d79c75cb",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "공유 트랜잭션",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "롤백 마킹",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "UnexpectedRollbackException",
+        "type": ":end"
+      },
+      {
+        "id": "n4",
+        "label": "원자성 보장",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "우회 방법들",
+        "type": "decision"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n2",
+        "to": "n4",
+        "bidirectional": true
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      }
+    ]
+  },
+  "springboot/01_how_to_handle_transaction_event_listener_exception": {
+    "hash": "b8ba213dd644f86c73894c40bbf22cd4",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "@TransactionalEventListener",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "TransactionPhase",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "beforeCommit 예외 묵음",
+        "type": ": step"
+      },
+      {
+        "id": "n4",
+        "label": "예외 전파 필요성",
+        "type": "decision"
+      },
+      {
+        "id": "n5",
+        "label": "Async + 커스텀 핸들러",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "비동기 예외 격리",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      }
+    ]
+  },
+  "system-design/00_url_shortener_design": {
+    "hash": "32918aaf67a5c70def472b16f7a16f4e",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "URL 단축기",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "NoSQL 선택",
+        "type": ":step"
+      },
+      {
+        "id": "n3",
+        "label": "해시 vs 압축",
+        "type": "decision"
+      },
+      {
+        "id": "n4",
+        "label": "변환 알고리즘",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "ID 생성기",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "Snowflake ID",
+        "type": "end"
+      },
+      {
+        "id": "n7",
+        "label": "Redis vs Memcached",
+        "type": "decision"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4",
+        "label": "변환 선택"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n2",
+        "to": "n7"
+      }
+    ]
+  },
   "system-design/01_web_crawler_design": {
-    "hash": "bbed6d35d7e923905ff7e919a520d24a",
+    "hash": "f95fe962909752598167a3a9144b8f5e",
     "nodes": [
       {
         "id": "n1",
@@ -614,7 +611,7 @@
       },
       {
         "id": "n3",
-        "label": "도메인 이름 변환기",
+        "label": "DNS 변환 & 캐시",
         "type": "step"
       },
       {
@@ -624,27 +621,96 @@
       },
       {
         "id": "n5",
-        "label": "컨텐츠 파서/중복검사",
+        "label": "중복/방문 검증",
+        "type": ":decision"
+      },
+      {
+        "id": "n6",
+        "label": "컨텐츠 저장소",
+        "type": "end"
+      },
+      {
+        "id": "n7",
+        "label": "URL 추출 & 필터",
+        "type": "step"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n3",
+        "to": "n4",
+        "bidirectional": true
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6",
+        "label": "중복됨"
+      },
+      {
+        "from": "n5",
+        "to": "n7",
+        "label": "신규"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      }
+    ]
+  },
+  "system-design/02_notification_system_design": {
+    "hash": "34cbe6545eb5156c1c4e3fe8b296ca97",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "알림 시스템 설계",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "멀티 SQS 큐",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "타입별 독립 처리",
+        "type": ":end"
+      },
+      {
+        "id": "n4",
+        "label": "메시지 큐 장애 대응",
+        "type": "decision"
+      },
+      {
+        "id": "n5",
+        "label": "DB 기반 재발행",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "URL 추출 및 필터링",
-        "type": ": step"
+        "label": "중복 전송 방지",
+        "type": "decision"
       },
       {
         "id": "n7",
-        "label": "방문 완료 처리",
+        "label": "인메모리/영속성 체크",
         "type": "step"
       },
       {
         "id": "n8",
-        "label": "탐색 전략(BFS/우선순위)",
-        "type": "decision"
+        "label": "우선순위 큐 매핑",
+        "type": "step"
       },
       {
         "id": "n9",
-        "label": "대규모 수집 설계",
+        "label": "분석용 로그 수집",
         "type": "end"
       }
     ],
@@ -658,60 +724,50 @@
         "to": "n3"
       },
       {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
         "from": "n4",
         "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
       },
       {
         "from": "n6",
         "to": "n7"
       },
       {
-        "from": "n2",
-        "to": "n8",
-        "bidirectional": true,
-        "label": "큐/우선순위"
+        "from": "n8",
+        "to": "n9"
       }
     ]
   },
-  "system-design/02_notification_system_design": {
-    "hash": "517f35dd489e713c00ac1e3453a7a074",
+  "system-design/03_sns_feed_system_design": {
+    "hash": "f902e64ed72cb779a06ffed7579ac721",
     "nodes": [
       {
         "id": "n1",
-        "label": "대규모 알림 시스템",
+        "label": "피드 시스템 설계",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "멀티 SQS 큐",
-        "type": "step"
+        "label": "쓰기 vs 읽기 부하",
+        "type": ":step"
       },
       {
         "id": "n3",
-        "label": "람다 기반 전송",
-        "type": ": step"
+        "label": "읽기 최적화 (Fan-out)",
+        "type": "step"
       },
       {
         "id": "n4",
-        "label": "중복/장애 처리",
+        "label": "인플루언서 예외 처리",
         "type": "decision"
       },
       {
         "id": "n5",
-        "label": "재시도용 저장소",
-        "type": "step"
+        "label": "푸시 기반 피드 캐시",
+        "type": "end"
       },
       {
         "id": "n6",
-        "label": "분석 DB 로깅",
+        "label": "풀링 기반 인플루언서 조회",
         "type": "end"
       }
     ],
@@ -731,85 +787,17 @@
       {
         "from": "n4",
         "to": "n5",
-        "label": "장애/중복 발생"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      }
-    ]
-  },
-  "system-design/03_sns_feed_system_design": {
-    "hash": "9fcbfc08e5d4030c483d9817757dc508",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "피드 시스템",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "쓰기 vs 읽기",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "읽기 최적화",
-        "type": ":step"
-      },
-      {
-        "id": "n4",
-        "label": "피드 캐시 업데이트",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "인플루언서 쓰기",
-        "type": "decision"
-      },
-      {
-        "id": "n6",
-        "label": "캐시 + DB 병합",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "읽기 성능 확보",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n4"
+        "label": "일반 사용자"
       },
       {
         "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
         "to": "n6",
         "label": "인플루언서"
-      },
-      {
-        "from": "n5",
-        "to": "n6",
-        "label": "일반"
       }
     ]
   },
   "llm/00_why_llm_is_decoder_only": {
-    "hash": "22a093d78687f750052c97af7a31c484",
+    "hash": "c96001fa0a93a61717bdb493704c06d9",
     "nodes": [
       {
         "id": "n1",
@@ -818,27 +806,27 @@
       },
       {
         "id": "n2",
-        "label": "Encoder-only",
+        "label": "Encoder-only (BERT)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Decoder-only",
-        "type": ":end"
+        "label": "Decoder-only (GPT)",
+        "type": "step"
       },
       {
         "id": "n4",
-        "label": "Encoder+Decoder",
+        "label": "Encoder+Decoder (T5)",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "스케일링/범용성",
-        "type": "decision"
+        "label": "스케일링 & 범용성",
+        "type": ": step"
       },
       {
         "id": "n6",
-        "label": "태스크별 최적 구조",
+        "label": "태스크별 구조 선택",
         "type": "end"
       }
     ],
@@ -869,7 +857,7 @@
         "from": "n4",
         "to": "n5",
         "bidirectional": true,
-        "label": "복잡도 vs 효율"
+        "label": "효율성 ↔ 복잡도"
       },
       {
         "from": "n5",
@@ -878,7 +866,7 @@
     ]
   },
   "data-architect/00_what_is_medaliion_architecture": {
-    "hash": "8a36d4ab819faafb770fe91345146f1f",
+    "hash": "2afc95554341f538997d1fe2496318cb",
     "nodes": [
       {
         "id": "n1",
@@ -908,7 +896,7 @@
       {
         "id": "n6",
         "label": "단일 진실원천",
-        "type": ": end"
+        "type": "end"
       }
     ],
     "edges": [
@@ -931,8 +919,7 @@
       },
       {
         "from": "n3",
-        "to": "n6",
-        "bidirectional": true
+        "to": "n6"
       }
     ]
   },
@@ -1011,42 +998,37 @@
     ]
   },
   "data-architect/02_how_to_architect_medallion_well": {
-    "hash": "979c764e14d749d90ed23a0f399a0f69",
+    "hash": "3b5b9403e481c3dd7d673ce06cbca481",
     "nodes": [
       {
         "id": "n1",
-        "label": "메달리언 레이어 배치",
+        "label": "메달리언 레이어",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "Bronze (적재)",
+        "label": "Bronze (원천)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Silver (정합/통합)",
+        "label": "Silver (정합)",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "Gold (집계/마트)",
-        "type": "step"
+        "label": "Gold (집계·마트)",
+        "type": "end"
       },
       {
         "id": "n5",
-        "label": "멱등성 MERGE 키",
-        "type": "decision"
+        "label": "재처리 복원력",
+        "type": ":decision"
       },
       {
         "id": "n6",
-        "label": "증분 vs 전체 재처리",
-        "type": ": step"
-      },
-      {
-        "id": "n7",
-        "label": "안티패턴 제거",
-        "type": "end"
+        "label": "멱등성 MERGE",
+        "type": "step"
       }
     ],
     "edges": [
@@ -1066,20 +1048,16 @@
         "from": "n5",
         "to": "n2",
         "bidirectional": true,
-        "label": "멱등성 보장"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
+        "label": "복원 불가 메타"
       },
       {
         "from": "n6",
-        "to": "n7"
+        "to": "n3"
       }
     ]
   },
   "data-architect/04_what_is_ontology": {
-    "hash": "8cfc0ddd3b134f96ca8dc10583d96e9b",
+    "hash": "ecdd013418331b91cb1525082736bb7a",
     "nodes": [
       {
         "id": "n1",
@@ -1099,7 +1077,7 @@
       {
         "id": "n4",
         "label": "동일성 해소",
-        "type": "step"
+        "type": ": step"
       },
       {
         "id": "n5",
@@ -1129,7 +1107,7 @@
     ]
   },
   "data-architect/05_how_to_implement_ontology": {
-    "hash": "c2c5fdcf9d8560fcf3f503a5a9110160",
+    "hash": "f99d7eac6cfbf75be5885e7605a83745",
     "nodes": [
       {
         "id": "n1",
@@ -1138,27 +1116,27 @@
       },
       {
         "id": "n2",
-        "label": "4가지 부재 (Identity, Link, Action Guard, Definition)",
+        "label": "4가지 부재 (ID, Link 등)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "온톨로지 vs 시맨틱 레이어",
-        "type": ":step"
+        "label": "시맨틱 레이어 vs 온톨로지",
+        "type": ": step"
       },
       {
         "id": "n4",
-        "label": "온톨로지 설계",
+        "label": "온톨로지 설계 4단계",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "Action Gate & SCD2 정의",
+        "label": "Action Guard & SCD2 정의",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "Dynamic Layer (의사결정 피드백)",
+        "label": "Dynamic Layer 피드백 루프",
         "type": "step"
       },
       {
@@ -1189,17 +1167,23 @@
         "to": "n6"
       },
       {
+        "from": "n1",
+        "to": "n3",
+        "bidirectional": true,
+        "label": "계층 차이"
+      },
+      {
         "from": "n6",
         "to": "n7"
       }
     ]
   },
   "data-architect/06_ontology_core_concepts": {
-    "hash": "a0005b51c4848934d17ebe0ed6991b3e",
+    "hash": "3e7984d8c6c9ce92a9a8e2201bb59b40",
     "nodes": [
       {
         "id": "n1",
-        "label": "Wikidata 모델링",
+        "label": "Ontology core",
         "type": "root"
       },
       {
@@ -1215,21 +1199,17 @@
       {
         "id": "n4",
         "label": "P31 (instance of)",
-        "type": "decision"
+        "type": "step"
       },
       {
         "id": "n5",
         "label": "P279 (subclass of)",
-        "type": "decision"
+        "type": "step"
       },
       {
         "id": "n6",
-        "label": "추론(Inference)"
-      },
-      {
-        "id": "n7",
-        "label": "SPARQL transitive closure",
-        "type": "end"
+        "label": "transitive inference",
+        "type": ":end"
       }
     ],
     "edges": [
@@ -1242,22 +1222,14 @@
         "to": "n3"
       },
       {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
         "from": "n4",
         "to": "n5",
         "bidirectional": true,
-        "label": "P31 vs P279"
+        "label": "inference"
       },
       {
         "from": "n5",
         "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
       }
     ]
   },
@@ -1418,51 +1390,104 @@
     ]
   },
   "data-architect/03_medallion_advanced_patterns": {
-    "hash": "155c64d0a4116fddf4cb5ed16b9e77a8",
+    "hash": "90a2f604497309db5e6d592c02240443",
     "nodes": [
       {
         "id": "n1",
-        "label": "Medallion Rulebook",
+        "label": "메달리언 패턴",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "Silver Layer",
+        "label": "WAP (검증 게이트)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Gold Layer",
+        "label": "SCD Type 2 (이력)",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "WAP Pattern",
+        "label": "Late-Arriving Data",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "SCD Type 2",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "Late Arrival Fix",
-        "type": "step"
-      },
-      {
-        "id": "n7",
         "label": "Identity Resolution",
         "type": "step"
       },
       {
-        "id": "n8",
-        "label": "Gold 2-Tier",
+        "id": "n6",
+        "label": "Gold 2-Tier (분리)",
+        "type": ":end"
+      },
+      {
+        "id": "n7",
+        "label": "안티패턴 증상",
+        "type": "decision"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n1",
+        "to": "n7",
+        "bidirectional": true,
+        "label": "패턴 vs 안티패턴"
+      }
+    ]
+  },
+  "essay/00_is_lombok_necessary": {
+    "hash": "311016e17a8f79dadad38e04b14100e8",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "롬복 도입 배경",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "편의성 vs 위험성",
+        "type": ":decision"
+      },
+      {
+        "id": "n3",
+        "label": "어노테이션 기반 생성",
         "type": "step"
       },
       {
-        "id": "n9",
-        "label": "Anti-pattern Symptoms",
+        "id": "n4",
+        "label": "컴파일 시점 AST 처리",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "코드 가독성 향상",
+        "type": "end"
+      },
+      {
+        "id": "n6",
+        "label": "런타임 문제 잠재적 발생",
         "type": "end"
       }
     ],
@@ -1480,90 +1505,22 @@
         "to": "n4"
       },
       {
-        "from": "n3",
+        "from": "n4",
         "to": "n5"
       },
       {
-        "from": "n3",
+        "from": "n4",
         "to": "n6"
       },
       {
-        "from": "n3",
-        "to": "n7"
-      },
-      {
-        "from": "n3",
-        "to": "n8"
-      },
-      {
-        "from": "n4",
-        "to": "n9"
-      },
-      {
         "from": "n5",
-        "to": "n9"
-      },
-      {
-        "from": "n6",
-        "to": "n9"
-      },
-      {
-        "from": "n7",
-        "to": "n9"
-      },
-      {
-        "from": "n8",
-        "to": "n9"
-      }
-    ]
-  },
-  "essay/00_is_lombok_necessary": {
-    "hash": "d3f6cbb95921c54a12075481de95fcab",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "Lombok 도입",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "편의성 vs 위험",
-        "type": ":bidirectional"
-      },
-      {
-        "id": "n3",
-        "label": "AST 기반 코드 생성",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "컴파일 시점 처리",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "가독성/생산성 향상",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2",
+        "to": "n6",
         "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
       }
     ]
   },
   "essay/01_why_redis_single_threaded": {
-    "hash": "caee07e5cff30745694ca5b3da7b7fc1",
+    "hash": "81cf6469cf30f0b3c1ded087f8f4fe6a",
     "nodes": [
       {
         "id": "n1",
@@ -1572,34 +1529,39 @@
       },
       {
         "id": "n2",
-        "label": "동기화/컨텍스트비용 절감",
-        "type": ":end"
-      },
-      {
-        "id": "n3",
-        "label": "CPU vs I/O 병목분석",
+        "label": "동기화/컨텍스트 비용",
         "type": "step"
       },
       {
+        "id": "n3",
+        "label": "메모리·네트워크 병목",
+        "type": ":step"
+      },
+      {
         "id": "n4",
-        "label": "커널I/O 멀티플렉싱",
+        "label": "이벤트 루프 모델",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "백그라운드서브스레드",
+        "label": "백그라운드 I/O 서브스레드",
         "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "성능과 복잡도 관계",
+        "type": "decision"
       }
     ],
     "edges": [
       {
         "from": "n1",
-        "to": "n2",
-        "bidirectional": true
+        "to": "n2"
       },
       {
-        "from": "n1",
-        "to": "n3"
+        "from": "n2",
+        "to": "n3",
+        "bidirectional": true
       },
       {
         "from": "n3",
@@ -1608,11 +1570,15 @@
       {
         "from": "n4",
         "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
       }
     ]
   },
   "essay/02_is_system_time_really_correct": {
-    "hash": "de792184901c578754ff6affa6bfeec1",
+    "hash": "443c151d6631cde23bea8618a6570539",
     "nodes": [
       {
         "id": "n1",
@@ -1621,419 +1587,27 @@
       },
       {
         "id": "n2",
-        "label": "CLOCK_REALTIME (wall-clock)",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "NTP/adjtime sync",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "hardware crystal drift",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "distributed skew",
-        "type": "decision"
-      },
-      {
-        "id": "n6",
-        "label": "Instant.now() vs System",
-        "type": ": step"
-      },
-      {
-        "id": "n7",
-        "label": "cloud sync (Amazon)",
-        "type": "step"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n2",
-        "to": "n4",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n4",
-        "bidirectional": true
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n1",
-        "to": "n6"
-      },
-      {
-        "from": "n5",
-        "to": "n7"
-      }
-    ]
-  },
-  "essay/03_which_jwt_algorithm_is_suitable": {
-    "hash": "7c476c5a2c4cf0a22ba322aacd96540e",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "JWT 알고리즘 선택",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "symmetric vs asymmetric",
+        "label": "CLOCK_REALTIME 기반",
         "type": ":step"
       },
       {
         "id": "n3",
-        "label": "HS (HMAC-SHA)",
+        "label": "하드웨어/OS 의존성",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "RS (RSA-SHA)",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "비트수 선택",
-        "type": "decision"
-      },
-      {
-        "id": "n6",
-        "label": "256/384/512 비트",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "보안 vs 성능",
-        "type": "step"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n2",
-        "to": "n4",
-        "bidirectional": true
-      },
-      {
-        "from": "n3",
-        "to": "n5"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7",
-        "bidirectional": true
-      }
-    ]
-  },
-  "essay/04_how_to_create_text_fixture": {
-    "hash": "e92265c18d0099da2278cad05d72d966",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "테스트 메서드 내 정의",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "직관성 및 문서화",
-        "type": ":end"
-      },
-      {
-        "id": "n3",
-        "label": "중복 코드 증가",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "내부 팩토리 메서드",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "외부 팩토리 클래스",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "Enum Fixture 결합",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "Fixture Monkey/Instancio",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n1",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
-      }
-    ]
-  },
-  "retrospect/00_2023_year_retrospect": {
-    "hash": "c2bf8ad8f2f5d6fef1eadefde1012c4e",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "2023 회고",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "면접을 통한 성찰",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "기초의 중요성 재확인",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "기술적 성장 vs 기초 강화",
+        "label": "NTP 동기화 한계",
         "type": "decision"
       },
       {
         "id": "n5",
-        "label": "논리 중심 문제 해결",
+        "label": "Instant.now() 대안",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "자기 성찰과 단점 인지",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "2024 목표 설정",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5",
-        "bidirectional": true
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
-      }
-    ]
-  },
-  "retrospect/01_2024_january_retrospect": {
-    "hash": "e00e7dd09a5b8831072c58951a225a04",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "한달간의 성장",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "시스템 아키텍처",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "데이터 질의 파트",
-        "type": "decision"
-      },
-      {
-        "id": "n4",
-        "label": "이펙티브 자바/스프링",
-        "type": ":end"
-      },
-      {
-        "id": "n5",
-        "label": "2월 Deep Dive 목표",
-        "type": "step"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n2",
-        "to": "n4",
-        "bidirectional": true
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      }
-    ]
-  },
-  "retrospect/02_2024_march_3rd_retrospect": {
-    "hash": "a49deb702dade19951bd839b8f3e2118",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "신규 입사 및 온보딩",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "제휴주문 도메인 분석",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "아키텍처 마이그레이션",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "상품 연동 및 예외 처리",
-        "type": "decision"
-      },
-      {
-        "id": "n5",
-        "label": "다양한 팀 협업(CS/상품)",
-        "type": ": step"
-      },
-      {
-        "id": "n6",
-        "label": "코딩 vs 업무의 구분",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "협업과 소통 중심 마인드",
-        "type": "end"
-      }
-    ],
-    "edges": [
-      {
-        "from": "n1",
-        "to": "n2"
-      },
-      {
-        "from": "n2",
-        "to": "n3"
-      },
-      {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
-      }
-    ]
-  },
-  "retrospect/03_2024_march_retrospect": {
-    "hash": "29784e725d7b631c5f05c53f50549c99",
-    "nodes": [
-      {
-        "id": "n1",
-        "label": "제휴주문 도메인",
-        "type": "root"
-      },
-      {
-        "id": "n2",
-        "label": "통신 프로토콜 핵심",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "데이터 정합성",
-        "type": "step"
-      },
-      {
-        "id": "n4",
-        "label": "비즈니스 이해도",
-        "type": "decision"
-      },
-      {
-        "id": "n5",
-        "label": "기술 스택 분석",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "EDA 전환 과제",
+        "label": "분산 시스템 오차",
         "type": "end"
       }
     ],
@@ -2061,42 +1635,162 @@
       }
     ]
   },
-  "retrospect/04_2024_september_retrospect": {
-    "hash": "59e2fcc67adc0bc381be760db5399fae",
+  "essay/03_which_jwt_algorithm_is_suitable": {
+    "hash": "9e851c9a2508ca7fff90db28ae08d3c4",
     "nodes": [
       {
         "id": "n1",
-        "label": "6개월간의 성과",
+        "label": "JWT 알고리즘 선택",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "헥사고날 아키텍처 도입",
-        "type": "step"
+        "label": "HS (대칭키)",
+        "type": ":step"
       },
       {
         "id": "n3",
-        "label": "Circuit Breaker 적용",
+        "label": "RS (비대칭키)",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "출고 예정일 개선",
+        "label": "보안 vs 속도",
+        "type": "decision"
+      },
+      {
+        "id": "n5",
+        "label": "256비트 권장",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n1",
+        "to": "n3"
+      },
+      {
+        "from": "n2",
+        "to": "n4",
+        "bidirectional": true
+      },
+      {
+        "from": "n3",
+        "to": "n4",
+        "bidirectional": true
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      }
+    ]
+  },
+  "essay/04_how_to_create_text_fixture": {
+    "hash": "4b038e6e99d8bfcfe414fee0a9378d9d",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "테스트 픽스쳐 생성",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "메서드 내 정의",
+        "type": ":step"
+      },
+      {
+        "id": "n3",
+        "label": "내부/외부 팩토리",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "Enum Fixture",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "개인 성장 vs 회사 기여",
-        "type": "decision"
+        "label": "Fixture Monkey / Instancio",
+        "type": "step"
       },
       {
         "id": "n6",
-        "label": "기술 역량 위기감",
-        "type": ": step"
+        "label": "선호하는 전략",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3",
+        "bidirectional": true,
+        "label": "중복/가독성"
+      },
+      {
+        "from": "n3",
+        "to": "n4",
+        "bidirectional": true,
+        "label": "파라미터 복잡도"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      }
+    ]
+  },
+  "retrospect/00_2023_year_retrospect": {
+    "hash": "bf67c28bb0ea09cde10c4129531f32e7",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "2023 회고",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "취업 준비",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "기술 면접",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "부족함 자각",
+        "type": "decision"
+      },
+      {
+        "id": "n5",
+        "label": "CS 기초 강화",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "엔지니어 지향",
+        "type": "end"
       },
       {
         "id": "n7",
-        "label": "2024 하반부 목표",
+        "label": "자아 성찰",
+        "type": ": step"
+      },
+      {
+        "id": "n8",
+        "label": "2024 목표",
         "type": "end"
       }
     ],
@@ -2115,13 +1809,138 @@
       },
       {
         "from": "n4",
-        "to": "n5"
+        "to": "n5",
+        "label": "부족함 인지"
       },
       {
         "from": "n5",
-        "to": "n6",
-        "bidirectional": true,
-        "label": "성장과기여의 균형"
+        "to": "n6"
+      },
+      {
+        "from": "n1",
+        "to": "n7"
+      },
+      {
+        "from": "n7",
+        "to": "n8"
+      }
+    ]
+  },
+  "retrospect/01_2024_january_retrospect": {
+    "hash": "72b9a4458a23980626d4a295594f0e3e",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "1월 회고",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "시스템 디자인",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "코드의 고민",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "책 리뷰 스터디",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "2월 목표: Deep Dive",
+        "type": ":end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n1",
+        "to": "n3"
+      },
+      {
+        "from": "n1",
+        "to": "n4"
+      },
+      {
+        "from": "n2",
+        "to": "n5"
+      },
+      {
+        "from": "n3",
+        "to": "n5"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      }
+    ]
+  },
+  "retrospect/02_2024_march_3rd_retrospect": {
+    "hash": "18f57a03fc8a6bb5018d3043f0d1cf0b",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "신규 입사",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "온보딩 과정",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "제휴 주문 도메인",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "아키텍처 마이그레이션",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "협업 커뮤니케이션",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "코딩 vs 업무",
+        "type": ":decision"
+      },
+      {
+        "id": "n7",
+        "label": "조직 내 역할",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n2",
+        "to": "n4"
+      },
+      {
+        "from": "n3",
+        "to": "n5"
+      },
+      {
+        "from": "n4",
+        "to": "n6"
       },
       {
         "from": "n6",
@@ -2129,8 +1948,136 @@
       }
     ]
   },
+  "retrospect/03_2024_march_retrospect": {
+    "hash": "f926adb8cc3c11fd26261676311b4d4b",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "제휴주문 도메인",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "통신 프로토콜",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "데이터 정합성",
+        "type": ":end"
+      },
+      {
+        "id": "n4",
+        "label": "비즈니스 이해도",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "협업 커뮤니케이션",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "기술 스택 분석",
+        "type": "decision"
+      },
+      {
+        "id": "n7",
+        "label": "EDA 구조 개선",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n2",
+        "to": "n3"
+      },
+      {
+        "from": "n4",
+        "to": "n5",
+        "bidirectional": true
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
+      }
+    ]
+  },
+  "retrospect/04_2024_september_retrospect": {
+    "hash": "fdd609bf9411233cb32eb580a4b3df3f",
+    "nodes": [
+      {
+        "id": "n1",
+        "label": "신입 6개월 성과",
+        "type": "root"
+      },
+      {
+        "id": "n2",
+        "label": "헥사고날 아키텍처",
+        "type": "step"
+      },
+      {
+        "id": "n3",
+        "label": "Circuit Breaker",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "출고 예정일 개선",
+        "type": "step"
+      },
+      {
+        "id": "n5",
+        "label": "비즈니스 기여도",
+        "type": "end"
+      },
+      {
+        "id": "n6",
+        "label": "자기 계발 계획",
+        "type": "end"
+      }
+    ],
+    "edges": [
+      {
+        "from": "n1",
+        "to": "n2"
+      },
+      {
+        "from": "n1",
+        "to": "n3"
+      },
+      {
+        "from": "n1",
+        "to": "n4"
+      },
+      {
+        "from": "n2",
+        "to": "n5"
+      },
+      {
+        "from": "n3",
+        "to": "n5"
+      },
+      {
+        "from": "n4",
+        "to": "n5"
+      },
+      {
+        "from": "n5",
+        "to": "n6"
+      }
+    ]
+  },
   "retrospect/05_2025_goodbye_kyobobook_retrospect": {
-    "hash": "e64d05106f3f1426e3e5d060158af338",
+    "hash": "bb7fb3d99dd1cc193fabf5fa909af2a6",
     "nodes": [
       {
         "id": "n1",
@@ -2145,7 +2092,7 @@
       {
         "id": "n3",
         "label": "새로운 직장/포지션",
-        "type": ":step"
+        "type": ": step"
       },
       {
         "id": "n4",
@@ -2155,6 +2102,11 @@
       {
         "id": "n5",
         "label": "자신감과 믿음",
+        "type": "step"
+      },
+      {
+        "id": "n6",
+        "label": "최선을 다하는 태도",
         "type": "end"
       }
     ],
@@ -2173,41 +2125,43 @@
       },
       {
         "from": "n4",
-        "to": "n5"
+        "to": "n5",
+        "bidirectional": true,
+        "label": "두려움 ↔ 믿음"
       }
     ]
   },
   "retrospect/06_2026_code_is_cheap": {
-    "hash": "f57137e353bc7395cfef89c09e87e5af",
+    "hash": "e06b62dc0ae96e2100c7657d08493944",
     "nodes": [
       {
         "id": "n1",
-        "label": "코드 제작 비용 0",
+        "label": "코드 비용 제로 시대",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "LLM 위임과 생산성",
-        "type": "step"
+        "label": "LLM 위임의 편함",
+        "type": ":step"
       },
       {
         "id": "n3",
-        "label": "문제 해결 능력",
-        "type": ":decision"
-      },
-      {
-        "id": "n4",
-        "label": "분석·예측·처방",
+        "label": "성장 곡선 지연",
         "type": "step"
       },
       {
+        "id": "n4",
+        "label": "문제 해결 능력",
+        "type": "decision"
+      },
+      {
         "id": "n5",
-        "label": "생산성 vs 성장 곡선",
+        "label": "분석·기획·추론",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "의식적 글/코드 작성",
+        "label": "의식적 사고 기록",
         "type": "end"
       }
     ],
@@ -2218,7 +2172,8 @@
       },
       {
         "from": "n2",
-        "to": "n3"
+        "to": "n3",
+        "bidirectional": true
       },
       {
         "from": "n3",

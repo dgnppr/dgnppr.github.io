@@ -1,1 +1,1 @@
-{% assign tag_list = page.tag | split: " " %}{% for tag in tag_list %}{% unless tag == "" %}<a class="post-tag-item" href="/tags/">#{{ tag }}</a> {% endunless %}{% endfor %}
+{% assign tag_list = page.tag | split: " " %}{% for tag in tag_list %}{% unless tag == "" %}<a class="post-tag-item" href="/tags/#{{ tag }}">#{{ tag }}</a> {% endunless %}{% endfor %}

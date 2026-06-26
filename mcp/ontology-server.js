@@ -59,6 +59,27 @@ const TYPE_AFFINITY = {
   tool:    { concept: 0.04, adr: 0.03, insight: 0.02, problem: 0.01, event: 0.00, tool: 0.02 },
 };
 
+// confidence → score multiplier
+const CONFIDENCE_WEIGHT = { high: 1.10, medium: 1.00, low: 0.85 };
+
+// valid_from/valid_to 기준 현재 유효 여부 판단
+function isValid(node) {
+  const today = new Date().toISOString().slice(0, 10);
+  if (node.valid_from && today < node.valid_from) return false;
+  if (node.valid_to   && today > node.valid_to)   return false;
+  return true;
+}
+
+// 노드에 validity 메타 첨부 (valid_from/valid_to가 있는 경우만)
+function attachValidity(node) {
+  if (!node) return node;
+  const out = { ...node };
+  if (node.valid_from || node.valid_to) {
+    out.valid = isValid(node);
+  }
+  return out;
+}
+
 // tag 전체 분포에서 희소성 계산용 캐시
 let _tagFreqCache = null;
 function getTagFrequencies(graph) {
@@ -634,7 +655,7 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
     const fp = path.join(ROOT, node.path);
     const content = fs.existsSync(fp) ? fs.readFileSync(fp, "utf-8") : "(파일 없음)";
     const relations = graph.edges.filter(e => e.from === args.id || e.to === args.id);
-    return { content: [{ type: "text", text: JSON.stringify({ ...node, relations, content }, null, 2) }] };
+    return { content: [{ type: "text", text: JSON.stringify({ ...attachValidity(node), relations, content }, null, 2) }] };
   }
 
   // ── ontology_related ───────────────────────────────────────────────────────
@@ -712,14 +733,18 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
       // type affinity
       const affinity = anchorType ? (TYPE_AFFINITY[anchorType]?.[candType] ?? 0) : 0;
 
+      // confidence multiplier (노드에 confidence 필드가 있는 경우 가중치 적용)
+      const confidenceKey = node?.confidence ?? "medium";
+      const confMultiplier = CONFIDENCE_WEIGHT[confidenceKey] ?? 1.00;
+
       let finalScore;
-      if (mode === "graph")    finalScore = gNorm + affinity;
-      else if (mode === "semantic") finalScore = sSem * 0.70 + tagScore * 0.18 + affinity;
+      if (mode === "graph")    finalScore = (gNorm + affinity) * confMultiplier;
+      else if (mode === "semantic") finalScore = (sSem * 0.70 + tagScore * 0.18 + affinity) * confMultiplier;
       else {
         // hybrid: 그래프 우선, 임베딩은 미연결 발견용
-        if (g && s) finalScore = gNorm * 0.55 + sSem * 0.35 + tagScore * 0.05 + affinity;
-        else if (g) finalScore = gNorm * 0.80 + tagScore * 0.05 + affinity;
-        else        finalScore = sSem  * 0.45 + tagScore * 0.10 + affinity; // undiscovered
+        if (g && s) finalScore = (gNorm * 0.55 + sSem * 0.35 + tagScore * 0.05 + affinity) * confMultiplier;
+        else if (g) finalScore = (gNorm * 0.80 + tagScore * 0.05 + affinity) * confMultiplier;
+        else        finalScore = (sSem  * 0.45 + tagScore * 0.10 + affinity) * confMultiplier; // undiscovered
       }
 
       return {
@@ -729,6 +754,8 @@ server.setRequestHandler(CallToolRequestSchema, async (req) => {
         status: node?.status ?? s?.payload?.status ?? "",
         score:  +finalScore.toFixed(3),
         layer:  g && s ? "both" : g ? "graph" : "semantic",
+        ...(node?.valid_from || node?.valid_to ? { valid: isValid(node) } : {}),
+        ...(node?.confidence ? { confidence: node.confidence } : {}),
         signals: {
           ...(g ? { graph: { hop: g.hop, normalized: +gNorm.toFixed(3), path: g.path } } : {}),
           ...(s ? { semantic: +sSem.toFixed(3) } : {}),

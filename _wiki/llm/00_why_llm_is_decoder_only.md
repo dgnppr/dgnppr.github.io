@@ -11,6 +11,8 @@ parent  : [[/llm]]
 latex   : true
 status  : complete
 show-diagram: true
+confidence     : medium
+valid_from     : 2026-06-25
 ---
 
 GPT로는 챗봇을 만드는데, 왜 BERT로는 만들기 어려울까? 둘 다 같은 Transformer에서 출발했는데 쓰임새는 정반대다. 한쪽은 분류와 검색에, 한쪽은 대화와 생성에 쓰인다. 그 차이의 뿌리에는 **아키텍처 구조**가 있다.

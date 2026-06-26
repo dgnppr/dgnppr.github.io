@@ -10,7 +10,8 @@ comment : true
 public  : true
 parent  : [[/essay]]
 latex   : true
-status  : complete
+status      : complete
+confidence  : high
 show-diagram: true
 relations:
   - { type: references, target: /wiki/cloud/01_how_to_operate_iam_well }

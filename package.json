@@ -2,7 +2,7 @@
   "name": "dragonappear.github.io",
   "version": "1.0.0",
   "description": "data generator",
-  "main": "generateData.js",
+  "main": "scripts/generateData.js",
   "dependencies": {
     "@google/genai": "^2.9.0",
     "@modelcontextprotocol/sdk": "^1.29.0",

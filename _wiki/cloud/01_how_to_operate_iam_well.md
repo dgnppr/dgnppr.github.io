@@ -11,6 +11,10 @@ status  : complete
 show-diagram : true
 public  : true
 parent  : [[/cloud]]
+relations:
+  - { type: references, target: concept/cloud/02_authenticate_gcp_without_service_accounts }
+confidence     : high
+valid_from     : 2026-06-20
 ---
 
 > AWS·GCP 어느 쪽을 쓰든 서비스 계정 관리의 원칙은 같다. 침해 시 **블래스트 레디어스를 최소화**하는 것. 각 철칙 아래 양 플랫폼 구현을 나란히 적는다.

@@ -13,6 +13,8 @@ public  : true
 parent  : [[/cloud]]
 relations:
   - { type: extends, target: /wiki/cloud/01_how_to_operate_iam_well }
+confidence     : medium
+valid_from     : 2026-06-25
 ---
 
 ## 핵심 개념 — ADC (Application Default Credentials)

@@ -12,6 +12,8 @@ public  : true
 parent  : [[/cloud]]
 relations:
   - { type: references, target: /wiki/cloud/01_how_to_operate_iam_well }
+confidence     : medium
+valid_from     : 2026-06-25
 ---
 
 > "방화벽을 열었는데 왜 연결이 안 되죠?" — GCP 네트워크에서 가장 흔한 첫 질문이다. 이 글은 그 질문에서 출발해, **Google Professional Cloud Architect(PCA)** 시험의 VPC 문제가 결국 "올바른 연결 방식 선택"이라는 의사결정임을 보인다. 이 글은 PCA 준비 시리즈의 1편이자, 이후 모든 편이 그 위에 쌓이는 네트워크 토대다.

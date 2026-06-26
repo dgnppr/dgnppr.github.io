@@ -10,6 +10,10 @@ latex   : true
 status  : draft
 public  : true
 parent  : [[/data-engineering]]
+relations:
+  - { type: references, target: /wiki/data-architect/00_what_is_medaliion_architecture }
+confidence     : medium
+valid_from     : 2026-06-26
 ---
 
 ## 개요

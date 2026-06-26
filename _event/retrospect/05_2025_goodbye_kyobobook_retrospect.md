@@ -11,6 +11,8 @@ parent  : [[/retrospect]]
 latex   : true
 status  : complete
 show-diagram: true
+valid_from: 2024-03-11
+valid_to: 2025-04-11
 relations:
   - { type: extends, target: /event/retrospect/04_2024_september_retrospect }
 ---

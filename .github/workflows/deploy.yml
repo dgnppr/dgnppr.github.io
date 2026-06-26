@@ -29,7 +29,7 @@ jobs:
       - name: Generate data
         run: |
           mkdir -p data/tags data/metadata
-          node generateData.js
+          node scripts/generateData.js
           node scripts/generate-writing-stats.js
 
       - uses: ruby/setup-ruby@v1

@@ -12,6 +12,8 @@ parent  : [[/retrospect]]
 latex   : true
 status  : complete
 show-diagram: true
+valid_from: 2023-01-01
+valid_to: 2023-12-31
 ---
 
 * TOC

@@ -12,6 +12,8 @@ parent  : [[/kafka]]
 latex   : true
 status  : complete
 show-diagram: true
+confidence     : medium
+valid_from     : 2025-01-03
 ---
 
 * TOC

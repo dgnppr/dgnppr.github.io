@@ -1,3 +1,4 @@
+document.addEventListener('DOMContentLoaded', function() {
 (function() {
     const TOC_ID = '#markdown-toc';
     const ACTIVE_CLASS = 'active-toc';
@@ -75,3 +76,4 @@
         activeHeadingId = currentHeading.id;
     }, { passive: true });
 })();
+});

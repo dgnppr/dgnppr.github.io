@@ -12,6 +12,7 @@ parent  : [[/design-pattern]]
 latex   : true
 status  : complete
 show-diagram: true
+confidence     : high
 ---
 
 * TOC

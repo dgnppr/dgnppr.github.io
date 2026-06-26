@@ -14,6 +14,7 @@ status  : complete
 show-diagram: true
 relations:
   - { type: references, target: /wiki/jpa/00_jpa_dirty_checking }
+confidence     : high
 ---
 
 * TOC

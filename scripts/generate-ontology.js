@@ -67,6 +67,14 @@ for (const [type, cfg] of Object.entries(SCHEMA.entity_types)) {
     for (const r of rels) {
       if (r?.type && r?.target) edges.push({ from: id, to: normalizeTarget(r.target), type: r.type });
     }
+    // supersedes frontmatter → 자동 엣지 생성 (relations 없이도)
+    if (meta.supersedes) {
+      const supersedesTarget = normalizeTarget(String(meta.supersedes));
+      const alreadyDeclared = rels.some(r => r?.type === 'supersedes' && normalizeTarget(r.target) === supersedesTarget);
+      if (!alreadyDeclared) {
+        edges.push({ from: id, to: supersedesTarget, type: 'supersedes' });
+      }
+    }
   }
 }
 

@@ -11,6 +11,7 @@ public  : true
 parent  : [[/essay]]
 latex   : true
 status  : complete
+confidence: medium
 show-diagram: true
 relations:
   - { type: references, target: /wiki/java/00_what_is_java_virtual_thread }

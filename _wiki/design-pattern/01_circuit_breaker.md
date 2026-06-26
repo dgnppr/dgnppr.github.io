@@ -13,6 +13,7 @@ status  : complete
 show-diagram: true
 relations:
   - { type: references, target: /wiki/design-pattern/00_how_to_use_strategy_pattern }
+confidence     : high
 ---
 
 * TOC

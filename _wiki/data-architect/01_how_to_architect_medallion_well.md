@@ -13,6 +13,7 @@ status  : complete
 show-diagram: true
 relations:
   - { type: extends, target: /wiki/data-architect/00_what_is_medaliion_architecture }
+confidence     : medium
 ---
 * TOC
 {:toc}

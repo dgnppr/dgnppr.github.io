@@ -10,7 +10,11 @@
         "adr",
         "guide"
       ],
-      "date": "2026-06-24"
+      "date": "2026-06-24",
+      "actions": [
+        "motivate",
+        "review"
+      ]
     },
     "concept/cloud/01_how_to_operate_iam_well": {
       "id": "concept/cloud/01_how_to_operate_iam_well",
@@ -24,7 +28,9 @@
         "iam",
         "security"
       ],
-      "date": "2026-06-20"
+      "date": "2026-06-20",
+      "valid_from": "Sat",
+      "confidence": "high"
     },
     "concept/cloud/01_vpc_for_pca": {
       "id": "concept/cloud/01_vpc_for_pca",
@@ -39,7 +45,9 @@
         "pca",
         "system-design"
       ],
-      "date": "2026-06-25"
+      "date": "2026-06-25",
+      "valid_from": "Thu",
+      "confidence": "medium"
     },
     "concept/cloud/02_authenticate_gcp_without_service_accounts": {
       "id": "concept/cloud/02_authenticate_gcp_without_service_accounts",
@@ -53,7 +61,9 @@
         "iam",
         "security"
       ],
-      "date": "2026-06-25"
+      "date": "2026-06-25",
+      "valid_from": "Thu",
+      "confidence": "medium"
     },
     "concept/data-analysis/00_how_to_design_funnel": {
       "id": "concept/data-analysis/00_how_to_design_funnel",
@@ -66,7 +76,8 @@
         "funnel",
         "analytics"
       ],
-      "date": "2026-06-01"
+      "date": "2026-06-01",
+      "confidence": "medium"
     },
     "concept/data-architect/00_what_is_medaliion_architecture": {
       "id": "concept/data-architect/00_what_is_medaliion_architecture",
@@ -79,7 +90,8 @@
         "design-pattern",
         "data-architecture"
       ],
-      "date": "2026-05-22"
+      "date": "2026-05-22",
+      "confidence": "high"
     },
     "concept/data-architect/01_how_to_architect_medallion_well": {
       "id": "concept/data-architect/01_how_to_architect_medallion_well",
@@ -92,7 +104,8 @@
         "design-pattern",
         "data-architecture"
       ],
-      "date": "2026-06-22"
+      "date": "2026-06-22",
+      "confidence": "medium"
     },
     "concept/data-architect/02_how_to_architect_medallion_well": {
       "id": "concept/data-architect/02_how_to_architect_medallion_well",
@@ -105,7 +118,8 @@
         "data-architecture",
         "design-pattern"
       ],
-      "date": "2026-06-25"
+      "date": "2026-06-25",
+      "confidence": "medium"
     },
     "concept/data-architect/03_medallion_advanced_patterns": {
       "id": "concept/data-architect/03_medallion_advanced_patterns",
@@ -118,7 +132,8 @@
         "data-architecture",
         "design-pattern"
       ],
-      "date": "2026-06-25"
+      "date": "2026-06-25",
+      "confidence": "medium"
     },
     "concept/data-architect/04_what_is_ontology": {
       "id": "concept/data-architect/04_what_is_ontology",
@@ -131,7 +146,8 @@
         "data-engineering",
         "ontology"
       ],
-      "date": "2026-05-27"
+      "date": "2026-05-27",
+      "confidence": "high"
     },
     "concept/data-architect/05_how_to_implement_ontology": {
       "id": "concept/data-architect/05_how_to_implement_ontology",
@@ -144,7 +160,8 @@
         "data-engineering",
         "ontology"
       ],
-      "date": "2026-06-23"
+      "date": "2026-06-23",
+      "confidence": "medium"
     },
     "concept/data-architect/06_ontology_core_concepts": {
       "id": "concept/data-architect/06_ontology_core_concepts",
@@ -159,7 +176,8 @@
         "knowledge-graph",
         "wikidata"
       ],
-      "date": "2026-06-25"
+      "date": "2026-06-25",
+      "confidence": "high"
     },
     "concept/data-engineering/00_how_to_use_dataform_well": {
       "id": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -174,7 +192,9 @@
         "data-engineering",
         "dbt"
       ],
-      "date": "2026-06-26"
+      "date": "2026-06-26",
+      "valid_from": "Fri",
+      "confidence": "medium"
     },
     "concept/design-pattern/00_how_to_use_strategy_pattern": {
       "id": "concept/design-pattern/00_how_to_use_strategy_pattern",
@@ -185,7 +205,8 @@
       "tags": [
         "design-pattern"
       ],
-      "date": "2024-01-31"
+      "date": "2024-01-31",
+      "confidence": "high"
     },
     "concept/design-pattern/01_circuit_breaker": {
       "id": "concept/design-pattern/01_circuit_breaker",
@@ -196,7 +217,8 @@
       "tags": [
         "design-pattern"
       ],
-      "date": "2024-11-19"
+      "date": "2024-11-19",
+      "confidence": "high"
     },
     "concept/java/00_what_is_java_virtual_thread": {
       "id": "concept/java/00_what_is_java_virtual_thread",
@@ -208,7 +230,8 @@
         "os",
         "java"
       ],
-      "date": "2024-02-13"
+      "date": "2024-02-13",
+      "confidence": "high"
     },
     "concept/java/01_producer_extends_consumer_super": {
       "id": "concept/java/01_producer_extends_consumer_super",
@@ -219,7 +242,8 @@
       "tags": [
         "java"
       ],
-      "date": "2024-03-24"
+      "date": "2024-03-24",
+      "confidence": "high"
     },
     "concept/jpa/00_jpa_dirty_checking": {
       "id": "concept/jpa/00_jpa_dirty_checking",
@@ -232,7 +256,8 @@
         "jpa",
         "code-analysis"
       ],
-      "date": "2024-02-18"
+      "date": "2024-02-18",
+      "confidence": "high"
     },
     "concept/llm/00_why_llm_is_decoder_only": {
       "id": "concept/llm/00_why_llm_is_decoder_only",
@@ -246,7 +271,9 @@
         "bert",
         "transformer"
       ],
-      "date": "2026-06-25"
+      "date": "2026-06-25",
+      "valid_from": "Thu",
+      "confidence": "medium"
     },
     "concept/springboot/00_why_rollback_marked_transaction_is_unusable": {
       "id": "concept/springboot/00_why_rollback_marked_transaction_is_unusable",
@@ -259,7 +286,8 @@
         "transaction",
         "code-analysis"
       ],
-      "date": "2024-01-25"
+      "date": "2024-01-25",
+      "confidence": "high"
     },
     "concept/springboot/01_how_to_handle_transaction_event_listener_exception": {
       "id": "concept/springboot/01_how_to_handle_transaction_event_listener_exception",
@@ -271,7 +299,8 @@
         "spring-boot",
         "code-analysis"
       ],
-      "date": "2024-02-21"
+      "date": "2024-02-21",
+      "confidence": "high"
     },
     "concept/system-design/00_url_shortener_design": {
       "id": "concept/system-design/00_url_shortener_design",
@@ -282,7 +311,8 @@
       "tags": [
         "system-design"
       ],
-      "date": "2024-01-07"
+      "date": "2024-01-07",
+      "confidence": "medium"
     },
     "concept/system-design/01_web_crawler_design": {
       "id": "concept/system-design/01_web_crawler_design",
@@ -293,7 +323,8 @@
       "tags": [
         "system-design"
       ],
-      "date": "2024-01-15"
+      "date": "2024-01-15",
+      "confidence": "medium"
     },
     "concept/system-design/02_notification_system_design": {
       "id": "concept/system-design/02_notification_system_design",
@@ -304,7 +335,8 @@
       "tags": [
         "system-design"
       ],
-      "date": "2024-01-30"
+      "date": "2024-01-30",
+      "confidence": "medium"
     },
     "concept/system-design/03_sns_feed_system_design": {
       "id": "concept/system-design/03_sns_feed_system_design",
@@ -315,7 +347,8 @@
       "tags": [
         "system-design"
       ],
-      "date": "2024-02-15"
+      "date": "2024-02-15",
+      "confidence": "medium"
     },
     "insight/data-architect/07_ontology_core_examples": {
       "id": "insight/data-architect/07_ontology_core_examples",
@@ -328,7 +361,8 @@
         "data-engineering",
         "ontology"
       ],
-      "date": "2026-06-25"
+      "date": "2026-06-25",
+      "confidence": "medium"
     },
     "insight/essay/00_is_lombok_necessary": {
       "id": "insight/essay/00_is_lombok_necessary",
@@ -340,7 +374,8 @@
         "essay",
         "java"
       ],
-      "date": "2023-12-21"
+      "date": "2023-12-21",
+      "confidence": "medium"
     },
     "insight/essay/01_why_redis_single_threaded": {
       "id": "insight/essay/01_why_redis_single_threaded",
@@ -353,7 +388,8 @@
         "redis",
         "os"
       ],
-      "date": "2023-12-24"
+      "date": "2023-12-24",
+      "confidence": "high"
     },
     "insight/essay/02_is_system_time_really_correct": {
       "id": "insight/essay/02_is_system_time_really_correct",
@@ -366,7 +402,8 @@
         "os",
         "java"
       ],
-      "date": "2023-12-31"
+      "date": "2023-12-31",
+      "confidence": "medium"
     },
     "insight/essay/03_which_jwt_algorithm_is_suitable": {
       "id": "insight/essay/03_which_jwt_algorithm_is_suitable",
@@ -379,7 +416,8 @@
         "algorithm",
         "security"
       ],
-      "date": "2024-01-06"
+      "date": "2024-01-06",
+      "confidence": "high"
     },
     "insight/essay/04_how_to_create_text_fixture": {
       "id": "insight/essay/04_how_to_create_text_fixture",
@@ -392,7 +430,8 @@
         "test",
         "java"
       ],
-      "date": "2024-01-29"
+      "date": "2024-01-29",
+      "confidence": "medium"
     },
     "tool/cloud/03_how_to_use_terraform": {
       "id": "tool/cloud/03_how_to_use_terraform",
@@ -407,9 +446,25 @@
         "gcp"
       ],
       "date": "2026-06-25"
+    },
+    "event/retrospect/06_2026_code_is_cheap": {
+      "id": "event/retrospect/06_2026_code_is_cheap",
+      "type": "event",
+      "title": "코드 작성 비용이 0인 시대에서 나는 어떻게 해야할까",
+      "path": "_event/retrospect/06_2026_code_is_cheap.md",
+      "status": "complete",
+      "tags": [
+        "retrospect"
+      ],
+      "date": "2026-06-21"
     }
   },
   "edges": [
+    {
+      "from": "concept/cloud/01_how_to_operate_iam_well",
+      "to": "concept/cloud/02_authenticate_gcp_without_service_accounts",
+      "type": "references"
+    },
     {
       "from": "concept/cloud/01_vpc_for_pca",
       "to": "concept/cloud/01_how_to_operate_iam_well",
@@ -469,6 +524,11 @@
       "from": "concept/data-architect/06_ontology_core_concepts",
       "to": "concept/data-architect/05_how_to_implement_ontology",
       "type": "extends"
+    },
+    {
+      "from": "concept/data-engineering/00_how_to_use_dataform_well",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
+      "type": "references"
     },
     {
       "from": "concept/design-pattern/01_circuit_breaker",
@@ -534,6 +594,11 @@
       "from": "tool/cloud/03_how_to_use_terraform",
       "to": "concept/cloud/01_how_to_operate_iam_well",
       "type": "references"
+    },
+    {
+      "from": "event/retrospect/06_2026_code_is_cheap",
+      "to": "concept/data-architect/04_what_is_ontology",
+      "type": "learned_from"
     }
   ]
 }

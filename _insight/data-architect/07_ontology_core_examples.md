@@ -9,6 +9,7 @@ comment : true
 latex   : true
 status  : complete
 public  : true
+confidence: medium
 parent  : [[/data-architect]]
 relations:
   - { type: extends, target: /wiki/data-architect/06_ontology_core_concepts }

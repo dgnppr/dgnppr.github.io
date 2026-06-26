@@ -6,14 +6,13 @@ updated : 2026-06-21 00:00:00 +0900
 tag     : retrospect
 toc     : true
 comment : true
-public  : false
+public  : true
 parent  : [[/retrospect]]
 latex   : true
 status  : complete
 show-diagram: true
 relations:
-  - { type: extends, target: /event/retrospect/05_2025_goodbye_kyobobook_retrospect }
-  - { type: learned-from, target: /wiki/data-architect/04_what_is_ontology }
+  - { type: learned_from, target: /wiki/data-architect/04_what_is_ontology }
 ---
 
 * TOC

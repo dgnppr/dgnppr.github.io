@@ -78,7 +78,7 @@ install:
 # ----------------------------------------
 .PHONY: data
 data:
-	node generateData.js
+	node scripts/generateData.js
 
 # ----------------------------------------
 # 상태 필드 추가
