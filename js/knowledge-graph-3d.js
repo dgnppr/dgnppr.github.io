@@ -290,7 +290,7 @@
             container.style.position = 'relative';
             container.style.backgroundColor = bgStr;
             if (!dark) {
-                container.style.backgroundImage = 'radial-gradient(circle, rgba(100,116,139,0.30) 1.2px, transparent 1.2px)';
+                container.style.backgroundImage = 'radial-gradient(circle, rgba(100,116,139,0.30) 0.9px, transparent 0.9px)';
                 container.style.backgroundSize = '28px 28px';
             }
             var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
@@ -1009,7 +1009,7 @@
                 container.style.backgroundColor = bgStr2;
                 container.style.backgroundImage = dark
                     ? 'none'
-                    : 'radial-gradient(circle, rgba(100,116,139,0.30) 1.2px, transparent 1.2px)';
+                    : 'radial-gradient(circle, rgba(100,116,139,0.30) 0.9px, transparent 0.9px)';
                 container.style.backgroundSize = dark ? '' : '28px 28px';
 
                 /* 노드 재색상 */
