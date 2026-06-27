@@ -1195,11 +1195,11 @@
     ]
   },
   "data-architect/06_ontology_core_concepts": {
-    "hash": "c48ccb75910aeaf8fd190168c4c4a9a7",
+    "hash": "4f2584bd9f085fe5c972eb18f6dbd84a",
     "nodes": [
       {
         "id": "n1",
-        "label": "Ontology Core",
+        "label": "Wikidata 모델",
         "type": "root"
       },
       {
@@ -1224,7 +1224,7 @@
       },
       {
         "id": "n6",
-        "label": "Transitive Closure",
+        "label": "transitive closure",
         "type": ":end"
       }
     ],
@@ -1238,18 +1238,10 @@
         "to": "n3"
       },
       {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
-        "from": "n3",
+        "from": "n4",
         "to": "n5",
         "bidirectional": true,
-        "label": "inference"
-      },
-      {
-        "from": "n4",
-        "to": "n6"
+        "label": "P31 vs P279"
       },
       {
         "from": "n5",
