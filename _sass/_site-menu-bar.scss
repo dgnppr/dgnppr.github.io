@@ -19,13 +19,22 @@
     }
 
     .site-title {
-        display: block;
+        display: flex;
+        align-items: center;
+        gap: 6px;
         text-decoration: none;
         color: var(--color-text-primary);
         font-weight: 700;
         padding: 8px 12px;
 
-        &::after {
+        .site-logo {
+            width: 24px;
+            height: 24px;
+            fill: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        .site-title-text::after {
             content: '';
             display: inline-block;
             width: 3px;
@@ -48,6 +57,10 @@
 
 #random-button:hover {
     cursor: pointer;
+}
+
+.dark-mode .site-title .site-logo {
+    fill: #60a5fa;
 }
 
 // 헤더 우측 네비게이션 드롭다운
