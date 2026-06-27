@@ -35,10 +35,10 @@ regenerate: true
         </li>
         {% endfor %}
     </ul>
-    <div class="home-footer">
-        {% assign count = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | size %}
-        <a href="/all-documents/">View all documents ({{ count }} items) →</a>
-    </div>
+<!--    <div class="home-footer">-->
+<!--        {% assign count = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | size %}-->
+<!--        <a href="/all/">View all documents ({{ count }} items) →</a>-->
+<!--    </div>-->
 </div>
 
 <script>
