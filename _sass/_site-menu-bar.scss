@@ -34,16 +34,6 @@
             flex-shrink: 0;
         }
 
-        .site-title-text::after {
-            content: '';
-            display: inline-block;
-            width: 3px;
-            height: 3px;
-            background-color: #3b82f6;
-            margin-left: 2px;
-            vertical-align: baseline;
-            margin-bottom: -1px;
-        }
     }
 
     .site-title-right {
