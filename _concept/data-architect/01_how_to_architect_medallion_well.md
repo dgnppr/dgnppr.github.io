@@ -3,7 +3,7 @@ layout  : concept
 title   : ERP 업그레이드가 새벽 3시에 GMV를 0으로 만들었다
 date    : 2026-06-22 00:00:00 +0900
 updated : 2026-06-24 00:00:00 +0900
-tag     : data-architect design-pattern data-architecture 
+tag     : data-architect design-pattern data-architecture medallion
 toc     : true
 comment : true
 public  : true

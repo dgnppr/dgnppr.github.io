@@ -3,7 +3,7 @@ layout  : concept
 title   : Dataform을 잘 사용하는 방법
 date    : 2026-06-26 00:00:00 +0900
 updated : 2026-06-26 00:00:00 +0900
-tag     : dataform bigquery sql data-engineering dbt
+tag     : dataform bigquery sql data-engineering
 toc     : true
 comment : true
 latex   : true

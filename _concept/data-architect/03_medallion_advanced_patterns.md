@@ -3,7 +3,7 @@ layout  : concept
 title   : 메달리언 실전 패턴과 안티패턴 SQL로 고도화하기
 date    : 2026-06-25 00:00:00 +0900
 updated : 2026-06-25 00:00:00 +0900
-tag     : data-architect data-architecture design-pattern
+tag     : data-architect data-architecture design-pattern medallion
 toc     : true
 comment : true
 public  : true

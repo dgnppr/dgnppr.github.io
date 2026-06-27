@@ -780,7 +780,9 @@
                 ray.setFromCamera(ptr, camera);
                 downAt = { x: e.clientX, y: e.clientY, t: Date.now() };
 
-                var visibleMeshes = meshes.filter(function (m) { return m.visible; });
+                var visibleMeshes = meshes.filter(function (m) {
+                    return m.visible && !(m.userData.dimmed && (pinnedNode || activeSearch));
+                });
                 var hits = ray.intersectObjects(visibleMeshes, false);
                 if (!hits.length) return;
 
@@ -860,7 +862,9 @@
                 }
                 camera.updateMatrixWorld();
                 ray.setFromCamera(ptr, camera);
-                var visibleMeshes = meshes.filter(function (m) { return m.visible; });
+                var visibleMeshes = meshes.filter(function (m) {
+                    return m.visible && !(m.userData.dimmed && (pinnedNode || activeSearch));
+                });
                 renderer.domElement.style.cursor =
                     ray.intersectObjects(visibleMeshes, false).length ? 'pointer' : 'grab';
             }
@@ -1124,6 +1128,7 @@
                     if (ud.borderMesh) {
                         ud.borderMesh.material.transparent = hidden;
                         ud.borderMesh.material.opacity = hidden ? 0 : 1;
+                        ud.borderMesh.material.depthWrite = !hidden;
                     }
                     /* halo: 아주 희미하게만 */
                     if (ud.haloMesh) {

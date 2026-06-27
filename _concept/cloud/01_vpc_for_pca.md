@@ -3,7 +3,7 @@ layout  : concept
 title   : Google Cloud VPC 네트워크 설계 결정
 date    : 2026-06-25 00:00:00 +0900
 updated : 2026-06-25 00:00:00 +0900
-tag     : cloud gcp network pca system-design
+tag     : cloud gcp network vpc
 toc     : true
 comment : true
 latex   : false

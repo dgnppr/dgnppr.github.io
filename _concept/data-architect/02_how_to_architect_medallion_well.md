@@ -3,7 +3,7 @@ layout  : concept
 title   : 메달리언 레이어 무엇을 어디에 둘 것인가
 date    : 2026-06-25 00:00:00 +0900
 updated : 2026-06-25 00:00:00 +0900
-tag     : data-architect data-architecture design-pattern
+tag     : data-architect data-architecture design-pattern medallion
 toc     : true
 comment : true
 public  : true
