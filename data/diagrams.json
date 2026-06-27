@@ -877,7 +877,7 @@
     ]
   },
   "data-architect/00_what_is_medaliion_architecture": {
-    "hash": "bb8be45579b96a623b025bc43fabb520",
+    "hash": "4f6ec4df8283b7748e6f146beb07a4cd",
     "nodes": [
       {
         "id": "n1",
@@ -930,28 +930,27 @@
       },
       {
         "from": "n3",
-        "to": "n6",
-        "bidirectional": true
+        "to": "n6"
       }
     ]
   },
   "data-architect/01_how_to_architect_medallion_well": {
-    "hash": "d216fc3930743237c53097d11f940a1f",
+    "hash": "1e85421eed491e5844804528f27b4751",
     "nodes": [
       {
         "id": "n1",
-        "label": "ERP 코드 변경",
+        "label": "ERP 상태 코드 변경",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "직접 연결 구조",
+        "label": "Bronze-Gold 직결 구조",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "정규화 레이어 부재",
-        "type": "step"
+        "label": "47개 쿼리 파손",
+        "type": ":step"
       },
       {
         "id": "n4",
@@ -960,17 +959,17 @@
       },
       {
         "id": "n5",
-        "label": "Medallion 구조 도입",
-        "type": ": decision"
+        "label": "Silver 번역 레이어",
+        "type": "decision"
       },
       {
         "id": "n6",
-        "label": "Silver 번역 레이어",
+        "label": "Bronze→Silver 변환",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "Gold 소비자 보호",
+        "label": "Gold은 Silver만 참조",
         "type": "end"
       }
     ],
@@ -980,20 +979,9 @@
         "to": "n2"
       },
       {
-        "from": "n1",
-        "to": "n3"
-      },
-      {
-        "from": "n1",
-        "to": "n4"
-      },
-      {
         "from": "n2",
-        "to": "n5"
-      },
-      {
-        "from": "n3",
-        "to": "n5"
+        "to": "n3",
+        "bidirectional": true
       },
       {
         "from": "n4",
@@ -1010,7 +998,7 @@
     ]
   },
   "data-architect/02_how_to_architect_medallion_well": {
-    "hash": "73c87d28658812a387a49ae0a761136f",
+    "hash": "1c5ad1b22152054a2dff9417550b6532",
     "nodes": [
       {
         "id": "n1",
@@ -1024,7 +1012,7 @@
       },
       {
         "id": "n3",
-        "label": "Silver (정합/통합)",
+        "label": "Silver (정합)",
         "type": "step"
       },
       {
@@ -1034,18 +1022,23 @@
       },
       {
         "id": "n5",
-        "label": "재처리 전략",
-        "type": ":decision"
+        "label": "재처리 원칙",
+        "type": ": step"
       },
       {
         "id": "n6",
-        "label": "증분 처리",
+        "label": "멱등성 MERGE",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "전체 재처리",
-        "type": "step"
+        "label": "증분 vs 전체 재처리",
+        "type": "decision"
+      },
+      {
+        "id": "n8",
+        "label": "실전 패턴/안티패턴",
+        "type": "end"
       }
     ],
     "edges": [
@@ -1064,24 +1057,21 @@
       {
         "from": "n5",
         "to": "n6",
-        "label": "대용량/고빈도"
+        "bidirectional": true
       },
       {
-        "from": "n5",
-        "to": "n7",
-        "label": "로직변경/소량"
+        "from": "n6",
+        "to": "n7"
       },
       {
         "from": "n2",
         "to": "n3",
         "bidirectional": true,
-        "label": "변환위치단일화"
+        "label": "변환 위치 단일화"
       },
       {
-        "from": "n3",
-        "to": "n4",
-        "bidirectional": true,
-        "label": "재사용vs정의"
+        "from": "n4",
+        "to": "n8"
       }
     ]
   },
@@ -1430,41 +1420,36 @@
     ]
   },
   "data-architect/03_medallion_advanced_patterns": {
-    "hash": "6978295911efe5bc98b25821c1f3ba10",
+    "hash": "22b8655cc691f472a71e4d454b6e3eb6",
     "nodes": [
       {
         "id": "n1",
-        "label": "메달리언 SQL 패턴",
+        "label": "메달리언 레이어 룰",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "WAP (검증 후 교체)",
+        "label": "실전 패턴 (Silver/Gold)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "SCD Type 2 (이력 관리)",
+        "label": "안티패턴 (로직 표류 등)",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "Late-Arriving Data",
-        "type": "step"
+        "label": "구현의 차이",
+        "type": "decision"
       },
       {
         "id": "n5",
-        "label": "Identity Resolution",
-        "type": "step"
+        "label": "SQL 기반 패턴 구현",
+        "type": "end"
       },
       {
         "id": "n6",
-        "label": "Gold 2-Tier (분리)",
-        "type": ": step"
-      },
-      {
-        "id": "n7",
-        "label": "안티패턴 증상",
+        "label": "증상 중심 안티패턴 대응",
         "type": "end"
       }
     ],
@@ -1474,8 +1459,12 @@
         "to": "n2"
       },
       {
-        "from": "n2",
+        "from": "n1",
         "to": "n3"
+      },
+      {
+        "from": "n2",
+        "to": "n4"
       },
       {
         "from": "n3",
@@ -1483,15 +1472,13 @@
       },
       {
         "from": "n4",
-        "to": "n5"
+        "to": "n5",
+        "label": "패턴 적용"
       },
       {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
+        "from": "n4",
+        "to": "n6",
+        "label": "안티패턴 대응"
       }
     ]
   },
