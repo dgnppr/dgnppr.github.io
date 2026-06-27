@@ -93,8 +93,7 @@
         "cloud",
         "gcp",
         "network",
-        "pca",
-        "system-design"
+        "vpc"
       ],
       "date": "2026-06-25",
       "valid_from": "Thu",
@@ -242,7 +241,8 @@
       "tags": [
         "data-architect",
         "design-pattern",
-        "data-architecture"
+        "data-architecture",
+        "medallion"
       ],
       "date": "2026-05-22",
       "confidence": "high",
@@ -262,7 +262,8 @@
       "tags": [
         "data-architect",
         "design-pattern",
-        "data-architecture"
+        "data-architecture",
+        "medallion"
       ],
       "date": "2026-06-22",
       "confidence": "medium",
@@ -292,7 +293,8 @@
       "tags": [
         "data-architect",
         "data-architecture",
-        "design-pattern"
+        "design-pattern",
+        "medallion"
       ],
       "date": "2026-06-25",
       "confidence": "medium",
@@ -330,7 +332,8 @@
       "tags": [
         "data-architect",
         "data-architecture",
-        "design-pattern"
+        "design-pattern",
+        "medallion"
       ],
       "date": "2026-06-25",
       "confidence": "medium",
@@ -548,8 +551,7 @@
         "dataform",
         "bigquery",
         "sql",
-        "data-engineering",
-        "dbt"
+        "data-engineering"
       ],
       "date": "2026-06-26",
       "valid_from": "Fri",

@@ -14,12 +14,12 @@
   "system-design/03_sns_feed_system_design": "baff6ea5404f740b2c3194fb478782a0",
   "data-analysis/00_how_to_design_funnel": "9e3ca71abf6c4681b72dc9f3f4995376",
   "llm/00_why_llm_is_decoder_only": "02d90e26900406077cf90c4f021d0fae",
-  "cloud/01_vpc_for_pca": "9ff157a88440b17cf1f356ae87d54fae",
+  "cloud/01_vpc_for_pca": "5823ea53e7d41e68ac8546cb2db180da",
   "cloud": "7f3aa3786efb57a25f0049ad1911ba55",
-  "data-architect/00_what_is_medaliion_architecture": "bb8be45579b96a623b025bc43fabb520",
-  "data-architect/01_how_to_architect_medallion_well": "d216fc3930743237c53097d11f940a1f",
-  "data-architect/02_how_to_architect_medallion_well": "73c87d28658812a387a49ae0a761136f",
-  "data-architect/03_medallion_advanced_patterns": "6978295911efe5bc98b25821c1f3ba10",
+  "data-architect/00_what_is_medaliion_architecture": "4f6ec4df8283b7748e6f146beb07a4cd",
+  "data-architect/01_how_to_architect_medallion_well": "1e85421eed491e5844804528f27b4751",
+  "data-architect/02_how_to_architect_medallion_well": "1c5ad1b22152054a2dff9417550b6532",
+  "data-architect/03_medallion_advanced_patterns": "22b8655cc691f472a71e4d454b6e3eb6",
   "data-architect/04_what_is_ontology": "41871800231c98ae821e05d60c325044",
   "data-architect/05_how_to_implement_ontology": "6dc2243ce1757bf18ef2ec894e781d66",
   "data-architect/06_ontology_core_concepts": "c48ccb75910aeaf8fd190168c4c4a9a7",
@@ -41,5 +41,5 @@
   "retrospect/06_2026_code_is_cheap": "2fb53584cbbd814a7de21ea2058bad5a",
   "architecture/2026-06-24-001-adr-guide": "b7430fcb37db5f02545cefe76ed339b7",
   "security/2026-06-24-002-gcp-key-management-status": "6cd14ca3d40c0e234d2810c760d4eee3",
-  "data-engineering/00_how_to_use_dataform_well": "b4ab5d8e1e04ffb1f0c8b7847119b0f6"
+  "data-engineering/00_how_to_use_dataform_well": "1408d4aaf44ba34ab603815d6aae2b92"
 }
