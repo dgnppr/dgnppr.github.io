@@ -944,32 +944,32 @@
       },
       {
         "id": "n2",
-        "label": "Bronze-Gold 직결 구조",
-        "type": "step"
-      },
-      {
-        "id": "n3",
-        "label": "47개 쿼리 파손",
+        "label": "Bronze-Gold 직결",
         "type": ":step"
       },
       {
-        "id": "n4",
-        "label": "DQ 모니터링 부재",
-        "type": "step"
+        "id": "n3",
+        "label": "47개 쿼리 파괴",
+        "type": "end"
       },
       {
-        "id": "n5",
-        "label": "Silver 번역 레이어",
+        "id": "n4",
+        "label": "Silver 레이어 도입",
         "type": "decision"
       },
       {
+        "id": "n5",
+        "label": "언어 번역 및 정규화",
+        "type": "step"
+      },
+      {
         "id": "n6",
-        "label": "Bronze→Silver 변환",
+        "label": "DQ assertion 강화",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "Gold은 Silver만 참조",
+        "label": "Bronze-Silver-Gold",
         "type": "end"
       }
     ],
@@ -980,8 +980,11 @@
       },
       {
         "from": "n2",
-        "to": "n3",
-        "bidirectional": true
+        "to": "n3"
+      },
+      {
+        "from": "n3",
+        "to": "n4"
       },
       {
         "from": "n4",
@@ -1002,43 +1005,33 @@
     "nodes": [
       {
         "id": "n1",
-        "label": "메달리언 레이어 설계",
+        "label": "Medallion Layer",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "Bronze (적재)",
+        "label": "Bronze (Raw)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Silver (정합)",
+        "label": "Silver (Base)",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "Gold (집계/마트)",
+        "label": "Gold (Mart)",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "재처리 원칙",
-        "type": ": step"
+        "label": "Idempotency/MERGE",
+        "type": ":end"
       },
       {
         "id": "n6",
-        "label": "멱등성 MERGE",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "증분 vs 전체 재처리",
+        "label": "Incremental vs Full",
         "type": "decision"
-      },
-      {
-        "id": "n8",
-        "label": "실전 패턴/안티패턴",
-        "type": "end"
       }
     ],
     "edges": [
@@ -1055,23 +1048,24 @@
         "to": "n4"
       },
       {
-        "from": "n5",
-        "to": "n6",
-        "bidirectional": true
-      },
-      {
-        "from": "n6",
-        "to": "n7"
-      },
-      {
         "from": "n2",
         "to": "n3",
         "bidirectional": true,
-        "label": "변환 위치 단일화"
+        "label": "entity vs metric"
       },
       {
-        "from": "n4",
-        "to": "n8"
+        "from": "n3",
+        "to": "n4",
+        "bidirectional": true,
+        "label": "shared dimension"
+      },
+      {
+        "from": "n5",
+        "to": "n2"
+      },
+      {
+        "from": "n6",
+        "to": "n1"
       }
     ]
   },
@@ -1420,36 +1414,41 @@
     ]
   },
   "data-architect/03_medallion_advanced_patterns": {
-    "hash": "22b8655cc691f472a71e4d454b6e3eb6",
+    "hash": "6978295911efe5bc98b25821c1f3ba10",
     "nodes": [
       {
         "id": "n1",
-        "label": "메달리언 레이어 룰",
+        "label": "메달리언 SQL 패턴",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "실전 패턴 (Silver/Gold)",
+        "label": "WAP (검증 후 교체)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "안티패턴 (로직 표류 등)",
+        "label": "SCD Type 2 (이력 관리)",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "구현의 차이",
-        "type": "decision"
+        "label": "Late-Arriving Data",
+        "type": "step"
       },
       {
         "id": "n5",
-        "label": "SQL 기반 패턴 구현",
-        "type": "end"
+        "label": "Identity Resolution",
+        "type": "step"
       },
       {
         "id": "n6",
-        "label": "증상 중심 안티패턴 대응",
+        "label": "Gold 2-Tier (분리)",
+        "type": ": step"
+      },
+      {
+        "id": "n7",
+        "label": "안티패턴 증상",
         "type": "end"
       }
     ],
@@ -1459,12 +1458,8 @@
         "to": "n2"
       },
       {
-        "from": "n1",
-        "to": "n3"
-      },
-      {
         "from": "n2",
-        "to": "n4"
+        "to": "n3"
       },
       {
         "from": "n3",
@@ -1472,13 +1467,15 @@
       },
       {
         "from": "n4",
-        "to": "n5",
-        "label": "패턴 적용"
+        "to": "n5"
       },
       {
-        "from": "n4",
-        "to": "n6",
-        "label": "안티패턴 대응"
+        "from": "n5",
+        "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
       }
     ]
   },
