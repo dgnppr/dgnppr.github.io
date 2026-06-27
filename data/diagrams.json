@@ -1414,26 +1414,26 @@
     ]
   },
   "data-architect/03_medallion_advanced_patterns": {
-    "hash": "6978295911efe5bc98b25821c1f3ba10",
+    "hash": "22b8655cc691f472a71e4d454b6e3eb6",
     "nodes": [
       {
         "id": "n1",
-        "label": "메달리언 SQL 패턴",
+        "label": "Medallion SQL Patterns",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "WAP (검증 후 교체)",
+        "label": "WAP (Write-Audit-Publish)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "SCD Type 2 (이력 관리)",
+        "label": "SCD Type 2",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "Late-Arriving Data",
+        "label": "Late Arriving Data",
         "type": "step"
       },
       {
@@ -1443,12 +1443,12 @@
       },
       {
         "id": "n6",
-        "label": "Gold 2-Tier (분리)",
-        "type": ": step"
+        "label": "Gold 2-Tier (Metric/Mart)",
+        "type": ": end"
       },
       {
         "id": "n7",
-        "label": "안티패턴 증상",
+        "label": "Anti-pattern Symptoms",
         "type": "end"
       }
     ],
@@ -1458,24 +1458,41 @@
         "to": "n2"
       },
       {
-        "from": "n2",
+        "from": "n1",
         "to": "n3"
       },
       {
-        "from": "n3",
+        "from": "n1",
         "to": "n4"
       },
       {
-        "from": "n4",
+        "from": "n1",
         "to": "n5"
       },
       {
-        "from": "n5",
+        "from": "n1",
         "to": "n6"
       },
       {
-        "from": "n6",
-        "to": "n7"
+        "from": "n2",
+        "to": "n7",
+        "bidirectional": true,
+        "label": "pattern vs anti-pattern"
+      },
+      {
+        "from": "n3",
+        "to": "n7",
+        "bidirectional": true
+      },
+      {
+        "from": "n4",
+        "to": "n7",
+        "bidirectional": true
+      },
+      {
+        "from": "n5",
+        "to": "n7",
+        "bidirectional": true
       }
     ]
   },
