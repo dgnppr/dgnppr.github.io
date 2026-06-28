@@ -1,6 +1,6 @@
 ---
 layout  : concept
-title   : 알람 하나로 온톨로지 전체를 훑어보기
+title   : 알람 케이스로 온톨로지 훑어보기
 date    : 2026-06-23 00:00:00 +0900
 updated : 2026-06-23 00:00:00 +0900
 tag     : data-architecture data-engineering ontology 

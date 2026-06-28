@@ -78,16 +78,41 @@
         "GCP Service Account 패턴"
       ],
       "content_depth": 0.68,
-      "importance": 9,
-      "depth": 0.86,
+      "importance": 11,
+      "depth": 0.89,
       "unanswered_questions": 0,
       "learning_pressure": 1.23
     },
-    "concept/cloud/01_vpc_for_pca": {
-      "id": "concept/cloud/01_vpc_for_pca",
+    "concept/cloud/02_authenticate_gcp_without_service_accounts": {
+      "id": "concept/cloud/02_authenticate_gcp_without_service_accounts",
+      "type": "concept",
+      "title": "SA 키 없이 GCP 인증하기",
+      "path": "_concept/cloud/02_authenticate_gcp_without_service_accounts.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "iam",
+        "security"
+      ],
+      "date": "2026-06-25",
+      "valid_from": "Thu",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "attribute-condition",
+        "온보딩 스크립트에 포함:"
+      ],
+      "content_depth": 0.75,
+      "importance": 3,
+      "depth": 0.71,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.86
+    },
+    "concept/cloud/03_vpc_for_pca": {
+      "id": "concept/cloud/03_vpc_for_pca",
       "type": "concept",
       "title": "Google Cloud VPC 네트워크 설계 결정",
-      "path": "_concept/cloud/01_vpc_for_pca.md",
+      "path": "_concept/cloud/03_vpc_for_pca.md",
       "status": "complete",
       "tags": [
         "cloud",
@@ -108,7 +133,15 @@
         "Regional",
         "Global",
         "/24",
+        "allow",
+        "deny",
+        "deny TCP 22 ingress",
         "apt update",
+        "apt-get upgrade",
+        "subnet-team-a",
+        "subnet-team-b",
+        "networkAdmin",
+        "networkUser",
         "VPC는 글로벌 리소스",
         "서브넷은 리전 단위",
         "Dynamic Routing Mode",
@@ -129,6 +162,12 @@
         "Service Account 타겟팅",
         "혼용 불가",
         "Service Account",
+        "단일 VPC",
+        "`goto_next`",
+        "VPC 방화벽 규칙 (기존)",
+        "케이스 적용 — 전사 SSH 차단",
+        "HFP",
+        "VPC 방화벽",
         "서로 다른 프로젝트·조직",
         "CIDR 중첩 불가",
         "비전이성",
@@ -161,24 +200,131 @@
         "PGA",
         "Cloud NAT",
         "VPC-SC",
+        "진단",
+        "샘플링 비율",
+        "Connectivity Tests",
+        "Firewall Insights",
+        "Network Topology",
+        "Performance Dashboard",
+        "VPC Flow Logs",
         "VPC Peering",
         "Cloud VPN(HA)",
         "VPC Service Controls",
         "세 도구가 각각",
-        "함정 6쌍",
-        "숫자 낮을수록 우선"
+        "함정 8쌍",
+        "숫자 낮을수록 우선",
+        "DENY",
+        "ALLOW",
+        "정답: (B)",
+        "계층 순서",
+        "같은 계층 안",
+        "별개 공간",
+        "CIDR 중복",
+        "차단된",
+        "이론적으로 허용되는지",
+        "허용된",
+        "PGA 범위 밖",
+        "Google API 전용",
+        "최소 권한",
+        "최소 권한 원칙 충족",
+        "배포하는 것"
       ],
       "content_depth": 1,
-      "importance": 3,
-      "depth": 0.8,
+      "importance": 1,
+      "depth": 0.78,
       "unanswered_questions": 0,
-      "learning_pressure": 0.6
+      "learning_pressure": 0.22
     },
-    "concept/cloud/02_authenticate_gcp_without_service_accounts": {
-      "id": "concept/cloud/02_authenticate_gcp_without_service_accounts",
+    "concept/cloud/04_gke_for_pca": {
+      "id": "concept/cloud/04_gke_for_pca",
       "type": "concept",
-      "title": "SA 키 없이 GCP 인증하기",
-      "path": "_concept/cloud/02_authenticate_gcp_without_service_accounts.md",
+      "title": "Google Cloud GKE 컨테이너 오케스트레이션 설계 결정",
+      "path": "_concept/cloud/04_gke_for_pca.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "gke",
+        "kubernetes",
+        "container"
+      ],
+      "date": "2026-06-28",
+      "valid_from": "Sun",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "kubectl",
+        "Auto",
+        "Initial",
+        "hostPID: true",
+        "hostPID",
+        "Standard",
+        "Autopilot",
+        "Control Plane",
+        "Data Plane",
+        "노드(VM)",
+        "누가 소유하느냐",
+        "Routes-based (구형)",
+        "아님",
+        "Secondary Range 2개",
+        "결론",
+        "VPC-native",
+        "사용자",
+        "Google",
+        "Pod 리소스 요청",
+        "Service",
+        "ClusterIP",
+        "NodePort",
+        "LoadBalancer",
+        "Ingress",
+        "LoadBalancer Service",
+        "독립적으로",
+        "없음",
+        "VPC 내부만",
+        "HPA — 수평 Pod 오토스케일러",
+        "Pod 수(replica)",
+        "VPA — 수직 Pod 오토스케일러",
+        "Pod의 CPU/메모리 request",
+        "동시 적용 불가",
+        "Cluster Autoscaler(CA)",
+        "노드 수",
+        "적합한 기계 타입의 새 노드 풀",
+        "Zonal",
+        "Multi-zonal",
+        "Regional",
+        "Regional 클러스터",
+        "서비스 계정 키 파일을 사용하지 않는",
+        "작동 원리",
+        "신뢰할 수 있는 서명(attestation)",
+        "Workload Identity",
+        "Binary Authorization",
+        "VPC-native 클러스터",
+        "Private nodes",
+        "Private endpoint",
+        "HPA",
+        "VPA",
+        "Cluster Autoscaler",
+        "정답: (B)",
+        "키 파일이 존재하지 않으므로",
+        "공개 인터넷에 노출",
+        "정답: (A)",
+        "수(replica)",
+        "resource request",
+        "같은 메트릭",
+        "Secondary range 2개",
+        "자동 생성되지 않음",
+        "별도 range"
+      ],
+      "content_depth": 1,
+      "importance": 0,
+      "depth": 0.75,
+      "unanswered_questions": 0,
+      "learning_pressure": 0
+    },
+    "concept/cloud/05_iam_for_pca": {
+      "id": "concept/cloud/05_iam_for_pca",
+      "type": "concept",
+      "title": "Google Cloud IAM 권한 모델 설계 결정",
+      "path": "_concept/cloud/05_iam_for_pca.md",
       "status": "complete",
       "tags": [
         "cloud",
@@ -186,18 +332,70 @@
         "iam",
         "security"
       ],
-      "date": "2026-06-25",
-      "valid_from": "Thu",
+      "date": "2026-06-28",
+      "valid_from": "Sun",
       "confidence": "medium",
       "mentioned_terms": [
-        "attribute-condition",
-        "온보딩 스크립트에 포함:"
+        "allUsers",
+        "allAuthenticatedUsers",
+        "Principal + Role + Resource",
+        "Owner",
+        "Editor",
+        "Viewer",
+        "), ② IAM (",
+        "roles/editor",
+        "Principal(주체)",
+        "Role(역할)",
+        "Policy Binding",
+        "결론",
+        "Basic Role (기본 역할)",
+        "절대 사용하지 말 것",
+        "언제 허용되는가",
+        "대부분의 케이스에서 1순위 선택",
+        "Custom Role (커스텀 역할)",
+        "정밀하게",
+        "조합을 금지",
+        "어느 레벨에든",
+        "상속",
+        "최소 권한 원칙 적용",
+        "필요한 가장 낮은 레벨",
+        "IAM Deny",
+        "개별 권한(permission) 레벨",
+        "애플리케이션·VM·서비스",
+        "User-managed SA",
+        "Google-managed SA",
+        "Default SA",
+        "언제 쓰는가",
+        "IAM",
+        "누가",
+        "Org Policy",
+        "무엇이",
+        "Boolean",
+        "List",
+        "자주 나오는 Constraints",
+        "케이스 적용",
+        "조건이 충족될 때만",
+        "케이스 — 분기 감사 접근",
+        "IAM Conditions",
+        "Predefined",
+        "Custom",
+        "Custom Role",
+        "Org Policy (constraints)",
+        "IAM 바인딩",
+        "정답: (B)",
+        "Custom 역할",
+        "누적(additive)",
+        "추가",
+        "정답: (A)",
+        "인스턴스 메타데이터 서버",
+        "도메인",
+        "함정 6쌍"
       ],
-      "content_depth": 0.75,
-      "importance": 3,
-      "depth": 0.71,
+      "content_depth": 1,
+      "importance": 1,
+      "depth": 0.78,
       "unanswered_questions": 0,
-      "learning_pressure": 0.86
+      "learning_pressure": 0.22
     },
     "concept/data-analysis/00_how_to_design_funnel": {
       "id": "concept/data-analysis/00_how_to_design_funnel",
@@ -400,7 +598,7 @@
     "concept/data-architect/05_how_to_implement_ontology": {
       "id": "concept/data-architect/05_how_to_implement_ontology",
       "type": "concept",
-      "title": "알람 하나로 온톨로지 전체를 훑어보기",
+      "title": "알람 케이스로 온톨로지 훑어보기",
       "path": "_concept/data-architect/05_how_to_implement_ontology.md",
       "status": "complete",
       "tags": [
@@ -443,7 +641,7 @@
     "concept/data-architect/06_ontology_core_concepts": {
       "id": "concept/data-architect/06_ontology_core_concepts",
       "type": "concept",
-      "title": "온톨로지의 문법 — Wikidata로 명사·관계·표준·시제를 끝까지 파다",
+      "title": "온톨로지의 Wikidata 명사·관계·표준·시제",
       "path": "_concept/data-architect/06_ontology_core_concepts.md",
       "status": "complete",
       "tags": [
@@ -1042,7 +1240,7 @@
     "insight/data-architect/07_ontology_core_examples": {
       "id": "insight/data-architect/07_ontology_core_examples",
       "type": "insight",
-      "title": "온톨로지를 살아있게 두는 법 — 베스트 프랙티스와 안티패턴",
+      "title": "온톨로지 베스트 프랙티스와 안티패턴",
       "path": "_insight/data-architect/07_ontology_core_examples.md",
       "status": "complete",
       "tags": [
@@ -1273,14 +1471,19 @@
       "type": "references"
     },
     {
-      "from": "concept/cloud/01_vpc_for_pca",
+      "from": "concept/cloud/02_authenticate_gcp_without_service_accounts",
+      "to": "concept/cloud/01_how_to_operate_iam_well",
+      "type": "extends"
+    },
+    {
+      "from": "concept/cloud/03_vpc_for_pca",
       "to": "concept/cloud/01_how_to_operate_iam_well",
       "type": "references"
     },
     {
-      "from": "concept/cloud/02_authenticate_gcp_without_service_accounts",
+      "from": "concept/cloud/05_iam_for_pca",
       "to": "concept/cloud/01_how_to_operate_iam_well",
-      "type": "extends"
+      "type": "references"
     },
     {
       "from": "concept/data-analysis/00_how_to_design_funnel",
@@ -1410,11 +1613,61 @@
   ],
   "content_mentioned_concepts": [
     {
+      "term": "결론",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/05_iam_for_pca"
+      ]
+    },
+    {
+      "term": "정답: (B)",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/05_iam_for_pca"
+      ]
+    },
+    {
       "term": "deprecated",
       "count": 2,
       "mentioned_by": [
         "adr/architecture/2026-06-24-001-adr-guide",
         "concept/data-architect/06_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "Regional",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/04_gke_for_pca"
+      ]
+    },
+    {
+      "term": "Custom",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/05_iam_for_pca"
+      ]
+    },
+    {
+      "term": "정답: (A)",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/05_iam_for_pca"
+      ]
+    },
+    {
+      "term": "List",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/05_iam_for_pca",
+        "concept/java/01_producer_extends_consumer_super"
       ]
     },
     {

@@ -1,6 +1,6 @@
 ---
 layout  : insight
-title   : 온톨로지를 살아있게 두는 법 — 베스트 프랙티스와 안티패턴
+title   : 온톨로지 베스트 프랙티스와 안티패턴
 date    : 2026-06-25 00:00:00 +0900
 updated : 2026-06-25 00:00:00 +0900
 tag     : data-architecture data-engineering ontology

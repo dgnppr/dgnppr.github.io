@@ -1124,43 +1124,42 @@
     ]
   },
   "data-architect/05_how_to_implement_ontology": {
-    "hash": "6dc2243ce1757bf18ef2ec894e781d66",
+    "hash": "aec21a453a38f891309a3192eb187ddf",
     "nodes": [
       {
         "id": "n1",
-        "label": "인시던트: 잘못된 쿠폰"
+        "label": "인시던트: 중복쿠폰",
+        "type": "root"
       },
       {
         "id": "n2",
-        "label": "4가지 부재 (Identity, Link, Guard, Definition)"
+        "label": "4가지 부재 (Id/Link/Action/Def)",
+        "type": "step"
       },
       {
         "id": "n3",
-        "label": "온톨로지 vs 시맨틱 레이어"
+        "label": "온톨로지 vs 시맨틱 레이어",
+        "type": ":step"
       },
       {
         "id": "n4",
-        "label": "온톨로지 설계: Entity+Identity"
+        "label": "온톨로지 설계의 4대 대응",
+        "type": "step"
       },
       {
         "id": "n5",
-        "label": "Link: 관계로서의 구매"
+        "label": "Action Guard & Link 그래프",
+        "type": "step"
       },
       {
         "id": "n6",
-        "label": "Property Definition (SCD2)"
+        "label": "Dynamic Layer: 결정→데이터",
+        "type": "step"
       },
       {
         "id": "n7",
-        "label": "Action Gate & Log"
-      },
-      {
-        "id": "n8",
-        "label": "Dynamic Layer 피드백 루프"
-      },
-      {
-        "id": "n9",
-        "label": "에이전트 월드모델"
+        "label": "에이전트 월드모델",
+        "type": "end"
       }
     ],
     "edges": [
@@ -1181,25 +1180,21 @@
         "to": "n5"
       },
       {
+        "from": "n5",
+        "to": "n6"
+      },
+      {
         "from": "n6",
         "to": "n7"
-      },
-      {
-        "from": "n7",
-        "to": "n8"
-      },
-      {
-        "from": "n8",
-        "to": "n9"
       }
     ]
   },
   "data-architect/06_ontology_core_concepts": {
-    "hash": "4f2584bd9f085fe5c972eb18f6dbd84a",
+    "hash": "f11f1a5f17b0733189802dbf8ddd95df",
     "nodes": [
       {
         "id": "n1",
-        "label": "Wikidata 모델",
+        "label": "Ontology Core",
         "type": "root"
       },
       {
@@ -1214,17 +1209,22 @@
       },
       {
         "id": "n4",
-        "label": "P31 (instance of)",
-        "type": "step"
+        "label": "P31 (Instance)",
+        "type": "decision"
       },
       {
         "id": "n5",
-        "label": "P279 (subclass of)",
-        "type": "step"
+        "label": "P279 (Subclass)",
+        "type": "decision"
       },
       {
         "id": "n6",
-        "label": "transitive closure",
+        "label": "Transitive Inference",
+        "type": "step"
+      },
+      {
+        "id": "n7",
+        "label": "SPARQL Expansion",
         "type": ":end"
       }
     ],
@@ -1246,6 +1246,10 @@
       {
         "from": "n5",
         "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
       }
     ]
   },

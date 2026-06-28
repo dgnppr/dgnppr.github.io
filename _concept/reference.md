@@ -5,15 +5,12 @@ date    : 2023-12-15 00:00:00 +0900
 updated : 2024-02-10 00:00:00 +0900
 tag     : reference
 toc     : true
-
 comment : false
 parent  : [[/index]]
 latex   : false
 status  : complete
 public: false
 ---
-
-public: false
 
 * TOC
 {:toc}

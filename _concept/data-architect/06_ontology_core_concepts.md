@@ -1,6 +1,6 @@
 ---
 layout  : concept
-title   : 온톨로지의 문법 — Wikidata로 명사·관계·표준·시제를 끝까지 파다
+title   : 온톨로지의 Wikidata 명사·관계·표준·시제
 date    : 2026-06-25 00:00:00 +0900
 updated : 2026-06-25 00:00:00 +0900
 tag     : data-architecture data-engineering ontology
