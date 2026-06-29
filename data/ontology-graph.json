@@ -722,10 +722,10 @@
         "데이터 리니지와 거버넌스"
       ],
       "content_depth": 0.85,
-      "importance": 3,
-      "depth": 0.77,
+      "importance": 5,
+      "depth": 0.8,
       "unanswered_questions": 0,
-      "learning_pressure": 0.68
+      "learning_pressure": 1.01
     },
     "concept/data-architect/04_what_is_ontology": {
       "id": "concept/data-architect/04_what_is_ontology",
@@ -771,10 +771,10 @@
         "과형식화"
       ],
       "content_depth": 0.92,
-      "importance": 7,
-      "depth": 0.85,
+      "importance": 9,
+      "depth": 0.87,
       "unanswered_questions": 0,
-      "learning_pressure": 1.07
+      "learning_pressure": 1.15
     },
     "concept/data-architect/05_ontology_objects_summary": {
       "id": "concept/data-architect/05_ontology_objects_summary",
@@ -929,10 +929,10 @@
         "검증은 Action 안에"
       ],
       "content_depth": 1,
-      "importance": 3,
-      "depth": 0.93,
+      "importance": 5,
+      "depth": 0.95,
       "unanswered_questions": 0,
-      "learning_pressure": 0.23
+      "learning_pressure": 0.25
     },
     "concept/data-architect/07_ontology_core_concepts": {
       "id": "concept/data-architect/07_ontology_core_concepts",
@@ -1512,11 +1512,11 @@
       "unanswered_questions": 0,
       "learning_pressure": 0
     },
-    "insight/data-architect/07_ontology_core_examples": {
-      "id": "insight/data-architect/07_ontology_core_examples",
+    "insight/data-architect/00_ontology_core_examples": {
+      "id": "insight/data-architect/00_ontology_core_examples",
       "type": "insight",
       "title": "온톨로지 베스트 프랙티스와 안티패턴",
-      "path": "_insight/data-architect/07_ontology_core_examples.md",
+      "path": "_insight/data-architect/00_ontology_core_examples.md",
       "status": "complete",
       "tags": [
         "data-architecture",
@@ -1547,10 +1547,49 @@
         "온톨로지 정렬(alignment)과 연합"
       ],
       "content_depth": 1,
-      "importance": 1,
-      "depth": 0.8,
+      "importance": 3,
+      "depth": 0.83,
       "unanswered_questions": 0,
-      "learning_pressure": 0.2
+      "learning_pressure": 0.53
+    },
+    "insight/data-architect/01_medallion_with_ontology": {
+      "id": "insight/data-architect/01_medallion_with_ontology",
+      "type": "insight",
+      "title": "메달리언 위에 온톨로지를 얹다 — 신뢰할 수 있는 행에서 신뢰할 수 있는 세계로",
+      "path": "_insight/data-architect/01_medallion_with_ontology.md",
+      "status": "writing",
+      "tags": [
+        "data-architecture",
+        "data-engineering",
+        "medallion",
+        "ontology"
+      ],
+      "date": "2026-06-29",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "'C'",
+        "'CM'",
+        "placed",
+        "LEFT JOIN",
+        "links",
+        "blocked",
+        "첫 번째 사고",
+        "두 번째 사고",
+        "Silver",
+        "온톨로지",
+        "행을 정합",
+        "엔티티를 모델링",
+        "온톨로지를 메달리언 스택의 어디에 끼우는가?",
+        "Silver 바로 위",
+        "동일성",
+        "같은 값",
+        "동시에"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.7,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.3
     },
     "insight/essay/00_is_lombok_necessary": {
       "id": "insight/essay/00_is_lombok_necessary",
@@ -1861,14 +1900,34 @@
       "type": "extends"
     },
     {
-      "from": "insight/data-architect/07_ontology_core_examples",
+      "from": "insight/data-architect/00_ontology_core_examples",
       "to": "concept/data-architect/06_ontology_core_concepts",
       "type": "extends"
     },
     {
-      "from": "insight/data-architect/07_ontology_core_examples",
+      "from": "insight/data-architect/00_ontology_core_examples",
       "to": "concept/data-architect/05_how_to_implement_ontology",
       "type": "learned_from"
+    },
+    {
+      "from": "insight/data-architect/01_medallion_with_ontology",
+      "to": "concept/data-architect/03_medallion_advanced_patterns",
+      "type": "extends"
+    },
+    {
+      "from": "insight/data-architect/01_medallion_with_ontology",
+      "to": "concept/data-architect/04_what_is_ontology",
+      "type": "extends"
+    },
+    {
+      "from": "insight/data-architect/01_medallion_with_ontology",
+      "to": "concept/data-architect/06_how_to_implement_ontology",
+      "type": "references"
+    },
+    {
+      "from": "insight/data-architect/01_medallion_with_ontology",
+      "to": "insight/data-architect/00_ontology_core_examples",
+      "type": "references"
     },
     {
       "from": "insight/essay/00_is_lombok_necessary",
@@ -1923,6 +1982,16 @@
       ]
     },
     {
+      "term": "links",
+      "count": 4,
+      "mentioned_by": [
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/data-architect/07_ontology_core_concepts",
+        "insight/data-architect/00_ontology_core_examples",
+        "insight/data-architect/01_medallion_with_ontology"
+      ]
+    },
+    {
       "term": "deprecated",
       "count": 3,
       "mentioned_by": [
@@ -1947,6 +2016,24 @@
         "concept/cloud/03_vpc_for_pca",
         "concept/cloud/04_gke_for_pca",
         "concept/cloud/05_iam_for_pca"
+      ]
+    },
+    {
+      "term": "LEFT JOIN",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-analysis/01_behavioral_analytics_techniques",
+        "concept/data-architect/03_medallion_advanced_patterns",
+        "insight/data-architect/01_medallion_with_ontology"
+      ]
+    },
+    {
+      "term": "'CM'",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-architect/01_how_to_architect_medallion_well",
+        "concept/data-architect/03_medallion_advanced_patterns",
+        "insight/data-architect/01_medallion_with_ontology"
       ]
     },
     {
@@ -1977,12 +2064,12 @@
       ]
     },
     {
-      "term": "links",
+      "term": "placed",
       "count": 3,
       "mentioned_by": [
         "concept/data-architect/06_how_to_implement_ontology",
         "concept/data-architect/07_ontology_core_concepts",
-        "insight/data-architect/07_ontology_core_examples"
+        "insight/data-architect/01_medallion_with_ontology"
       ]
     },
     {
@@ -2026,14 +2113,6 @@
       ]
     },
     {
-      "term": "LEFT JOIN",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_behavioral_analytics_techniques",
-        "concept/data-architect/03_medallion_advanced_patterns"
-      ]
-    },
-    {
       "term": "운영",
       "count": 2,
       "mentioned_by": [
@@ -2042,11 +2121,11 @@
       ]
     },
     {
-      "term": "'CM'",
+      "term": "'C'",
       "count": 2,
       "mentioned_by": [
         "concept/data-architect/01_how_to_architect_medallion_well",
-        "concept/data-architect/03_medallion_advanced_patterns"
+        "insight/data-architect/01_medallion_with_ontology"
       ]
     },
     {
@@ -2154,14 +2233,6 @@
       ]
     },
     {
-      "term": "placed",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/data-architect/07_ontology_core_concepts"
-      ]
-    },
-    {
       "term": "Customer",
       "count": 2,
       "mentioned_by": [
@@ -2186,11 +2257,19 @@
       ]
     },
     {
+      "term": "온톨로지",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/06_how_to_implement_ontology",
+        "insight/data-architect/01_medallion_with_ontology"
+      ]
+    },
+    {
       "term": "P31/P279*",
       "count": 2,
       "mentioned_by": [
         "concept/data-architect/07_ontology_core_concepts",
-        "insight/data-architect/07_ontology_core_examples"
+        "insight/data-architect/00_ontology_core_examples"
       ]
     },
     {
@@ -2198,7 +2277,7 @@
       "count": 2,
       "mentioned_by": [
         "concept/data-architect/07_ontology_core_concepts",
-        "insight/data-architect/07_ontology_core_examples"
+        "insight/data-architect/00_ontology_core_examples"
       ]
     },
     {
@@ -2206,7 +2285,7 @@
       "count": 2,
       "mentioned_by": [
         "concept/data-architect/07_ontology_core_concepts",
-        "insight/data-architect/07_ontology_core_examples"
+        "insight/data-architect/00_ontology_core_examples"
       ]
     },
     {
@@ -2223,6 +2302,14 @@
       "mentioned_by": [
         "concept/jpa/00_jpa_dirty_checking",
         "concept/springboot/00_why_rollback_marked_transaction_is_unusable"
+      ]
+    },
+    {
+      "term": "blocked",
+      "count": 2,
+      "mentioned_by": [
+        "insight/data-architect/00_ontology_core_examples",
+        "insight/data-architect/01_medallion_with_ontology"
       ]
     }
   ]
