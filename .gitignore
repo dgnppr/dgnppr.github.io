@@ -8,7 +8,6 @@ package-lock.json
 .jekyll-cache/
 .idea
 .obsidian
-.claude
 resource/credentials/
 .env
 data/qdrant/
