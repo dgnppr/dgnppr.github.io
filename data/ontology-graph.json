@@ -568,9 +568,7 @@
         "data-architecture",
         "data-engineering",
         "ontology",
-        "palantir",
-        "AIP",
-        "semantic-layer"
+        "palantir"
       ],
       "date": "2026-05-27",
       "confidence": "high",
@@ -621,7 +619,7 @@
         "ontology",
         "data-architect"
       ],
-      "date": "2026-06-29",
+      "date": "2026-06-22",
       "confidence": "high",
       "mentioned_terms": [
         "Flight",
@@ -716,11 +714,7 @@
         "data-architecture",
         "data-engineering",
         "ontology",
-        "palantir",
-        "object-type",
-        "link-type",
-        "action-type",
-        "bigquery"
+        "palantir"
       ],
       "date": "2026-06-23",
       "confidence": "high",
@@ -780,13 +774,7 @@
         "data-architecture",
         "data-engineering",
         "ontology",
-        "wikidata",
-        "palantir",
-        "rdf",
-        "sparql",
-        "owl",
-        "cwa",
-        "owa"
+        "palantir"
       ],
       "date": "2026-06-25",
       "confidence": "high",
