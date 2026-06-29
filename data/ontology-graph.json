@@ -402,7 +402,7 @@
       "type": "concept",
       "title": "올바른 Funnel 설계의 7가지 조건",
       "path": "_concept/data-analysis/00_how_to_design_funnel.md",
-      "status": "draft",
+      "status": "complete",
       "tags": [
         "data-analysis",
         "funnel",
@@ -426,9 +426,9 @@
       ],
       "content_depth": 0.68,
       "importance": 1,
-      "depth": 0.46,
+      "depth": 0.66,
       "unanswered_questions": 0,
-      "learning_pressure": 0.54
+      "learning_pressure": 0.34
     },
     "concept/data-analysis/01_behavioral_analytics_techniques": {
       "id": "concept/data-analysis/01_behavioral_analytics_techniques",
@@ -483,10 +483,103 @@
         "경로 분석"
       ],
       "content_depth": 0.77,
-      "importance": 0,
-      "depth": 0.77,
+      "importance": 4,
+      "depth": 0.82,
       "unanswered_questions": 0,
-      "learning_pressure": 0
+      "learning_pressure": 0.72
+    },
+    "concept/data-analysis/02_event_tracking_design": {
+      "id": "concept/data-analysis/02_event_tracking_design",
+      "type": "concept",
+      "title": "행동 데이터 분석의 전제조건 — 이벤트 트래킹 설계",
+      "path": "_concept/data-analysis/02_event_tracking_design.md",
+      "status": "complete",
+      "tags": [
+        "data-analysis",
+        "event-tracking",
+        "schema",
+        "analytics",
+        "tracking-plan",
+        "bigquery"
+      ],
+      "date": "2026-06-29",
+      "confidence": "high",
+      "mentioned_terms": [
+        "platform",
+        "properties",
+        "trigger",
+        "category",
+        "price",
+        "owner",
+        "status",
+        "planned",
+        "implemented",
+        "deprecated",
+        "\"9900\"",
+        "특정 시점에 발생한 사실의 기록",
+        "불변성",
+        "원자성",
+        "Screen View",
+        "User Action",
+        "System Event",
+        "Screen View는 노출 데이터",
+        "User Action은 의도 데이터",
+        "왜 과거형인가",
+        "해결",
+        "스키마 설계",
+        "네이밍",
+        "트래킹 플랜",
+        "운영"
+      ],
+      "content_depth": 0.6,
+      "importance": 1,
+      "depth": 0.74,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.27
+    },
+    "concept/data-analysis/03_metrics_framework": {
+      "id": "concept/data-analysis/03_metrics_framework",
+      "type": "concept",
+      "title": "지표 체계 설계 — NSM부터 Guardrail까지",
+      "path": "_concept/data-analysis/03_metrics_framework.md",
+      "status": "complete",
+      "tags": [
+        "data-analysis",
+        "metrics",
+        "nsm",
+        "north-star",
+        "guardrail",
+        "okr",
+        "analytics",
+        "goodhart"
+      ],
+      "date": "2026-06-29",
+      "confidence": "high",
+      "mentioned_terms": [
+        "NSM",
+        "L1",
+        "L2",
+        "Guardrail",
+        "고객에게 제공하는 핵심 가치",
+        "고객 가치를 반영한다",
+        "비즈니스 성과와 연결된다",
+        "팀이 직접 영향을 줄 수 있다",
+        "측정 가능하다",
+        "단일 숫자다",
+        "최적화 도중 망가지면 안 되는 지표",
+        "지표 쌍으로 관리",
+        "지표를 정기적으로 교체",
+        "지표 설계를 공개",
+        "전사 대시보드",
+        "팀 대시보드",
+        "Leading/Lagging",
+        "Goodhart's Law 방어"
+      ],
+      "content_depth": 0.77,
+      "importance": 1,
+      "depth": 0.79,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.21
     },
     "concept/data-architect/00_what_is_medaliion_architecture": {
       "id": "concept/data-architect/00_what_is_medaliion_architecture",
@@ -1655,6 +1748,16 @@
       "type": "references"
     },
     {
+      "from": "concept/data-analysis/02_event_tracking_design",
+      "to": "concept/data-analysis/01_behavioral_analytics_techniques",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-analysis/03_metrics_framework",
+      "to": "concept/data-analysis/01_behavioral_analytics_techniques",
+      "type": "extends"
+    },
+    {
       "from": "concept/data-architect/01_how_to_architect_medallion_well",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "extends"
@@ -1792,6 +1895,25 @@
   ],
   "content_mentioned_concepts": [
     {
+      "term": "status",
+      "count": 4,
+      "mentioned_by": [
+        "concept/data-analysis/02_event_tracking_design",
+        "concept/data-architect/02_how_to_architect_medallion_well",
+        "concept/data-architect/04_what_is_ontology",
+        "concept/data-architect/05_ontology_objects_summary"
+      ]
+    },
+    {
+      "term": "deprecated",
+      "count": 3,
+      "mentioned_by": [
+        "adr/architecture/2026-06-24-001-adr-guide",
+        "concept/data-analysis/02_event_tracking_design",
+        "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
       "term": "결론",
       "count": 3,
       "mentioned_by": [
@@ -1807,15 +1929,6 @@
         "concept/cloud/03_vpc_for_pca",
         "concept/cloud/04_gke_for_pca",
         "concept/cloud/05_iam_for_pca"
-      ]
-    },
-    {
-      "term": "status",
-      "count": 3,
-      "mentioned_by": [
-        "concept/data-architect/02_how_to_architect_medallion_well",
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/05_ontology_objects_summary"
       ]
     },
     {
@@ -1852,14 +1965,6 @@
         "concept/data-architect/06_how_to_implement_ontology",
         "concept/data-architect/07_ontology_core_concepts",
         "insight/data-architect/07_ontology_core_examples"
-      ]
-    },
-    {
-      "term": "deprecated",
-      "count": 2,
-      "mentioned_by": [
-        "adr/architecture/2026-06-24-001-adr-guide",
-        "concept/data-architect/07_ontology_core_concepts"
       ]
     },
     {
@@ -1908,6 +2013,14 @@
       "mentioned_by": [
         "concept/data-analysis/01_behavioral_analytics_techniques",
         "concept/data-architect/03_medallion_advanced_patterns"
+      ]
+    },
+    {
+      "term": "운영",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-analysis/02_event_tracking_design",
+        "concept/data-engineering/00_how_to_use_dataform_well"
       ]
     },
     {

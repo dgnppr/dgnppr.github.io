@@ -7,7 +7,7 @@ tag     : data-analysis funnel analytics
 toc     : true
 comment : true
 latex   : true
-status  : draft
+status  : complete
 public  : true
 parent  : [[/data-analysis]]
 relations:
