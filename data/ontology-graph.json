@@ -425,75 +425,17 @@
         "overall"
       ],
       "content_depth": 0.68,
-      "importance": 3,
-      "depth": 0.49,
-      "unanswered_questions": 0,
-      "learning_pressure": 1.54
-    },
-    "concept/data-analysis/01_analysis_techniques_beyond_funnel": {
-      "id": "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-      "type": "concept",
-      "title": "실전 데이터 분석 기법 5가지",
-      "path": "_concept/data-analysis/01_analysis_techniques_beyond_funnel.md",
-      "status": "writing",
-      "tags": [
-        "data-analysis",
-        "cohort",
-        "retention",
-        "ab-test",
-        "rfm",
-        "path-analysis",
-        "analytics"
-      ],
-      "date": "2026-06-29",
-      "confidence": "high",
-      "mentioned_terms": [
-        "LEFT JOIN",
-        "N-Day",
-        "Unbounded",
-        "Rolling",
-        "N-Day 리텐션이 흔히 틀리는 이유",
-        "곡선이 flatten되지 않고 0으로 수렴",
-        "초반 급감이 매우 가파름",
-        "특정 시점에 반등",
-        "규칙",
-        "\"어떤 집단이 더 잘 돌아오나\"",
-        "획득 코호트",
-        "행동 코호트",
-        "수직으로 보기",
-        "수평으로 보기",
-        "대각선으로 보기",
-        "주의",
-        "\"이 사람이 전체 이력에서 어떤 사람인가\"",
-        "분석 기간 고정하지 않기",
-        "NTILE 경계 맹신",
-        "Monetary 0 포함",
-        "관찰",
-        "인과",
-        "SRM 원인",
-        "방법",
-        "신호",
-        "사용자가 실제로 어떤 순서로 움직이는지",
-        "좋은 사례",
-        "나쁜 사례",
-        "리텐션",
-        "코호트",
-        "RFM",
-        "A/B 테스트",
-        "경로 분석"
-      ],
-      "content_depth": 0.85,
       "importance": 1,
-      "depth": 0.72,
+      "depth": 0.46,
       "unanswered_questions": 0,
-      "learning_pressure": 0.28
+      "learning_pressure": 0.54
     },
     "concept/data-analysis/01_behavioral_analytics_techniques": {
       "id": "concept/data-analysis/01_behavioral_analytics_techniques",
       "type": "concept",
       "title": "행동 데이터 분석 핵심 기법 5가지",
       "path": "_concept/data-analysis/01_behavioral_analytics_techniques.md",
-      "status": "writing",
+      "status": "complete",
       "tags": [
         "data-analysis",
         "cohort",
@@ -542,7 +484,7 @@
       ],
       "content_depth": 0.77,
       "importance": 0,
-      "depth": 0.67,
+      "depth": 0.77,
       "unanswered_questions": 0,
       "learning_pressure": 0
     },
@@ -1713,11 +1655,6 @@
       "type": "references"
     },
     {
-      "from": "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-      "to": "concept/data-analysis/00_how_to_design_funnel",
-      "type": "extends"
-    },
-    {
       "from": "concept/data-architect/01_how_to_architect_medallion_well",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "extends"
@@ -1873,24 +1810,6 @@
       ]
     },
     {
-      "term": "규칙",
-      "count": 3,
-      "mentioned_by": [
-        "concept/data-analysis/00_how_to_design_funnel",
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "LEFT JOIN",
-      "count": 3,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques",
-        "concept/data-architect/03_medallion_advanced_patterns"
-      ]
-    },
-    {
       "term": "status",
       "count": 3,
       "mentioned_by": [
@@ -1976,243 +1895,19 @@
       ]
     },
     {
-      "term": "N-Day",
+      "term": "규칙",
       "count": 2,
       "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
+        "concept/data-analysis/00_how_to_design_funnel",
         "concept/data-analysis/01_behavioral_analytics_techniques"
       ]
     },
     {
-      "term": "Unbounded",
+      "term": "LEFT JOIN",
       "count": 2,
       "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "Rolling",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "N-Day 리텐션이 흔히 틀리는 이유",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "곡선이 flatten되지 않고 0으로 수렴",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "초반 급감이 매우 가파름",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "특정 시점에 반등",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "\"어떤 집단이 더 잘 돌아오나\"",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "획득 코호트",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "행동 코호트",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "수직으로 보기",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "수평으로 보기",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "대각선으로 보기",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "주의",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "분석 기간 고정하지 않기",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "NTILE 경계 맹신",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "Monetary 0 포함",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "관찰",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "인과",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "SRM 원인",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "방법",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "신호",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "사용자가 실제로 어떤 순서로 움직이는지",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "좋은 사례",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "나쁜 사례",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "리텐션",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "코호트",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "RFM",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "A/B 테스트",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
-      ]
-    },
-    {
-      "term": "경로 분석",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analysis/01_analysis_techniques_beyond_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
+        "concept/data-analysis/01_behavioral_analytics_techniques",
+        "concept/data-architect/03_medallion_advanced_patterns"
       ]
     },
     {

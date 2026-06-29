@@ -44,5 +44,6 @@
   "cloud/05_iam_for_pca": "efe7db45d016e4a8bd3c5ca130ec416f",
   "data-architect/05_ontology_objects_summary": "f05fcfd4092eb27cb76c08c8b29fa5f7",
   "data-architect/06_how_to_implement_ontology": "928ecdbc8bd7818e09abfc8b7f95ad05",
-  "data-architect/07_ontology_core_concepts": "59f42dd10680cbcf7f2822ab3e580dbf"
+  "data-architect/07_ontology_core_concepts": "59f42dd10680cbcf7f2822ab3e580dbf",
+  "data-analysis/01_behavioral_analytics_techniques": "1e970fd2496b060c41ff41fb2e6430bf"
 }
