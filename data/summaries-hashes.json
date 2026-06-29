@@ -20,8 +20,6 @@
   "data-architect/02_how_to_architect_medallion_well": "1c5ad1b22152054a2dff9417550b6532",
   "data-architect/03_medallion_advanced_patterns": "22b8655cc691f472a71e4d454b6e3eb6",
   "data-architect/04_what_is_ontology": "f4345e8a6d95b43ff3836e0bca6f0b26",
-  "data-architect/05_how_to_implement_ontology": "aec21a453a38f891309a3192eb187ddf",
-  "data-architect/06_ontology_core_concepts": "f11f1a5f17b0733189802dbf8ddd95df",
   "cloud/01_how_to_operate_iam_well": "f1b26b8320e67660aecd81f2a484868b",
   "cloud/02_authenticate_gcp_without_service_accounts": "66563ee28f9b8a700d867daa6e8acb36",
   "data-architect/07_ontology_core_examples": "215c2a4ce94af5588fa838f4063ba118",
@@ -44,5 +42,7 @@
   "cloud/03_vpc_for_pca": "88fdfed8fb177fa62d5b8a9cd36f59df",
   "cloud/04_gke_for_pca": "9c57c47eced2806cce0cda846bfe9f3b",
   "cloud/05_iam_for_pca": "efe7db45d016e4a8bd3c5ca130ec416f",
-  "data-architect/05_ontology_objects_summary": "f05fcfd4092eb27cb76c08c8b29fa5f7"
+  "data-architect/05_ontology_objects_summary": "f05fcfd4092eb27cb76c08c8b29fa5f7",
+  "data-architect/06_how_to_implement_ontology": "06369f72e7bc78e357fbf0b5c5a8abc8",
+  "data-architect/07_ontology_core_concepts": "c44604694ac0a8b7dddacc925ed7282c"
 }
