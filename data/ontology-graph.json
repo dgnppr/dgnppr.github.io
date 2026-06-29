@@ -735,6 +735,7 @@
         "Action Type",
         "Dynamic Layer",
         "Object Set",
+        "마켓온",
         "아니다",
         "시맨틱 레이어",
         "온톨로지",
@@ -758,16 +759,16 @@
         "Action은 비즈니스 이벤트",
         "검증은 Action 안에"
       ],
-      "content_depth": 0.92,
+      "content_depth": 1,
       "importance": 3,
-      "depth": 0.9,
+      "depth": 0.93,
       "unanswered_questions": 0,
-      "learning_pressure": 0.31
+      "learning_pressure": 0.23
     },
     "concept/data-architect/07_ontology_core_concepts": {
       "id": "concept/data-architect/07_ontology_core_concepts",
       "type": "concept",
-      "title": "온톨로지의 핵심 개념 — 마켓온 · 팔란티어 · Wikidata 세 세계관",
+      "title": "온톨로지 핵심 개념 정리",
       "path": "_concept/data-architect/07_ontology_core_concepts.md",
       "status": "complete",
       "tags": [

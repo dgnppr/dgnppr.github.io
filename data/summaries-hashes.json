@@ -43,6 +43,6 @@
   "cloud/04_gke_for_pca": "9c57c47eced2806cce0cda846bfe9f3b",
   "cloud/05_iam_for_pca": "efe7db45d016e4a8bd3c5ca130ec416f",
   "data-architect/05_ontology_objects_summary": "f05fcfd4092eb27cb76c08c8b29fa5f7",
-  "data-architect/06_how_to_implement_ontology": "06369f72e7bc78e357fbf0b5c5a8abc8",
-  "data-architect/07_ontology_core_concepts": "c44604694ac0a8b7dddacc925ed7282c"
+  "data-architect/06_how_to_implement_ontology": "928ecdbc8bd7818e09abfc8b7f95ad05",
+  "data-architect/07_ontology_core_concepts": "59f42dd10680cbcf7f2822ab3e580dbf"
 }
