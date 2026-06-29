@@ -1,19 +1,19 @@
 ---
-layout  : concept
-title   : 온톨로지는 데이터가 아니라 합의를 설계한다
-date    : 2026-05-27 00:00:00 +0900
-updated : 2026-05-27 00:00:00 +0900
-tag     : data-architecture data-engineering ontology 
-toc     : true
-comment : true
-latex   : true
-status  : draft
-public  : true
-show-diagram: true
-parent  : [[/data-architect]]
+layout      : concept
+title       : 온톨로지는 데이터가 아니라 합의를 설계한다
+date        : 2026-05-27 00:00:00 +0900
+updated     : 2026-06-29 00:00:00 +0900
+tag         : data-architecture data-engineering ontology palantir
+toc         : true
+comment     : true
+latex       : true
+status      : writing
+public      : true
+parent      : [[/data-architect]]
+confidence  : high
 relations:
-  - { type: extends, target: /concept/data-architect/03_medallion_advanced_patterns }
-confidence     : high
+  - { type: extends, target: concept/data-architect/03_medallion_advanced_patterns }
+  - { type: references, target: concept/data-architect/05_ontology_objects_summary }
 ---
 
 > 시맨틱 웹의 실패에서 AI 에이전트의 월드모델까지, 데이터 아키텍트의 시선으로 다시 읽는 온톨로지
@@ -67,13 +67,49 @@ confidence     : high
 
 온톨로지를 가장 명료하게 해부한 것은 Palantir의 3계층 모델이다. 나는 이 프레임이 마케팅 용어를 넘어 실제 아키텍처 원리라고 본다.
 
-**① 의미 계층(Semantic).** 객체(objects), 속성(properties), 링크(links). 세계에 무엇이 존재하고 어떻게 관계 맺는가. 이것이 **명사**다. 고객, 주문, 상품, 그리고 "고객이 주문을 한다"는 관계.
+**① 의미 계층(Semantic).** 객체(objects), 속성(properties), 링크(links). 세계에 무엇이 존재하고 어떻게 관계 맺는가. 이것이 **명사**다.
 
-**② 운동 계층(Kinetic).** 액션(actions)과 함수(functions). 거버넌스 아래에서 세계를 *바꾸는* 행위. 이것이 **동사**다. "고객 등급을 변경한다", "주문 상태를 갱신한다". Palantir의 표현대로, 의미는 반드시 운동과 짝지어져야 한다 — 명사만으로는 의사결정을 모델링할 수 없다.
+예를 들어 항공사 운영 도메인을 온톨로지로 적으면 다음과 같다.
 
-**③ 동역학 계층(Dynamic).** 시뮬레이션, AI, 폐루프(closed-loop). 모델이 시간 속에서 진화하고, 내려진 의사결정이 다시 데이터로 되먹임되는 층. 모델 자체가 살아 움직인다.
+```
+Object Type: Flight        — 특정 날짜에 운항하는 항공편 단위
+  Properties:
+    flightNumber  : string     "KE001"
+    status        : string     "ON_TIME" | "DELAYED" | "CANCELLED"
+    scheduledDepart: timestamp 2026-06-29T09:00:00+09:00
+    delayMinutes  : integer    (파생: actualDepart - scheduledDepart)
 
-시맨틱 레이어와 온톨로지를 가르는 결정적 차이가 여기서 드러난다. **온톨로지에는 동사(kinetic)와 시간(dynamic)이 있다.** 분석에서 멈추지 않고 writeback을 통해 실행으로 이어지고, 정의와 상태가 시간 축을 따라 버전을 갖는다. 대시보드는 답을 *보여주고*, 온톨로지는 그 답으로 세계를 *바꾼다*. 내가 늘 쓰는 표현으로는 — dashboards가 아니라 decisions.
+Object Type: CrewMember    — 운항에 배치되는 승무원
+Object Type: Airport       — 출발·도착 공항
+
+Link Type: Flight --[hasCrew / assignedTo]--> CrewMember   (MANY_TO_MANY)
+Link Type: Flight --[departsFrom / originFlights]--> Airport (MANY_TO_ONE)
+```
+
+SQL에서는 `flights.tail_num = aircraft.reg_no`라는 조인 조건이 외래키로 표현된다. 온톨로지에서는 `Flight --[operatedBy]--> Aircraft`라는 **이름이 있는 관계**로 표현된다. 관계에 비즈니스 의미를 담는 것이 핵심이다.
+
+**② 운동 계층(Kinetic).** 액션(actions)과 함수(functions). 거버넌스 아래에서 세계를 *바꾸는* 행위. 이것이 **동사**다.
+
+```
+Action Type: delayFlight
+  Parameters  : flight, delayMinutes, reason, notifyPassengers
+  Validation  : status != "CANCELLED", delayMinutes > 0
+  Effects     : MODIFY_OBJECT flight { status → "DELAYED", actualDepart → ... }
+  Notification: 운항 통제 채널 웹훅 + 승객 SMS
+
+Action Type: reassignCrew
+  Parameters  : flight, removeCrew, addCrew
+  Validation  : addCrew가 해당 시간대 다른 편에 미배정
+  Effects     : DELETE_LINK + CREATE_LINK (flight ↔ crew)
+```
+
+액션이 중요한 이유는 단순히 데이터를 쓰기(writeback) 때문이 아니다. **누가, 언제, 어떤 검증 아래, 어떤 변경을 허용하는가**를 온톨로지 계층에서 선언하기 때문이다. 앱 코드 5곳이 각자 `UPDATE` 문을 날리는 것과 근본적으로 다르다.
+
+**③ 동역학 계층(Dynamic).** 시뮬레이션, AI, 폐루프(closed-loop). 모델이 시간 속에서 진화하고, 내려진 의사결정이 다시 데이터로 되먹임되는 층.
+
+시맨틱 레이어와 온톨로지를 가르는 결정적 차이가 여기서 드러난다. **온톨로지에는 동사(kinetic)와 시간(dynamic)이 있다.** 대시보드는 답을 *보여주고*, 온톨로지는 그 답으로 세계를 *바꾼다*. dashboards가 아니라 decisions.
+
+> 각 구성 요소(Object, Property, Link, Action, Interface, Object Set)의 상세 스펙과 코드 예시는 [[05_ontology_objects_summary]] 참고.
 
 ---
 
@@ -83,7 +119,9 @@ confidence     : high
 
 이 회원번호와 저 GA `client_id`가 같은 사람인가? 통합된 `customer_key`는 어떻게 확정되는가? 온톨로지의 객체는 결국 여러 소스를 표준 키로 묶은 결과이고, **모델의 품질은 정확히 그 키의 품질만큼이다.** 아무리 우아한 객체-링크 그래프를 그려도, identity가 흔들리면 그 위의 모든 것이 흔들린다.
 
-그래서 성숙한 온톨로지 작업의 8할은 모델링이 아니라 동일성과의 싸움이다. 매칭 규칙, N:1 위반, 식별자 충돌. 이 지점을 데이터 계약(data contract)과 DQ 게이트로 단단히 잠그지 않으면, 온톨로지는 잘 만든 거짓말이 된다. 이 작업이 지루하다는 사실이야말로, 대부분의 "온톨로지 도입"이 데모에서 멈추는 이유다.
+항공사 예시로 돌아오면: `Flight`의 Primary Key를 `flightNumber`(예: "KE001")로 잡으면 날짜마다 중복이다. `flightId = flightNumber + date`로 합성하면 코드 배리에이션(KE001 vs KE 001)이 충돌한다. 좋은 온톨로지는 이 문제를 모델링 단계에서 명시적으로 다루고, DQ 게이트로 단단히 잠근다.
+
+이 작업이 지루하다는 사실이야말로, 대부분의 "온톨로지 도입"이 데모에서 멈추는 이유다.
 
 ---
 
@@ -91,7 +129,21 @@ confidence     : high
 
 온톨로지의 가장 깊은 가치는 다이어그램도, 셀프서비스도 아니다. **단어의 뜻에 대한, 버전 관리된 제도적 기억**이다.
 
-"활성 고객 = 90일"이라는 정의를 어느 분기에 60일로 바꿨다고 하자. 평범한 조직에서는 누군가의 SQL 한 줄이 조용히 바뀌고, 과거 리포트는 영원히 재현 불가능해진다. 온톨로지에서는 정의 자체가 코드(definition-as-code)이고, 그 변경이 이력으로 남는다. 나는 이걸 **의미의 SCD2** 라고 부른다 — 사실 데이터가 아니라 *정의*에 valid_from / valid_to가 붙는 것이다.
+"활성 고객 = 90일"이라는 정의를 어느 분기에 60일로 바꿨다고 하자. 평범한 조직에서는 누군가의 SQL 한 줄이 조용히 바뀌고, 과거 리포트는 영원히 재현 불가능해진다. 온톨로지에서는 정의 자체가 코드(definition-as-code)이고, 그 변경이 이력으로 남는다. 나는 이걸 **의미의 SCD2** 라고 부른다 — 사실 데이터가 아니라 *정의*에 `valid_from` / `valid_to`가 붙는 것이다.
+
+```yaml
+# 온톨로지 프로퍼티 정의 — 의미의 SCD2
+activeCustomer:
+  definition : "마지막 구매로부터 N일 이내 재구매 이력이 있는 고객"
+  valid_from : 2024-01-01
+  valid_to   : 2025-12-31
+  threshold  : 90   # 일
+
+activeCustomer:
+  definition : 위와 동일
+  valid_from : 2026-01-01
+  threshold  : 60   # 분기 정책 변경
+```
 
 이것이 갖춰지면 조직은 분기마다 "그래서 활성 고객이 정확히 뭐였지?"를 재논쟁하지 않게 된다. 의미가 합의의 대상이자 감사의 대상이 되고, 데이터팀은 정의 분쟁의 중재자 역할에서 해방된다.
 
@@ -103,9 +155,36 @@ confidence     : high
 
 흥미롭게도 dbt가 2026년에 다시 돌린 벤치마크는 미묘한 결과를 보여준다. 모델이 좋아지면서, LLM에게 raw SQL을 직접 쓰게 하는 방식(text-to-SQL)이 구조화된 의미 모델을 거치는 방식과의 정확도 격차를 상당히 좁혔다. 다만 의미 계층은 **모델링된 범위 안에서는 결정론적 정확성**을 보장하고, 그 대가는 커버리지다. 즉 LLM이 점점 똑똑해질수록, 모델이 *못 쓰는* 쿼리를 막는 것보다 모델에게 *올바른 세계관*을 주는 것이 핵심이 된다.
 
-그리고 세계관은 지표만으로 만들어지지 않는다. 에이전트는 "무엇이 존재하고, 무엇과 연결되며, 무슨 행동이 가능한가"를 알아야 한다. 그게 정확히 온톨로지가 주는 것이다. **온톨로지는 에이전트의 월드모델이 된다.** 테이블 1,000개의 스키마를 던지는 대신 객체·관계·행동으로 압축된 지도를 주면, 환각은 줄고 행동은 통제 가능해진다.
+그리고 세계관은 지표만으로 만들어지지 않는다. 에이전트는 "무엇이 존재하고, 무엇과 연결되며, 무슨 행동이 가능한가"를 알아야 한다. 그게 정확히 온톨로지가 주는 것이다. **온톨로지는 에이전트의 월드모델이 된다.**
 
-이 흐름은 이미 제품화되고 있다. Palantir는 Ontology MCP를 통해 온톨로지를 MCP 도구로 노출하고, 외부 AI 에이전트가 객체를 읽고 *사전 정의된 통제된 액션만* 실행하도록 한다. 에이전트가 마음대로 UPDATE를 날리는 게 아니라, 온톨로지가 허용한 동사만 호출하는 것이다. 운동 계층(kinetic)이 곧 AI 안전장치가 되는 셈이다. 분석→의사결정→실행이라는 루프가, 사람만이 아니라 에이전트에게도 열린다.
+구체적으로 보면 이렇다. 운항 통제사가 AIP 에이전트에게 말한다.
+
+```
+"오늘 인천 출발편 중 지연 30분 이상인 건들 뽑아서
+ 환승 승객이 있으면 연결편 리스크 알려줘"
+```
+
+에이전트는 SQL을 모른다. 온톨로지가 주는 개념만 쓴다.
+
+```
+Step 1. 오브젝트 조회
+  Flight.where(departsFrom="ICN", scheduledDepart.isToday(), delayMinutes >= 30)
+  → KE001(60분 지연), KE723(45분 지연)
+
+Step 2. 링크 탐색 (Search Around)
+  KE001.links.carriesPassenger.where(hasConnectingFlight=true)
+  → 23명 환승, 이 중 7명 연결편 마감 위험
+
+Step 3. 에이전트 응답
+  "KE001(60분 지연): 환승 승객 23명 중 7명 연결편 위험.
+   JL096(도쿄행) 연결 5명이 가장 촉박합니다.
+   delayFlight 액션을 실행하거나 lounge 이동을 안내하시겠습니까?"
+
+Step 4. 운항 통제사 승인 → 액션 실행
+  actions.notifyTransitPassengers(flight=KE001, urgencyLevel="HIGH")
+```
+
+테이블 1,000개의 스키마를 던지는 대신 객체·관계·행동으로 압축된 지도를 주면, 환각은 줄고 행동은 통제 가능해진다. Palantir는 Ontology MCP를 통해 이 지도를 외부 AI 에이전트에도 노출한다. 에이전트가 마음대로 `UPDATE`를 날리는 게 아니라, 온톨로지가 허용한 동사(Action)만 호출한다. **운동 계층(kinetic)이 곧 AI 안전장치가 되는 셈이다.** 분석→의사결정→실행이라는 루프가, 사람만이 아니라 에이전트에게도 열린다.
 
 ---
 
@@ -113,9 +192,18 @@ confidence     : high
 
 온톨로지는 자주 실패하고, 실패 양상은 거의 정해져 있다.
 
-가장 흔한 실패는 **온톨로지를 프로젝트로 취급하는 것**이다. 어느 플랫폼 팀이 몇 달에 걸쳐 고객·계정·거래·상품을 멋지게 모델링한다. 그런데 그 모델을 라이브 메타데이터에 연결하지 않는다. 신규 사업이 생기고, 인수로 시스템이 셋 늘고, 테이블이 폐기되어도 온톨로지는 모른다. 결국 그것은 *더 이상 존재하지 않는 비즈니스*를 모델링하게 된다. 추상화 계층을 인프라가 아니라 일회성 프로젝트로 다룬 대가다.
+가장 흔한 실패는 **온톨로지를 프로젝트로 취급하는 것**이다. 어느 플랫폼 팀이 몇 달에 걸쳐 고객·계정·거래·상품을 멋지게 모델링한다. 그런데 그 모델을 라이브 메타데이터에 연결하지 않는다. 신규 사업이 생기고, 인수로 시스템이 셋 늘고, 테이블이 폐기되어도 온톨로지는 모른다. 결국 그것은 *더 이상 존재하지 않는 비즈니스*를 모델링하게 된다.
 
-두 번째는 **바다를 끓이려는 시도(boil the ocean)** — 첫 가치를 보기 전에 7개 도메인을 한 번에 모델링하려다 좌초한다. 세 번째는 **과형식화** — RDF/OWL의 실패를 그대로 반복하는, 아무도 안 쓰는 정교한 분류 체계. 그리고 마지막으로, 작고 안정적이고 단일 팀이 쓰는 데이터라면 **애초에 온톨로지가 필요 없다.** 도구가 아니라 문제가 정당화해야 한다.
+두 번째는 **바다를 끓이려는 시도(boil the ocean)** — 첫 가치를 보기 전에 7개 도메인을 한 번에 모델링하려다 좌초한다. 세 번째는 **과형식화** — 아무도 안 쓰는 정교한 분류 체계. 그리고 마지막으로, 작고 안정적이고 단일 팀이 쓰는 데이터라면 **애초에 온톨로지가 필요 없다.** 도구가 아니라 문제가 정당화해야 한다.
+
+잘못된 설계의 냄새는 명확하다.
+
+| 나쁜 예 | 좋은 예 | 이유 |
+|--------|--------|------|
+| Object Type: `FlightDelayHandler` | `Flight` + `delayFlight` Action | Object는 명사, 동사는 Action |
+| Link: `hasCrew` + 앱 코드에서 `crewType == PILOT` 필터 | Link: `hasPilot` (기장 전용 링크) | 링크에 비즈니스 의미를 담아야 |
+| `col_delay_min`, `flt_stat_cd` | `delayMinutes`, `status` | 비즈니스 언어 우선 |
+| 각 앱 5곳에서 각자 지연 처리 검증 | Action validation rule 한 곳 | 검증은 온톨로지 계층에서 |
 
 규칙은 하나다. **온톨로지는 프로젝트가 아니라 인프라로 취급될 때만 살아있다.** 작게 시작해, 라이브 데이터에 묶고, 정의를 코드로 버전 관리하며, 가치를 증명하면서 키운다.
 

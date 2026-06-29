@@ -1,22 +1,41 @@
 ---
-layout  : concept
-title   : 알람 케이스로 온톨로지 훑어보기
-date    : 2026-06-23 00:00:00 +0900
-updated : 2026-06-23 00:00:00 +0900
-tag     : data-architecture data-engineering ontology 
-toc     : true
-comment : true
-latex   : true
-status  : complete
-public  : true
-show-diagram: true
-parent  : [[/data-architect]]
+layout      : concept
+title       : 알람 케이스로 온톨로지 훑어보기
+date        : 2026-06-23 00:00:00 +0900
+updated     : 2026-06-29 00:00:00 +0900
+tag         : data-architecture data-engineering ontology palantir
+toc         : true
+comment     : true
+latex       : true
+status      : complete
+public      : true
+parent      : [[/data-architect]]
+confidence  : high
 relations:
-  - { type: extends, target: /concept/data-architect/04_what_is_ontology }
-confidence     : medium
+  - { type: extends, target: concept/data-architect/04_what_is_ontology }
+  - { type: implements, target: concept/data-architect/05_ontology_objects_summary }
 ---
 
 > [[/data-architect/04_what_is_ontology]] 에서 온톨로지를 **객체(명사)·링크(관계)·액션(동사)** 세 계층과, 그 위에 올라타는 **시간(Dynamic)** 차원으로 설명했다. 이 글은 그 모든 개념이 하나의 사건 안에서 어떻게 맞물리는지를 끝까지 파고든다.
+
+---
+
+## 팔란티어 온톨로지 언어로 읽는 이 글
+
+이 글에서 BigQuery SQL로 구현하는 것들은 팔란티어 파운드리의 온톨로지 언어로 부르면 다음과 같다. 두 언어를 나란히 두면 개념이 더 또렷해진다.
+
+| 이 글의 BigQuery 구현 | 팔란티어 온톨로지 개념 | 역할 |
+|----------------------|---------------------|------|
+| `customers` 테이블 + `canonical_id` | **Object Type** + Primary Key | 비즈니스 개체의 정의와 식별 |
+| `customer_identity` 매핑 | Entity Resolution | 여러 소스 ID → 하나의 Object |
+| `display_name`, `created_at` | **Property** (Scalar) | 개체가 갖는 값 |
+| `days_since_last_purchase` | **Derived Property** | 런타임 계산값 (저장 안 함) |
+| `links` 테이블 (`placed`) | **Link Type** | 객체 간 관계 |
+| `prop_def` 테이블 | Property Definition (SCD2) | 정의에 이력을 붙임 |
+| `action_def` + precondition | **Action Type** (Parameters + Validation Rules) | 허용된 행위의 계약 |
+| `action_log` | Action 실행 이력 + **Dynamic Layer** 피드백 소스 |
+| 847명 집합 쿼리 | **Object Set** | 조건을 만족하는 객체 컬렉션 |
+| 에이전트 쿼리 인터페이스 | Ontology API | 행위자가 온톨로지를 호출하는 방법 |
 
 ---
 
@@ -74,7 +93,7 @@ CS 자동화 시스템은 이탈 확률이 임계값을 넘으면 쿠폰 발송 
 
 ### 4. Definition 부재 — "마지막 구매"의 의미가 어디에도 적혀 있지 않았다
 
-모델 카드에는 `last_purchase_at: 마지막 구매일`이라고만 적혀 있었다. 웹 기준인지 전채널 기준인지, 주문 접수 기준인지 결제 완료 기준인지. 이 모호함이 묵인된 채 3년이 흘렀다. 그리고 이 정의가 언제 누가 왜 만들었는지, 중간에 바뀐 적은 없는지 추적할 방법이 없었다.
+모델 카드에는 `last_purchase_at: 마지막 구매일`이라고만 적혀 있었다. 웹 기준인지 전채널 기준인지, 주문 접수 기준인지 결제 완료 기준인지. 이 모호함이 묵인된 채 3년이 흘렀다.
 
 ---
 
@@ -87,15 +106,12 @@ CS 자동화 시스템은 이탈 확률이 임계값을 넘으면 쿠폰 발송 
 마켓온에는 이미 잘 만들어진 시맨틱 레이어가 있었다. `customer_gmv_90d`는 이렇게 정의돼 있었다.
 
 ```yaml
-# dbt/models/metrics/customer_gmv_90d.yml
 metrics:
   - name: customer_gmv_90d
-    label: "고객 90일 GMV"
     model: ref('fct_orders')
     calculation_method: sum
     expression: amount
     timestamp: order_date
-    time_grains: [day, week, month]
     dimensions: [user_id, channel, tier]
     filters:
       - field: status
@@ -103,16 +119,10 @@ metrics:
         value: 'completed'
 ```
 
-이 metric은 "고객 GMV를 어떻게 측정하는가"를 정확하게 정의한다. 마케팅과 재무가 서로 다른 GMV를 계산하지 않도록 막아준다. 훌륭한 도구다.
-
-하지만 K씨 문제에는 답이 없다. `user_id`가 K씨를 완전하게 대표하지 않기 때문이다. metric이 아무리 정밀해도, 측정 **대상**이 불완전하면 측정값도 불완전하다.
-
-이것이 [[/data-architect/04_what_is_ontology]]에서 설명한 시맨틱 레이어와 온톨로지의 층위 차이다.
+이 metric은 "고객 GMV를 *어떻게 측정하는가*"를 정확하게 정의한다. 훌륭한 도구다. 하지만 K씨 문제에는 답이 없다. `user_id`가 K씨를 완전하게 대표하지 않기 때문이다.
 
 > **시맨틱 레이어**: "K씨의 GMV를 *어떻게 측정하는가*"를 정의한다.  
 > **온톨로지**: "K씨가 *무엇이고*, 무엇과 *연결되며*, 무슨 *행동이 가능한가*"를 정의한다.
-
-시맨틱 레이어는 측정 계약(metric contract)이다. 온톨로지는 그 아래 레이어다. `user_id`가 K씨의 전부인지 아닌지를 아는 것이 온톨로지의 일이다. K씨의 온라인·오프라인 구매를 하나로 묶고 나서야 시맨틱 레이어의 GMV metric이 올바른 숫자를 낸다.
 
 둘은 경쟁이 아니라 층위다. 온톨로지 위에 시맨틱 레이어가 올라간다.
 
@@ -122,9 +132,21 @@ metrics:
 
 포스트모텀 이후 데이터팀이 제안한 것은 새 모델이나 더 나은 피처 엔지니어링이 아니었다. 네 가지 부재를 각각 채우는 설계였다.
 
-### Entity + Identity: K씨를 하나로
+---
 
-Customer는 소스 시스템의 ID가 아니라 실체(사람)다. `CUST-029182`라는 canonical ID를 발급하고, 소스 ID들을 매핑한다.
+### Object Type + Identity: K씨를 하나로
+
+**팔란티어 온톨로지 언어로:** Customer는 **Object Type**이다. `canonical_id`가 Primary Key, `display_name`이 Title Property다.
+
+```
+Object Type: Customer
+  Primary Key  : canonical_id  (예: "CUST-029182")
+  Title Prop   : display_name  (예: "권지혜")
+  Description  : 채널 무관하게 동일 실체를 가리키는 고객 단위
+  Data Source  : customer_identity 매핑을 통해 CRM·POS 통합
+```
+
+Customer는 소스 시스템의 ID가 아니라 실체(사람)다. 시스템 구현은 다음과 같다.
 
 ```sql
 CREATE TABLE `marketeon.ontology.customers` (
@@ -145,9 +167,9 @@ CREATE TABLE `marketeon.ontology.customer_identity` (
 
 K씨의 이메일이 CRM과 POS 모두 `kwon.jihye@gmail.com`이었다. 이메일 정규화 매칭으로 `U-29182`와 `M-00991`을 `CUST-029182` 하나에 연결한다.
 
-적재는 3단계다.
+**적재 3단계:**
 
-**Step 1 — CRM을 시드로 canonical entity 생성.** `GENERATE_UUID()` 결과를 같은 트랜잭션에서 바로 참조할 수 없으므로 임시 테이블에 먼저 확보한다.
+**Step 1** — CRM을 시드로 canonical entity 생성.
 
 ```sql
 CREATE TEMP TABLE _crm_seed AS
@@ -155,11 +177,10 @@ SELECT user_id, name, created_at, GENERATE_UUID() AS canonical_id
 FROM `marketeon.crm.users`;
 
 INSERT INTO `marketeon.ontology.customers` (canonical_id, display_name, created_at)
-SELECT canonical_id, name, created_at
-FROM _crm_seed;
+SELECT canonical_id, name, created_at FROM _crm_seed;
 ```
 
-**Step 2 — CRM → canonical 매핑 등록.** `_crm_seed`에 UUID가 이미 있으므로 안전하게 조인할 수 있다.
+**Step 2** — CRM → canonical 매핑 등록.
 
 ```sql
 INSERT INTO `marketeon.ontology.customer_identity`
@@ -168,7 +189,7 @@ SELECT 'crm', user_id, canonical_id, 'seed', 1.0, CURRENT_TIMESTAMP()
 FROM _crm_seed;
 ```
 
-**Step 3 — POS → canonical 매핑 등록.** CRM canonical_id가 이미 `customer_identity`에 있으므로 이메일 매칭으로 연결한다.
+**Step 3** — POS → canonical 매핑 등록 (이메일 매칭).
 
 ```sql
 INSERT INTO `marketeon.ontology.customer_identity`
@@ -183,9 +204,21 @@ JOIN `marketeon.ontology.customer_identity` ci
 
 ---
 
-### Link: 구매를 관계로 표현한다
+### Link Type: 구매를 관계로 표현한다
 
-Order도 엔티티다. K씨와 주문 사이에는 **"구매했다(placed)"** 는 링크가 있다.
+**팔란티어 온톨로지 언어로:** Customer와 Order 사이에 **Link Type**이 있다.
+
+```
+Link Type: placed / placedBy
+  Source       : Customer  (MANY)
+  Target       : Order     (MANY)
+  카디널리티   : MANY_TO_MANY (한 고객이 여러 주문, 한 주문은 하나의 고객)
+  Forward Name : placed    (Customer → Order: "K씨가 place한 주문들")
+  Reverse Name : placedBy  (Order → Customer: "이 주문을 place한 고객")
+  의미         : 고객이 주문을 생성한 행위. 채널 무관.
+```
+
+Order도 엔티티다. 시스템 구현:
 
 ```sql
 CREATE TABLE `marketeon.ontology.orders` (
@@ -211,7 +244,7 @@ PARTITION BY DATE(valid_from)
 CLUSTER BY rel_type, source_id;
 ```
 
-CRM·POS 주문을 각각 Order 엔티티로 적재하고, canonical_id 기준의 `placed` 링크를 생성한다.
+CRM·POS 주문을 각각 Order 오브젝트로 적재하고, canonical_id 기준의 `placed` 링크를 생성한다.
 
 ```sql
 -- CRM 주문
@@ -225,7 +258,7 @@ JOIN `marketeon.ontology.customer_identity` ci
   ON ci.source_id = o.user_id AND ci.source_system = 'crm'
 WHERE o.status = 'completed';
 
--- POS 주문 — 같은 links 테이블에, 같은 rel_type으로
+-- POS 주문 — 같은 links 테이블, 같은 rel_type
 INSERT INTO `marketeon.ontology.links`
   (id, rel_type, source_type, source_id, target_type, target_id, valid_from)
 SELECT
@@ -236,7 +269,7 @@ JOIN `marketeon.ontology.customer_identity` ci
   ON ci.source_id = p.member_no AND ci.source_system = 'pos';
 ```
 
-이제 `last_purchase_at`은 컬럼이 아니다. **"K씨가 placed 링크로 연결된 모든 Order 중 가장 최근의 completed_at"** 이다.
+이제 `last_purchase_at`은 컬럼이 아니다. **"K씨가 `placed` 링크로 연결된 모든 Order 중 가장 최근의 `completed_at`"** — 이것이 팔란티어에서 말하는 **Derived Property**다.
 
 ```sql
 SELECT
@@ -256,34 +289,50 @@ canonical_id  | last_purchase_at     | gmv_90d
 CUST-029182   | 2024-12-08 14:23:00  | 835,000   ← 이틀 전, 83만원
 ```
 
-새 채널이 추가될 때는 Order 엔티티와 placed 링크만 추가하면 된다. `last_purchase_at` 계산 로직은 건드리지 않는다.
+새 채널이 추가될 때는 Order 오브젝트와 `placed` 링크만 추가한다. `last_purchase_at` 계산 로직은 건드리지 않는다.
 
 ---
 
-### Property Definition: 정의를 코드로, 이력을 남긴다
+### Property Types & Definition: 정의를 코드로, 이력을 남긴다
 
-[[/data-architect/04_what_is_ontology]]에서 "의미의 SCD2"를 이야기했다. 사실 데이터가 아니라 *정의* 자체에 `valid_from`과 `valid_to`가 붙는 것. 이것을 여기서 실체화한다.
+**팔란티어 온톨로지 언어로:** Customer Object Type의 프로퍼티는 타입별로 분류된다.
+
+```
+Customer Object Type의 프로퍼티:
+  canonical_id       : string    (Scalar, NORMAL)    — Primary Key
+  display_name       : string    (Scalar, NORMAL)    — Title Property
+  tier               : string    (Scalar, NORMAL)    — "VIP" | "GOLD" | "SILVER"
+  created_at         : timestamp (Scalar, NORMAL)
+  pii_email          : string    (Scalar, SENSITIVE) — 명시적 접근 시에만 반환
+  last_purchase_at   : timestamp (Derived)           — placed 링크 탐색으로 런타임 계산
+  days_since_purchase: integer   (Derived)           — TIMESTAMP_DIFF(NOW, last_purchase_at)
+  gmv_90d            : double    (Derived)           — 90일 placed 링크 합산
+```
+
+Derived Property는 저장하지 않고 쿼리 시점에 계산된다. 원본 데이터가 바뀌면 즉시 반영된다.
+
+[[/data-architect/04_what_is_ontology]]에서 "의미의 SCD2"를 이야기했다 — 사실 데이터가 아니라 *정의* 자체에 `valid_from`과 `valid_to`가 붙는 것. 이것을 `prop_def` 테이블로 실체화한다.
 
 ```sql
 CREATE TABLE `marketeon.ontology.prop_def` (
   prop_name     STRING    NOT NULL,
   entity_type   STRING    NOT NULL,
-  description   STRING    NOT NULL,   -- 의미의 공식 정의
-  computation   STRING,               -- 어떻게 계산하는가 (선택)
+  description   STRING    NOT NULL,
+  computation   STRING,
   data_type     STRING    NOT NULL,
   is_pii        BOOL      NOT NULL,
   valid_from    TIMESTAMP NOT NULL,
-  valid_to      TIMESTAMP,            -- NULL = 현재 유효
+  valid_to      TIMESTAMP,
   changed_by    STRING    NOT NULL,
-  change_note   STRING                -- 왜 바뀌었나
+  change_note   STRING
 )
 CLUSTER BY entity_type, prop_name;
 ```
 
-인시던트 전후로 `last_purchase_at`의 정의가 각각 등록된다.
+인시던트 전후로 `last_purchase_at`의 정의가 버전 관리된다.
 
 ```sql
--- 인시던트 전: 웹 기준 (3년간 암묵적으로 유지됐던 정의를 소급 등록)
+-- 인시던트 전: 웹 기준 (소급 등록)
 INSERT INTO `marketeon.ontology.prop_def` VALUES (
   'last_purchase_at', 'customer',
   'CRM(웹/앱) 기준 마지막 주문 완료 시점. 오프라인 채널 제외.',
@@ -293,7 +342,7 @@ INSERT INTO `marketeon.ontology.prop_def` VALUES (
   'data-team', '초기 정의. 오프라인 데이터 미통합 상태'
 );
 
--- 인시던트 후: 전채널 기준으로 변경
+-- 인시던트 후: 전채널 기준
 INSERT INTO `marketeon.ontology.prop_def` VALUES (
   'last_purchase_at', 'customer',
   '전채널(CRM+POS+마켓플레이스) 기준 마지막 구매 완료 시점. Customer→placed→Order 링크 기준.',
@@ -306,26 +355,21 @@ INSERT INTO `marketeon.ontology.prop_def` VALUES (
 
 이제 세 가지 질문에 답할 수 있다.
 
-**"지금 last_purchase_at은 무엇을 의미하는가?"**
+**"지금 last_purchase_at은 무엇인가?"**
 ```sql
-SELECT description, computation
-FROM `marketeon.ontology.prop_def`
-WHERE prop_name = 'last_purchase_at' AND entity_type = 'customer'
-  AND valid_to IS NULL;
--- '전채널(CRM+POS+마켓플레이스) 기준 마지막 구매 완료 시점'
+SELECT description, computation FROM `marketeon.ontology.prop_def`
+WHERE prop_name = 'last_purchase_at' AND entity_type = 'customer' AND valid_to IS NULL;
 ```
 
-**"인시던트 전날 last_purchase_at의 정의는 무엇이었는가?"**
+**"인시던트 전날 정의는?"**
 ```sql
-SELECT description, changed_by, change_note
-FROM `marketeon.ontology.prop_def`
+SELECT description, change_note FROM `marketeon.ontology.prop_def`
 WHERE prop_name = 'last_purchase_at' AND entity_type = 'customer'
   AND valid_from <= TIMESTAMP '2024-12-09'
   AND (valid_to IS NULL OR valid_to > TIMESTAMP '2024-12-09');
--- 'CRM(웹/앱) 기준 마지막 주문 완료 시점. 오프라인 채널 제외.'
 ```
 
-**"정의가 몇 번 바뀌었고 각각 왜 바뀌었는가?"**
+**"정의가 몇 번 바뀌었고 각각 왜?"**
 ```sql
 SELECT valid_from, valid_to, description, change_note
 FROM `marketeon.ontology.prop_def`
@@ -333,13 +377,34 @@ WHERE prop_name = 'last_purchase_at' AND entity_type = 'customer'
 ORDER BY valid_from;
 ```
 
-3개월 뒤 이탈 모델 정확도가 개선됐을 때, 그 원인이 이 정의 변경임을 `change_note`의 인시던트 번호로 추적할 수 있다. 이것이 데이터 거버넌스가 코드가 아닌 데이터로 관리될 때 생기는 일이다.
-
 ---
 
-### Action: 쿠폰 발송에 게이트를 단다
+### Action Type: 쿠폰 발송에 게이트를 단다
 
-쿠폰 발송은 고객 객체에 가해지는 **행위(action)** 다. 허용 조건과 허용 주체를 데이터로 표현한다.
+**팔란티어 온톨로지 언어로:** 쿠폰 발송은 Customer Object Type에 정의된 **Action Type**이다.
+
+```
+Action Type: issue_churn_coupon
+  Target       : Customer
+  Description  : 이탈 방어 목적 쿠폰 발송. 전채널 기준 90일 이상 미구매 고객 한정.
+
+  Parameters:
+    customer         : ObjectType<Customer>
+    couponAmount     : integer              — 발송할 쿠폰 금액
+    notifyChannel    : string               — "sms" | "push" | "email"
+
+  Validation Rules:
+    - days_since_last_purchase(all_channels) >= 90   → "최근 90일 내 구매 이력 있음 (전채널 기준)"
+    - active_coupon_count == 0                       → "미사용 쿠폰 보유 중 — 중복 발송 방지"
+
+  Effects:
+    CREATE_OBJECT Coupon { amount, expires_at }
+    CREATE_LINK   Customer --[received]--> Coupon
+
+  Notifications:
+    → 발송 성공 시 CS 대시보드 웹훅
+    → notifyChannel에 따라 고객 알림 발송
+```
 
 ```sql
 CREATE TABLE `marketeon.ontology.action_def` (
@@ -370,18 +435,16 @@ INSERT INTO `marketeon.ontology.action_def` VALUES (
         "metric":   "active_coupon_count",
         "operator": "eq",
         "value":    0,
-        "error":    "미사용 쿠폰 보유 중 — 중복 발송 방지"
+        "error":    "미사용 쿠폰 보유 중"
       }
     ]
   }',
-  'received',   -- 성공 시 Customer → received → Coupon 링크 생성
+  'received',
   CURRENT_TIMESTAMP(), NULL
 );
 ```
 
-`preconditions.basis: "all_channels"` 한 줄이 "마지막 구매를 전채널로 계산하라"는 의미를 액션 정의에 못 박는다. 이 정의가 `prop_def`의 `last_purchase_at` 정의와 연결된다. 의미가 코드가 아닌 데이터에 있다.
-
-액션 실행기는 링크 그래프를 순회해 precondition을 검사한다.
+액션 실행기는 링크 그래프를 순회해 Validation Rule을 검사한다.
 
 ```sql
 WITH customer_metrics AS (
@@ -422,7 +485,7 @@ CREATE TABLE `marketeon.ontology.action_log` (
   target_id     STRING    NOT NULL,
   caller        STRING    NOT NULL,
   params        JSON,
-  status        STRING    NOT NULL,   -- 'completed' | 'blocked' | 'failed'
+  status        STRING    NOT NULL,
   block_reason  STRING,
   executed_at   TIMESTAMP NOT NULL
 )
@@ -430,19 +493,19 @@ PARTITION BY DATE(executed_at)
 CLUSTER BY target_id, action_name;
 ```
 
-액션이 성공하면 `Customer → received → Coupon` 링크도 생성된다. 링크가 액션의 효과를 그래프에 기록하는 방법이다.
+액션이 성공하면 `Customer → received → Coupon` 링크도 생성된다. **액션의 Effect가 그래프에 기록되는 방법**이다.
 
 ---
 
 ## 재현: 온톨로지가 있었다면
 
-같은 날 K씨에게 일어났을 일을 단계별로 추적한다.
+같은 날 K씨에게 일어났을 일:
 
 1. **이탈 모델이 피처를 계산한다** → links 테이블 순회 → `last_purchase_at = 2024-12-08` (이틀 전) → 이탈 확률 0.12 → **알람 없음**
 
 만약 모델이 그래도 알람을 올렸다면:
 
-2. **CS 자동화가 `issue_churn_coupon` 요청** → `allowed_callers` 확인 통과 → precondition 체크 → `days_since_purchase = 2` → **게이트 차단**
+2. **CS 자동화가 `issue_churn_coupon` 요청** → precondition 체크 → `days_since_purchase = 2` → **Validation Rule 차단**
 
 3. **`action_log`에 `status = 'blocked'`, `block_reason = '최근 90일 내 구매 이력 있음 (전채널 기준)'` 기록**
 
@@ -454,15 +517,12 @@ K씨는 쿠폰을 받지 않았다. 그리고 이 blocked 기록은 사라지지
 
 [[/data-architect/04_what_is_ontology]]에서 Palantir의 3계층 중 **Dynamic Layer**를 "내려진 의사결정이 다시 데이터로 되먹임되는 층"이라고 설명했다. 이 케이스에서 그것이 실제로 일어난다.
 
-K씨의 blocked 기록은 `action_log`에 쌓였다. 그리고 같은 패턴이 다른 고객들에게서도 반복됐다.
+K씨의 blocked 기록은 `action_log`에 쌓였다. 같은 패턴이 다른 고객들에게서도 반복됐다.
 
 ```sql
--- 90일 내에 이탈 알람이 왔지만 전채널 구매 이력으로 blocked된 고객
 SELECT
   target_id                                          AS canonical_id,
-  COUNT(*)                                           AS alert_blocked_count,
-  MIN(executed_at)                                   AS first_blocked_at,
-  MAX(executed_at)                                   AS last_blocked_at
+  COUNT(*)                                           AS alert_blocked_count
 FROM `marketeon.ontology.action_log`
 WHERE action_name   = 'issue_churn_coupon'
   AND status        = 'blocked'
@@ -472,12 +532,11 @@ GROUP BY 1
 HAVING alert_blocked_count >= 2;
 ```
 
-이 쿼리가 반환한 고객은 847명이었다. 이탈 모델이 반복적으로 틀린 고객들. 이들의 공통점을 분석하면 **채널 전환 패턴**이 나왔다 — 웹 구매 빈도가 떨어지는 동시에 POS 링크가 늘고 있었다.
+이 쿼리가 반환한 고객은 847명이었다. 이것이 팔란티어에서 말하는 **Object Set** — "조건을 만족하는 오브젝트 인스턴스의 집합" — 이다. 847명이라는 숫자가 아니라, "이탈 알람이 2회 이상 blocked된 고객들"이라는 **의미 있는 집합**이다.
 
-이 패턴을 새 피처로 모델에 추가했다.
+이들의 공통점을 분석하면 **채널 전환 패턴**이 나왔다 — 웹 구매 빈도가 떨어지는 동시에 POS 링크가 늘고 있었다. 이 패턴을 새 피처로 모델에 추가했다.
 
 ```sql
--- 새 피처: 채널 전환 신호 (action_log에서 파생)
 SELECT
   target_id                                            AS canonical_id,
   COUNTIF(status = 'blocked'
@@ -491,22 +550,17 @@ GROUP BY 1;
 
 이제 모델은 `cross_channel_signal_90d > 0`인 고객을 이탈이 아닌 채널 전환으로 분류한다.
 
-이것이 Dynamic Layer다. **결정(blocked action) → 기록(action_log) → 학습(new feature) → 더 나은 결정.** 이 루프가 돌기 시작했다. 온톨로지가 없었다면 blocked 기록이 남지 않았을 것이고, 루프도 없었을 것이다.
-
-[[/data-architect/04_what_is_ontology]]에서 "대시보드는 답을 보여주고, 온톨로지는 그 답으로 세계를 바꾼다"고 했다. `action_log`가 그 메커니즘이다.
+**결정(blocked action) → 기록(action_log) → 학습(new feature) → 더 나은 결정.** 온톨로지가 없었다면 blocked 기록이 남지 않았을 것이고, 루프도 없었을 것이다.
 
 ---
 
 ## 에이전트 월드모델
 
-인시던트 이후 마켓온은 AI 추천 에이전트를 새로 구축했다. 이전 에이전트가 실패한 이유가 "K씨의 불완전한 세계관"이었으므로, 새 에이전트에게는 온톨로지를 세계관으로 제공했다.
+인시던트 이후 마켓온은 AI 추천 에이전트를 새로 구축했다. 에이전트는 raw 테이블을 직접 조회하지 않는다. 두 가지 인터페이스만 쓴다.
 
-에이전트는 raw 테이블을 직접 조회하지 않는다. 대신 두 가지 인터페이스만 쓴다.
-
-**인터페이스 1: 허용된 동사 목록**
+**인터페이스 1: 허용된 Action Type 목록 (Ontology API)**
 
 ```sql
--- 에이전트가 'customer' 타입에 실행할 수 있는 액션 조회
 SELECT action_name, description, preconditions
 FROM `marketeon.ontology.action_def`
 WHERE target_entity_type = 'customer'
@@ -522,24 +576,18 @@ recommend_product      | 상품 추천 발송
 upgrade_tier           | 등급 상향 (조건: 연 GMV 기준 달성)
 ```
 
-에이전트는 이 네 가지만 알고 있다. `delete_customer`, `export_pii`, `change_email`은 `allowed_callers`에 `agent:recommendation`이 없어서 보이지 않는다. 에이전트가 **존재하지 않는 동사를 만들어내는 환각**이 구조적으로 막힌다.
+에이전트는 이 네 가지만 안다. `delete_customer`, `export_pii`는 `allowed_callers`에 없어 보이지 않는다. **에이전트가 존재하지 않는 동사를 만들어내는 환각이 구조적으로 차단된다.**
 
-**인터페이스 2: 링크 그래프를 통한 고객 이해**
-
-에이전트가 "K씨에게 지금 실행 가능한 액션은 무엇인가?"를 물을 때, 온톨로지를 통해 K씨의 세계를 읽는다.
+**인터페이스 2: Link 탐색을 통한 Object 상태 조회**
 
 ```sql
--- 에이전트: K씨의 현재 상태를 링크 그래프에서 읽는다
 WITH customer_state AS (
   SELECT
-    -- placed 링크로 구매 이력
     (SELECT MAX(o.completed_at)
      FROM `marketeon.ontology.links` l
      JOIN `marketeon.ontology.orders` o ON o.canonical_id = l.target_id
      WHERE l.source_id = 'CUST-029182' AND l.rel_type = 'placed'
        AND l.valid_to IS NULL)                        AS last_purchase_at,
-
-    -- received 링크로 미사용 쿠폰 수
     (SELECT COUNT(*)
      FROM `marketeon.ontology.links` l
      JOIN `marketeon.ontology.coupons` c ON c.canonical_id = l.target_id
@@ -548,18 +596,10 @@ WITH customer_state AS (
 )
 SELECT
   ad.action_name,
-  ad.description,
   CASE ad.action_name
     WHEN 'issue_churn_coupon'
       THEN TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), cs.last_purchase_at, DAY) >= 90
            AND cs.active_coupon_count = 0
-    WHEN 'upgrade_tier'
-      THEN (SELECT SUM(o.amount)
-            FROM `marketeon.ontology.links` l
-            JOIN `marketeon.ontology.orders` o ON o.canonical_id = l.target_id
-            WHERE l.source_id = 'CUST-029182' AND l.rel_type = 'placed'
-              AND o.completed_at >= TIMESTAMP_SUB(CURRENT_TIMESTAMP(), INTERVAL 365 DAY)
-           ) >= 3000000
     ELSE TRUE
   END AS executable
 FROM `marketeon.ontology.action_def` ad, customer_state cs
@@ -569,16 +609,29 @@ WHERE ad.target_entity_type = 'customer'
 ```
 
 ```
-action_name            | description              | executable
-issue_churn_coupon     | 이탈 방어 쿠폰 발송       | FALSE   ← 이틀 전 구매 있음
-issue_birthday_coupon  | 생일 쿠폰 발송            | FALSE   ← 생일 아님
-recommend_product      | 상품 추천 발송            | TRUE
-upgrade_tier           | 등급 상향                 | TRUE    ← 연 GMV 300만 달성
+action_name            | executable
+issue_churn_coupon     | FALSE   ← 이틀 전 구매 있음
+issue_birthday_coupon  | FALSE   ← 생일 아님
+recommend_product      | TRUE
+upgrade_tier           | TRUE    ← 연 GMV 300만 달성
 ```
 
-에이전트는 이 결과를 받아 `recommend_product`와 `upgrade_tier`만 실행한다. K씨의 테이블 스키마를 몰라도, 소스 시스템이 몇 개인지 몰라도, 링크 그래프 위에 올라탄 추상화가 K씨의 세계를 전달한다.
+[[/data-architect/04_what_is_ontology]]에서 "테이블 1,000개의 스키마 대신 객체·관계·허용된 행동으로 압축된 지도"라 한 것이 이 두 인터페이스다.
 
-이것이 [[/data-architect/04_what_is_ontology]]에서 말한 **"에이전트의 월드모델"** 이다. 테이블 1,000개의 스키마 대신 객체·관계·허용된 행동으로 압축된 지도. 환각이 줄고 행동이 통제 가능해진다.
+---
+
+## 온톨로지 설계 원칙
+
+이 글에서 구현한 것들을 [[/data-architect/05_ontology_objects_summary]]의 설계 원칙과 대조하면 다음과 같다.
+
+| 원칙 | 이 글에서 | 나쁜 예 (인시던트 전) |
+|------|---------|---------------------|
+| **Object Type은 명사** | `Customer`, `Order` — 비즈니스 개체 | `U-29182`, `M-00991` — 시스템 ID |
+| **Link는 의미를 담는다** | `placed` — "고객이 주문을 생성한 행위" | FK join `user_id = order.user_id` — 의미 없는 조인 |
+| **Derived Property 분리** | `last_purchase_at` 런타임 계산 | `last_purchase_at` 컬럼 저장 → 채널 누락 |
+| **Action은 비즈니스 이벤트** | `issue_churn_coupon` + 사전 검증 | 함수 직접 호출 + 사후 후회 |
+| **검증은 Action 안에** | `action_def.preconditions` | 앱 코드 각자 조건 분기 |
+| **정의는 코드(Definition-as-Code)** | `prop_def` + `valid_from`/`valid_to` | 모델 카드 주석 한 줄 |
 
 ---
 
@@ -610,26 +663,19 @@ HAVING web_orders_90d = 0 AND pos_orders_90d > 0;
 SELECT executed_at AS ts, action_name AS event, status, block_reason
 FROM `marketeon.ontology.action_log`
 WHERE target_id = 'CUST-029182'
-
 UNION ALL
-
 SELECT valid_from, CONCAT('link.', rel_type, '.', target_type), 'created', NULL
 FROM `marketeon.ontology.links`
 WHERE source_id = 'CUST-029182'
-
 ORDER BY ts;
 ```
 
 ```
-ts                   | event                      | status    | block_reason
-2024-08-02 10:11:00  | link.placed.order          | created   |
-2024-09-15 14:30:00  | link.placed.order          | created   |
-2024-10-14 16:45:00  | link.placed.order          | created   |
-2024-11-21 11:20:00  | link.placed.order          | created   |
-2024-12-08 14:23:00  | link.placed.order          | created   |
-2024-12-10 09:02:00  | issue_churn_coupon         | blocked   | 최근 90일 내 구매 이력 있음
-2024-12-10 09:05:00  | upgrade_tier               | completed |
-2024-12-10 09:05:00  | link.received.coupon       | created   |   ← upgrade 혜택 쿠폰
+ts                   | event                  | status    | block_reason
+2024-12-08 14:23:00  | link.placed.order      | created   |
+2024-12-10 09:02:00  | issue_churn_coupon     | blocked   | 최근 90일 내 구매 이력 있음
+2024-12-10 09:05:00  | upgrade_tier           | completed |
+2024-12-10 09:05:00  | link.received.coupon   | created   |   ← upgrade 혜택 쿠폰
 ```
 
 ---
@@ -638,11 +684,11 @@ ts                   | event                      | status    | block_reason
 
 **Identity resolution은 끝나지 않는다.** 이메일 없는 POS 회원, 게스트 주문, 전화번호가 바뀐 고객. `confidence < 0.9`인 매핑은 주당 수백 건 쌓인다. 온톨로지를 도입한다는 건 entity resolution을 영원히 운영하겠다는 선언이다.
 
-**정의 합의는 기술이 해결하지 않는다.** `prop_def`에 `last_purchase_at` 정의를 등록하는 것 자체는 하루면 됐다. 마케팅·재무·데이터팀이 "전채널 기준"에 동의하는 데 두 달이 걸렸다. 스키마는 합의를 *기록*하지 합의를 *만들어내지* 않는다.
+**정의 합의는 기술이 해결하지 않는다.** `prop_def`에 정의를 등록하는 것 자체는 하루면 됐다. 마케팅·재무·데이터팀이 "전채널 기준"에 동의하는 데 두 달이 걸렸다. 스키마는 합의를 *기록*하지 합의를 *만들어내지* 않는다.
 
 **precondition이 코드를 완전히 대체하지는 못한다.** 복잡한 비즈니스 룰은 여전히 코드가 필요하다. JSON precondition은 계약(contract)이고, 이행은 코드의 일이다.
 
-**Dynamic Loop가 작동하려면 action_log 품질이 담보돼야 한다.** blocked 기록이 부정확하면 그것을 피처로 쓴 모델도 부정확해진다. 쓰레기가 들어오면 쓰레기가 나간다.
+**Dynamic Loop가 작동하려면 action_log 품질이 담보돼야 한다.** blocked 기록이 부정확하면 그것을 피처로 쓴 모델도 부정확해진다.
 
 ---
 
@@ -650,17 +696,15 @@ ts                   | event                      | status    | block_reason
 
 K씨의 알람은 2만원짜리 사건이었다. 드릴다운하자 온톨로지의 다섯 개념이 모두 모습을 드러냈다.
 
-| 부재 | 개념 | 해결 |
-|------|------|------|
-| K씨가 두 시스템에 분리됨 | Entity + Identity | `canonical_id` + `customer_identity` |
-| 구매가 채널별로 분리됨 | Link | `placed` 링크로 전채널 통합 |
-| "마지막 구매"의 의미가 없음 | Property Definition (SCD2) | `prop_def`에 버전 관리된 정의 |
-| 쿠폰이 조건 없이 발송됨 | Action (Kinetic Layer) | `action_def`의 precondition 게이트 |
-| blocked 기록이 허공에 사라짐 | Dynamic Layer | `action_log` → 피처 → 모델 피드백 루프 |
+| 부재 | 팔란티어 개념 | 이 글의 구현 |
+|------|------------|-----------|
+| K씨가 두 시스템에 분리됨 | Object Type + Entity Resolution | `canonical_id` + `customer_identity` |
+| 구매가 채널별로 분리됨 | Link Type | `placed` 링크로 전채널 통합 |
+| `last_purchase_at` 의미 없음 | Property Definition (SCD2) | `prop_def` + `valid_from/to` |
+| 쿠폰이 조건 없이 발송됨 | Action Type + Validation Rules | `action_def.preconditions` |
+| blocked 기록이 허공에 사라짐 | Dynamic Layer | `action_log` → 피처 → 피드백 루프 |
 
-그리고 다섯 개념이 맞물리자 여섯 번째가 자연스럽게 따라왔다. 에이전트에게 raw 테이블 대신 이 그래프를 주었을 때, 에이전트는 K씨의 세계를 이해하고 허용된 동사만 실행했다. 온톨로지가 **에이전트의 월드모델**이 된 것이다.
-
-시맨틱 레이어는 이 여정에서 빠지지 않는다. GMV metric이 올바른 숫자를 내려면 그 아래에 올바른 K씨가 있어야 한다. 온톨로지는 그 아래 레이어다.
+그리고 다섯 개념이 맞물리자 여섯 번째가 자연스럽게 따라왔다. 에이전트에게 raw 테이블 대신 이 그래프를 주었을 때, 에이전트는 K씨의 세계를 이해하고 허용된 동사(Action Type)만 실행했다. **온톨로지가 에이전트의 월드모델이 된 것이다.**
 
 > 모델이 틀린 게 아니었다. 모델이 본 K씨가 불완전했다. 온톨로지는 K씨를 완전하게 만드는 일이다.
 
@@ -668,6 +712,7 @@ K씨의 알람은 2만원짜리 사건이었다. 드릴다운하자 온톨로지
 
 ## 참고
 
-- [[/data-architect/04_what_is_ontology]] — 온톨로지의 개념과 아키텍처 원리: Semantic·Kinetic·Dynamic 3계층
+- [[/data-architect/04_what_is_ontology]] — 온톨로지의 개념과 아키텍처 원리: Semantic·Kinetic·Dynamic 3계층, 의미의 SCD2
+- [[/data-architect/05_ontology_objects_summary]] — Object Type·Property·Link Type·Action Type·Interface·Object Set 전체 스펙
 - Sculley et al., [*Hidden Technical Debt in Machine Learning Systems*](https://papers.nips.cc/paper/5656-hidden-technical-debt-in-machine-learning-systems) (NIPS 2015) — 피처 의미 드리프트가 ML 시스템에 미치는 영향
 - Milner, [*Action calculi, or syntactic action structures*](https://link.springer.com/chapter/10.1007/3-540-57182-5_7) (MFCS 1993) — 행위(action)를 일급 시민으로 다루는 이론적 배경

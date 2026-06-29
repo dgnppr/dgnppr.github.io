@@ -563,15 +563,28 @@
       "type": "concept",
       "title": "온톨로지는 데이터가 아니라 합의를 설계한다",
       "path": "_concept/data-architect/04_what_is_ontology.md",
-      "status": "draft",
+      "status": "writing",
       "tags": [
         "data-architecture",
         "data-engineering",
-        "ontology"
+        "ontology",
+        "palantir",
+        "AIP",
+        "semantic-layer"
       ],
       "date": "2026-05-27",
       "confidence": "high",
       "mentioned_terms": [
+        "Flight",
+        "flightNumber",
+        "flightId = flightNumber + date",
+        "FlightDelayHandler",
+        "delayFlight",
+        "hasCrew",
+        "crewType == PILOT",
+        "hasPilot",
+        "delayMinutes",
+        "status",
         "합의된 의미",
         "저장과 질의",
         "의미",
@@ -582,6 +595,7 @@
         "경제적 강제력의 부재",
         "경계",
         "명사",
+        "이름이 있는 관계",
         "동사",
         "단어의 뜻에 대한, 버전 관리된 제도적 기억",
         "의미의 SCD2",
@@ -589,153 +603,256 @@
         "온톨로지를 프로젝트로 취급하는 것",
         "과형식화"
       ],
-      "content_depth": 0.72,
+      "content_depth": 0.92,
       "importance": 7,
-      "depth": 0.65,
+      "depth": 0.85,
       "unanswered_questions": 0,
-      "learning_pressure": 2.44
+      "learning_pressure": 1.07
     },
-    "concept/data-architect/05_how_to_implement_ontology": {
-      "id": "concept/data-architect/05_how_to_implement_ontology",
+    "concept/data-architect/05_ontology_objects_summary": {
+      "id": "concept/data-architect/05_ontology_objects_summary",
+      "type": "concept",
+      "title": "팔란티어 온톨로지 Objects · Properties · Links · Actions",
+      "path": "_concept/data-architect/05_ontology_objects_summary.md",
+      "status": "complete",
+      "tags": [
+        "palantir",
+        "foundry",
+        "ontology",
+        "data-architect"
+      ],
+      "date": "2026-06-29",
+      "confidence": "high",
+      "mentioned_terms": [
+        "Flight",
+        "Aircraft",
+        "CrewMember",
+        "Airport",
+        "Passenger",
+        "Employee",
+        "string",
+        "integer",
+        "double",
+        "boolean",
+        "timestamp",
+        "date",
+        "string[]",
+        "integer[]",
+        "delayMinutes",
+        "hasCrew",
+        "assignedTo",
+        "operatedBy",
+        "departsFrom",
+        "Locatable",
+        "Schedulable",
+        "take()",
+        "count()",
+        "FlightDelayHandler",
+        "delayFlight",
+        "updateFlightStatus",
+        "hasPilot",
+        "scheduledStart",
+        "status",
+        "온톨로지(Ontology)",
+        "비즈니스 언어로 모델링",
+        "도메인 예시",
+        "항공사 운영",
+        "핵심 단위",
+        "Primary Key",
+        "Display Name",
+        "Description",
+        "Data Source",
+        "Title Property",
+        "Object Type",
+        "Object (Instance)",
+        "속성(attribute)",
+        "Scalar",
+        "Array",
+        "Struct",
+        "Attachment",
+        "Marking",
+        "관계(relationship)",
+        "ONE_TO_ONE",
+        "ONE_TO_MANY",
+        "MANY_TO_MANY",
+        "양방향",
+        "Link Type",
+        "Relations/edges",
+        "실제 활용:",
+        "수정·생성·삭제하는 비즈니스 연산",
+        "Parameters",
+        "Validation Rules",
+        "Effects",
+        "Notifications",
+        "Logic (Functions)",
+        "공통 프로퍼티 계약",
+        "활용:",
+        "Link를 따라 관련 오브젝트를 탐색",
+        "집합(collection)",
+        "지연 평가의 장점:",
+        "AIP(AI Platform)",
+        "비즈니스 언어로 정의된 인터페이스",
+        "핵심:",
+        "Object Type은 명사",
+        "Action은 비즈니스 이벤트",
+        "Link는 의미를 담는다",
+        "Interface로 공통 추출",
+        "검증은 Action 안에",
+        "비즈니스 언어 우선"
+      ],
+      "content_depth": 0.77,
+      "importance": 6,
+      "depth": 0.84,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.93
+    },
+    "concept/data-architect/06_how_to_implement_ontology": {
+      "id": "concept/data-architect/06_how_to_implement_ontology",
       "type": "concept",
       "title": "알람 케이스로 온톨로지 훑어보기",
-      "path": "_concept/data-architect/05_how_to_implement_ontology.md",
+      "path": "_concept/data-architect/06_how_to_implement_ontology.md",
       "status": "complete",
       "tags": [
         "data-architecture",
         "data-engineering",
-        "ontology"
+        "ontology",
+        "palantir",
+        "object-type",
+        "link-type",
+        "action-type",
+        "bigquery"
       ],
       "date": "2026-06-23",
-      "confidence": "medium",
+      "confidence": "high",
       "mentioned_terms": [
+        "customers",
+        "links",
         "placed",
         "Customer → received → Coupon",
         "status = 'blocked'",
-        "agent:recommendation",
+        "Customer",
+        "Order",
         "객체(명사)·링크(관계)·액션(동사)",
         "시간(Dynamic)",
+        "Object Type",
+        "Property",
+        "Derived Property",
+        "Link Type",
+        "Action Type",
+        "Dynamic Layer",
+        "Object Set",
         "아니다",
-        "대상",
         "시맨틱 레이어",
         "온톨로지",
-        "\"구매했다(placed)\"",
-        "행위(action)",
+        "팔란티어 온톨로지 언어로:",
+        "적재 3단계:",
+        "Step 1",
+        "Step 2",
+        "Step 3",
+        "— 이것이 팔란티어에서 말하는",
+        "\"인시던트 전날 정의는?\"",
+        "\"정의가 몇 번 바뀌었고 각각 왜?\"",
+        "액션의 Effect가 그래프에 기록되는 방법",
         "이탈 모델이 피처를 계산한다",
         "알람 없음",
-        "게이트 차단",
-        "Dynamic Layer",
+        "Validation Rule 차단",
+        "의미 있는 집합",
         "채널 전환 패턴",
-        "인터페이스 1: 허용된 동사 목록",
-        "존재하지 않는 동사를 만들어내는 환각",
-        "인터페이스 2: 링크 그래프를 통한 고객 이해",
-        "\"에이전트의 월드모델\"",
-        "에이전트의 월드모델"
+        "Object Type은 명사",
+        "Link는 의미를 담는다",
+        "Derived Property 분리",
+        "Action은 비즈니스 이벤트",
+        "검증은 Action 안에"
       ],
-      "content_depth": 1,
-      "importance": 5,
-      "depth": 0.83,
+      "content_depth": 0.92,
+      "importance": 3,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 0.88
+      "learning_pressure": 0.31
     },
-    "concept/data-architect/06_ontology_core_concepts": {
-      "id": "concept/data-architect/06_ontology_core_concepts",
+    "concept/data-architect/07_ontology_core_concepts": {
+      "id": "concept/data-architect/07_ontology_core_concepts",
       "type": "concept",
-      "title": "온톨로지의 Wikidata 명사·관계·표준·시제",
-      "path": "_concept/data-architect/06_ontology_core_concepts.md",
+      "title": "온톨로지의 핵심 개념 — 마켓온 · 팔란티어 · Wikidata 세 세계관",
+      "path": "_concept/data-architect/07_ontology_core_concepts.md",
       "status": "complete",
       "tags": [
         "data-architecture",
         "data-engineering",
-        "ontology"
+        "ontology",
+        "wikidata",
+        "palantir",
+        "rdf",
+        "sparql",
+        "owl",
+        "cwa",
+        "owa"
       ],
       "date": "2026-06-25",
       "confidence": "high",
       "mentioned_terms": [
+        "objectRid",
+        "P31/P279*",
         "customers",
         "owl:Class",
         "'customer'",
+        "Customer",
         "owl:NamedIndividual",
-        "owl:sameAs",
         "SELECT * FROM customers",
-        "is-a",
-        "part-of",
-        "rdf:type",
-        "rdfs:subClassOf",
-        "Q42 P31 Q5",
+        "Schedulable",
+        "Flight",
+        "MaintenanceJob",
+        "CrewShift",
+        "Object Type: Flight",
+        "Interface: Schedulable",
         "wdt:P31/wdt:P279*",
-        "WITH RECURSIVE",
-        "wdt:P279*",
         "links",
-        "placed",
-        "amount",
-        "Q42 wdt:P31 wd:Q5",
-        "Q42 wdt:P569 \"1952-03-11\"",
-        "wd:Q42",
         "Q42 wdt:P69 wd:Q691283",
-        "wdt:",
-        "p:P69",
-        "ps:P69",
-        "pq:P580",
-        "p:",
-        "ps:",
-        "pq:",
-        "SERVICE wikibase:label",
-        "wdt:P1082",
-        "wikibase:rank",
-        "wikibase:BestRank",
-        "Q-something",
-        "P31 Q5",
         "NOT EXISTS",
+        "wdt:",
+        "placed",
+        "P31 Q5",
         "pq:P585",
-        "wd:",
-        "폐쇄 세계",
-        "Wikidata",
+        "is-a",
+        "Action Type",
+        "폐쇄 세계(CWA)",
+        "일급 시민",
         "item",
         "property",
-        "Entity와 Object의 분리",
-        "IRI",
-        "named individual",
-        "Type",
-        "Instance",
-        "의미",
-        "방향",
+        "Q42 P31 Q5",
+        "Object Type",
+        "Interface",
+        "Link Type",
         "is a",
         "아니오",
         "is a kind of",
-        "\"is a\"",
-        "\"is a kind of\"",
         "P31",
         "P279",
-        "추론 없이 — 직접 선언된 것만",
-        "추론 적용 — subclass까지 타고",
-        "SQL — 재귀로 직접 전개",
-        "값으로 끝나는가",
-        "다른 엔티티를 가리키는가",
-        "object property",
-        "datatype property",
-        "property constraint",
-        "qualifier",
-        "statement 노드",
-        "실제 값",
-        "SQL — 가상의 관계형 스키마",
+        "마켓온 SQL:",
+        "Wikidata",
+        "마켓온·팔란티어",
         "\"아직 입력 안 됨\"",
-        "rank",
         "preferred",
         "normal",
         "deprecated",
-        "best rank",
-        "any rank",
-        "truthy — 현재값만 (함정)",
-        "reified — 전체 시계열",
-        "class 구조 자체",
-        "온톨로지 정렬(alignment)과 연합"
+        "Kinetic Layer",
+        "Object Set",
+        "Action을 실행할 수 있다",
+        "명사",
+        "관계",
+        "추론",
+        "행위",
+        "표준",
+        "시제",
+        "Entity와 Object의 분리",
+        "`is-a` 관계",
+        "정의의 시제"
       ],
-      "content_depth": 1,
-      "importance": 3,
-      "depth": 0.93,
+      "content_depth": 0.83,
+      "importance": 1,
+      "depth": 0.87,
       "unanswered_questions": 0,
-      "learning_pressure": 0.23
+      "learning_pressure": 0.13
     },
     "concept/data-engineering/00_how_to_use_dataform_well": {
       "id": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -1521,19 +1638,34 @@
       "type": "extends"
     },
     {
-      "from": "concept/data-architect/05_how_to_implement_ontology",
+      "from": "concept/data-architect/04_what_is_ontology",
+      "to": "concept/data-architect/05_ontology_objects_summary",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-architect/06_how_to_implement_ontology",
       "to": "concept/data-architect/04_what_is_ontology",
       "type": "extends"
     },
     {
-      "from": "concept/data-architect/06_ontology_core_concepts",
+      "from": "concept/data-architect/06_how_to_implement_ontology",
+      "to": "concept/data-architect/05_ontology_objects_summary",
+      "type": "implements"
+    },
+    {
+      "from": "concept/data-architect/07_ontology_core_concepts",
       "to": "concept/data-architect/04_what_is_ontology",
       "type": "extends"
     },
     {
-      "from": "concept/data-architect/06_ontology_core_concepts",
-      "to": "concept/data-architect/05_how_to_implement_ontology",
+      "from": "concept/data-architect/07_ontology_core_concepts",
+      "to": "concept/data-architect/06_how_to_implement_ontology",
       "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/07_ontology_core_concepts",
+      "to": "concept/data-architect/05_ontology_objects_summary",
+      "type": "references"
     },
     {
       "from": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -1631,11 +1763,56 @@
       ]
     },
     {
+      "term": "status",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-architect/02_how_to_architect_medallion_well",
+        "concept/data-architect/04_what_is_ontology",
+        "concept/data-architect/05_ontology_objects_summary"
+      ]
+    },
+    {
+      "term": "Flight",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-architect/04_what_is_ontology",
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "Object Type",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "Link Type",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "links",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/data-architect/07_ontology_core_concepts",
+        "insight/data-architect/07_ontology_core_examples"
+      ]
+    },
+    {
       "term": "deprecated",
       "count": 2,
       "mentioned_by": [
         "adr/architecture/2026-06-24-001-adr-guide",
-        "concept/data-architect/06_ontology_core_concepts"
+        "concept/data-architect/07_ontology_core_concepts"
       ]
     },
     {
@@ -1683,30 +1860,142 @@
       "count": 2,
       "mentioned_by": [
         "concept/data-architect/01_how_to_architect_medallion_well",
-        "concept/data-architect/05_how_to_implement_ontology"
+        "concept/data-architect/06_how_to_implement_ontology"
       ]
     },
     {
-      "term": "의미",
+      "term": "FlightDelayHandler",
       "count": 2,
       "mentioned_by": [
         "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/06_ontology_core_concepts"
+        "concept/data-architect/05_ontology_objects_summary"
+      ]
+    },
+    {
+      "term": "delayFlight",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/04_what_is_ontology",
+        "concept/data-architect/05_ontology_objects_summary"
+      ]
+    },
+    {
+      "term": "hasCrew",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/04_what_is_ontology",
+        "concept/data-architect/05_ontology_objects_summary"
+      ]
+    },
+    {
+      "term": "hasPilot",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/04_what_is_ontology",
+        "concept/data-architect/05_ontology_objects_summary"
+      ]
+    },
+    {
+      "term": "delayMinutes",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/04_what_is_ontology",
+        "concept/data-architect/05_ontology_objects_summary"
+      ]
+    },
+    {
+      "term": "명사",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/04_what_is_ontology",
+        "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "Schedulable",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "Object Type은 명사",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/data-architect/06_how_to_implement_ontology"
+      ]
+    },
+    {
+      "term": "Action은 비즈니스 이벤트",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/data-architect/06_how_to_implement_ontology"
+      ]
+    },
+    {
+      "term": "Link는 의미를 담는다",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/data-architect/06_how_to_implement_ontology"
+      ]
+    },
+    {
+      "term": "검증은 Action 안에",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/data-architect/06_how_to_implement_ontology"
+      ]
+    },
+    {
+      "term": "customers",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/data-architect/07_ontology_core_concepts"
       ]
     },
     {
       "term": "placed",
       "count": 2,
       "mentioned_by": [
-        "concept/data-architect/05_how_to_implement_ontology",
-        "concept/data-architect/06_ontology_core_concepts"
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/data-architect/07_ontology_core_concepts"
       ]
     },
     {
-      "term": "links",
+      "term": "Customer",
       "count": 2,
       "mentioned_by": [
-        "concept/data-architect/06_ontology_core_concepts",
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "Action Type",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "Object Set",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "P31/P279*",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/07_ontology_core_concepts",
         "insight/data-architect/07_ontology_core_examples"
       ]
     },
@@ -1714,7 +2003,7 @@
       "term": "is a",
       "count": 2,
       "mentioned_by": [
-        "concept/data-architect/06_ontology_core_concepts",
+        "concept/data-architect/07_ontology_core_concepts",
         "insight/data-architect/07_ontology_core_examples"
       ]
     },
@@ -1722,15 +2011,7 @@
       "term": "is a kind of",
       "count": 2,
       "mentioned_by": [
-        "concept/data-architect/06_ontology_core_concepts",
-        "insight/data-architect/07_ontology_core_examples"
-      ]
-    },
-    {
-      "term": "온톨로지 정렬(alignment)과 연합",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/06_ontology_core_concepts",
+        "concept/data-architect/07_ontology_core_concepts",
         "insight/data-architect/07_ontology_core_examples"
       ]
     },
