@@ -37,3 +37,9 @@ gem 'kramdown-parser-gfm'
 
 gem "faraday-retry", "~> 2.3"
 gem "webrick", "~> 1.8"
+
+# Ruby 3.4부터 기본 gem에서 제외된 표준 라이브러리 (Jekyll이 요구)
+gem "csv"
+gem "base64"
+gem "logger"
+gem "bigdecimal"
