@@ -1,6 +1,6 @@
 ---
 layout      : concept
-title       : 온톨로지의 핵심 개념 — 마켓온 · 팔란티어 · Wikidata 세 세계관
+title       : 온톨로지 핵심 개념 정리
 date        : 2026-06-25 00:00:00 +0900
 updated     : 2026-06-29 00:00:00 +0900
 tag         : data-architecture data-engineering ontology palantir
@@ -17,7 +17,7 @@ relations:
   - { type: references, target: concept/data-architect/05_ontology_objects_summary }
 ---
 
-> [[/data-architect/06_how_to_implement_ontology]] 에서 "Customer는 *엔티티*다", "구매를 *관계*로 표현한다", "쿠폰 발송은 *행위*다"라고 썼다. 그 단어들을 엄밀히 구분하지 않은 채로. 1편이 알람 하나로 온톨로지를 훑었다면, 이 글은 그 안에서 매번 미끄러졌던 개념들의 경계를 못 박는다.
+> [[/data-architect/06_how_to_implement_ontology]] 의 마켓온 케이스에서 "Customer는 *엔티티*다", "구매를 *관계*로 표현한다", "쿠폰 발송은 *행위*다"라고 썼다. 그 단어들을 엄밀히 구분하지 않은 채로. 이 글은 그 케이스에서 매번 미끄러졌던 개념들의 경계를 못 박는다.
 
 그리고 세 번째 세계를 추가한다. **마켓온(폐쇄·CWA·커스텀 SQL) → 팔란티어 파운드리(폐쇄·CWA·형식 스키마) → Wikidata(개방·OWA·RDF 표준)**. 같은 개념이 세 형식을 입었을 때 경계가 가장 또렷해진다.
 
@@ -444,7 +444,7 @@ graph TD
 ## 참고
 
 - [[/data-architect/04_what_is_ontology]] — 온톨로지가 합의를 설계한다는 주장, Semantic·Kinetic·Dynamic 3계층, 시맨틱 레이어와의 구분
-- [[/data-architect/06_how_to_implement_ontology]] — 마켓온 K씨 사건, 다섯 개념의 BigQuery 구현
+- [[/data-architect/06_how_to_implement_ontology]] — 마켓온 케이스 (이탈 오분류 시나리오), 다섯 개념의 BigQuery 구현
 - [[/data-architect/05_ontology_objects_summary]] — 팔란티어 Object Type·Property·Link Type·Action Type·Interface·Object Set 전체 스펙
 - Wikidata, [*Help:Basic membership properties*](https://www.wikidata.org/wiki/Help:Basic_membership_properties) — P31(instance of) vs P279(subclass of), transitivity
 - Wikidata, [*Help:Ranking*](https://www.wikidata.org/wiki/Help:Ranking) — preferred/normal/deprecated, best rank
