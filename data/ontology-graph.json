@@ -124,8 +124,6 @@
       "valid_from": "Thu",
       "confidence": "medium",
       "mentioned_terms": [
-        "vm-a",
-        "vm-b",
         "ping",
         "allow-icmp",
         "us-central1",
@@ -142,6 +140,7 @@
         "subnet-team-b",
         "networkAdmin",
         "networkUser",
+        "숫자가 크면",
         "VPC는 글로벌 리소스",
         "서브넷은 리전 단위",
         "Dynamic Routing Mode",
@@ -453,7 +452,7 @@
         "Unbounded",
         "Rolling",
         "N-Day 리텐션이 흔히 틀리는 이유",
-        "곡선이 flatten되지 않고 0으로 수렴",
+        "곡선이 수평 구간에 진입하지 않고 0으로 수렴",
         "초반 급감이 매우 가파름",
         "특정 시점에 반등",
         "규칙",
@@ -491,7 +490,7 @@
     "concept/data-analysis/02_event_tracking_design": {
       "id": "concept/data-analysis/02_event_tracking_design",
       "type": "concept",
-      "title": "행동 데이터 분석의 전제조건 — 이벤트 트래킹 설계",
+      "title": "이벤트 트래킹 설계",
       "path": "_concept/data-analysis/02_event_tracking_design.md",
       "status": "complete",
       "tags": [
@@ -546,7 +545,7 @@
     "concept/data-analysis/03_metrics_framework": {
       "id": "concept/data-analysis/03_metrics_framework",
       "type": "concept",
-      "title": "지표 체계 설계 — NSM부터 Guardrail까지",
+      "title": "NSM부터 Guardrail까지 지표 체계 설계",
       "path": "_concept/data-analysis/03_metrics_framework.md",
       "status": "complete",
       "tags": [
@@ -602,7 +601,7 @@
     "concept/data-analysis/04_user_behavior_analytics_framework": {
       "id": "concept/data-analysis/04_user_behavior_analytics_framework",
       "type": "concept",
-      "title": "사용자 행동 분석 프레임워크 설계 — 온·오프라인을 하나의 그래프로",
+      "title": "사용자 행동 분석 프레임워크 설계",
       "path": "_concept/data-analysis/04_user_behavior_analytics_framework.md",
       "status": "complete",
       "tags": [
@@ -686,7 +685,6 @@
         "CASE WHEN",
         "IN ('C', 'CM', 'COMP')",
         "'PA'",
-        "아니다",
         "DQ assertion",
         "새벽 2시 34분 — Silver 변환 실행",
         "\"재처리 범위가 어디까지인가?\""
@@ -764,8 +762,7 @@
         "Audit",
         "Publish",
         "Metric Layer",
-        "Mart Layer",
-        "데이터 리니지와 거버넌스"
+        "Mart Layer"
       ],
       "content_depth": 0.85,
       "importance": 5,
@@ -2192,14 +2189,6 @@
       "mentioned_by": [
         "concept/data-architect/01_how_to_architect_medallion_well",
         "insight/data-architect/01_medallion_with_ontology"
-      ]
-    },
-    {
-      "term": "아니다",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/01_how_to_architect_medallion_well",
-        "concept/data-architect/06_how_to_implement_ontology"
       ]
     },
     {
