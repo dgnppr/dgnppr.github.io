@@ -60,10 +60,6 @@
       "valid_from": "Tue",
       "confidence": "high",
       "mentioned_terms": [
-        "Altostrat Media",
-        "Cymbal Retail",
-        "EHR Healthcare",
-        "KnightMotives Automotive",
         "~25%",
         "~15%",
         "설계·계획(섹션 1)이 단일 최대 비중",
@@ -78,11 +74,11 @@
         "IaC(Terraform)",
         "신규 범위 주의:"
       ],
-      "content_depth": 0.57,
+      "content_depth": 0.72,
       "importance": 3,
-      "depth": 0.85,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 0.45
+      "learning_pressure": 0.29
     },
     "concept/cloud/01_how_to_operate_iam_well": {
       "id": "concept/cloud/01_how_to_operate_iam_well",
@@ -2009,10 +2005,10 @@
         "과형식화"
       ],
       "content_depth": 0.92,
-      "importance": 9,
+      "importance": 11,
       "depth": 0.87,
       "unanswered_questions": 0,
-      "learning_pressure": 1.15
+      "learning_pressure": 1.41
     },
     "concept/data-architect/05_ontology_objects_summary": {
       "id": "concept/data-architect/05_ontology_objects_summary",
@@ -2245,10 +2241,48 @@
         "정의의 시제"
       ],
       "content_depth": 0.83,
-      "importance": 1,
-      "depth": 0.87,
+      "importance": 3,
+      "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 0.13
+      "learning_pressure": 0.33
+    },
+    "concept/data-architect/08_what_layer_should_an_architect_own": {
+      "id": "concept/data-architect/08_what_layer_should_an_architect_own",
+      "type": "concept",
+      "title": "데이터 아키텍트는 어느 레이어를 소유하는가",
+      "path": "_concept/data-architect/08_what_layer_should_an_architect_own.md",
+      "status": "draft",
+      "tags": [
+        "data-architecture",
+        "entity-resolution",
+        "identity-graph",
+        "feature-store",
+        "causal-inference",
+        "record-linkage"
+      ],
+      "date": "2026-06-30",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "COUNT(DISTINCT a)",
+        "상호 배타적이지 않다(non-MECE)",
+        "한 줄 휴리스틱:",
+        "Entity Resolution(개체 해소)",
+        "Record Linkage",
+        "실측",
+        "토폴로지 다이어그램 한 장 + 측정 SQL",
+        "entity resolution 아키텍처",
+        "Fellegi-Sunter 모델",
+        "training-serving skew",
+        "사후에 못 붙인다",
+        "아키텍트가 미리 설계해야 가능해지는 인프라",
+        "\"어느 레이어를 소유할까\"",
+        "인과추론·실험설계"
+      ],
+      "content_depth": 0.77,
+      "importance": 1,
+      "depth": 0.52,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.48
     },
     "concept/data-engineering/00_how_to_use_dataform_well": {
       "id": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -3332,6 +3366,16 @@
     {
       "from": "concept/data-architect/07_ontology_core_concepts",
       "to": "concept/data-architect/05_ontology_objects_summary",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-architect/08_what_layer_should_an_architect_own",
+      "to": "concept/data-architect/04_what_is_ontology",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-architect/08_what_layer_should_an_architect_own",
+      "to": "concept/data-architect/07_ontology_core_concepts",
       "type": "references"
     },
     {
