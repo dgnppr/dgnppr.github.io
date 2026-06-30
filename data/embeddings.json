@@ -11318,7 +11318,7 @@
       0.5058654546737671
     ]
   },
-  "data-analysis/00_how_to_design_funnel": {
+  "data-analytics/00_how_to_design_funnel": {
     "hash": "5f32c5ed1f45bcc8b84b77f08cf097de",
     "embedding": [
       0.11436016112565994,
@@ -37043,7 +37043,7 @@
       -1.036208152770996
     ]
   },
-  "data-analysis/01_behavioral_analytics_techniques": {
+  "data-analytics/01_behavioral_analytics_techniques": {
     "hash": "27f49e1502b14d6acde930abba31c363",
     "embedding": [
       -0.43059042096138,
@@ -38072,7 +38072,7 @@
       -0.13695399463176727
     ]
   },
-  "data-analysis/02_event_tracking_design": {
+  "data-analytics/02_event_tracking_design": {
     "hash": "b4e0e59ce3ecf68dff15606fd9f0f112",
     "embedding": [
       -1.334007978439331,
@@ -39101,7 +39101,7 @@
       -0.8643317222595215
     ]
   },
-  "data-analysis/03_metrics_framework": {
+  "data-analytics/03_metrics_framework": {
     "hash": "7998ec2dccb2831cd8922cd7cb44aaf6",
     "embedding": [
       -1.1894416809082031,
@@ -42188,7 +42188,7 @@
       -0.7098740935325623
     ]
   },
-  "data-analysis/04_user_behavior_analytics_framework": {
+  "data-analytics/04_user_behavior_analytics_framework": {
     "hash": "4f2d47417cc013931e3d25e1b4387cfd",
     "embedding": [
       -0.0341438464820385,

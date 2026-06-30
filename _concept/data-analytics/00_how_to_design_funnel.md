@@ -3,13 +3,13 @@ layout  : concept
 title   : 올바른 Funnel 설계의 7가지 조건
 date    : 2026-06-01 00:00:00 +0900
 updated : 2026-06-01 00:00:00 +0900
-tag     : data-analysis funnel analytics
+tag     : data-analytics funnel analytics
 toc     : true
 comment : true
 latex   : true
 status  : complete
 public  : true
-parent  : [[/data-analysis]]
+parent  : [[/data-analytics]]
 relations:
   - { type: references, target: /concept/data-architect/00_what_is_medaliion_architecture }
 confidence     : medium

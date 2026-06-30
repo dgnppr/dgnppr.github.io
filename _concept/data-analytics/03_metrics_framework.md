@@ -3,16 +3,16 @@ layout      : concept
 title       : NSM부터 Guardrail까지 지표 체계 설계
 date        : 2026-06-29 00:00:00 +0900
 updated     : 2026-06-29 00:00:00 +0900
-tag         : data-analysis metrics nsm north-star guardrail okr analytics goodhart
+tag         : data-analytics metrics north-star
 toc         : true
 comment     : true
 latex       : true
 status      : complete
 public      : true
-parent      : [[/data-analysis]]
+parent      : [[/data-analytics]]
 confidence  : high
 relations:
-  - { type: extends, target: concept/data-analysis/01_behavioral_analytics_techniques }
+  - { type: extends, target: concept/data-analytics/01_behavioral_analytics_techniques }
 ---
 
 * TOC

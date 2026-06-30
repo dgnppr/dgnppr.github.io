@@ -3,16 +3,16 @@ layout      : concept
 title       : 이벤트 트래킹 설계
 date        : 2026-06-29 00:00:00 +0900
 updated     : 2026-06-29 00:00:00 +0900
-tag         : data-analysis event-tracking schema analytics tracking-plan bigquery
+tag         : data-analytics event-tracking
 toc         : true
 comment     : true
 latex       : true
 status      : complete
 public      : true
-parent      : [[/data-analysis]]
+parent      : [[/data-analytics]]
 confidence  : high
 relations:
-  - { type: extends, target: concept/data-analysis/01_behavioral_analytics_techniques }
+  - { type: extends, target: concept/data-analytics/01_behavioral_analytics_techniques }
 ---
 
 * TOC

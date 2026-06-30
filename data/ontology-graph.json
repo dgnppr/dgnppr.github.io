@@ -176,6 +176,8 @@
         "deny",
         "deny TCP 22 ingress",
         "apt update",
+        "all-apis",
+        "vpc-sc",
         "apt-get upgrade",
         "subnet-team-a",
         "subnet-team-b",
@@ -233,13 +235,32 @@
         "Cloud NAT — 일반 인터넷 egress",
         "Google API·서비스",
         "Google API 한정",
+        "Private Service Connect",
         "Private Google Access",
         "사설 경로로 Google API에 접근",
-        ": 서비스",
         "서비스 경계(perimeter)",
         "PGA",
         "Cloud NAT",
         "VPC-SC",
+        "는 \"특정",
+        "내부 IP 엔드포인트",
+        "Producer",
+        "service attachment",
+        "Consumer",
+        "PSC 엔드포인트",
+        "단방향·서비스 단위",
+        "PSC for Google APIs",
+        "를 소비자 VPC 안에 만든",
+        "온프렘에서도",
+        "타 조직·SaaS 벤더의 관리형 서비스",
+        "공인 인터넷 노출 없이",
+        "VPC 전체",
+        "특정 서비스 하나",
+        "불가",
+        "허용",
+        "서비스만",
+        "Peering/Shared VPC",
+        "PSC",
         "진단",
         "샘플링 비율",
         "Connectivity Tests",
@@ -267,7 +288,13 @@
         "Google API 전용",
         "최소 권한",
         "최소 권한 원칙 충족",
-        "배포하는 것"
+        "배포하는 것",
+        "사설로",
+        "그 API 서비스 하나만",
+        "CIDR 중첩",
+        "서비스 단위 최소 노출",
+        "service attachment 하나",
+        "단일 조직 내"
       ],
       "content_depth": 1,
       "importance": 9,
@@ -382,6 +409,7 @@
         "Owner",
         "Editor",
         "Viewer",
+        "roles/owner",
         "), ② IAM (",
         "roles/editor",
         "Principal(주체)",
@@ -406,6 +434,21 @@
         "Google-managed SA",
         "Default SA",
         "언제 쓰는가",
+        "다른 문제를 푸는",
+        "GKE Workload Identity",
+        "클러스터 안",
+        ": GCP",
+        "GCP 내부",
+        "GCP 외부",
+        "Workload Identity Pool",
+        "Provider",
+        "내부",
+        "외부",
+        "위험한 권한 조합이 한 주체에 모이지 않게",
+        "역할을 다른 그룹·주체에 분배",
+        "Custom Role로 금지 조합 배제",
+        "IAM Conditions로 분리",
+        "상위 계층 점검",
         "IAM",
         "누가",
         "Org Policy",
@@ -422,6 +465,8 @@
         "Custom Role",
         "Org Policy (constraints)",
         "IAM 바인딩",
+        "SA 연결 + 메타데이터 서버",
+        "직무 분리",
         "정답: (B)",
         "Custom 역할",
         "누적(additive)",
@@ -429,7 +474,10 @@
         "정답: (A)",
         "인스턴스 메타데이터 서버",
         "도메인",
-        "함정 6쌍"
+        "클러스터 내부",
+        "암복호화 자체는 못 한다",
+        "유효 권한 합산",
+        "함정 8쌍"
       ],
       "content_depth": 1,
       "importance": 9,
@@ -464,14 +512,19 @@
         "운영 부담(Ops)",
         "포팅성(Portability)",
         "비용 모델(Cost)",
+        "VM Manager",
         "머신 패밀리",
         "범용(General-purpose)",
-        "T2D/T2A(Tau)",
+        "T2D(x86)·T2A(Arm)",
         "메모리 최적화(Memory-optimized)",
         "가속기 최적화(Accelerator)",
+        "GPU 부착",
         "E2",
         "N2 / N2D",
-        "T2D / T2A (Tau)",
+        "T2D (Tau, x86)",
+        "x86(AMD EPYC)",
+        "T2A (Tau, Arm)",
+        "Arm(Ampere Altra)",
         "C3",
         "커스텀 머신 타입",
         "결론",
@@ -502,6 +555,12 @@
         "라이선스(BYOL)",
         "컴플라이언스·격리",
         "sole-tenant node",
+        "재작성·재플랫폼 없이 빠르게",
+        "마이그레이션 방식",
+        "리프트앤시프트",
+        "운영 인터페이스",
+        "관리 범위",
+        "GCP 연동",
         "은 동일한",
         "자동 복구(Autohealing)",
         "오토스케일링",
@@ -518,6 +577,14 @@
         "로드 밸런서 health check",
         "제외",
         "MIG",
+        "수동으로 하라",
+        "OS Patch Management",
+        "스케줄",
+        "규정 준수(compliance) 리포트",
+        "OS Inventory Management",
+        "인벤토리 데이터 수집·조회",
+        "| 원하는 소프트웨어·구성 상태를",
+        "OS Config 에이전트",
         "컨테이너 이미지",
         "포팅성",
         "동시성(Concurrency)",
@@ -529,6 +596,22 @@
         "Cloud Run Jobs",
         "CPU 할당",
         "min instances",
+        "Cloud Functions",
+        "Cloud Run functions",
+        "이벤트나 HTTP 요청에 반응",
+        "HTTP 트리거",
+        "이벤트 트리거",
+        "Eventarc",
+        "Pub/Sub 트리거",
+        "Cloud Run 위에서 동작",
+        "추상화 수준이 다르다",
+        "커넥터 리소스를 별도 프로비저닝",
+        "Direct VPC egress",
+        "없이",
+        "ingress 설정",
+        "all",
+        "internal",
+        "또는",
         "Standard 환경",
         "지원 언어 런타임이 정해져 있음",
         "Flexible 환경",
@@ -548,7 +631,6 @@
         "GKE Autopilot",
         "Cloud Run (Services)",
         "App Engine Flexible",
-        "Cloud Functions",
         "Compute Engine + Spot VM",
         "Regional",
         "재생성",
@@ -560,6 +642,13 @@
         "LB 처리 용량 기반 오토스케일링",
         "커스텀 네이티브 바이너리",
         "Standard가 지원하지 않는",
+        "인터넷에 노출하지 않고 내부에서만",
+        "private IP",
+        "VPC 안으로 나가는(egress)",
+        "누가 서비스를 호출하느냐(ingress)",
+        "ingress를 internal",
+        "수백 대의 VMware vSphere VM",
+        "재플랫폼 없이 단기간에",
         "함정 묶음"
       ],
       "content_depth": 1,
@@ -631,6 +720,22 @@
         "IP allow/deny",
         "Backend security policy",
         "Edge security policy",
+        "차단",
+        "탐지",
+        "사본",
+        "Packet Mirroring",
+        "IDS 엔드포인트(zonal)",
+        "검사 범위",
+        "Cloud IDS (탐지/가시성)",
+        "시그니처 탐지",
+        "east-west(내부 횡적)",
+        "차단하지 않음",
+        "Cloud Armor (차단/방어)",
+        "인라인 차단",
+        "요청을 거부",
+        "탐지·가시화",
+        "Cloud IDS",
+        "Cloud Armor",
         "온프렘 데이터센터와 GCP를 사설로 잇는",
         "HA VPN (권장)",
         "Classic VPN (레거시)",
@@ -642,9 +747,12 @@
         "Hub",
         "Spoke",
         "Site-to-site 데이터 전송",
+        "온프렘",
+        "온프렘 ↔ GCP",
+        "타 클라우드(AWS·Azure 등) ↔ GCP",
+        "Cross-Cloud Interconnect",
         "제약된 관계",
         "Cloud CDN",
-        "Cloud Armor",
         "Signed URL/Cookie",
         "HA VPN",
         "Application",
@@ -658,6 +766,10 @@
         "Partner",
         "edge",
         "backend",
+        "IDS",
+        "Armor",
+        "VPN/Interconnect",
+        "글로벌 VPC·Peering·NCC",
         "함정 7쌍",
         "실제 클라이언트 소스 IP",
         "정답: (B)",
@@ -665,7 +777,10 @@
         "캐시 키에서 해당 쿼리 파라미터를 제외",
         "하나의 IP 주소",
         "TCP",
-        "단일 글로벌 anycast IP"
+        "단일 글로벌 anycast IP",
+        "탐지하고 가시화",
+        "east-west(VM 간 횡적 이동)",
+        "탐지/가시성(차단 안 함)"
       ],
       "content_depth": 1,
       "importance": 3,
@@ -752,6 +867,37 @@
         "Fine-grained(세분화)",
         "Uniform(균일)",
         "IAM만",
+        "object / file / databases",
+        "file",
+        "Object",
+        "File",
+        "Filestore",
+        "NFS(POSIX 파일·디렉터리)",
+        "여러 VM/Pod 동시",
+        "Block",
+        "여러 VM/컨테이너가 같은 파일을 공유",
+        "HPC·렌더링·미디어 처리",
+        "GKE/Compute의 공유 영속 볼륨",
+        "Dataproc",
+        "Dataflow",
+        "Pub/Sub",
+        "Cloud Composer",
+        "관리형 vs 자체 운영",
+        "배치 vs 스트리밍",
+        "HA는 인프라 장애 시에도 서비스가 계속 뜨게",
+        "PITR",
+        "타임 트래블",
+        "스냅숏",
+        "Cloud Storage",
+        "객체 버전 관리",
+        "암호화",
+        "기본적으로 저장 시 암호화",
+        "CMEK",
+        "인증·인가",
+        "IAM 데이터베이스 인증",
+        "네트워크 격리",
+        "Private IP",
+        "VPC Service Controls",
         "Firestore (Native)",
         "Firestore (Datastore 모드)",
         "Nearline / Coldline",
@@ -759,9 +905,10 @@
         "Autoclass",
         "region 버킷",
         "multi-region 버킷",
-        "객체 버전 관리",
         "보존 정책 + 락",
         "균일 버킷 수준 액세스(IAM 단일화)",
+        "CMEK(Cloud KMS)",
+        "Private IP / VPC-SC",
         "정답: (B)",
         "조인",
         "하나의 트랜잭션으로 원자적으로",
@@ -772,15 +919,16 @@
         "Native 모드",
         "정답: (C)",
         "같은 단일 region",
+        "NFS 마운트 경로에 파일을 읽고 쓰도록",
         "요구사항 키워드를 서비스 특성에 매핑",
         "Spanner 오버킬",
         "Bigtable 데이터 모델 오용"
       ],
       "content_depth": 1,
       "importance": 5,
-      "depth": 0.95,
+      "depth": 1,
       "unanswered_questions": 0,
-      "learning_pressure": 0.25
+      "learning_pressure": 0
     },
     "concept/cloud/09_security_for_pca": {
       "id": "concept/cloud/09_security_for_pca",
@@ -805,9 +953,16 @@
         "(읽기),",
         "automatic",
         "user-managed",
+        "allow",
+        "deny",
+        "resourceLocations",
         "protects",
         "encloses",
         "conditions",
+        "requires",
+        "classifies",
+        "transforms",
+        "records",
         "레이어 구분",
         "별개의 레이어",
         "탈취된 자격증명으로 외부에서",
@@ -862,6 +1017,12 @@
         "실제 값 교체 로직은 사용자 책임",
         "외부 인터넷에서",
         "자신의 개인 GCS 버킷",
+        "프로젝트마다 따로 관리",
+        "은 이 강제력을",
+        "위에서 아래로",
+        "하위 프로젝트가 무력화하지 못하게",
+        "`goto_next`",
+        "다음(하위) 레벨로 평가를 위임",
         "Service Perimeter",
         "Access Level",
         "조건",
@@ -872,13 +1033,21 @@
         "Dry-run 모드",
         "도입",
         "데이터 유출(exfiltration) 방지",
-        "BeyondCorp(제로 트러스트)",
+        "제로 트러스트",
+        "BeyondCorp",
         "IAP for Web (HTTPS)",
         "HTTPS 부하 분산기(L7) 앞단",
         "IAP TCP forwarding",
         "외부 IP 없는 VM",
         "IAP for Web",
         "Access Context Manager",
+        "앱 앞단(L7)",
+        "는 같은 컨텍스트 조건을",
+        "공유",
+        "IAP",
+        "개별 앱/VM 앞단(L7)",
+        "Context-Aware Access",
+        "콘솔·API·앱 접근 전반",
         "자산 인벤토리",
         "취약점 탐지",
         "위협 탐지",
@@ -890,6 +1059,18 @@
         "Standard",
         "Premium",
         "Enterprise",
+        "Binary Authorization",
+        "GKE·Cloud Run",
+        "서명(attestation)을 갖췄는지",
+        "Policy",
+        "Attestor",
+        "Attestation",
+        "Artifact Analysis",
+        "Artifact Registry",
+        "SLSA",
+        "업계 프레임워크",
+        "Assured OSS",
+        "스캔·검증·서명한 OSS 패키지",
         "Secure Boot",
         "vTPM",
         "Integrity Monitoring",
@@ -897,17 +1078,62 @@
         "CMEK 사용 강제",
         "Shielded VM으로 강제",
         "Cloud Armor",
+        "접근 통제·암호화·감사·데이터 거주·유출 방지",
+        "HIPAA",
+        "VPC-SC",
+        "GDPR",
+        "Sensitive Data Protection",
+        "COPPA",
+        "PCI DSS",
+        "데이터 소유권/거주",
+        "Assured Workloads",
+        "EKM",
+        "데이터 거주(residency)",
+        "데이터 주권(sovereignty)",
+        "폴더 단위로 강제·검증",
+        "PII/민감정보",
+        "탐지·분류·비식별(de-identify)",
+        "탐지(inspect)",
+        "분류",
+        "비식별(de-identify)",
+        "마스킹(masking)",
+        "| 값을 토큰으로 치환, 형식은 유지 |",
+        "redaction",
+        "\"인프라 계층\"에 대한 것",
+        "\"누가 언제 무엇을 했는가를 증명\"",
+        "Admin Activity",
+        "Data Access",
+        "기본 꺼짐",
+        "System Event",
+        "Policy Denied",
+        "거부된",
+        "장기 보존",
+        "로그 싱크(sink)",
+        "Cloud Storage",
+        "BigQuery",
+        "Pub/Sub",
+        "한다면,",
+        "결론(컴플라이언스)",
         "Key",
         "Dataset/Bucket/Disk",
         "Secret",
         "Service",
         "Project/Service",
         "(VPC-SC 경계, IAP 리소스)",
+        "Regulation",
+        "Control",
+        "Dataset/Column",
+        "Image",
+        "GKE/Cloud Run",
+        "Audit Log",
         "거버넌스 레이어 서브그래프",
-        "VPC-SC",
         "SCC Premium",
         "SCC Enterprise",
         "Shielded VM",
+        "계층형 방화벽 정책",
+        "`resourceLocations`",
+        "Data Access 감사 로그",
+        "Access Transparency",
         "Version",
         "정답: (C)",
         "BigQuery는 CSEK 미지원",
@@ -918,14 +1144,25 @@
         "유효한 IAM 권한을 가진 채",
         "Premium 이상",
         "Enterprise까지는 불필요",
+        "서명된 것만",
+        "부팅",
+        "마스킹(redaction)",
+        "토큰화(형식보존, 가역)",
+        "되돌릴 수 있어야 한다",
+        "토큰화(형식보존 암호화)는 가역적",
+        "비가역",
+        "증빙하고, 모든 감사 기록을",
+        "읽기/쓰기",
+        "기본 비활성",
+        "Google 인력",
         "키 통제권을 고객에게 옮기는 정도의 차이",
         "경계"
       ],
       "content_depth": 1,
-      "importance": 7,
-      "depth": 0.95,
+      "importance": 9,
+      "depth": 0.98,
       "unanswered_questions": 0,
-      "learning_pressure": 0.35
+      "learning_pressure": 0.23
     },
     "concept/cloud/10_migration_and_dr_for_pca": {
       "id": "concept/cloud/10_migration_and_dr_for_pca",
@@ -937,9 +1174,7 @@
         "cloud",
         "gcp",
         "migration",
-        "disaster-recovery",
-        "dr",
-        "pca"
+        "disaster-recovery"
       ],
       "date": "2026-06-30",
       "valid_from": "Tue",
@@ -958,6 +1193,29 @@
         "Rip and replace",
         "Assess(현황 평가·종속성 파악)",
         "결론",
+        "자산 발견·인벤토리",
+        "TCO 평가",
+        "마이그레이션 그룹화·계획",
+        "의존성 매핑",
+        "Migration Center",
+        "무엇이 무엇에 묶여 있는가(의존성)",
+        "그 데이터를 옮길 길이 충분한가(네트워크)",
+        "마이그레이션 네트워크 계획",
+        "대역폭",
+        "연결 방식",
+        "컷오버 라우팅",
+        "소프트웨어 라이선스와 그 재무 영향",
+        "라이선스 포함 이미지 (PAYG)",
+        "시간당 요금에 포함",
+        "사용량만큼",
+        "반입",
+        "물리 코어·소켓 기반",
+        "sole-tenant 노드",
+        "라이선스 포함 이미지(PAYG)",
+        "BYOL(멀티테넌트 VM 가능)",
+        "BYOL + sole-tenant 노드",
+        "라이선스 포함 이미지",
+        "BYOL",
         "Rehost(lift-and-shift)",
         "마이그레이션 커넥터/매니저",
         "에이전트리스 vs 에이전트",
@@ -1020,6 +1278,7 @@
         "DMS 이질 마이그레이션(변환)",
         "Replatform/Refactor",
         "Assess(평가·인벤토리·종속성)",
+        "Migration Center 의존성 매핑",
         "Transfer Appliance(오프라인)",
         "동기 복제 / 다중 리전 Spanner",
         "리전 내 다중 존(Regional 배치)",
@@ -1037,13 +1296,17 @@
         "리전 내 존 보호",
         "비동기",
         "리전 장애",
-        "존 장애"
+        "존 장애",
+        "Assess·Plan",
+        "실행",
+        "물리 코어 단위 SQL Server 라이선스",
+        "sole-tenant 노드 + BYOL"
       ],
       "content_depth": 1,
-      "importance": 3,
-      "depth": 0.95,
+      "importance": 7,
+      "depth": 1,
       "unanswered_questions": 0,
-      "learning_pressure": 0.15
+      "learning_pressure": 0
     },
     "concept/cloud/11_operations_and_cost_for_pca": {
       "id": "concept/cloud/11_operations_and_cost_for_pca",
@@ -1055,9 +1318,7 @@
         "cloud",
         "gcp",
         "operations",
-        "sre",
-        "cost",
-        "pca"
+        "sre"
       ],
       "date": "2026-06-30",
       "valid_from": "Tue",
@@ -1065,6 +1326,12 @@
       "mentioned_terms": [
         "maxSurge",
         "maxUnavailable",
+        "gcloud",
+        "bq",
+        "kubectl",
+        "--quiet",
+        "gcloud storage",
+        "gsutil",
         "함정 → 판단 기준 → 결론",
         "지금 시스템이 건강한가",
         "변경을 어떻게 안전하게 내보내는가",
@@ -1076,6 +1343,7 @@
         "Error Reporting",
         "Cloud Profiler",
         "Cloud Debugger",
+        "지원 종료됐다(shutdown)",
         "메트릭(Metric)",
         "커스텀 메트릭",
         "Ops Agent",
@@ -1095,6 +1363,12 @@
         "분포형",
         "어디서 지연이 발생하는지",
         "결론",
+        "기준선(baseline)",
+        "프로파일링(Profiling)",
+        "벤치마킹(Benchmarking)",
+        "성능 기준선을 측정·기록",
+        "근본 원인",
+        "Gemini Cloud Assist",
         "SLI",
         "SLO",
         "SLA",
@@ -1131,6 +1405,27 @@
         "지속적 배포",
         "승격 파이프라인",
         "canary 배포",
+        "무게와 목적",
+        "Apigee (풀 라이프사이클 API 관리)",
+        "제품화·수익화(monetization)",
+        "API를 비즈니스 자산으로 운영",
+        "단순히 서버리스 API를 안전하게 노출",
+        "Cloud Shell",
+        "Cloud Shell Editor",
+        "Cloud Code",
+        "gsutil → `gcloud storage`",
+        "`gcloud storage`",
+        "로컬 에뮬레이터",
+        "비용이 들지 않고 CI에서 빠르다",
+        "클라이언트 라이브러리",
+        "연결된 서비스 계정",
+        "능동적 검증",
+        "단위(Unit)",
+        "통합(Integration)",
+        "부하(Load)",
+        "응답 시간·처리량·자동 확장·병목",
+        "의도적으로 장애를 주입",
+        "보안 검증",
         "약정형(CUD)과 자동형(SUD)을 구분",
         "Spot의 적용 조건",
         "budget alert가 지출을 막지 못한다",
@@ -1160,6 +1455,16 @@
         "리전 내 다른 존 간",
         "리전 간(inter-region)",
         "인터넷으로 나가는 egress",
+        "Service Catalog",
+        "승인·표준화된 솔루션",
+        "셀프서비스로 배포",
+        "검증된 청사진",
+        "요구 응답 속도와 전담 인력 필요 여부",
+        "Basic",
+        "Standard",
+        "Enhanced",
+        "Premium",
+        "관리형 서비스·자동화·관측 강화",
         "정답: (B)",
         "실제 트래픽의 소수에게 먼저 노출",
         "정답: (C)",
@@ -1173,16 +1478,28 @@
         "실제 차단이 필요하면 예산 알림을",
         "로 발행하고, 이를 구독한",
         "외부 SIEM(Splunk)",
+        "API 키와 JWT 검증만 붙여 가볍게 노출",
+        "개발자 포털·수익화·정교한 정책·분석",
+        "Apigee",
+        "서버리스 백엔드를 키/JWT로 가볍게 노출",
+        "API Gateway",
+        "부하 테스트",
+        "카오스 엔지니어링",
+        "침투 테스트",
+        "Cloud Emulators",
+        "비용 없이·빠르게",
+        "로컬·CI 검증용",
         "관측",
         "신뢰성·배포",
         "비용",
-        "함정 6쌍"
+        "개발·테스트·거버넌스",
+        "함정 7쌍"
       ],
       "content_depth": 1,
       "importance": 3,
-      "depth": 0.93,
+      "depth": 0.98,
       "unanswered_questions": 0,
-      "learning_pressure": 0.23
+      "learning_pressure": 0.08
     },
     "concept/cloud/12_genai_for_pca": {
       "id": "concept/cloud/12_genai_for_pca",
@@ -1194,10 +1511,7 @@
         "cloud",
         "gcp",
         "genai",
-        "gemini",
-        "agent-platform",
-        "rag",
-        "pca"
+        "gemini"
       ],
       "date": "2026-06-30",
       "valid_from": "Tue",
@@ -1241,11 +1555,20 @@
         "AI Hypercomputer",
         "대규모 ML/AI 학습과 서빙",
         "언제 이 레이어가 답인가",
+        "On-demand",
+        "예약(Reservation) / CUD",
+        "Spot",
         "Search (엔터프라이즈 검색)",
         "Conversation / 챗봇",
         "AI Agents (에이전트)",
         "NotebookLM",
+        "연결할 데이터가 준비돼 있어야",
+        "데이터 커넥터 구성",
+        "데이터스토어(datastore) 구성",
+        "RAG 검색 대상화",
+        "데이터 커넥터 → 데이터스토어 → 인덱싱",
         "Agent Platform Pipelines",
+        "ML 라이프사이클을 자동화·오케스트레이션",
         "관리형 빌더 (Agent Builder 계열)",
         "환각(hallucination)",
         "Grounding",
@@ -1282,19 +1605,19 @@
         "`Perimeter —protects→`"
       ],
       "content_depth": 0.77,
-      "importance": 3,
-      "depth": 0.72,
+      "importance": 5,
+      "depth": 0.74,
       "unanswered_questions": 0,
-      "learning_pressure": 0.84
+      "learning_pressure": 1.28
     },
-    "concept/data-analysis/00_how_to_design_funnel": {
-      "id": "concept/data-analysis/00_how_to_design_funnel",
+    "concept/data-analytics/00_how_to_design_funnel": {
+      "id": "concept/data-analytics/00_how_to_design_funnel",
       "type": "concept",
       "title": "올바른 Funnel 설계의 7가지 조건",
-      "path": "_concept/data-analysis/00_how_to_design_funnel.md",
+      "path": "_concept/data-analytics/00_how_to_design_funnel.md",
       "status": "complete",
       "tags": [
-        "data-analysis",
+        "data-analytics",
         "funnel",
         "analytics"
       ],
@@ -1320,20 +1643,16 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.94
     },
-    "concept/data-analysis/01_behavioral_analytics_techniques": {
-      "id": "concept/data-analysis/01_behavioral_analytics_techniques",
+    "concept/data-analytics/01_behavioral_analytics_techniques": {
+      "id": "concept/data-analytics/01_behavioral_analytics_techniques",
       "type": "concept",
       "title": "행동 데이터 분석 핵심 기법 5가지",
-      "path": "_concept/data-analysis/01_behavioral_analytics_techniques.md",
+      "path": "_concept/data-analytics/01_behavioral_analytics_techniques.md",
       "status": "complete",
       "tags": [
-        "data-analysis",
+        "data-analytics",
         "cohort",
-        "retention",
-        "ab-test",
-        "rfm",
-        "path-analysis",
-        "analytics"
+        "retention"
       ],
       "date": "2026-06-29",
       "confidence": "high",
@@ -1378,19 +1697,15 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.93
     },
-    "concept/data-analysis/02_event_tracking_design": {
-      "id": "concept/data-analysis/02_event_tracking_design",
+    "concept/data-analytics/02_event_tracking_design": {
+      "id": "concept/data-analytics/02_event_tracking_design",
       "type": "concept",
       "title": "이벤트 트래킹 설계",
-      "path": "_concept/data-analysis/02_event_tracking_design.md",
+      "path": "_concept/data-analytics/02_event_tracking_design.md",
       "status": "complete",
       "tags": [
-        "data-analysis",
-        "event-tracking",
-        "schema",
-        "analytics",
-        "tracking-plan",
-        "bigquery"
+        "data-analytics",
+        "event-tracking"
       ],
       "date": "2026-06-29",
       "confidence": "high",
@@ -1433,21 +1748,16 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.64
     },
-    "concept/data-analysis/03_metrics_framework": {
-      "id": "concept/data-analysis/03_metrics_framework",
+    "concept/data-analytics/03_metrics_framework": {
+      "id": "concept/data-analytics/03_metrics_framework",
       "type": "concept",
       "title": "NSM부터 Guardrail까지 지표 체계 설계",
-      "path": "_concept/data-analysis/03_metrics_framework.md",
+      "path": "_concept/data-analytics/03_metrics_framework.md",
       "status": "complete",
       "tags": [
-        "data-analysis",
+        "data-analytics",
         "metrics",
-        "nsm",
-        "north-star",
-        "guardrail",
-        "okr",
-        "analytics",
-        "goodhart"
+        "north-star"
       ],
       "date": "2026-06-29",
       "confidence": "high",
@@ -1489,14 +1799,14 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.54
     },
-    "concept/data-analysis/04_user_behavior_analytics_framework": {
-      "id": "concept/data-analysis/04_user_behavior_analytics_framework",
+    "concept/data-analytics/04_user_behavior_analytics_framework": {
+      "id": "concept/data-analytics/04_user_behavior_analytics_framework",
       "type": "concept",
       "title": "사용자 행동 분석 프레임워크 설계",
-      "path": "_concept/data-analysis/04_user_behavior_analytics_framework.md",
+      "path": "_concept/data-analytics/04_user_behavior_analytics_framework.md",
       "status": "complete",
       "tags": [
-        "data-analysis",
+        "data-analytics",
         "behavior-analytics"
       ],
       "date": "2026-06-30",
@@ -2875,6 +3185,16 @@
       "type": "references"
     },
     {
+      "from": "concept/cloud/08_databases_and_storage_for_pca",
+      "to": "concept/cloud/09_security_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/08_databases_and_storage_for_pca",
+      "to": "concept/cloud/10_migration_and_dr_for_pca",
+      "type": "references"
+    },
+    {
       "from": "concept/cloud/09_security_for_pca",
       "to": "concept/cloud/05_iam_for_pca",
       "type": "references"
@@ -2905,43 +3225,53 @@
       "type": "references"
     },
     {
+      "from": "concept/cloud/11_operations_and_cost_for_pca",
+      "to": "concept/cloud/10_migration_and_dr_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/11_operations_and_cost_for_pca",
+      "to": "concept/cloud/12_genai_for_pca",
+      "type": "references"
+    },
+    {
       "from": "concept/cloud/12_genai_for_pca",
       "to": "concept/cloud/09_security_for_pca",
       "type": "references"
     },
     {
-      "from": "concept/data-analysis/00_how_to_design_funnel",
+      "from": "concept/data-analytics/00_how_to_design_funnel",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "references"
     },
     {
-      "from": "concept/data-analysis/02_event_tracking_design",
-      "to": "concept/data-analysis/01_behavioral_analytics_techniques",
+      "from": "concept/data-analytics/02_event_tracking_design",
+      "to": "concept/data-analytics/01_behavioral_analytics_techniques",
       "type": "extends"
     },
     {
-      "from": "concept/data-analysis/03_metrics_framework",
-      "to": "concept/data-analysis/01_behavioral_analytics_techniques",
+      "from": "concept/data-analytics/03_metrics_framework",
+      "to": "concept/data-analytics/01_behavioral_analytics_techniques",
       "type": "extends"
     },
     {
-      "from": "concept/data-analysis/04_user_behavior_analytics_framework",
-      "to": "concept/data-analysis/02_event_tracking_design",
+      "from": "concept/data-analytics/04_user_behavior_analytics_framework",
+      "to": "concept/data-analytics/02_event_tracking_design",
       "type": "extends"
     },
     {
-      "from": "concept/data-analysis/04_user_behavior_analytics_framework",
-      "to": "concept/data-analysis/00_how_to_design_funnel",
+      "from": "concept/data-analytics/04_user_behavior_analytics_framework",
+      "to": "concept/data-analytics/00_how_to_design_funnel",
       "type": "references"
     },
     {
-      "from": "concept/data-analysis/04_user_behavior_analytics_framework",
-      "to": "concept/data-analysis/01_behavioral_analytics_techniques",
+      "from": "concept/data-analytics/04_user_behavior_analytics_framework",
+      "to": "concept/data-analytics/01_behavioral_analytics_techniques",
       "type": "references"
     },
     {
-      "from": "concept/data-analysis/04_user_behavior_analytics_framework",
-      "to": "concept/data-analysis/03_metrics_framework",
+      "from": "concept/data-analytics/04_user_behavior_analytics_framework",
+      "to": "concept/data-analytics/03_metrics_framework",
       "type": "references"
     },
     {
@@ -3148,6 +3478,36 @@
       ]
     },
     {
+      "term": "VPC Service Controls",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/12_genai_for_pca"
+      ]
+    },
+    {
+      "term": "Standard",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "BigQuery",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
       "term": "정답: (C)",
       "count": 4,
       "mentioned_by": [
@@ -3161,7 +3521,7 @@
       "term": "status",
       "count": 4,
       "mentioned_by": [
-        "concept/data-analysis/02_event_tracking_design",
+        "concept/data-analytics/02_event_tracking_design",
         "concept/data-architect/02_how_to_architect_medallion_well",
         "concept/data-architect/04_what_is_ontology",
         "concept/data-architect/05_ontology_objects_summary"
@@ -3182,26 +3542,17 @@
       "count": 3,
       "mentioned_by": [
         "adr/architecture/2026-06-24-001-adr-guide",
-        "concept/data-analysis/02_event_tracking_design",
+        "concept/data-analytics/02_event_tracking_design",
         "concept/data-architect/07_ontology_core_concepts"
       ]
     },
     {
-      "term": "VPC Service Controls",
+      "term": "Gemini Cloud Assist",
       "count": 3,
       "mentioned_by": [
-        "concept/cloud/03_vpc_for_pca",
-        "concept/cloud/09_security_for_pca",
+        "concept/cloud/00_pca_study_plan",
+        "concept/cloud/11_operations_and_cost_for_pca",
         "concept/cloud/12_genai_for_pca"
-      ]
-    },
-    {
-      "term": "Standard",
-      "count": 3,
-      "mentioned_by": [
-        "concept/cloud/04_gke_for_pca",
-        "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/09_security_for_pca"
       ]
     },
     {
@@ -3214,19 +3565,37 @@
       ]
     },
     {
-      "term": "BigQuery",
+      "term": "Pub/Sub",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/09_security_for_pca",
         "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud Storage",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "CMEK",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/12_genai_for_pca"
       ]
     },
     {
       "term": "LEFT JOIN",
       "count": 3,
       "mentioned_by": [
-        "concept/data-analysis/01_behavioral_analytics_techniques",
+        "concept/data-analytics/01_behavioral_analytics_techniques",
         "concept/data-architect/03_medallion_advanced_patterns",
         "insight/data-architect/01_medallion_with_ontology"
       ]
@@ -3286,7 +3655,7 @@
       ]
     },
     {
-      "term": "Gemini Cloud Assist",
+      "term": "AI Hypercomputer",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/00_pca_study_plan",
@@ -3294,11 +3663,19 @@
       ]
     },
     {
-      "term": "AI Hypercomputer",
+      "term": "allow",
       "count": 2,
       "mentioned_by": [
-        "concept/cloud/00_pca_study_plan",
-        "concept/cloud/12_genai_for_pca"
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/09_security_for_pca"
+      ]
+    },
+    {
+      "term": "deny",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/09_security_for_pca"
       ]
     },
     {
@@ -3315,6 +3692,14 @@
       "mentioned_by": [
         "concept/cloud/03_vpc_for_pca",
         "concept/cloud/12_genai_for_pca"
+      ]
+    },
+    {
+      "term": "`goto_next`",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/09_security_for_pca"
       ]
     },
     {
@@ -3342,6 +3727,38 @@
       ]
     },
     {
+      "term": "Producer",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/java/01_producer_extends_consumer_super"
+      ]
+    },
+    {
+      "term": "Consumer",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/java/01_producer_extends_consumer_super"
+      ]
+    },
+    {
+      "term": "함정 8쌍",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/05_iam_for_pca"
+      ]
+    },
+    {
+      "term": "kubectl",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
       "term": "Service",
       "count": 2,
       "mentioned_by": [
@@ -3366,19 +3783,19 @@
       ]
     },
     {
+      "term": "Binary Authorization",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/09_security_for_pca"
+      ]
+    },
+    {
       "term": "List",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/05_iam_for_pca",
         "concept/java/01_producer_extends_consumer_super"
-      ]
-    },
-    {
-      "term": "함정 6쌍",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/05_iam_for_pca",
-        "concept/cloud/11_operations_and_cost_for_pca"
       ]
     },
     {
@@ -3390,11 +3807,27 @@
       ]
     },
     {
+      "term": "Spot",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/06_compute_for_pca",
+        "concept/cloud/12_genai_for_pca"
+      ]
+    },
+    {
       "term": "Cloud Armor",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/07_load_balancing_and_connectivity_for_pca",
         "concept/cloud/09_security_for_pca"
+      ]
+    },
+    {
+      "term": "함정 7쌍",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
       ]
     },
     {
@@ -3438,10 +3871,10 @@
       ]
     },
     {
-      "term": "CMEK",
+      "term": "인증·인가",
       "count": 2,
       "mentioned_by": [
-        "concept/cloud/09_security_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca",
         "concept/cloud/12_genai_for_pca"
       ]
     },
@@ -3462,6 +3895,46 @@
       ]
     },
     {
+      "term": "Premium",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Artifact Registry",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Sensitive Data Protection",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/12_genai_for_pca"
+      ]
+    },
+    {
+      "term": "System Event",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/data-analytics/02_event_tracking_design"
+      ]
+    },
+    {
+      "term": "GKE/Cloud Run",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca"
+      ]
+    },
+    {
       "term": "경계",
       "count": 2,
       "mentioned_by": [
@@ -3470,11 +3943,27 @@
       ]
     },
     {
+      "term": "gcloud storage",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "gsutil",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
       "term": "Rolling",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/11_operations_and_cost_for_pca",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
+        "concept/data-analytics/01_behavioral_analytics_techniques"
       ]
     },
     {
@@ -3497,15 +3986,15 @@
       "term": "규칙",
       "count": 2,
       "mentioned_by": [
-        "concept/data-analysis/00_how_to_design_funnel",
-        "concept/data-analysis/01_behavioral_analytics_techniques"
+        "concept/data-analytics/00_how_to_design_funnel",
+        "concept/data-analytics/01_behavioral_analytics_techniques"
       ]
     },
     {
       "term": "운영",
       "count": 2,
       "mentioned_by": [
-        "concept/data-analysis/02_event_tracking_design",
+        "concept/data-analytics/02_event_tracking_design",
         "concept/data-engineering/00_how_to_use_dataform_well"
       ]
     },

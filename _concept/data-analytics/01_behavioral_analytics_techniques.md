@@ -1,16 +1,16 @@
 ---
-layout      : concept
-title       : 행동 데이터 분석 핵심 기법 5가지
-date        : 2026-06-29 00:00:00 +0900
-updated     : 2026-06-29 00:00:00 +0900
-tag         : data-analysis cohort retention ab-test rfm path-analysis analytics
-toc         : true
-comment     : true
-latex       : true
-status      : complete
-public      : true
-parent      : [[/data-analysis]]
-confidence  : high
+layout: concept
+title: 행동 데이터 분석 핵심 기법 5가지
+date: 2026-06-29 00:00:00 +0900
+updated: 2026-06-29 00:00:00 +0900
+tag: data-analytics cohort retention
+toc: true
+comment: true
+latex: true
+status: complete
+public: true
+parent: [ [ /data-analytics ] ]
+confidence: high
 ---
 
 * TOC

@@ -3,19 +3,19 @@ layout      : concept
 title       : 사용자 행동 분석 프레임워크 설계
 date        : 2026-06-30 00:00:00 +0900
 updated     : 2026-06-30 00:00:00 +0900
-tag         : data-analysis behavior-analytics
+tag         : data-analytics behavior-analytics
 toc         : true
 comment     : true
 latex       : true
 status      : complete
 public      : true
-parent      : [[/data-analysis]]
+parent      : [[/data-analytics]]
 confidence  : medium
 relations:
-  - { type: extends, target: concept/data-analysis/02_event_tracking_design }
-  - { type: references, target: concept/data-analysis/00_how_to_design_funnel }
-  - { type: references, target: concept/data-analysis/01_behavioral_analytics_techniques }
-  - { type: references, target: concept/data-analysis/03_metrics_framework }
+  - { type: extends, target: concept/data-analytics/02_event_tracking_design }
+  - { type: references, target: concept/data-analytics/00_how_to_design_funnel }
+  - { type: references, target: concept/data-analytics/01_behavioral_analytics_techniques }
+  - { type: references, target: concept/data-analytics/03_metrics_framework }
 ---
 
 * TOC
@@ -37,10 +37,10 @@ relations:
 
 | 글 | 다루는 것 | 전제 |
 |---|---|---|
-| [핵심 기법 5가지](/concept/data-analysis/01_behavioral_analytics_techniques) | 리텐션·코호트·RFM·경로 분석 | 정제된 행동 데이터가 이미 있음 |
-| [이벤트 트래킹 설계](/concept/data-analysis/02_event_tracking_design) | 그 데이터를 만드는 스키마 | 단일 채널 가정 |
-| [퍼널 설계](/concept/data-analysis/00_how_to_design_funnel) | 단계별로 보는 법 | 사용자 식별이 됨 |
-| [지표 체계](/concept/data-analysis/03_metrics_framework) | 무엇을 측정할지 | 측정 대상이 통합돼 있음 |
+| [핵심 기법 5가지](/concept/data-analytics/01_behavioral_analytics_techniques) | 리텐션·코호트·RFM·경로 분석 | 정제된 행동 데이터가 이미 있음 |
+| [이벤트 트래킹 설계](/concept/data-analytics/02_event_tracking_design) | 그 데이터를 만드는 스키마 | 단일 채널 가정 |
+| [퍼널 설계](/concept/data-analytics/00_how_to_design_funnel) | 단계별로 보는 법 | 사용자 식별이 됨 |
+| [지표 체계](/concept/data-analytics/03_metrics_framework) | 무엇을 측정할지 | 측정 대상이 통합돼 있음 |
 
 넷 다 옳지만 서로의 전제를 공유하지 않는다. 프레임워크는 이들을 하나의 수직 스택으로 쌓아 "원천 행동 → 정제된 이벤트 → 세션 → 지표 → 분석"의 흐름이 끊기지 않게 만드는 구조다. 스택의 최하단, 가장 자주 실패하는 지점이 **정체성(identity)** 이다.
 
@@ -89,13 +89,13 @@ PARTITION BY DATE(observed_at);
 
 이 엣지를 연결 요소(connected component)로 묶으면 `unified_user_id`가 나온다. 실무에서는 **확정적 엣지만 사용하는 보수적 그래프**와 **확률적 엣지까지 포함한 공격적 그래프**를 둘 다 만들고, 분석 성격에 따라 신뢰도 임계값을 선택하게 한다. 매출 정산처럼 오차가 허용되지 않는 분석은 확정적 그래프만 사용한다.
 
-> ⚠️ ID 통합은 개인정보 처리의 핵심 지점이다. `card_hash`·`phone_hash`는 단방향 해시로만 저장하고 원문은 보관하지 않는다. 통합 행위 자체가 동의 범위 내인지 법무·보안 검토를 선행한다. [이벤트 트래킹의 PII 원칙](/concept/data-analysis/02_event_tracking_design)이 그대로 적용된다.
+> ⚠️ ID 통합은 개인정보 처리의 핵심 지점이다. `card_hash`·`phone_hash`는 단방향 해시로만 저장하고 원문은 보관하지 않는다. 통합 행위 자체가 동의 범위 내인지 법무·보안 검토를 선행한다. [이벤트 트래킹의 PII 원칙](/concept/data-analytics/02_event_tracking_design)이 그대로 적용된다.
 
 ---
 
 ## L2. Event — 채널을 차원으로 흡수
 
-[이벤트 트래킹 설계](/concept/data-analysis/02_event_tracking_design)의 표준 스키마를 재사용하되, 두 가지를 추가한다. (1) `channel`을 일급 차원으로 두고, (2) 식별자를 L1의 `unified_user_id`로 채운다. 온라인·오프라인 이벤트가 같은 테이블·같은 형태로 적재되는 것이 핵심이다.
+[이벤트 트래킹 설계](/concept/data-analytics/02_event_tracking_design)의 표준 스키마를 재사용하되, 두 가지를 추가한다. (1) `channel`을 일급 차원으로 두고, (2) 식별자를 L1의 `unified_user_id`로 채운다. 온라인·오프라인 이벤트가 같은 테이블·같은 형태로 적재되는 것이 핵심이다.
 
 ```json
 {
@@ -133,7 +133,7 @@ PARTITION BY DATE(observed_at);
 
 ## L3. Session — 시간이 어긋난 행동 잇기
 
-온·오프라인의 가장 까다로운 차이가 여기서 드러난다. 온라인 이벤트는 발생 즉시 도착하지만, 오프라인 이벤트는 배치로 수 시간 늦게 도착한다. [02에서 `event_time`(실제 발생)과 `received_at`(도착)을 분리한 설계](/concept/data-analysis/02_event_tracking_design)가 여기서 결정적이다 — **크로스채널 세션은 반드시 `event_time` 기준으로 정렬**해야 한다. `received_at`으로 순서를 매기면 "매장 방문이 앱 검색보다 먼저"인 시간 역전이 발생한다.
+온·오프라인의 가장 까다로운 차이가 여기서 드러난다. 온라인 이벤트는 발생 즉시 도착하지만, 오프라인 이벤트는 배치로 수 시간 늦게 도착한다. [02에서 `event_time`(실제 발생)과 `received_at`(도착)을 분리한 설계](/concept/data-analytics/02_event_tracking_design)가 여기서 결정적이다 — **크로스채널 세션은 반드시 `event_time` 기준으로 정렬**해야 한다. `received_at`으로 순서를 매기면 "매장 방문이 앱 검색보다 먼저"인 시간 역전이 발생한다.
 
 세션 단위도 두 층으로 나눈다.
 
@@ -165,9 +165,9 @@ HAVING LOGICAL_OR(event_name = 'order_completed');
 
 ## L4 · L5. Metric과 Analysis
 
-L1~L3이 서면 [지표 체계](/concept/data-analysis/03_metrics_framework)와 [핵심 기법](/concept/data-analysis/01_behavioral_analytics_techniques)을 채널 차원에 얹어 그대로 적용한다. 통합 전에는 불가능했던 분석들이 가능해진다.
+L1~L3이 서면 [지표 체계](/concept/data-analytics/03_metrics_framework)와 [핵심 기법](/concept/data-analytics/01_behavioral_analytics_techniques)을 채널 차원에 얹어 그대로 적용한다. 통합 전에는 불가능했던 분석들이 가능해진다.
 
-**크로스채널 퍼널** — [퍼널 설계](/concept/data-analysis/00_how_to_design_funnel)의 단계를 채널 무관 행동으로 정의한다.
+**크로스채널 퍼널** — [퍼널 설계](/concept/data-analytics/00_how_to_design_funnel)의 단계를 채널 무관 행동으로 정의한다.
 
 ```sql
 SELECT
@@ -198,13 +198,13 @@ FROM (
 
 프레임워크를 한 번에 세우려는 시도는 대부분 L1에서 실패한다. 권장 순서는 아래부터다.
 
-1. **L2를 한 채널에서만** — 온라인 이벤트 스키마를 [02 기준](/concept/data-analysis/02_event_tracking_design)으로 정립. 여기가 부실하면 위가 흔들린다.
+1. **L2를 한 채널에서만** — 온라인 이벤트 스키마를 [02 기준](/concept/data-analytics/02_event_tracking_design)으로 정립. 여기가 부실하면 위가 흔들린다.
 2. **L1 확정적 연결만** — 로그인·멤버십 같은 확실한 신호로 ID 그래프 시작. 확률적 매칭은 후순위.
 3. **두 번째 채널을 동일 L2 스키마로 흡수** — 새 테이블이 아니라 `channel` 차원으로 통합.
 4. **L3 여정 재구성** — `event_time` 기준.
 5. **L4·L5를 채널 차원에 적용.**
 
-각 단계는 [02의 데이터 품질 검증](/concept/data-analysis/02_event_tracking_design)(볼륨·누락·중복 모니터링)을 통과한 뒤 다음으로 넘어간다.
+각 단계는 [02의 데이터 품질 검증](/concept/data-analytics/02_event_tracking_design)(볼륨·누락·중복 모니터링)을 통과한 뒤 다음으로 넘어간다.
 
 ---
 

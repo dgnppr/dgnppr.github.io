@@ -12,7 +12,7 @@
   "system-design/01_web_crawler_design": "ae1089f97225db3c397cd744bb0600d6",
   "system-design/02_notification_system_design": "39f4e0e520df661cbb8b19057e8a3b6d",
   "system-design/03_sns_feed_system_design": "baff6ea5404f740b2c3194fb478782a0",
-  "data-analysis/00_how_to_design_funnel": "0c01115de05d6dabf889dc04b3097446",
+  "data-analytics/00_how_to_design_funnel": "0c01115de05d6dabf889dc04b3097446",
   "llm/00_why_llm_is_decoder_only": "02d90e26900406077cf90c4f021d0fae",
   "cloud": "71680957da3c17aeb3d89b9d72ede8db",
   "data-architect/00_what_is_medaliion_architecture": "4f6ec4df8283b7748e6f146beb07a4cd",
@@ -43,11 +43,11 @@
   "data-architect/05_ontology_objects_summary": "f05fcfd4092eb27cb76c08c8b29fa5f7",
   "data-architect/06_how_to_implement_ontology": "2969488657b9554eaf71ad5db23d17c9",
   "data-architect/07_ontology_core_concepts": "aaa6b18290f7a53cc6dd2d08716ff096",
-  "data-analysis/01_behavioral_analytics_techniques": "64a5caaac455100ee2b42df59afe7340",
-  "data-analysis/02_event_tracking_design": "b5ee02c29d3789aca88b3db58f99f450",
-  "data-analysis/03_metrics_framework": "003e08b059d6708a04b1dabdab3b19cf",
+  "data-analytics/01_behavioral_analytics_techniques": "64a5caaac455100ee2b42df59afe7340",
+  "data-analytics/02_event_tracking_design": "b5ee02c29d3789aca88b3db58f99f450",
+  "data-analytics/03_metrics_framework": "003e08b059d6708a04b1dabdab3b19cf",
   "data-architect/00_ontology_core_examples": "ef92fc22a08ac3b49fbe60386ccf605c",
   "data-architect/01_medallion_with_ontology": "403b0fc563f436ab3a0d8423f1387459",
   "security/2026-06-24-002-gcp-key-management-status": "6cd14ca3d40c0e234d2810c760d4eee3",
-  "data-analysis/04_user_behavior_analytics_framework": "84f7ecac4d5a5554325cb2bdea4219f7"
+  "data-analytics/04_user_behavior_analytics_framework": "84f7ecac4d5a5554325cb2bdea4219f7"
 }
