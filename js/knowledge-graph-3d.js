@@ -117,7 +117,7 @@
         var focusSlug = opts.focusSlug || null;
         var miniMode  = opts.miniMode  || false;
         var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-        var GRID_ANIM = 'kg3d-grid-drift 5s linear infinite';
+        var GRID_ANIM = 'kg3d-grid-drift 5.6s linear infinite';
         var W = container.clientWidth  || 800;
         var H = container.clientHeight || 500;
 
@@ -574,6 +574,7 @@
             /* ── 상태 ────────────────────────────────────── */
             var pinnedNode = null, activeNode = null, resetTimer = null, activeSearch = false;
             var lastInteract = 0, IDLE_MS = 2000;
+            var pointerInside = false;
 
             function highlight(n) {
                 activeNode = n;
@@ -674,6 +675,11 @@
             renderer.domElement.addEventListener('pointerdown', onDown);
             renderer.domElement.addEventListener('pointermove', onMove);
             renderer.domElement.addEventListener('pointerup',   onUp);
+            /* 포인터가 그래프 위에 있는 동안 자동회전 정지, 벗어나면 IDLE_MS 후 재개 */
+            renderer.domElement.addEventListener('pointerenter', function () { pointerInside = true; });
+            renderer.domElement.addEventListener('pointerleave', function () {
+                pointerInside = false; lastInteract = performance.now();
+            });
 
             /* TrackballControls — 극점 제한 없는 자유 360° 회전 */
             var controls = new THREE.TrackballControls(camera, renderer.domElement);
@@ -1260,7 +1266,7 @@
                 /* 자동 회전 — miniMode: 항상, 메인: idle 3초 후 */
                 var shouldRotate = isDragging ? false
                     : miniMode ? true
-                    : (!pinnedNode && (now - lastInteract > IDLE_MS));
+                    : (!pinnedNode && !pointerInside && (now - lastInteract > IDLE_MS));
                 if (shouldRotate) {
                     var _a = miniMode ? 0.004 : 0.003;
                     var _px = camera.position.x - controls.target.x;
