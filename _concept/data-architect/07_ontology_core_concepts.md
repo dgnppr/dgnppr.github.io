@@ -437,7 +437,7 @@ graph TD
   E --- L
 ```
 
-아래층(KG) 위에 위층(온톨로지)이 올라탄다. 마켓온에서 `links`(KG edge) 위에 `prop_def`·`action_def`(온톨로지 규칙)가 올라탔던 것과, 팔란티어에서 Object/Link 인스턴스 위에 Object Type·Link Type·Action Type이 올라탄 것과, Wikidata에서 item·triple 위에 `P31`/`P279` 분류가 올라탄 것이 — 모두 같은 두 층위 구조다.
+아래층(KG) 위에 위층(온톨로지)이 구성된다. 마켓온에서 `links`(KG edge) 위에 `prop_def`·`action_def`(온톨로지 규칙)가 위치하고, 팔란티어에서 Object/Link 인스턴스 위에 Object Type·Link Type·Action Type이 위치하며, Wikidata에서 item·triple 위에 `P31`/`P279` 분류가 위치하는 것이 — 모두 같은 두 층위 구조다.
 
 ---
 

@@ -99,7 +99,7 @@ POS → bronze.pos_purchases → (18개 쿼리) → Gold 마트
 
 장애 복구 시 88개 쿼리를 모두 점검해야 했다. 그 중 72개가 영향 범위에 들어왔다.
 
-### 3. DQ 모니터링 없음 — 6시간 8분 동안 침묵했다
+### 3. DQ 모니터링 없음 — 6시간 8분간 탐지되지 않았다
 
 `'CM'`이라는 미지의 status 코드가 Bronze에 처음 들어온 시각은 새벽 2시 32분이었다. 오전 9시 15분에 GMV 0 알람이 떴으니, 탐지까지 6시간 43분이 걸렸다.
 
@@ -107,11 +107,9 @@ Bronze에 `'CM'`이 들어오는 순간 "알 수 없는 status 코드 감지"라
 
 ---
 
-## 잠깐 — Bronze 레이어만 있으면 됐을까?
+## Bronze 레이어만 있으면 됐을까?
 
-포스트모텀 회의에서 누군가 물었다. "Bronze 테이블을 raw로 쓰면 되는 거 아닌가요? 이건 그냥 Gold 쿼리를 잘못 짠 거잖아요."
-
-답은 **아니다**.
+흔한 반론은 "Bronze 테이블을 raw로 쓰면 되고, 이건 그냥 Gold 쿼리를 잘못 짠 것"이라는 주장이다. 그렇지 않다.
 
 Bronze 테이블은 이미 있었다. `marketeon.bronze.erp_orders`는 ERP 데이터를 그대로 담는 raw 테이블이었다. 문제는 Bronze가 있어도 Gold가 Bronze를 직접 참조했다는 것이다.
 
@@ -271,7 +269,7 @@ _source_status_raw | is_completed
 CM                 | NULL          ← DQ assertion 발동
 ```
 
-**새벽 2시 34분 — DQ assertion이 울린다**
+**새벽 2시 34분 — DQ assertion이 발동한다**
 
 ```
 [DQ-ALERT] silver_dq_unknown_status

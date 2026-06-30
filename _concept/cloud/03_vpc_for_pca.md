@@ -22,9 +22,9 @@ valid_from     : 2026-06-25
 
 ## 도입 — 방화벽을 열었는데 왜 연결이 안 되죠?
 
-같은 VPC, 다른 서브넷에 있는 두 VM. `vm-a`에서 `vm-b`로 `ping`이 안 나간다. 콘솔에서 `allow-icmp` 규칙을 추가한다. 여전히 안 된다. 한참을 헤매다 깨닫는다 — 추가한 규칙의 priority가 기존 deny 규칙보다 **숫자가 컸다.** GCP에서 방화벽 우선순위는 숫자가 낮을수록 강하다. 직관과 정반대다.
+같은 VPC, 다른 서브넷에 있는 두 VM 사이에서 `ping`이 실패하는 흔한 원인 하나는 방화벽 우선순위다. `allow-icmp` 규칙을 추가해도 그 규칙의 priority가 기존 deny 규칙보다 **숫자가 크면** 적용되지 않는다. GCP에서 방화벽 우선순위는 숫자가 낮을수록 강하다 — 직관과 정반대다.
 
-PCA 시험의 VPC 문제는 이 장면의 변주다. 표면적으로는 "ping이 왜 안 되나", "어떤 구성이 가장 적합한가"를 묻지만 본질은 하나다 — **요구사항을 읽고 올바른 GCP 프리미티브로 매핑할 줄 아는가.** Peering인가 Shared VPC인가 VPN인가, Cloud NAT인가 Private Google Access인가, Network Tag인가 Service Account인가.
+PCA 시험의 VPC 문제도 같은 성격이다. 표면적으로는 "ping이 왜 안 되나", "어떤 구성이 가장 적합한가"를 묻지만 본질은 하나다 — **요구사항을 읽고 올바른 GCP 프리미티브로 매핑할 줄 아는가.** Peering인가 Shared VPC인가 VPN인가, Cloud NAT인가 Private Google Access인가, Network Tag인가 Service Account인가.
 
 <div class="callout-note">
 이 글의 지도: 정신모델 → 패킷 흐름(Route·Firewall·HFP) → 연결 3선택지 → Private Access → 진단 도구 → 시험 유형 공략 → 케이스. 각 축은 "문제 → 케이스 → 결론"으로 닫는다.
@@ -371,7 +371,7 @@ PCA 시험에서 <strong>Connectivity Tests</strong>가 가장 자주 나온다.
 
 ## 마무리
 
-처음의 장면 — "방화벽을 열었는데 왜 연결이 안 되죠?" — 은 implied deny와 priority 역전을 알면 풀린다. 그리고 그 너머의 모든 VPC 문제는 요구사항을 읽고 올바른 연결 방식을 고르는 의사결정이다.
+"방화벽을 열었는데 왜 연결이 안 되죠?"는 implied deny와 priority 역전을 알면 풀린다. 그 너머의 모든 VPC 문제는 요구사항을 읽고 올바른 연결 방식을 고르는 의사결정이다.
 
 <div class="callout-tip">
 VPC 문제 = <strong>연결 방식 선택 문제</strong>. 요구사항 키워드(거버넌스 / 비용 / 격리 / 온프렘)를 연결 방식에 매핑하면 답이 보인다.

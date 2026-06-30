@@ -47,7 +47,7 @@ nesting이 성립하면 count는 단조 감소해야 정상이다 (`step1 ≥ st
 
 단계마다 귀속 기준이 같아야 한다.
 
-step1~3은 "AI 추천 경로"(strict, `item_list_id` 기반)인데 step4~5는 "세션 내 아무거나"(context-agnostic)로 바뀌면, 같은 funnel인데 측정 대상이 도중에 바뀐 것이다. 이 이음매가 funnel의 단층선이 된다.
+step1~3은 "AI 추천 경로"(strict, `item_list_id` 기반)인데 step4~5는 "세션 내 아무거나"(context-agnostic)로 바뀌면, 같은 funnel인데 측정 대상이 도중에 바뀐 것이다. 이 지점에서 전환율 비교의 기준이 어긋난다.
 
 > **규칙**: strict면 끝까지 strict, broad면 끝까지 broad. 섞어야 한다면 두 개의 funnel로 분리한다.
 
@@ -68,7 +68,7 @@ step 번호가 실제 시간/인과 순서를 반영해야 한다.
 | **누적형(cumulative)** | stepN = "N단계까지 도달" | count 단조 감소, 전환율 funnel용 (대부분의 funnel) |
 | **배타형(exclusive/deepest)** | 각 세션을 "가장 깊이 도달한 단계 하나"에만 배정 | 분포 합계 = 100% (ENUM, abandon flag) |
 
-섞으면 깨진다. `abandon` 설계가 대표적인 위반 사례다 — `checkout_abandon ⊂ cart_abandon` (`begin_checkout`은 `add_to_cart` 전제)인데 병렬 flag처럼 정의하면, "cart 이탈"과 "checkout 이탈"을 배타 단계로 읽을 때 틀린다.
+두 방식을 섞으면 단계 정의가 무효가 된다. `abandon` 설계가 대표적인 위반 사례다 — `checkout_abandon ⊂ cart_abandon` (`begin_checkout`은 `add_to_cart` 전제)인데 병렬 flag처럼 정의하면, "cart 이탈"과 "checkout 이탈"을 배타 단계로 읽을 때 틀린다.
 
 > **배타형 구현 규칙**:
 > ```

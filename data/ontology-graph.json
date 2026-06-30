@@ -425,10 +425,10 @@
         "overall"
       ],
       "content_depth": 0.68,
-      "importance": 1,
-      "depth": 0.66,
+      "importance": 3,
+      "depth": 0.69,
       "unanswered_questions": 0,
-      "learning_pressure": 0.34
+      "learning_pressure": 0.94
     },
     "concept/data-analysis/01_behavioral_analytics_techniques": {
       "id": "concept/data-analysis/01_behavioral_analytics_techniques",
@@ -483,10 +483,10 @@
         "경로 분석"
       ],
       "content_depth": 0.77,
-      "importance": 4,
-      "depth": 0.82,
+      "importance": 6,
+      "depth": 0.84,
       "unanswered_questions": 0,
-      "learning_pressure": 0.72
+      "learning_pressure": 0.93
     },
     "concept/data-analysis/02_event_tracking_design": {
       "id": "concept/data-analysis/02_event_tracking_design",
@@ -538,10 +538,10 @@
         "운영"
       ],
       "content_depth": 0.68,
-      "importance": 1,
-      "depth": 0.76,
+      "importance": 3,
+      "depth": 0.79,
       "unanswered_questions": 0,
-      "learning_pressure": 0.24
+      "learning_pressure": 0.64
     },
     "concept/data-analysis/03_metrics_framework": {
       "id": "concept/data-analysis/03_metrics_framework",
@@ -594,10 +594,56 @@
         "Goodhart's Law 방어"
       ],
       "content_depth": 0.77,
-      "importance": 1,
-      "depth": 0.79,
+      "importance": 3,
+      "depth": 0.82,
       "unanswered_questions": 0,
-      "learning_pressure": 0.21
+      "learning_pressure": 0.54
+    },
+    "concept/data-analysis/04_user_behavior_analytics_framework": {
+      "id": "concept/data-analysis/04_user_behavior_analytics_framework",
+      "type": "concept",
+      "title": "사용자 행동 분석 프레임워크 설계 — 온·오프라인을 하나의 그래프로",
+      "path": "_concept/data-analysis/04_user_behavior_analytics_framework.md",
+      "status": "complete",
+      "tags": [
+        "data-analysis",
+        "behavior-analytics",
+        "framework",
+        "identity-resolution",
+        "omnichannel",
+        "event-tracking",
+        "cdp",
+        "bigquery"
+      ],
+      "date": "2026-06-30",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "channel",
+        "프레임워크",
+        "정체성(identity)",
+        "L1 Identity",
+        "L2 Event",
+        "L3 Session",
+        "L4 Metric",
+        "L5 Analysis",
+        "확정적 엣지만 사용하는 보수적 그래프",
+        "확률적 엣지까지 포함한 공격적 그래프",
+        "마이크로 세션",
+        "여정(journey)",
+        "크로스채널 퍼널",
+        "채널 기여 분석",
+        "채널 전환 행렬",
+        "채널별 가드레일 지표",
+        "L2를 한 채널에서만",
+        "L1 확정적 연결만",
+        "두 번째 채널을 동일 L2 스키마로 흡수",
+        "L3 여정 재구성"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.8,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.2
     },
     "concept/data-architect/00_what_is_medaliion_architecture": {
       "id": "concept/data-architect/00_what_is_medaliion_architecture",
@@ -1813,6 +1859,26 @@
       "from": "concept/data-analysis/03_metrics_framework",
       "to": "concept/data-analysis/01_behavioral_analytics_techniques",
       "type": "extends"
+    },
+    {
+      "from": "concept/data-analysis/04_user_behavior_analytics_framework",
+      "to": "concept/data-analysis/02_event_tracking_design",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-analysis/04_user_behavior_analytics_framework",
+      "to": "concept/data-analysis/00_how_to_design_funnel",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analysis/04_user_behavior_analytics_framework",
+      "to": "concept/data-analysis/01_behavioral_analytics_techniques",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analysis/04_user_behavior_analytics_framework",
+      "to": "concept/data-analysis/03_metrics_framework",
+      "type": "references"
     },
     {
       "from": "concept/data-architect/01_how_to_architect_medallion_well",
