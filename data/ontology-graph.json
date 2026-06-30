@@ -2246,43 +2246,141 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.33
     },
-    "concept/data-architect/08_what_layer_should_an_architect_own": {
-      "id": "concept/data-architect/08_what_layer_should_an_architect_own",
+    "concept/data-architect/08_record_linkage_basics": {
+      "id": "concept/data-architect/08_record_linkage_basics",
       "type": "concept",
-      "title": "데이터 아키텍트는 어느 레이어를 소유하는가",
-      "path": "_concept/data-architect/08_what_layer_should_an_architect_own.md",
+      "title": "레코드 링키지 기초 Fellegi-Sunter와 Blocking과 Survivorship",
+      "path": "_concept/data-architect/08_record_linkage_basics.md",
       "status": "draft",
       "tags": [
         "data-architecture",
         "entity-resolution",
-        "identity-graph",
-        "feature-store",
-        "causal-inference",
+        "record-linkage",
+        "mdm"
+      ],
+      "date": "2026-06-30",
+      "confidence": "high",
+      "mentioned_terms": [
+        "홍길동, 1990-01-02, 서울시 강남구",
+        "홍길동, 1990-01-02, 서울 강남",
+        "김민수, 010-1234-5678",
+        "김민서",
+        "이영희, 1985",
+        "이영희, 1986",
+        "서울",
+        "서울시 강남구",
+        "레코드 링키지(record linkage)",
+        "개체 해소(entity resolution)",
+        "Fellegi-Sunter",
+        "Blocking",
+        "Survivorship",
+        "\"같을 확률\"을 추정하는 매칭",
+        "생년월일·전화번호가 일치하면 강한 증거",
+        "성별이 일치하면 약한 증거",
+        "두 개의 임계값",
+        "최소화하는 것이 최적",
+        "라벨된 학습 데이터가 있으면",
+        "없으면 EM 알고리즘",
+        "블로킹 키",
+        "정확도가 아니라 스케일을 위한 설계",
+        "여러 블로킹 키를 OR로 결합",
+        "골든 레코드(golden record)",
+        "속성별로",
+        "매칭",
+        "스케일"
+      ],
+      "content_depth": 0.77,
+      "importance": 3,
+      "depth": 0.64,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.07
+    },
+    "concept/data-architect/09_privacy_preserving_matching": {
+      "id": "concept/data-architect/09_privacy_preserving_matching",
+      "type": "concept",
+      "title": "프라이버시 보존 매칭과 확률적 링키지 심화",
+      "path": "_concept/data-architect/09_privacy_preserving_matching.md",
+      "status": "draft",
+      "tags": [
+        "data-architecture",
+        "entity-resolution",
         "record-linkage"
       ],
       "date": "2026-06-30",
-      "confidence": "medium",
+      "confidence": "high",
       "mentioned_terms": [
-        "COUNT(DISTINCT a)",
-        "상호 배타적이지 않다(non-MECE)",
-        "한 줄 휴리스틱:",
-        "Entity Resolution(개체 해소)",
-        "Record Linkage",
-        "실측",
-        "토폴로지 다이어그램 한 장 + 측정 SQL",
-        "entity resolution 아키텍처",
-        "Fellegi-Sunter 모델",
-        "training-serving skew",
-        "사후에 못 붙인다",
-        "아키텍트가 미리 설계해야 가능해지는 인프라",
-        "\"어느 레이어를 소유할까\"",
-        "인과추론·실험설계"
+        "김민수",
+        "김민서",
+        "서울시",
+        "서울",
+        "smith",
+        "EM",
+        "프라이버시 보존 레코드 링키지(PPRL)",
+        "알고리즘이 이 문제를 푼다 — 매치 여부를",
+        "필드 간 조건부 독립",
+        "부분 일치(partial agreement)",
+        "서로 다른 조직이 각자의 고객을 대조",
+        "Bloom filter 인코딩",
+        "Dice 계수",
+        "평문을 교환하지 않으면서 퍼지 유사도를 계산",
+        "정확도-프라이버시-비용의 삼각 트레이드오프",
+        "익명 행동 데이터를 식별된 이벤트에 잇는 문제",
+        "record linkage의 한 사례",
+        "시공간 좌표 + 행동 feature",
+        "유사도 함수",
+        "PPRL",
+        "익명 trajectory 매칭",
+        "임계값"
       ],
-      "content_depth": 0.77,
+      "content_depth": 0.65,
       "importance": 1,
-      "depth": 0.52,
+      "depth": 0.55,
       "unanswered_questions": 0,
-      "learning_pressure": 0.48
+      "learning_pressure": 0.45
+    },
+    "concept/data-architect/10_trustworthy_controlled_experiments": {
+      "id": "concept/data-architect/10_trustworthy_controlled_experiments",
+      "type": "concept",
+      "title": "신뢰할 수 있는 온라인 통제 실험 설계",
+      "path": "_concept/data-architect/10_trustworthy_controlled_experiments.md",
+      "status": "draft",
+      "tags": [
+        "data-architecture",
+        "experimentation",
+        "ab-testing",
+        "causal-inference",
+        "kohavi",
+        "oec",
+        "srm",
+        "exposure-logging"
+      ],
+      "date": "2026-06-30",
+      "confidence": "high",
+      "mentioned_terms": [
+        "신뢰할 수 있게",
+        "배정·노출·holdout은 사후에 못 붙인다",
+        "변경이 지표에 미친 인과 효과",
+        "상관이 아니라 인과",
+        "대리 지표(surrogate)",
+        "귀무가설",
+        "더 많은 샘플·더 긴 기간",
+        "\"실험 결과를 어떻게 믿나\"",
+        "배정 또는 로깅에 버그가 있다는 신호",
+        "계측 오류·로깅 중복·이상치",
+        "가드레일(guardrail) 지표",
+        "OCE",
+        "OEC",
+        "피킹",
+        "SRM",
+        "Twyman's law",
+        "가드레일 지표",
+        "SUTVA"
+      ],
+      "content_depth": 0.57,
+      "importance": 0,
+      "depth": 0.5,
+      "unanswered_questions": 0,
+      "learning_pressure": 0
     },
     "concept/data-engineering/00_how_to_use_dataform_well": {
       "id": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -3369,14 +3467,19 @@
       "type": "references"
     },
     {
-      "from": "concept/data-architect/08_what_layer_should_an_architect_own",
+      "from": "concept/data-architect/08_record_linkage_basics",
       "to": "concept/data-architect/04_what_is_ontology",
       "type": "references"
     },
     {
-      "from": "concept/data-architect/08_what_layer_should_an_architect_own",
+      "from": "concept/data-architect/08_record_linkage_basics",
       "to": "concept/data-architect/07_ontology_core_concepts",
       "type": "references"
+    },
+    {
+      "from": "concept/data-architect/09_privacy_preserving_matching",
+      "to": "concept/data-architect/08_record_linkage_basics",
+      "type": "extends"
     },
     {
       "from": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -4200,6 +4303,22 @@
       "mentioned_by": [
         "concept/data-architect/07_ontology_core_concepts",
         "insight/data-architect/00_ontology_core_examples"
+      ]
+    },
+    {
+      "term": "김민서",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/08_record_linkage_basics",
+        "concept/data-architect/09_privacy_preserving_matching"
+      ]
+    },
+    {
+      "term": "서울",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/08_record_linkage_basics",
+        "concept/data-architect/09_privacy_preserving_matching"
       ]
     },
     {
