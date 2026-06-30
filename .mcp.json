@@ -2,7 +2,7 @@
   "mcpServers": {
     "dgnppr-ontology": {
       "command": "node",
-      "args": ["/Users/yh.yoon/private/dgnppr.github.io/mcp/ontology-server.js"],
+      "args": ["mcp/ontology-server.js"],
       "env": {
         "EMBEDDING_BACKEND": "ollama"
       }
