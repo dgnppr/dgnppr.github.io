@@ -294,7 +294,7 @@
             if (!dark) {
                 container.style.backgroundImage = 'radial-gradient(circle, rgba(100,116,139,0.30) 0.9px, transparent 0.9px)';
                 container.style.backgroundSize = '28px 28px';
-                if (!reduceMotion) container.style.animation = GRID_ANIM;
+                container.style.animation = 'none';
             }
             var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -1028,7 +1028,7 @@
                     ? 'none'
                     : 'radial-gradient(circle, rgba(100,116,139,0.30) 0.9px, transparent 0.9px)';
                 container.style.backgroundSize = dark ? '' : '28px 28px';
-                container.style.animation = (dark || reduceMotion) ? 'none' : GRID_ANIM;
+                container.style.animation = 'none';
 
                 /* 노드 재색상 */
                 meshes.forEach(function (m) {
@@ -1265,7 +1265,7 @@
 
                 /* 자동 회전 — miniMode: 항상, 메인: idle 3초 후 */
                 var shouldRotate = isDragging ? false
-                    : miniMode ? true
+                    : miniMode ? !pointerInside
                     : (!pinnedNode && !pointerInside && (now - lastInteract > IDLE_MS));
                 if (shouldRotate) {
                     var _a = miniMode ? 0.004 : 0.003;
