@@ -36,6 +36,7 @@ function main() {
 
     dataList.forEach(data => {
         if (!data.tag) return;
+        if (data.layout === 'category') return; // 카테고리 문서는 태그 검색에 노출하지 않음
         data.tag.forEach(tag => {
             if (!tagMap[tag]) tagMap[tag] = [];
             tagMap[tag].push({ fileName: data.fileName });
