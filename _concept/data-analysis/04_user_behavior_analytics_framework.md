@@ -3,7 +3,7 @@ layout      : concept
 title       : 사용자 행동 분석 프레임워크 설계
 date        : 2026-06-30 00:00:00 +0900
 updated     : 2026-06-30 00:00:00 +0900
-tag         : data-analysis behavior-analytics framework identity-resolution omnichannel event-tracking cdp bigquery
+tag         : data-analysis behavior-analytics
 toc         : true
 comment     : true
 latex       : true
