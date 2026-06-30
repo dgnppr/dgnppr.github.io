@@ -1555,7 +1555,7 @@
     "insight/data-architect/01_medallion_with_ontology": {
       "id": "insight/data-architect/01_medallion_with_ontology",
       "type": "insight",
-      "title": "메달리언 위에 온톨로지를 얹다 — 신뢰할 수 있는 행에서 신뢰할 수 있는 세계로",
+      "title": "메달리언 위에 온톨로지를 얹다",
       "path": "_insight/data-architect/01_medallion_with_ontology.md",
       "status": "writing",
       "tags": [
