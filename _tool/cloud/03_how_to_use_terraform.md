@@ -11,7 +11,7 @@ status  : writing
 public  : true
 parent  : [[/cloud]]
 relations:
-  - { type: implements, target: /concept/cloud/01_vpc_for_pca }
+  - { type: implements, target: /concept/cloud/03_vpc_for_pca }
   - { type: references, target: /concept/cloud/01_how_to_operate_iam_well }
 confidence  : medium
 ---

@@ -52,8 +52,17 @@
     padding-left: 0;
 }
 
+// 중첩(h3/h4) 목록: 기본은 접힘 → 현재 섹션만 부드럽게 펼침
 #markdown-toc ul {
     padding-left: 14px;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.2s ease;
+}
+#markdown-toc > li.toc-expanded ul {
+    max-height: 70vh;
+    opacity: 1;
 }
 
 // depth별 시각 위계

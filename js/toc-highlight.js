@@ -41,9 +41,22 @@ document.addEventListener('DOMContentLoaded', function() {
             .forEach(n => n.classList.remove(ACTIVE_CLASS));
     };
 
+    // 현재 항목이 속한 최상위(h2) 섹션만 펼친다
+    const expandSectionFor = (anchor) => {
+        if (!anchor) return;
+        let li = anchor.closest('li');
+        while (li && li.parentElement !== tocEl) {
+            li = li.parentElement.closest('li');
+        }
+        if (!li || li.classList.contains('toc-expanded')) return;
+        Array.from(tocEl.children).forEach(el => el.classList.remove('toc-expanded'));
+        li.classList.add('toc-expanded');
+    };
+
     const activate = (target) => {
         if (!target) return;
         target.classList.add(ACTIVE_CLASS);
+        expandSectionFor(target);
         // TOC 내에서 active 항목이 보이도록 스크롤
         var tocRect = tocEl.getBoundingClientRect();
         var itemRect = target.getBoundingClientRect();
@@ -67,13 +80,17 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     let activeHeadingId = null;
-    window.addEventListener('scroll', function() {
+    const syncActive = () => {
         const currentHeading = findCurrentHeading();
         if (!currentHeading || currentHeading.id === activeHeadingId) return;
 
         deActivate();
         activate(tocMap[currentHeading.id]);
         activeHeadingId = currentHeading.id;
-    }, { passive: true });
+    };
+    window.addEventListener('scroll', syncActive, { passive: true });
+
+    // 초기 로드 시 현재 위치 섹션을 펼쳐 둔다
+    syncActive();
 })();
 });
