@@ -47,7 +47,7 @@
   "data-analysis/02_event_tracking_design": "b5ee02c29d3789aca88b3db58f99f450",
   "data-analysis/03_metrics_framework": "003e08b059d6708a04b1dabdab3b19cf",
   "data-architect/00_ontology_core_examples": "ef92fc22a08ac3b49fbe60386ccf605c",
-  "data-architect/01_medallion_with_ontology": "647ee7d500039a93cf497a670ade1a0f",
+  "data-architect/01_medallion_with_ontology": "403b0fc563f436ab3a0d8423f1387459",
   "security/2026-06-24-002-gcp-key-management-status": "6cd14ca3d40c0e234d2810c760d4eee3",
   "data-analysis/04_user_behavior_analytics_framework": "84f7ecac4d5a5554325cb2bdea4219f7"
 }
