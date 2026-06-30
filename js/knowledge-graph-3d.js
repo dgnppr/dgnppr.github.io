@@ -1363,6 +1363,34 @@
             };
             container._kg3dDispose = _dispose;
 
+            /* ── 외부 hover 포커스 API (목록 ↔ 그래프 연동) ─────────── */
+            /* 목록 항목 hover 시 노드 클릭(pinNode)과 동일한 하이라이트·회전정지를
+               적용하고, hover 해제 시 hover 이전 상태(핀/리셋)로 복원한다. */
+            function normUrl(u) {
+                if (!u) return '';
+                try { u = new URL(u, location.origin).pathname; } catch (e) {}
+                return u.replace(/\/+$/, '');
+            }
+            var nodeByUrl = {};
+            nodes.forEach(function (n) { nodeByUrl[normUrl(n.url)] = n; });
+            function lookupNode(key) {
+                if (!key) return null;
+                return nodeByUrl[normUrl(key)] || nodeMap[key] || null; /* slug/id 폴백 */
+            }
+            var hoverPrev; /* undefined = hover 상태 아님 */
+            container._kg3dHoverFocus = function (key) {
+                var n = lookupNode(key);
+                if (!n) return false;
+                if (hoverPrev === undefined) hoverPrev = pinnedNode; /* hover 이전 핀 저장(1회) */
+                pinNode(n);
+                return true;
+            };
+            container._kg3dHoverRelease = function () {
+                if (hoverPrev === undefined) return;
+                var prev = hoverPrev; hoverPrev = undefined;
+                if (prev) pinNode(prev); else doReset(); /* 원상 복구 → 회전 재개 */
+            };
+
         }).catch(function (e) { console.error('[kg3d] data error:', e); });
     }
 

@@ -61,10 +61,32 @@ adsense: false
         document.head.appendChild(s);
     }
 
+    /* 목록 hover ↔ 그래프 노드 포커스 연동 */
+    function wireFeedHover() {
+        var el = document.getElementById('home-kg-container');
+        if (!el) return;
+        var hovered = 0;
+        document.querySelectorAll('.home-feed-link').forEach(function (link) {
+            link.addEventListener('mouseenter', function () {
+                hovered++;
+                if (el._kg3dHoverFocus) el._kg3dHoverFocus(link.getAttribute('href'));
+            });
+            link.addEventListener('mouseleave', function () {
+                hovered = Math.max(0, hovered - 1);
+                /* 다른 항목으로 이동했는지 다음 프레임에 확인 후 해제 */
+                requestAnimationFrame(function () {
+                    if (hovered === 0 && el._kg3dHoverRelease) el._kg3dHoverRelease();
+                });
+            });
+        });
+    }
+
+    function boot() { loadScripts(); wireFeedHover(); }
+
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', loadScripts);
+        document.addEventListener('DOMContentLoaded', boot);
     } else {
-        loadScripts();
+        boot();
     }
 })();
 </script>

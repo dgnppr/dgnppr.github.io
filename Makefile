@@ -174,7 +174,7 @@ qdrant-status:
 .PHONY: auto-generate
 auto-generate:
 	@CHANGED=$$(git diff --name-only HEAD; git diff --cached --name-only; git ls-files --others --exclude-standard); \
-	DOC_CHANGED=$$(echo "$$CHANGED" | grep -E '^(_wiki|_adr|_insight|_problem|_tool|_event|_posts)/'); \
+	DOC_CHANGED=$$(echo "$$CHANGED" | grep -E '^(_concept|_adr|_insight|_problem|_tool|_event|_posts)/'); \
 	if [ -n "$$DOC_CHANGED" ]; then \
 		CF=$$(echo "$$DOC_CHANGED" | tr '\n' ':' | sed 's/:$$//'); \
 		echo "[auto] 변경 파일: $$CF"; \
