@@ -1,11 +1,4 @@
 ---
 layout: concept
 ---
-{% if page.valid_from or page.confidence %}
-<div class="entity-meta tool-meta">
-  {% if page.valid_from %}<span class="meta-item">valid_from: {{ page.valid_from }}</span>{% endif %}
-  {% if page.valid_to %}<span class="meta-item">valid_to: {{ page.valid_to }}</span>{% endif %}
-  {% if page.confidence %}<span class="meta-item">confidence: {{ page.confidence }}</span>{% endif %}
-</div>
-{% endif %}
 {{ content }}
