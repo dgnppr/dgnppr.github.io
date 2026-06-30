@@ -935,41 +935,31 @@
     ]
   },
   "data-architect/01_how_to_architect_medallion_well": {
-    "hash": "1e85421eed491e5844804528f27b4751",
+    "hash": "948ed76734ebd3f059f78b5251f15e58",
     "nodes": [
       {
         "id": "n1",
-        "label": "ERP 상태 코드 변경",
+        "label": "ERP 코드 변경",
         "type": "root"
       },
       {
         "id": "n2",
         "label": "Bronze-Gold 직결",
-        "type": ":step"
+        "type": "step"
       },
       {
         "id": "n3",
-        "label": "47개 쿼리 파괴",
-        "type": "end"
+        "label": "정규화 레이어 부재",
+        "type": ":step"
       },
       {
         "id": "n4",
-        "label": "Silver 레이어 도입",
-        "type": "decision"
+        "label": "DQ 모니터링 부재",
+        "type": "step"
       },
       {
         "id": "n5",
-        "label": "언어 번역 및 정규화",
-        "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "DQ assertion 강화",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "Bronze-Silver-Gold",
+        "label": "GMV 0 장애 발생",
         "type": "end"
       }
     ],
@@ -979,29 +969,29 @@
         "to": "n2"
       },
       {
-        "from": "n2",
+        "from": "n1",
         "to": "n3"
       },
       {
-        "from": "n3",
+        "from": "n1",
         "to": "n4"
+      },
+      {
+        "from": "n2",
+        "to": "n5"
+      },
+      {
+        "from": "n3",
+        "to": "n5"
       },
       {
         "from": "n4",
         "to": "n5"
-      },
-      {
-        "from": "n5",
-        "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
       }
     ]
   },
   "data-architect/02_how_to_architect_medallion_well": {
-    "hash": "1c5ad1b22152054a2dff9417550b6532",
+    "hash": "5fc87a635507d8f18ac13738c692a757",
     "nodes": [
       {
         "id": "n1",
@@ -1010,28 +1000,33 @@
       },
       {
         "id": "n2",
-        "label": "Bronze (Raw)",
+        "label": "Bronze (Ingest)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Silver (Base)",
+        "label": "Silver (Entity)",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "Gold (Mart)",
+        "label": "Gold (Mart/KPI)",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "Idempotency/MERGE",
-        "type": ":end"
+        "label": "Idempotency MERGE",
+        "type": "decision"
       },
       {
         "id": "n6",
-        "label": "Incremental vs Full",
-        "type": "decision"
+        "label": "Partition Strategy",
+        "type": ": decision"
+      },
+      {
+        "id": "n7",
+        "label": "Architecture Goal",
+        "type": "end"
       }
     ],
     "edges": [
@@ -1048,24 +1043,13 @@
         "to": "n4"
       },
       {
-        "from": "n2",
-        "to": "n3",
-        "bidirectional": true,
-        "label": "entity vs metric"
-      },
-      {
-        "from": "n3",
-        "to": "n4",
-        "bidirectional": true,
-        "label": "shared dimension"
-      },
-      {
         "from": "n5",
-        "to": "n2"
+        "to": "n2",
+        "bidirectional": true
       },
       {
         "from": "n6",
-        "to": "n1"
+        "to": "n7"
       }
     ]
   },
@@ -1280,41 +1264,46 @@
     ]
   },
   "data-architect/03_medallion_advanced_patterns": {
-    "hash": "22b8655cc691f472a71e4d454b6e3eb6",
+    "hash": "aba526c8c46ce650cfed2a294ca13d65",
     "nodes": [
       {
         "id": "n1",
-        "label": "Medallion SQL Patterns",
+        "label": "Medallion Rulebook",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "WAP (Write-Audit-Publish)",
+        "label": "Silver Layer",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "SCD Type 2",
-        "type": "step"
+        "label": "Gold Layer",
+        "type": "decision"
       },
       {
         "id": "n4",
-        "label": "Late Arriving Data",
+        "label": "WAP Pattern",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "Identity Resolution",
+        "label": "SCD Type 2",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "Gold 2-Tier (Metric/Mart)",
-        "type": ": end"
+        "label": "Late-Arriving Data",
+        "type": "step"
       },
       {
         "id": "n7",
-        "label": "Anti-pattern Symptoms",
+        "label": "Identity Resolution",
+        "type": "step"
+      },
+      {
+        "id": "n8",
+        "label": "Gold 2-Tier",
         "type": "end"
       }
     ],
@@ -1324,41 +1313,46 @@
         "to": "n2"
       },
       {
-        "from": "n1",
+        "from": "n2",
         "to": "n3"
       },
       {
-        "from": "n1",
+        "from": "n3",
         "to": "n4"
       },
       {
-        "from": "n1",
+        "from": "n3",
         "to": "n5"
       },
       {
-        "from": "n1",
+        "from": "n3",
         "to": "n6"
+      },
+      {
+        "from": "n3",
+        "to": "n7"
       },
       {
         "from": "n2",
         "to": "n7",
         "bidirectional": true,
-        "label": "pattern vs anti-pattern"
-      },
-      {
-        "from": "n3",
-        "to": "n7",
-        "bidirectional": true
+        "label": "canonical id"
       },
       {
         "from": "n4",
-        "to": "n7",
-        "bidirectional": true
+        "to": "n8"
       },
       {
         "from": "n5",
-        "to": "n7",
-        "bidirectional": true
+        "to": "n8"
+      },
+      {
+        "from": "n6",
+        "to": "n8"
+      },
+      {
+        "from": "n7",
+        "to": "n8"
       }
     ]
   },
