@@ -935,7 +935,7 @@
     ]
   },
   "data-architect/01_how_to_architect_medallion_well": {
-    "hash": "948ed76734ebd3f059f78b5251f15e58",
+    "hash": "7eaf12ae55f345482262c6593d8c9cb7",
     "nodes": [
       {
         "id": "n1",
@@ -944,13 +944,13 @@
       },
       {
         "id": "n2",
-        "label": "Bronze-Gold 직결",
+        "label": "Bronze-Gold직결",
         "type": "step"
       },
       {
         "id": "n3",
         "label": "정규화 레이어 부재",
-        "type": ":step"
+        "type": "step"
       },
       {
         "id": "n4",
@@ -959,8 +959,18 @@
       },
       {
         "id": "n5",
-        "label": "GMV 0 장애 발생",
+        "label": "GMV 0 장애",
         "type": "end"
+      },
+      {
+        "id": "n6",
+        "label": "Medallion 구조",
+        "type": ":decision"
+      },
+      {
+        "id": "n7",
+        "label": "Silver 변환 레이어",
+        "type": "step"
       }
     ],
     "edges": [
@@ -987,6 +997,16 @@
       {
         "from": "n4",
         "to": "n5"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
+      },
+      {
+        "from": "n7",
+        "to": "n1",
+        "bidirectional": true,
+        "label": "변경 흡수"
       }
     ]
   },
