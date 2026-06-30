@@ -116,6 +116,8 @@
         var bgStr     = dark ? '#060a14' : '#f8fafc';
         var focusSlug = opts.focusSlug || null;
         var miniMode  = opts.miniMode  || false;
+        var reduceMotion = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+        var GRID_ANIM = 'kg3d-grid-drift 5s linear infinite';
         var W = container.clientWidth  || 800;
         var H = container.clientHeight || 500;
 
@@ -292,6 +294,7 @@
             if (!dark) {
                 container.style.backgroundImage = 'radial-gradient(circle, rgba(100,116,139,0.30) 0.9px, transparent 0.9px)';
                 container.style.backgroundSize = '28px 28px';
+                if (!reduceMotion) container.style.animation = GRID_ANIM;
             }
             var renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
             renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -1019,6 +1022,7 @@
                     ? 'none'
                     : 'radial-gradient(circle, rgba(100,116,139,0.30) 0.9px, transparent 0.9px)';
                 container.style.backgroundSize = dark ? '' : '28px 28px';
+                container.style.animation = (dark || reduceMotion) ? 'none' : GRID_ANIM;
 
                 /* 노드 재색상 */
                 meshes.forEach(function (m) {
@@ -1266,6 +1270,12 @@
                     camera.position.z = controls.target.z - _s * _px + _c * _pz;
                     camera.lookAt(controls.target);
                 }
+                /* 별 필드 독립 드리프트 — 카메라 정지 중에도 배경에 흐름 부여 */
+                if (starPoints && !reduceMotion) {
+                    starPoints.rotation.y += 0.0003;
+                    starPoints.rotation.x += 0.00008;
+                }
+
                 controls.update();
                 renderer.render(scene, camera);
                 projectLabels();

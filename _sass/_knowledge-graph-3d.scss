@@ -1,5 +1,11 @@
 // knowledge-graph-3d.scss
 
+/* 라이트모드 도트 격자 대각선 흐름 (1타일=28px 이동 → seamless loop) */
+@keyframes kg3d-grid-drift {
+    from { background-position: 0 0; }
+    to   { background-position: 28px 28px; }
+}
+
 #modal-kg-container canvas,
 #home-kg-container canvas {
     display: block;
