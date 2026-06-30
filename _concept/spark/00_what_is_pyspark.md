@@ -16,6 +16,9 @@ relations:
   - { type: references, target: /concept/data-architect/00_what_is_medaliion_architecture }
 ---
 
+* TOC
+{:toc}
+
 ## 문제 정의 — 데이터가 한 대 메모리를 넘을 때
 
 다음 작업을 생각해 보자. GCS에 Parquet로 저장된 8억 행, 압축 후 약 400GB의 주문 로그에서 고객별·일별 매출을 집계한다. 작업 환경의 메모리는 16GB다.

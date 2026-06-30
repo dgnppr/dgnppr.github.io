@@ -16,6 +16,9 @@ relations:
   - { type: implements, target: concept/data-architect/05_ontology_objects_summary }
 ---
 
+* TOC
+{:toc}
+
 > [[/data-architect/04_what_is_ontology]] 에서 온톨로지를 **객체(명사)·링크(관계)·액션(동사)** 세 계층과, 그 위에 올라타는 **시간(Dynamic)** 차원으로 설명했다. 이 글은 가상의 B2C 이커머스 케이스를 통해, 그 개념들이 실제 데이터 문제 안에서 어떻게 맞물리는지를 보여준다.
 
 ---

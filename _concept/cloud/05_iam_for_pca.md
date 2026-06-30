@@ -16,6 +16,9 @@ confidence     : medium
 valid_from     : 2026-06-28
 ---
 
+* TOC
+{:toc}
+
 > "팀원 전체에게 Editor를 줬는데 왜 감사에서 걸리죠?" — 기본 역할(Basic Role)의 과잉 권한이 IAM 문제의 시작점이다. 이 글은 역할 3종 선택과 정책 상속이 PCA 시험 IAM 파트의 핵심임을 보이고, **"누가(Principal) 무엇을(Role) 어디서(Resource) 할 수 있는가"라는 의사결정 구조**로 모든 IAM 문제를 풀 수 있음을 보인다. 이 글은 PCA 준비 시리즈 4편이다.
 
 ---

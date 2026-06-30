@@ -15,6 +15,9 @@ relations:
   - { type: extends, target: concept/data-analysis/01_behavioral_analytics_techniques }
 ---
 
+* TOC
+{:toc}
+
 "어떤 지표가 좋아졌을 때 우리가 잘하고 있다고 말할 수 있는가"가 명확하지 않으면, 리텐션 분석이나 A/B 테스트 같은 개별 기법의 결과를 일관되게 해석할 수 없다. 지표 체계는 분석 기법보다 먼저 설계해야 한다.
 
 ---

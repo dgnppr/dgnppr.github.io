@@ -15,6 +15,9 @@ relations:
   - { type: extends, target: concept/data-analysis/01_behavioral_analytics_techniques }
 ---
 
+* TOC
+{:toc}
+
 리텐션, 코호트, RFM, A/B 테스트, 경로 분석 — 이 모든 기법은 이벤트 데이터 위에 서 있다. 이벤트가 잘못 설계되면 분석 기법이 아무리 정교해도 결론을 신뢰할 수 없다. 잘못 설계된 이벤트 스키마는 사후 변경 비용이 크기 때문에, 이벤트 설계는 분석 신뢰성의 전제다.
 
 ---

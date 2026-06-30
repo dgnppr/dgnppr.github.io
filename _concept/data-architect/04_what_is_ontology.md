@@ -16,6 +16,9 @@ relations:
   - { type: references, target: concept/data-architect/05_ontology_objects_summary }
 ---
 
+* TOC
+{:toc}
+
 > 시맨틱 웹의 실패에서 AI 에이전트의 월드모델까지, 데이터 아키텍트의 시선으로 다시 읽는 온톨로지
 
 대부분의 조직은 데이터가 부족하지 않다. **합의된 의미**가 부족할 뿐이다.

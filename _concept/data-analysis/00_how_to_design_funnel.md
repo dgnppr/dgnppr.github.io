@@ -15,6 +15,9 @@ relations:
 confidence     : medium
 ---
 
+* TOC
+{:toc}
+
 funnel을 설계할 때 흔히 "단계를 늘어놓으면 된다"고 생각하기 쉽다. 하지만 각 조건 중 하나라도 어기면 전환율 숫자 자체가 의미를 잃는다. 아래 7가지는 funnel이 수학적으로 성립하기 위한 필요조건이다.
 
 ## 1. 단일 Grain — 한 funnel = 한 분석 단위

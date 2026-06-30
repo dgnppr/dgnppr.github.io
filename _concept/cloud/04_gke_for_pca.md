@@ -14,6 +14,9 @@ confidence     : medium
 valid_from     : 2026-06-28
 ---
 
+* TOC
+{:toc}
+
 > Autopilot은 노드 운영 부담을 줄이지만 GPU·DaemonSet 호스트 접근 등 특정 워크로드에는 제약이 있다. 따라서 Standard와 Autopilot 선택이 GKE 설계의 시작점이며, **PCA 시험의 GKE 문제는 결국 "어떤 모드·구성이 요구사항에 맞는가"라는 의사결정**이다. 이 글은 PCA 준비 시리즈 3편으로, VPC(1편) 위에 컨테이너 오케스트레이션을 쌓는다.
 
 ---

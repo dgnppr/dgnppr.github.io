@@ -16,6 +16,9 @@ confidence     : medium
 valid_from     : 2026-06-25
 ---
 
+* TOC
+{:toc}
+
 > "방화벽을 열었는데 왜 연결이 안 되죠?"
 
 ---

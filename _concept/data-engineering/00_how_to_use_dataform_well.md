@@ -16,6 +16,9 @@ confidence     : medium
 valid_from     : 2026-06-26
 ---
 
+* TOC
+{:toc}
+
 ## 개요
 
 Dataform은 BigQuery 위에서 SQL 기반 데이터 파이프라인을 관리하는 도구다. dbt와 유사하지만 Google Cloud에 완전 통합되어 있어 BigQuery 환경에서는 더 자연스러운 선택이다. 단순히 SQL을 실행하는 것을 넘어, 의존성 관리·테스트·문서화·스케줄링을 코드로 다룰 수 있다.

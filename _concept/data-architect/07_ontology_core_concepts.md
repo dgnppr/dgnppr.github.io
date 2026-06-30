@@ -17,6 +17,9 @@ relations:
   - { type: references, target: concept/data-architect/05_ontology_objects_summary }
 ---
 
+* TOC
+{:toc}
+
 > [[/data-architect/06_how_to_implement_ontology]] 의 마켓온 케이스에서 "Customer는 *엔티티*다", "구매를 *관계*로 표현한다", "쿠폰 발송은 *행위*다"라고 썼다. 그 단어들을 엄밀히 구분하지 않은 채로. 이 글은 그 케이스에서 매번 미끄러졌던 개념들의 경계를 못 박는다.
 
 그리고 세 번째 세계를 추가한다. **마켓온(폐쇄·CWA·커스텀 SQL) → 팔란티어 파운드리(폐쇄·CWA·형식 스키마) → Wikidata(개방·OWA·RDF 표준)**. 같은 개념이 세 형식을 입었을 때 경계가 가장 또렷해진다.

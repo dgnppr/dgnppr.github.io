@@ -13,6 +13,9 @@ parent      : [[/data-architect]]
 confidence  : high
 ---
 
+* TOC
+{:toc}
+
 ## 개요
 
 팔란티어 Foundry의 **온톨로지(Ontology)**는 기업의 실세계 개체(entity)와 운영 개념을 코드가 아닌 **비즈니스 언어로 모델링**하는 의미 계층이다.  

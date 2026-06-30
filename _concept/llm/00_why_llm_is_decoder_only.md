@@ -15,6 +15,9 @@ confidence     : medium
 valid_from     : 2026-06-25
 ---
 
+* TOC
+{:toc}
+
 GPT로는 챗봇을 만드는데, 왜 BERT로는 만들기 어려울까? 둘 다 같은 Transformer에서 출발했는데 쓰임새는 정반대다. 한쪽은 분류와 검색에, 한쪽은 대화와 생성에 쓰인다. 그 차이의 뿌리에는 **아키텍처 구조**가 있다.
 
 이 글은 Transformer의 세 가지 변형(Encoder-only / Decoder-only / Encoder+Decoder)을 비교하고, 오늘날 주류 LLM이 왜 Decoder-only로 수렴했는지를 짚는다. 수식을 깊게 파지 않고도 "이 아키텍처는 왜 이 태스크에 맞는가"라는 직관을 얻는 것이 목표다.
