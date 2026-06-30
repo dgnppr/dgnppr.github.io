@@ -1264,47 +1264,42 @@
     ]
   },
   "data-architect/03_medallion_advanced_patterns": {
-    "hash": "aba526c8c46ce650cfed2a294ca13d65",
+    "hash": "c97f1153546095e64fedf96f4bb333c5",
     "nodes": [
       {
         "id": "n1",
-        "label": "Medallion Rulebook",
+        "label": "메달리언 SQL 패턴",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "Silver Layer",
+        "label": "WAP (Staging 검증)",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Gold Layer",
-        "type": "decision"
+        "label": "SCD Type 2 (이력행)",
+        "type": "step"
       },
       {
         "id": "n4",
-        "label": "WAP Pattern",
-        "type": "step"
-      },
-      {
-        "id": "n5",
-        "label": "SCD Type 2",
-        "type": "step"
-      },
-      {
-        "id": "n6",
         "label": "Late-Arriving Data",
         "type": "step"
       },
       {
-        "id": "n7",
+        "id": "n5",
         "label": "Identity Resolution",
         "type": "step"
       },
       {
-        "id": "n8",
-        "label": "Gold 2-Tier",
-        "type": "end"
+        "id": "n6",
+        "label": "Gold 2-Tier (Metric/Mart)",
+        "type": "step"
+      },
+      {
+        "id": "n7",
+        "label": "안티패턴 증상 진단",
+        "type": ":end"
       }
     ],
     "edges": [
@@ -1321,38 +1316,16 @@
         "to": "n4"
       },
       {
-        "from": "n3",
+        "from": "n4",
         "to": "n5"
       },
       {
-        "from": "n3",
+        "from": "n5",
         "to": "n6"
       },
       {
-        "from": "n3",
-        "to": "n7"
-      },
-      {
-        "from": "n2",
-        "to": "n7",
-        "bidirectional": true,
-        "label": "canonical id"
-      },
-      {
-        "from": "n4",
-        "to": "n8"
-      },
-      {
-        "from": "n5",
-        "to": "n8"
-      },
-      {
         "from": "n6",
-        "to": "n8"
-      },
-      {
-        "from": "n7",
-        "to": "n8"
+        "to": "n7"
       }
     ]
   },

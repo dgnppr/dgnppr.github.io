@@ -227,7 +227,7 @@ LEFT JOIN `proj.silver.customer_identity_map` m
 
 Gold를 한 덩어리로 두면 부서마다 `SUM(amount)`를 제각각 정의하면서 같은 "GMV"가 마트마다 미묘하게 달라진다. Gold를 둘로 쪼갠다. **Metric Layer**는 `daily_gmv`, `cancel_count` 같은 원자 지표를 단일 정의로 두고, **Mart Layer**는 그 metric을 조합만 한다. 지표 정의가 한 곳에만 살아 있으므로 표류하지 않는다.
 
-나쁜 쪽은 각 부서 마트가 Silver에서 직접 집계한다. 마케팅 마트와 재무 마트가 GMV를 따로 정의하는 순간 둘은 갈라질 운명이다.
+나쁜 쪽은 각 부서 마트가 Silver에서 직접 집계한다. 마케팅 마트와 재무 마트가 GMV를 따로 정의하는 순간 둘의 수치는 반드시 갈라진다.
 
 ```sql
 -- ✗ 마트마다 GMV를 직접 정의 → 정의가 갈라짐 (Metric Cannibalism의 토양)
