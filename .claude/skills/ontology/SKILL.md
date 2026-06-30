@@ -83,6 +83,8 @@ type 생략 시 모든 엔티티 타입을 대상으로 동작한다.
 ### doc write
 `$ARGUMENTS`에서 타입과 경로를 추출한다. 없으면 사용자에게 묻는다.
 
+**제목 규칙:** 단문 명사구 또는 질문형(예: "이벤트 트래킹 설계", "왜 레디스를 싱글 스레드로 만들었을까"). `본제목 — 부제` em dash 패턴 금지. 부연이 꼭 필요하면 콜론(`:`) 한 번까지만, 가급적 단문으로.
+
 **concept/insight/problem/tool/event** frontmatter 자동 조립:
 ```yaml
 layout      : <type>
