@@ -33,7 +33,7 @@ description: "DRAGONAPPEAR 데이터 지식 그래프 기반으로 글을 기획
 - `category`는 기존 것을 재사용한다(예: `data-architect`, `cloud`). 새 category는 꼭 필요할 때만.
 - 파일: `_{collection}/{category}/{NNNN_slug}.md`. `NNNN`은 해당 디렉토리의 다음 번호(디렉토리를 확인해 충돌 회피). `slug`은 영문 snake_case.
 - `parent`: `[[/{category}]]`.
-- **제목 규칙:** 단문 명사구 또는 질문형(예: "이벤트 트래킹 설계", "왜 레디스를 싱글 스레드로 만들었을까"). `본제목 — 부제` em dash 패턴 금지. 부연이 꼭 필요하면 콜론(`:`) 한 번까지만 허용하되 가급적 단문으로.
+- **제목 규칙:** 단문 명사구 또는 질문형(예: "이벤트 트래킹 설계", "왜 레디스를 싱글 스레드로 만들었을까"). 부제·구분자 금지 — em dash(`—`) 금지, 콜론(`:`)은 **무인용 YAML frontmatter `title` 파싱을 깨뜨려 빌드 에러를 내므로 절대 금지**. 제목 하나로 끝낸다.
 
 ### 4. 연결 설계 (자산화의 핵심)
 `ontology_related id:{이 글과 가까운 노드} mode:hybrid`로 이웃을 찾는다. 결과의 `layer`를 본다:
