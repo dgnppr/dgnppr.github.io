@@ -5,11 +5,56 @@ permalink: /tags/
 public: true
 ---
 <div class="post">
+    <p class="home-section-title">Knowledge Graph</p>
+    <div class="home-kg-wrap">
+        <div id="home-kg-container" class="home-kg-container"></div>
+        <div class="kg-modal__hint" aria-hidden="true">드래그로 이동 &middot; 스크롤로 확대/축소 &middot; 클릭으로 연결 보기</div>
+        <button class="home-kg-expand" data-kg-open aria-label="전체 지식 그래프 보기">
+            <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<div class="post">
     <h1 class="tag-page-title">All Tags</h1>
     <div id="tag-list"></div>
 </div>
 
 <div class="post" id="tag-collection"></div>
+
+<script>
+/* 상단 지식 그래프 (메인 페이지와 동일한 3D 그래프 재사용) */
+(function () {
+    function initGraph() {
+        if (!window.KnowledgeGraph3D) return;
+        var el = document.getElementById('home-kg-container');
+        if (!el || el.dataset.kgReady) return;
+        el.dataset.kgReady = '1';
+        window.KnowledgeGraph3D.init({ container: el, search: null, groups: null, stats: null });
+    }
+    function loadKg3D() {
+        if (window.KnowledgeGraph3D) { initGraph(); return; }
+        var s = document.createElement('script');
+        s.src = '/js/knowledge-graph-3d.js';
+        s.onload = initGraph;
+        document.head.appendChild(s);
+    }
+    function loadScripts() {
+        if (window.d3) { loadKg3D(); return; }
+        var s = document.createElement('script');
+        s.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
+        s.onload = loadKg3D;
+        document.head.appendChild(s);
+    }
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', loadScripts);
+    } else {
+        loadScripts();
+    }
+})();
+</script>
 
 <script>
     var activeTagName = null;
@@ -47,7 +92,45 @@ public: true
             .catch(console.error);
     })();
 
+    /* ── 그래프 하이라이트 연동 ───────────────────────────── */
+    function kgContainer() { return document.getElementById('home-kg-container'); }
+    function kgHighlight(name) {
+        var el = kgContainer();
+        if (el && el._kg3dHighlightTag) el._kg3dHighlightTag(name);
+    }
+    function kgClear() {
+        var el = kgContainer();
+        if (el && el._kg3dClearHighlight) el._kg3dClearHighlight();
+    }
+    (function wireTagHover() {
+        var list = document.getElementById('tag-list');
+        list.addEventListener('mouseover', function (e) {
+            var li = e.target.closest('.tag-item');
+            if (li) kgHighlight(li.id.replace('tag-pill-', ''));
+        });
+        list.addEventListener('mouseout', function (e) {
+            var li = e.target.closest('.tag-item');
+            if (!li) return;
+            /* 다른 태그로 이동 중이면 그쪽 mouseover가 처리 */
+            if (e.relatedTarget && e.relatedTarget.closest('.tag-item')) return;
+            /* 클릭된 태그가 있으면 그 하이라이트로 복귀, 없으면 해제 */
+            if (activeTagName) kgHighlight(activeTagName); else kgClear();
+        });
+    })();
+
+    function deselectTag() {
+        if (activeTagName) {
+            var prev = document.getElementById('tag-pill-' + activeTagName);
+            if (prev) prev.classList.remove('active');
+        }
+        activeTagName = null;
+        kgClear();
+        document.getElementById('tag-collection').innerHTML = '';
+    }
+
     function showTag(tagName) {
+        /* 같은 태그 재클릭 → 선택 해제, 전체 그래프로 복귀 */
+        if (activeTagName === tagName) { deselectTag(); return; }
         if (activeTagName) {
             var prev = document.getElementById('tag-pill-' + activeTagName);
             if (prev) prev.classList.remove('active');
@@ -55,6 +138,7 @@ public: true
         activeTagName = tagName;
         var current = document.getElementById('tag-pill-' + tagName);
         if (current) current.classList.add('active');
+        kgHighlight(tagName);
 
         fetch('/data/tags/' + tagName + '.json')
             .then(function(r) { return r.json(); })

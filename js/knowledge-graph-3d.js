@@ -1391,6 +1391,41 @@
                 if (prev) pinNode(prev); else doReset(); /* 원상 복구 → 회전 재개 */
             };
 
+            /* 태그별 하이라이트: 해당 태그를 가진 노드만 강조, 나머지 디밍(검색 디밍 재사용) */
+            container._kg3dHighlightTag = function (tagName) {
+                if (!tagName) return;
+                var t = tagName.toLowerCase();
+                pinnedNode = null; clearTimeout(resetTimer); activeNode = null;
+                activeSearch = true;
+                meshes.forEach(function (m) {
+                    var ok = (m.userData.node.tags || []).some(function (tg) {
+                        return tg.toLowerCase() === t;
+                    });
+                    var opa = ok ? 1 : 0;
+                    m.userData.dimmed   = !ok;
+                    m.userData.selected = false;
+                    if (m.userData.labelDiv) {
+                        m.userData.labelDiv._opa = opa;
+                        m.userData.labelDiv.style.opacity  = opa.toString();
+                        m.userData.labelDiv.style.fontSize = ok ? '11px' : '9px';
+                    }
+                });
+                linkObjs.forEach(function (lo) { lo.connected = false; lo.dimmed = true; });
+            };
+            container._kg3dClearHighlight = function () {
+                activeSearch = false;
+                meshes.forEach(function (m) {
+                    m.userData.dimmed   = false;
+                    m.userData.selected = false;
+                    if (m.userData.labelDiv) {
+                        m.userData.labelDiv._opa = LABEL_NORMAL;
+                        m.userData.labelDiv.style.opacity  = LABEL_NORMAL.toString();
+                        m.userData.labelDiv.style.fontSize = '9px';
+                    }
+                });
+                linkObjs.forEach(function (lo) { lo.connected = false; lo.dimmed = false; });
+            };
+
         }).catch(function (e) { console.error('[kg3d] data error:', e); });
     }
 

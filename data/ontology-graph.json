@@ -1851,10 +1851,10 @@
       "confidence": "high",
       "mentioned_terms": [],
       "content_depth": 0.68,
-      "importance": 10,
-      "depth": 0.86,
+      "importance": 12,
+      "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 1.37
+      "learning_pressure": 1.34
     },
     "concept/data-architect/01_how_to_architect_medallion_well": {
       "id": "concept/data-architect/01_how_to_architect_medallion_well",
@@ -2346,13 +2346,7 @@
       "status": "draft",
       "tags": [
         "data-architecture",
-        "experimentation",
-        "ab-testing",
-        "causal-inference",
-        "kohavi",
-        "oec",
-        "srm",
-        "exposure-logging"
+        "experimentation"
       ],
       "date": "2026-06-30",
       "confidence": "high",
@@ -2727,6 +2721,7 @@
         "Exchange",
         "Driver",
         "Executor",
+        "Cluster Manager",
         "Transformation",
         "Action",
         "Job → Stage → Task",
@@ -2755,6 +2750,133 @@
         "반복 실행되는 메타데이터 연산"
       ],
       "content_depth": 1,
+      "importance": 5,
+      "depth": 0.63,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.88
+    },
+    "concept/spark/01_structured_streaming": {
+      "id": "concept/spark/01_structured_streaming",
+      "type": "concept",
+      "title": "Structured Streaming으로 스트림 처리하기",
+      "path": "_concept/spark/01_structured_streaming.md",
+      "status": "draft",
+      "tags": [
+        "spark",
+        "structured-streaming",
+        "kafka",
+        "data-engineering",
+        "streaming"
+      ],
+      "date": "2026-07-01",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "tier",
+        "sum",
+        "count",
+        "min",
+        "max",
+        "avg",
+        "orders",
+        "value",
+        "readStream",
+        "read",
+        "maxOffsetsPerTrigger",
+        "update",
+        "read→write",
+        "readStream→writeStream",
+        "checkpointLocation",
+        "processingTime=\"30 seconds\"",
+        "availableNow=True",
+        "continuous=\"1 second\"",
+        "availableNow",
+        "outputMode(\"append\")",
+        "explain()",
+        "전체",
+        "직전 실행 이후 새로 도착한 데이터만",
+        "의미",
+        "배치 — 유한 테이블에 1회 실행",
+        "스트리밍 — 무한 테이블에 증분 실행",
+        "전체 데이터 크기",
+        "트리거당 새 데이터 크기 + 상태 크기",
+        "어떻게",
+        "append",
+        "새로 확정된",
+        "값이 바뀐",
+        "complete",
+        "Event time",
+        "Processing time",
+        "event time",
+        "확정(finalize)",
+        "offset 로그(WAL)",
+        "state store 스냅샷",
+        "checkpoint",
+        "마이크로배치(micro-batch)",
+        "상태 무한 증가",
+        "큰 상태와 GC",
+        "RocksDB state store",
+        "작은 파일 폭증",
+        "stream-stream 조인의 상태",
+        "checkpoint 스키마 변경",
+        "애초에 스트리밍이 필요한지",
+        "상태를 유한하게 유지하는 것"
+      ],
+      "content_depth": 1,
+      "importance": 3,
+      "depth": 0.63,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.13
+    },
+    "concept/spark/02_spark_performance_tuning": {
+      "id": "concept/spark/02_spark_performance_tuning",
+      "type": "concept",
+      "title": "Spark 성능 튜닝 — 느린 잡 진단과 최적화",
+      "path": "_concept/spark/02_spark_performance_tuning.md",
+      "status": "draft",
+      "tags": [
+        "spark",
+        "performance",
+        "tuning",
+        "shuffle",
+        "skew",
+        "memory",
+        "data-engineering"
+      ],
+      "date": "2026-07-01",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "explain()",
+        "Exchange",
+        "OutOfMemoryError",
+        "http://<driver>:4040",
+        "cache()",
+        "persist()",
+        "sum",
+        "count",
+        "unpersist()",
+        "coalesce",
+        "repartition",
+        "broadcast",
+        "distinct",
+        "orderBy",
+        "가장 오래 걸린 Stage",
+        "Max ≫ Median",
+        "Reserved (~300MB)",
+        "Execution",
+        "Storage",
+        "디스크로 흘러넘친다(spill)",
+        "입력 파티션이 큼",
+        "셔플 후 파티션이 큼",
+        "Max task time ≫ Median",
+        "매번 처음부터 다시 계산한다",
+        "작은 파일 문제",
+        "Input Size와 태스크 수",
+        "UI를 보지 않고 튜닝",
+        "과도한 캐싱",
+        "모든 조인에 `broadcast` 강제",
+        "AQE를 끄고 수동 튜닝"
+      ],
+      "content_depth": 0.92,
       "importance": 1,
       "depth": 0.57,
       "unanswered_questions": 0,
@@ -3502,6 +3624,26 @@
       "type": "references"
     },
     {
+      "from": "concept/spark/01_structured_streaming",
+      "to": "concept/spark/00_what_is_pyspark",
+      "type": "extends"
+    },
+    {
+      "from": "concept/spark/01_structured_streaming",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
+      "type": "references"
+    },
+    {
+      "from": "concept/spark/02_spark_performance_tuning",
+      "to": "concept/spark/00_what_is_pyspark",
+      "type": "extends"
+    },
+    {
+      "from": "concept/spark/02_spark_performance_tuning",
+      "to": "concept/spark/01_structured_streaming",
+      "type": "references"
+    },
+    {
       "from": "concept/springboot/00_why_rollback_marked_transaction_is_unusable",
       "to": "concept/jpa/00_jpa_dirty_checking",
       "type": "references"
@@ -3802,6 +3944,24 @@
       ]
     },
     {
+      "term": "count",
+      "count": 3,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/01_structured_streaming",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "explain()",
+      "count": 3,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/01_structured_streaming",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
       "term": "AI Hypercomputer",
       "count": 2,
       "mentioned_by": [
@@ -4042,6 +4202,14 @@
       ]
     },
     {
+      "term": "전체",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
       "term": "Premium",
       "count": 2,
       "mentioned_by": [
@@ -4154,6 +4322,14 @@
       ]
     },
     {
+      "term": "append",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/02_how_to_architect_medallion_well",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
       "term": "FlightDelayHandler",
       "count": 2,
       "mentioned_by": [
@@ -4191,6 +4367,14 @@
       "mentioned_by": [
         "concept/data-architect/04_what_is_ontology",
         "concept/data-architect/05_ontology_objects_summary"
+      ]
+    },
+    {
+      "term": "의미",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/04_what_is_ontology",
+        "concept/spark/01_structured_streaming"
       ]
     },
     {
@@ -4322,6 +4506,14 @@
       ]
     },
     {
+      "term": "max",
+      "count": 2,
+      "mentioned_by": [
+        "concept/java/01_producer_extends_consumer_super",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
       "term": "PlatformTransactionManager",
       "count": 2,
       "mentioned_by": [
@@ -4338,11 +4530,83 @@
       ]
     },
     {
+      "term": "distinct",
+      "count": 2,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "repartition",
+      "count": 2,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "orderBy",
+      "count": 2,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "coalesce",
+      "count": 2,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "cache()",
+      "count": 2,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "persist()",
+      "count": 2,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "Exchange",
+      "count": 2,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
       "term": "Task",
       "count": 2,
       "mentioned_by": [
         "concept/spark/00_what_is_pyspark",
         "insight/essay/01_why_redis_single_threaded"
+      ]
+    },
+    {
+      "term": "작은 파일 문제",
+      "count": 2,
+      "mentioned_by": [
+        "concept/spark/00_what_is_pyspark",
+        "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "sum",
+      "count": 2,
+      "mentioned_by": [
+        "concept/spark/01_structured_streaming",
+        "concept/spark/02_spark_performance_tuning"
       ]
     },
     {
