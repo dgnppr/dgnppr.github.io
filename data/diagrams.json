@@ -446,7 +446,7 @@
     "nodes": [
       {
         "id": "n1",
-        "label": "@TransactionalEventListener",
+        "label": "TransactionalEventListener",
         "type": "root"
       },
       {
@@ -456,23 +456,23 @@
       },
       {
         "id": "n3",
-        "label": "beforeCommit 예외",
+        "label": "beforeCompletion 예외 묵음",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "예외 swallow (묵음)",
+        "label": "예외 전파 필요성",
         "type": "decision"
       },
       {
         "id": "n5",
-        "label": "@Async 비동기 처리",
+        "label": "Async + 커스텀 핸들러",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "커스텀 AsyncHandler",
-        "type": "step"
+        "label": "비동기 예외 격리",
+        "type": "end"
       }
     ],
     "edges": [
@@ -490,9 +490,7 @@
       },
       {
         "from": "n4",
-        "to": "n5",
-        "bidirectional": true,
-        "label": "동기 예외 전파 불가"
+        "to": "n5"
       },
       {
         "from": "n5",
@@ -1221,27 +1219,27 @@
       },
       {
         "id": "n2",
-        "label": "로컬 개발자 계정",
+        "label": "로컬 개발 계정",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "GitLab WIF OIDC",
+        "label": "GitLab CI WIF",
         "type": ":step"
       },
       {
         "id": "n4",
-        "label": "SA 경유 방식 A",
+        "label": "SA 경유 방식",
         "type": "decision"
       },
       {
         "id": "n5",
-        "label": "직접 역할 부여 B",
+        "label": "직접 역할 부여",
         "type": "decision"
       },
       {
         "id": "n6",
-        "label": "운영계 브랜치 제한",
+        "label": "운영계 IAM 제한",
         "type": "end"
       }
     ],
@@ -1255,10 +1253,14 @@
         "to": "n3"
       },
       {
-        "from": "n4",
+        "from": "n3",
+        "to": "n4"
+      },
+      {
+        "from": "n3",
         "to": "n5",
         "bidirectional": true,
-        "label": "권한 분리 vs 관리"
+        "label": "권한 분리 vs 단순"
       }
     ]
   },

@@ -140,7 +140,8 @@ async function generateSummary(title, body) {
         body: JSON.stringify({
             model: LM_MODEL,
             messages: [{ role: 'user', content: prompt }],
-            max_tokens: 4096,
+            max_tokens: 600, // vertexai maxOutputTokens와 동일 — 로컬 모델 컨텍스트 초과 방지
+
             temperature: 0.45,
             top_p: 0.9,
         }),
