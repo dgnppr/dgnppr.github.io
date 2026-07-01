@@ -2435,10 +2435,368 @@
         "운영"
       ],
       "content_depth": 0.85,
-      "importance": 1,
-      "depth": 0.52,
+      "importance": 3,
+      "depth": 0.55,
       "unanswered_questions": 0,
-      "learning_pressure": 0.48
+      "learning_pressure": 1.36
+    },
+    "concept/dbt/00_what_is_dbt": {
+      "id": "concept/dbt/00_what_is_dbt",
+      "type": "concept",
+      "title": "dbt란 무엇이고 어떻게 동작하는가",
+      "path": "_concept/dbt/00_what_is_dbt.md",
+      "status": "draft",
+      "tags": [
+        "dbt",
+        "elt",
+        "data-transformation",
+        "data-engineering"
+      ],
+      "date": "2026-07-01",
+      "confidence": "high",
+      "mentioned_terms": [
+        "revenue",
+        "ref()",
+        "source()",
+        "dbt",
+        "ref",
+        "models/",
+        "CREATE TABLE",
+        "dbt run",
+        "target/compiled/",
+        "source",
+        "view",
+        "table",
+        "incremental",
+        "ephemeral",
+        "CREATE VIEW",
+        "target",
+        "dbt debug",
+        "dbt compile",
+        "dbt test",
+        "dbt build",
+        "run",
+        "test",
+        "build",
+        "는 하류,",
+        "state:",
+        "실행 순서",
+        "안에서",
+        "컴파일하고 실행 순서를 잡아 실행하는",
+        "자동",
+        "의존성 관리",
+        "모델(model)",
+        "딱 하나의 `SELECT` 문",
+        "생성해서",
+        "로직",
+        "껍데기",
+        "컴파일(compile):",
+        "실행(run):",
+        "하드코딩하지 않고",
+        "환경 이식성:",
+        "의존성 자동 추론:",
+        "스스로",
+        "실행 순서를 사람이 지정하지 않아도",
+        "한 번만",
+        "어떤 물리적 형태로",
+        "설정으로",
+        "접속 정보",
+        "DAG 순서로 통합",
+        "자동 생성"
+      ],
+      "content_depth": 0.77,
+      "importance": 5,
+      "depth": 0.64,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.78
+    },
+    "concept/dbt/01_dbt_core_features": {
+      "id": "concept/dbt/01_dbt_core_features",
+      "type": "concept",
+      "title": "dbt 소스 테스트 스냅샷 증분 모델 다루기",
+      "path": "_concept/dbt/01_dbt_core_features.md",
+      "status": "draft",
+      "tags": [
+        "dbt",
+        "testing",
+        "snapshot",
+        "incremental",
+        "jinja",
+        "data-engineering"
+      ],
+      "date": "2026-07-01",
+      "confidence": "high",
+      "mentioned_terms": [
+        "ref()",
+        "source",
+        "{{ source() }}",
+        "{{ source('raw', 'orders') }}",
+        "max()",
+        "filter",
+        "unique",
+        "relationships",
+        "dbt build",
+        "run",
+        "test",
+        "build",
+        "tests/",
+        "config(severity='warn')",
+        "where",
+        "active",
+        "churned",
+        "dbt snapshot",
+        "timestamp",
+        "check",
+        "--full-refresh",
+        "seed",
+        "seeds/",
+        "dbt seed",
+        "incremental",
+        "{{ this }}",
+        "{% if %}",
+        "{{ ref('x') }}",
+        "{{ var('start') }}",
+        "{% for %}",
+        "{% set %}",
+        "{# 컴파일에도 안 남음 #}",
+        "{{ }}",
+        "{% %}",
+        "var()",
+        "compile",
+        "macros/",
+        "{% materialization %}",
+        "운영 가능한 dbt 프로젝트",
+        "계보(lineage) 추적",
+        "한 곳에서 이름을 바꿀 능력",
+        "컨벤션:",
+        "신선도(freshness)",
+        "적재 지연을 모델 실패보다 먼저",
+        "한계 정직하게:",
+        "웨어하우스에 이미 적재된 데이터",
+        "덮어쓰기",
+        "SCD Type 2",
+        "운영 주의:",
+        "언제 쓰나 / 언제 안 쓰나",
+        "사람이 편집하는, 작고, 자주 안 바뀌는 표",
+        "지금 만들고 있는 이 모델 자신",
+        "실제로 어떻게",
+        "SQL에 출력",
+        "출력 없음",
+        "매크로"
+      ],
+      "content_depth": 0.85,
+      "importance": 5,
+      "depth": 0.67,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.64
+    },
+    "concept/dbt/02_dbt_advanced": {
+      "id": "concept/dbt/02_dbt_advanced",
+      "type": "concept",
+      "title": "dbt 증분 전략과 매크로 컨트랙트 심화",
+      "path": "_concept/dbt/02_dbt_advanced.md",
+      "status": "draft",
+      "tags": [
+        "dbt",
+        "incremental",
+        "macro",
+        "contract",
+        "state-defer",
+        "data-engineering"
+      ],
+      "date": "2026-07-01",
+      "confidence": "high",
+      "mentioned_terms": [
+        "ref",
+        "source",
+        "dbt test",
+        "state",
+        "defer",
+        "--full-refresh",
+        "incremental",
+        "create or replace",
+        "append",
+        "insert",
+        "merge",
+        "delete+insert",
+        "ignore",
+        "fail",
+        "codegen",
+        "dbt deps",
+        "tests/generic/",
+        "pre-hook",
+        "post-hook",
+        "on-run-start",
+        "on-run-end",
+        "grants",
+        "unique",
+        "check",
+        "dbt docs",
+        "state:modified",
+        "--state",
+        "state:new",
+        "state:modified+",
+        "+state:modified",
+        "--defer",
+        "enforced",
+        "운영 규모에서 실제로 문제를 일으키는 지점",
+        "수정·삭제가 없고",
+        "파티션 단위 교체",
+        "파티션 전체",
+        "모든 컬럼",
+        "lookback",
+        "중복을 만들 수 있으므로",
+        "contract",
+        "재사용 단위로 뽑아내는 기준",
+        "`grants` config",
+        "빌드를 실패",
+        "정보성(informational)",
+        "test",
+        "버전으로 병행",
+        "exposure",
+        "\"이 대시보드가 의존하는 모델만\"",
+        "직전 실행의 산출물(manifest)",
+        "다른 환경(보통 운영)의 테이블로 해석",
+        "slim CI",
+        "커스텀 materialization"
+      ],
+      "content_depth": 1,
+      "importance": 5,
+      "depth": 0.75,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.25
+    },
+    "concept/dbt/03_dbt_in_practice": {
+      "id": "concept/dbt/03_dbt_in_practice",
+      "type": "concept",
+      "title": "dbt 실전 프로젝트 구조와 배포 파이프라인",
+      "path": "_concept/dbt/03_dbt_in_practice.md",
+      "status": "draft",
+      "tags": [
+        "dbt",
+        "project-structure",
+        "ci-cd",
+        "orchestration",
+        "data-engineering"
+      ],
+      "date": "2026-07-01",
+      "confidence": "high",
+      "mentioned_terms": [
+        "dbt run",
+        "models/",
+        "staging",
+        "view",
+        "intermediate",
+        "ephemeral",
+        "marts",
+        "table",
+        "incremental",
+        "dbt run --target prod",
+        "target: dev",
+        "dataset",
+        "analytics",
+        "+ 모델",
+        "조합은 실제로는",
+        "dbt build",
+        "run",
+        "test",
+        "+schema",
+        "state:modified+",
+        "--defer --state",
+        "state:modified",
+        "defer",
+        "--state",
+        "model",
+        "model+",
+        "+model",
+        "+model+",
+        "@model",
+        "tag:daily",
+        "path:models/marts",
+        "astronomer-cosmos",
+        "dbt docs generate",
+        "dbt docs",
+        "exposures",
+        "target/",
+        "구조 붕괴",
+        "환경 오염",
+        "검증 부재",
+        "디렉토리 = 규칙",
+        "target",
+        "동작을 정확히 이해하고 명시적으로 정하는 것",
+        "변경분과 그 하류만 빌드",
+        "한 방에 다 돌릴지, 부분만 돌릴지",
+        "무엇이 스케줄을 쥐는지",
+        "태그와 그래프 셀렉터",
+        "멱등성",
+        "문서가 코드와 같은 저장소·같은 PR에 산다",
+        "데이터 계약의 종착점을 문서화하는 장치",
+        "구조화된 데이터"
+      ],
+      "content_depth": 1,
+      "importance": 3,
+      "depth": 0.73,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.83
+    },
+    "concept/dbt/04_dbt_operational_knowhow": {
+      "id": "concept/dbt/04_dbt_operational_knowhow",
+      "type": "concept",
+      "title": "dbt 운영 노하우 함정과 성능 비용 회피",
+      "path": "_concept/dbt/04_dbt_operational_knowhow.md",
+      "status": "draft",
+      "tags": [
+        "dbt",
+        "performance",
+        "cost",
+        "pitfalls",
+        "data-engineering"
+      ],
+      "date": "2026-07-01",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "materialized='incremental'",
+        "append",
+        "merge",
+        "delete+insert",
+        "column X not found",
+        "dbt run",
+        "view",
+        "ephemeral",
+        "table",
+        "incremental",
+        "SELECT *",
+        "ref()",
+        "config",
+        "--full-refresh",
+        "unique",
+        "--select",
+        "state:modified",
+        "error",
+        "warn",
+        "dbt compile",
+        "{% if execute %}",
+        "--defer",
+        "--state",
+        "dbt ls",
+        "함정 카탈로그",
+        "증상 → 원인 → 조치",
+        "원리와 방향",
+        "잘못 고르면 나는 비용 손해",
+        "읽는 쪽이 매번",
+        "매번 재컴파일·재계산",
+        "읽은 컬럼만큼 과금",
+        "디버깅 대상이 SQL이 아니라 컴파일 로직",
+        "컴파일 시점",
+        "구조의 밀도",
+        "재사용성과 grain",
+        "프로덕션 오브젝트를 참조"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.55,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.45
     },
     "concept/design-pattern/00_how_to_use_strategy_pattern": {
       "id": "concept/design-pattern/00_how_to_use_strategy_pattern",
@@ -3609,6 +3967,46 @@
       "type": "references"
     },
     {
+      "from": "concept/dbt/00_what_is_dbt",
+      "to": "concept/data-engineering/00_how_to_use_dataform_well",
+      "type": "references"
+    },
+    {
+      "from": "concept/dbt/01_dbt_core_features",
+      "to": "concept/dbt/00_what_is_dbt",
+      "type": "extends"
+    },
+    {
+      "from": "concept/dbt/02_dbt_advanced",
+      "to": "concept/dbt/01_dbt_core_features",
+      "type": "extends"
+    },
+    {
+      "from": "concept/dbt/02_dbt_advanced",
+      "to": "concept/dbt/00_what_is_dbt",
+      "type": "references"
+    },
+    {
+      "from": "concept/dbt/03_dbt_in_practice",
+      "to": "concept/dbt/02_dbt_advanced",
+      "type": "extends"
+    },
+    {
+      "from": "concept/dbt/03_dbt_in_practice",
+      "to": "concept/dbt/01_dbt_core_features",
+      "type": "references"
+    },
+    {
+      "from": "concept/dbt/04_dbt_operational_knowhow",
+      "to": "concept/dbt/03_dbt_in_practice",
+      "type": "extends"
+    },
+    {
+      "from": "concept/dbt/04_dbt_operational_knowhow",
+      "to": "concept/dbt/02_dbt_advanced",
+      "type": "references"
+    },
+    {
       "from": "concept/design-pattern/01_circuit_breaker",
       "to": "concept/design-pattern/00_how_to_use_strategy_pattern",
       "type": "references"
@@ -3757,6 +4155,18 @@
       ]
     },
     {
+      "term": "incremental",
+      "count": 6,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
       "term": "Regional",
       "count": 4,
       "mentioned_by": [
@@ -3817,6 +4227,26 @@
       ]
     },
     {
+      "term": "source",
+      "count": 4,
+      "mentioned_by": [
+        "concept/data-analytics/02_event_tracking_design",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
+      "term": "append",
+      "count": 4,
+      "mentioned_by": [
+        "concept/data-architect/02_how_to_architect_medallion_well",
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/04_dbt_operational_knowhow",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
       "term": "links",
       "count": 4,
       "mentioned_by": [
@@ -3824,6 +4254,56 @@
         "concept/data-architect/07_ontology_core_concepts",
         "insight/data-architect/00_ontology_core_examples",
         "insight/data-architect/01_medallion_with_ontology"
+      ]
+    },
+    {
+      "term": "ref()",
+      "count": 4,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "table",
+      "count": 4,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "view",
+      "count": 4,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "--full-refresh",
+      "count": 4,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "test",
+      "count": 4,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice"
       ]
     },
     {
@@ -3941,6 +4421,78 @@
         "concept/data-architect/06_how_to_implement_ontology",
         "concept/data-architect/07_ontology_core_concepts",
         "insight/data-architect/01_medallion_with_ontology"
+      ]
+    },
+    {
+      "term": "ref",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
+      "term": "dbt run",
+      "count": 3,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "ephemeral",
+      "count": 3,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "dbt build",
+      "count": 3,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "run",
+      "count": 3,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "unique",
+      "count": 3,
+      "mentioned_by": [
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "state:modified",
+      "count": 3,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "--state",
+      "count": 3,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice",
+        "concept/dbt/04_dbt_operational_knowhow"
       ]
     },
     {
@@ -4122,6 +4674,14 @@
       ]
     },
     {
+      "term": "exposure",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
       "term": "Cloud Armor",
       "count": 2,
       "mentioned_by": [
@@ -4282,6 +4842,14 @@
       ]
     },
     {
+      "term": "자동",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/dbt/00_what_is_dbt"
+      ]
+    },
+    {
       "term": "관계",
       "count": 2,
       "mentioned_by": [
@@ -4319,14 +4887,6 @@
       "mentioned_by": [
         "concept/data-architect/01_how_to_architect_medallion_well",
         "insight/data-architect/01_medallion_with_ontology"
-      ]
-    },
-    {
-      "term": "append",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/02_how_to_architect_medallion_well",
-        "concept/spark/01_structured_streaming"
       ]
     },
     {
@@ -4383,6 +4943,14 @@
       "mentioned_by": [
         "concept/data-architect/04_what_is_ontology",
         "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "timestamp",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/dbt/01_dbt_core_features"
       ]
     },
     {
@@ -4503,6 +5071,126 @@
       "mentioned_by": [
         "concept/data-architect/08_record_linkage_basics",
         "concept/data-architect/09_privacy_preserving_matching"
+      ]
+    },
+    {
+      "term": "staging",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "intermediate",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "models/",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "target",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "dbt compile",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "dbt test",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
+      "term": "build",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/01_dbt_core_features"
+      ]
+    },
+    {
+      "term": "filter",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/01_dbt_core_features",
+        "concept/spark/00_what_is_pyspark"
+      ]
+    },
+    {
+      "term": "check",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
+      "term": "defer",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "merge",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "delete+insert",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/04_dbt_operational_knowhow"
+      ]
+    },
+    {
+      "term": "dbt docs",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "state:modified+",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "--defer",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/04_dbt_operational_knowhow"
       ]
     },
     {

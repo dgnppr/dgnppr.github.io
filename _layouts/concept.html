@@ -22,6 +22,7 @@ layout: default
             {% if page.status %}<p>Status: <span class="post-status">{{ page.status }}</span></p>{% endif %}
             {% if page.note %}<p>Note: <span class="post-note">{{ page.note }}</span></p>{% endif %}
             {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
+            {% include relations.html %}
         </div>
         <hr>
     </header>

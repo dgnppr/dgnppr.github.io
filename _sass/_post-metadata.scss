@@ -50,6 +50,60 @@
 .history-button {
     text-align: right;
     font-size: 0.8em;
+
+    // 히스토리 안의 태그는 다른 메타와 색상·크기를 동일하게
+    .post-tag-item {
+        font-size: inherit;
+        color: inherit;
+
+        &:hover { color: var(--color-interactive); }
+    }
+}
+
+// 히스토리 영역의 relations (관계 + 링크)
+.post-relations {
+    margin-top: 6px;
+}
+
+.post-relations__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 3px;
+}
+
+.post-relations__item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 100%;
+}
+
+.post-relations__type {
+    flex-shrink: 0;
+    font-size: inherit;
+    line-height: 1.4;
+    color: inherit;
+    white-space: nowrap;
+}
+
+.post-relations__link {
+    font-size: inherit;
+    color: inherit;
+    text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    &:hover { text-decoration: underline; }
+
+    &--dead {
+        text-decoration: line-through;
+        opacity: 0.6;
+    }
 }
 
 // 글의 부제목

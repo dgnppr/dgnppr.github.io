@@ -1,0 +1,29 @@
+{%- comment -%}
+  히스토리 영역에 현재 문서의 relations(관계 + 링크)를 렌더링한다.
+  page.relations: [{ type, target }, ...] (frontmatter). target은 `type/slug`
+  또는 `/type/slug` 형태 → 정규화해 permalink(/type/slug/)로 매핑한다.
+{%- endcomment -%}
+{%- if page.relations and page.relations.size > 0 -%}
+<div class="post-relations">
+    <ul class="post-relations__list">
+    {%- for r in page.relations -%}
+        {%- assign rtype = r.type | downcase -%}
+        {%- assign tgt = r.target -%}
+        {%- if tgt == blank -%}{%- continue -%}{%- endif -%}
+        {%- assign tgt_first = tgt | slice: 0 -%}
+        {%- if tgt_first == '/' -%}{%- assign tgt = tgt | slice: 1, 9999 -%}{%- endif -%}
+        {%- assign tgt_last = tgt | slice: -1 -%}
+        {%- if tgt_last == '/' -%}{%- assign target_url = tgt | prepend: '/' -%}{%- else -%}{%- assign target_url = tgt | append: '/' | prepend: '/' -%}{%- endif -%}
+        {%- assign target_doc = site.documents | where: 'url', target_url | first -%}
+        <li class="post-relations__item">
+            <span class="post-relations__type" data-rel="{{ rtype }}">#{{ rtype }}</span>
+            {%- if target_doc -%}
+            <a class="post-relations__link" href="{{ target_url }}">{{ target_doc.title }}</a>
+            {%- else -%}
+            <a class="post-relations__link post-relations__link--dead" href="{{ target_url }}" title="문서를 찾을 수 없음">{{ r.target | split: '/' | last }}</a>
+            {%- endif -%}
+        </li>
+    {%- endfor -%}
+    </ul>
+</div>
+{%- endif -%}
