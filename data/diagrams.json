@@ -1212,7 +1212,7 @@
     ]
   },
   "cloud/02_authenticate_gcp_without_service_accounts": {
-    "hash": "66563ee28f9b8a700d867daa6e8acb36",
+    "hash": "dd519c49f9939b06edfefedcfad18dc2",
     "nodes": [
       {
         "id": "n1",
@@ -1221,32 +1221,27 @@
       },
       {
         "id": "n2",
-        "label": "로컬 개발 인증",
+        "label": "로컬 개발자 계정",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "Gcloud CLI vs SDK",
-        "type": ":decision"
+        "label": "GitLab WIF OIDC",
+        "type": ":step"
       },
       {
         "id": "n4",
-        "label": "GitLab WIF (OIDC)",
-        "type": "step"
+        "label": "SA 경유 방식 A",
+        "type": "decision"
       },
       {
         "id": "n5",
-        "label": "SA 경유 방식 A",
-        "type": "step"
+        "label": "직접 역할 부여 B",
+        "type": "decision"
       },
       {
         "id": "n6",
-        "label": "직접 역할 부여 B",
-        "type": "step"
-      },
-      {
-        "id": "n7",
-        "label": "운영계 IAM 조건",
+        "label": "운영계 브랜치 제한",
         "type": "end"
       }
     ],
@@ -1256,30 +1251,14 @@
         "to": "n2"
       },
       {
-        "from": "n2",
+        "from": "n1",
         "to": "n3"
       },
       {
-        "from": "n3",
-        "to": "n4"
-      },
-      {
         "from": "n4",
-        "to": "n5"
-      },
-      {
-        "from": "n4",
-        "to": "n6",
+        "to": "n5",
         "bidirectional": true,
-        "label": "권한 세분화 vs 관리"
-      },
-      {
-        "from": "n5",
-        "to": "n7"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
+        "label": "권한 분리 vs 관리"
       }
     ]
   },
