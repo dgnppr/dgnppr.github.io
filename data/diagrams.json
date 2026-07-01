@@ -76,13 +76,13 @@
     "nodes": [
       {
         "id": "n1",
-        "label": "공통 토픽 사용",
+        "label": "공통 토픽 구조",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "제휴사별 전용 토픽",
-        "type": ":step"
+        "label": "제휴사 API 타임아웃",
+        "type": "step"
       },
       {
         "id": "n3",
@@ -91,41 +91,50 @@
       },
       {
         "id": "n4",
+        "label": "데이터 불일치 위험",
+        "type": ":end"
+      },
+      {
+        "id": "n5",
+        "label": "전용 토픽 대안",
+        "type": "decision"
+      },
+      {
+        "id": "n6",
         "label": "운영/개발 부담",
         "type": "step"
       },
       {
-        "id": "n5",
-        "label": "컨슈머 확장",
+        "id": "n7",
+        "label": "Circuit Breaker 도입",
         "type": "step"
-      },
-      {
-        "id": "n6",
-        "label": "서킷 브레이커",
-        "type": "end"
       }
     ],
     "edges": [
       {
         "from": "n1",
-        "to": "n2",
-        "bidirectional": true
+        "to": "n2"
       },
       {
         "from": "n2",
         "to": "n3"
       },
       {
-        "from": "n2",
+        "from": "n3",
         "to": "n4"
       },
       {
-        "from": "n4",
+        "from": "n1",
         "to": "n5"
       },
       {
-        "from": "n1",
-        "to": "n6"
+        "from": "n5",
+        "to": "n6",
+        "bidirectional": true
+      },
+      {
+        "from": "n6",
+        "to": "n7"
       }
     ]
   },
@@ -796,7 +805,7 @@
     ]
   },
   "llm/00_why_llm_is_decoder_only": {
-    "hash": "02d90e26900406077cf90c4f021d0fae",
+    "hash": "f82dc15ff4c2802552313f74c2ad304e",
     "nodes": [
       {
         "id": "n1",
@@ -805,32 +814,27 @@
       },
       {
         "id": "n2",
-        "label": "Encoder-only (BERT)",
-        "type": "step"
+        "label": "Encoder-only",
+        "type": ":step"
       },
       {
         "id": "n3",
-        "label": "Decoder-only (GPT)",
+        "label": "Decoder-only",
         "type": "step"
       },
       {
         "id": "n4",
-        "label": "Encoder+Decoder (T5/CT5)",
+        "label": "Encoder+Decoder",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "범용 생성 vs 특화 변환",
-        "type": ":decision"
-      },
-      {
-        "id": "n6",
-        "label": "Decoder-only 주류 이유",
+        "label": "스케일링/범용성",
         "type": "step"
       },
       {
-        "id": "n7",
-        "label": "태스크별 구조 선택",
+        "id": "n6",
+        "label": "태스크별 선택",
         "type": "end"
       }
     ],
@@ -849,28 +853,23 @@
       },
       {
         "from": "n2",
-        "to": "n5",
+        "to": "n3",
         "bidirectional": true,
-        "label": "이해·분류 vs 생성"
+        "label": "생성 vs 이해"
       },
       {
         "from": "n3",
-        "to": "n5",
-        "bidirectional": true
+        "to": "n5"
       },
       {
         "from": "n4",
         "to": "n5",
         "bidirectional": true,
-        "label": "정보 병목 활용"
+        "label": "복잡도 ↔ 효율"
       },
       {
         "from": "n5",
         "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
       }
     ]
   },
