@@ -143,66 +143,53 @@
     "nodes": [
       {
         "id": "n1",
-        "label": "플랫폼 스레드 한계",
+        "label": "Virtual Threads",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "I/O 블로킹 비용",
+        "label": "Platform Thread",
         "type": "step"
       },
       {
         "id": "n3",
-        "label": "가상 스레드 도입",
+        "label": "I/O Bound Work",
         "type": ":step"
       },
       {
         "id": "n4",
-        "label": "Carrier 기반 스케줄링",
+        "label": "CPU Bound Work",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "I/O vs CPU 부하",
+        "label": "Pinning Issue",
         "type": "decision"
-      },
-      {
-        "id": "n6",
-        "label": "I/O 바운드 최적화",
-        "type": "end"
-      },
-      {
-        "id": "n7",
-        "label": "CPU 바운드 한계",
-        "type": "end"
       }
     ],
     "edges": [
       {
         "from": "n1",
-        "to": "n2"
+        "to": "n2",
+        "bidirectional": true
       },
       {
-        "from": "n2",
+        "from": "n1",
         "to": "n3"
       },
       {
-        "from": "n3",
+        "from": "n1",
         "to": "n4"
       },
       {
-        "from": "n4",
-        "to": "n5"
+        "from": "n5",
+        "label": "I/O bound case",
+        "to": "n3"
       },
       {
         "from": "n5",
-        "to": "n6",
-        "label": "I/O 중심"
-      },
-      {
-        "from": "n5",
-        "to": "n7",
-        "label": "CPU 중심"
+        "label": "CPU bound case",
+        "to": "n4"
       }
     ]
   },
@@ -211,37 +198,42 @@
     "nodes": [
       {
         "id": "n1",
-        "label": "한정적 와일드카드",
+        "label": "제네릭 유연성",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "불공변성 제약",
-        "type": ":step"
+        "label": "불공변 타입 문제",
+        "type": "step"
       },
       {
         "id": "n3",
-        "label": "PECS 공식",
-        "type": "decision"
+        "label": "한정적 와일드카드",
+        "type": "step"
       },
       {
         "id": "n4",
-        "label": "Producer-extends",
+        "label": "consumer-super",
         "type": "step"
       },
       {
         "id": "n5",
-        "label": "Consumer-super",
-        "type": "step"
+        "label": "PECS 공식",
+        "type": "decision"
       },
       {
         "id": "n6",
-        "label": "타입 매개변수 제거",
+        "label": "와일드카드 vs 타입 매개변수",
         "type": "step"
       },
       {
         "id": "n7",
-        "label": "API 유연성 확보",
+        "label": ":consumer-super",
+        "type": "step"
+      },
+      {
+        "id": "n8",
+        "label": "유연한 API",
         "type": "end"
       }
     ],
@@ -257,18 +249,15 @@
       {
         "from": "n3",
         "to": "n4",
-        "bidirectional": true,
-        "label": "생산자 역할"
+        "bidirectional": true
       },
       {
         "from": "n3",
-        "to": "n5",
-        "bidirectional": true,
-        "label": "소비자 역할"
+        "to": "n5"
       },
       {
         "from": "n4",
-        "to": "n6"
+        "to": "n5"
       },
       {
         "from": "n5",
@@ -277,6 +266,10 @@
       {
         "from": "n6",
         "to": "n7"
+      },
+      {
+        "from": "n7",
+        "to": "n8"
       }
     ]
   },
@@ -291,12 +284,12 @@
       {
         "id": "n2",
         "label": "스냅샷 비교",
-        "type": "step"
+        "type": ":step"
       },
       {
         "id": "n3",
         "label": "쓰기 지연 SQL",
-        "type": ":end"
+        "type": "step"
       },
       {
         "id": "n4",
@@ -305,13 +298,18 @@
       },
       {
         "id": "n5",
-        "label": "코드 명확성",
+        "label": "예측 불가능한 flush",
         "type": "step"
       },
       {
         "id": "n6",
-        "label": "테스트 용이성",
+        "label": "추적 및 테스트",
         "type": "step"
+      },
+      {
+        "id": "n7",
+        "label": "명시적 save/flush",
+        "type": "end"
       }
     ],
     "edges": [
@@ -324,13 +322,27 @@
         "to": "n3"
       },
       {
-        "from": "n4",
+        "from": "n3",
+        "to": "n4",
+        "bidirectional": true
+      },
+      {
+        "from": "n3",
         "to": "n5",
+        "bidirectional": true
+      },
+      {
+        "from": "n4",
+        "to": "n6",
         "bidirectional": true
       },
       {
         "from": "n5",
         "to": "n6"
+      },
+      {
+        "from": "n6",
+        "to": "n7"
       }
     ]
   },
@@ -339,37 +351,32 @@
     "nodes": [
       {
         "id": "n1",
-        "label": "KafkaProducer",
+        "label": "KafkaProducer send()",
         "type": "root"
       },
       {
         "id": "n2",
-        "label": "send() 호출",
-        "type": ":step"
-      },
-      {
-        "id": "n3",
-        "label": "RecordAccumulator",
-        "type": "step"
-      },
-      {
-        "id": "n4",
         "label": "Serialization",
         "type": "step"
       },
       {
-        "id": "n5",
+        "id": "n3",
         "label": "Partitioning",
+        "type": "step"
+      },
+      {
+        "id": "n4",
+        "label": "DefaultPartitioner",
         "type": "decision"
       },
       {
-        "id": "n6",
+        "id": "n5",
         "label": "Compression",
         "type": "step"
       },
       {
-        "id": "n7",
-        "label": "비동기 전송",
+        "id": "n6",
+        "label": "RecordAccumulator",
         "type": "end"
       }
     ],
@@ -388,15 +395,12 @@
       },
       {
         "from": "n4",
-        "to": "n5"
+        "to": "n5",
+        "label": "Key hash / Round-robin"
       },
       {
         "from": "n5",
         "to": "n6"
-      },
-      {
-        "from": "n6",
-        "to": "n7"
       }
     ]
   },
@@ -815,12 +819,12 @@
       {
         "id": "n2",
         "label": "Encoder-only",
-        "type": ":step"
+        "type": "step"
       },
       {
         "id": "n3",
         "label": "Decoder-only",
-        "type": "step"
+        "type": ":step"
       },
       {
         "id": "n4",
@@ -829,12 +833,12 @@
       },
       {
         "id": "n5",
-        "label": "스케일링/범용성",
-        "type": "step"
+        "label": "범용 생성/스케일링",
+        "type": "end"
       },
       {
         "id": "n6",
-        "label": "태스크별 선택",
+        "label": "특화 변환(번역·요약)",
         "type": "end"
       }
     ],
@@ -855,7 +859,7 @@
         "from": "n2",
         "to": "n3",
         "bidirectional": true,
-        "label": "생성 vs 이해"
+        "label": "이해 vs 생성"
       },
       {
         "from": "n3",
@@ -863,12 +867,6 @@
       },
       {
         "from": "n4",
-        "to": "n5",
-        "bidirectional": true,
-        "label": "복잡도 ↔ 효율"
-      },
-      {
-        "from": "n5",
         "to": "n6"
       }
     ]
@@ -1125,7 +1123,7 @@
     ]
   },
   "cloud/01_how_to_operate_iam_well": {
-    "hash": "f1b26b8320e67660aecd81f2a484868b",
+    "hash": "523a8eab48390e78a05c6acf4c7db651",
     "nodes": [
       {
         "id": "n1",
@@ -1144,13 +1142,13 @@
       },
       {
         "id": "n4",
-        "label": "워크로드별 전용계정",
+        "label": "워크로드 전용 계정",
         "type": "step"
       },
       {
         "id": "n5",
         "label": "최소 권한 원칙",
-        "type": "step"
+        "type": ": step"
       },
       {
         "id": "n6",
@@ -1160,7 +1158,7 @@
       {
         "id": "n7",
         "label": "권한 경계 설정",
-        "type": ": step"
+        "type": "step"
       },
       {
         "id": "n8",
