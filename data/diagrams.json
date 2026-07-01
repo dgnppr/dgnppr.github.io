@@ -1120,7 +1120,7 @@
     ]
   },
   "cloud/01_how_to_operate_iam_well": {
-    "hash": "f1b26b8320e67660aecd81f2a484868b",
+    "hash": "523a8eab48390e78a05c6acf4c7db651",
     "nodes": [
       {
         "id": "n1",
@@ -1155,12 +1155,12 @@
       {
         "id": "n7",
         "label": "권한 경계 설정",
-        "type": ": step"
+        "type": "step"
       },
       {
         "id": "n8",
         "label": "감사 및 정기 정리",
-        "type": "step"
+        "type": ": step"
       },
       {
         "id": "n9",
