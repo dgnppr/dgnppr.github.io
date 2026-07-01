@@ -2830,7 +2830,7 @@
     "concept/spark/02_spark_performance_tuning": {
       "id": "concept/spark/02_spark_performance_tuning",
       "type": "concept",
-      "title": "Spark 성능 튜닝 — 느린 잡 진단과 최적화",
+      "title": "Spark 성능 튜닝 느린 잡 진단과 최적화",
       "path": "_concept/spark/02_spark_performance_tuning.md",
       "status": "draft",
       "tags": [
