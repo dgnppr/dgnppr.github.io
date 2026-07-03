@@ -1688,10 +1688,10 @@
         "경로 분석"
       ],
       "content_depth": 0.77,
-      "importance": 6,
-      "depth": 0.84,
+      "importance": 8,
+      "depth": 0.87,
       "unanswered_questions": 0,
-      "learning_pressure": 0.93
+      "learning_pressure": 1.04
     },
     "concept/data-analytics/02_event_tracking_design": {
       "id": "concept/data-analytics/02_event_tracking_design",
@@ -1830,10 +1830,63 @@
         "L3 여정 재구성"
       ],
       "content_depth": 0.85,
-      "importance": 1,
-      "depth": 0.8,
+      "importance": 3,
+      "depth": 0.82,
       "unanswered_questions": 0,
-      "learning_pressure": 0.2
+      "learning_pressure": 0.53
+    },
+    "concept/data-analytics/05_customer_segmentation": {
+      "id": "concept/data-analytics/05_customer_segmentation",
+      "type": "concept",
+      "title": "고객 세그먼트 정의와 분석 방법",
+      "path": "_concept/data-analytics/05_customer_segmentation.md",
+      "status": "complete",
+      "tags": [
+        "data-analytics",
+        "segmentation",
+        "clustering"
+      ],
+      "date": "2026-07-03",
+      "confidence": "high",
+      "mentioned_terms": [
+        "NTILE(5)",
+        "누적매출(0~1,000,000)",
+        "방문횟수(0~50)",
+        "분석과 액션의 단위",
+        "속성 기반",
+        "행동 기반",
+        "가치 기반",
+        "생애주기",
+        "니즈·태도",
+        "속성 축과 행동 축을 한 세그먼트에 섞는 것",
+        "규칙",
+        "전이 행렬(transition matrix)",
+        "다른 행동을 유발",
+        "실제로 달라야",
+        "만드는 데 쓰지 않은 결과 지표",
+        "규칙 기반",
+        "군집",
+        "분포를 보고",
+        "한계",
+        "결과 지표",
+        "안정성 진단",
+        "생애주기 흐름",
+        "크기 확인 없이 축 교차",
+        "군집을 먼저, 해석을 나중에",
+        "세그먼트를 정적이라 가정",
+        "스케일링 없이 K-means",
+        "정의",
+        "성립 조건",
+        "생성",
+        "검증",
+        "만들 때 쓰지 않은 결과 지표",
+        "해석"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.85,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.15
     },
     "concept/data-architect/00_what_is_medaliion_architecture": {
       "id": "concept/data-architect/00_what_is_medaliion_architecture",
@@ -3887,6 +3940,16 @@
       "type": "references"
     },
     {
+      "from": "concept/data-analytics/05_customer_segmentation",
+      "to": "concept/data-analytics/01_behavioral_analytics_techniques",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/05_customer_segmentation",
+      "to": "concept/data-analytics/04_user_behavior_analytics_framework",
+      "type": "references"
+    },
+    {
       "from": "concept/data-architect/01_how_to_architect_medallion_well",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "extends"
@@ -4358,6 +4421,15 @@
         "concept/cloud/08_databases_and_storage_for_pca",
         "concept/cloud/09_security_for_pca",
         "concept/cloud/12_genai_for_pca"
+      ]
+    },
+    {
+      "term": "규칙",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-analytics/00_how_to_design_funnel",
+        "concept/data-analytics/01_behavioral_analytics_techniques",
+        "concept/data-analytics/05_customer_segmentation"
       ]
     },
     {
@@ -4863,14 +4935,6 @@
       "mentioned_by": [
         "concept/cloud/12_genai_for_pca",
         "concept/data-architect/07_ontology_core_concepts"
-      ]
-    },
-    {
-      "term": "규칙",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analytics/00_how_to_design_funnel",
-        "concept/data-analytics/01_behavioral_analytics_techniques"
       ]
     },
     {

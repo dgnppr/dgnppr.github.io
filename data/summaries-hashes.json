@@ -62,5 +62,11 @@
   "data-architect/10_trustworthy_controlled_experiments": "4e935da0670d1f58cbf378f197fc55ca",
   "spark/00_what_is_pyspark": "da989c79fe695823f5a22c275e7f891e",
   "spark/01_structured_streaming": "81deef70ec5459719232457eb67dc998",
-  "spark/02_spark_performance_tuning": "1470d208fe0414d9cd5d55502e510b3a"
+  "spark/02_spark_performance_tuning": "1470d208fe0414d9cd5d55502e510b3a",
+  "data-analytics/05_customer_segmentation": "ffaf2932d8d90a9c3d81dd6677dbbdaa",
+  "dbt/00_what_is_dbt": "1e0828aa47b05d915539a37b0f8d8def",
+  "dbt/01_dbt_core_features": "4459273ca3a23a587e26f4c12dd93e69",
+  "dbt/02_dbt_advanced": "fceb0cb3dcd2698fdc84e2af75b3a8b2",
+  "dbt/03_dbt_in_practice": "64a0b7178992cb71987ff5bab3e89df9",
+  "dbt/04_dbt_operational_knowhow": "9ad710412510614a5753c2464da720aa"
 }
