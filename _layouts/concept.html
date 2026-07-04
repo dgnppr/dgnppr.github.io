@@ -10,6 +10,7 @@ layout: default
 <div class="post">
     <header class="post-header">
         <br>
+        {% include breadcrumb.html %}
         <h1 class="page-title">{{ page.title }}</h1>
         {% if page.summary %}
         <p class="title-summary">{{ page.summary }}</p>
@@ -109,93 +110,10 @@ layout: default
     {% endif %}
 
     <div id="reading-cta" class="reading-cta"></div>
-    <div id="series-nav-container"></div>
-
-    <script>
-    (function() {
-        var nameEl = document.getElementById('thisName');
-        if (!nameEl) return;
-        var slug = nameEl.value;
-        fetch('/data/series.json')
-            .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(data) {
-                if (!data) return;
-                var seriesName = null;
-                var items = null;
-                Object.keys(data).forEach(function(name) {
-                    data[name].forEach(function(item) {
-                        if (item.slug === slug) { seriesName = name; items = data[name]; }
-                    });
-                });
-                if (!seriesName || !items) return;
-                var idx = items.findIndex(function(i) { return i.slug === slug; });
-                var prev = idx > 0 ? items[idx - 1] : null;
-                var next = idx < items.length - 1 ? items[idx + 1] : null;
-                if (!prev && !next) return;
-                var html = '<nav class="series-nav" aria-label="시리즈 내비게이션">' +
-                    '<div class="series-nav__header"><span class="series-nav__label">시리즈: ' + seriesName + '</span>' +
-                    '<span class="series-nav__progress">' + (idx + 1) + ' / ' + items.length + '</span></div>' +
-                    '<div class="series-nav__links">' +
-                    (prev ? '<a class="series-nav__link series-nav__prev" href="' + prev.url + '">← ' + prev.title + '</a>' : '<span></span>') +
-                    (next ? '<a class="series-nav__link series-nav__next" href="' + next.url + '">' + next.title + ' →</a>' : '') +
-                    '</div></nav>';
-                document.getElementById('series-nav-container').innerHTML = html;
-            }).catch(function() {});
-    })();
-    </script>
 
     <div id="related-posts-container"></div>
-    <script>
-    (function() {
-        var nameEl = document.getElementById('thisName');
-        if (!nameEl) return;
-        var slug = nameEl.value;
-        var TYPE_URL_PREFIX = { concept: '/concept/', insight: '/insight/', problem: '/problem/', tool: '/tool/', event: '/event/', adr: '/adr/' };
-
-        function renderRelated(items) {
-            if (!items || !items.length) return;
-            var html = '<section class="related-posts"><h3 class="related-posts__heading">관련 글</h3><div class="related-posts__list">' +
-                items.map(function(r) {
-                    return '<a class="related-posts__item" href="' + r.url + '">' + r.title + '</a>';
-                }).join('') + '</div></section>';
-            document.getElementById('related-posts-container').innerHTML = html;
-        }
-
-        function fallbackToEmbeddings() {
-            fetch('/data/related.json')
-                .then(function(r) { return r.ok ? r.json() : null; })
-                .then(function(data) {
-                    if (!data) return;
-                    var items = (data[slug] || []).map(function(r) {
-                        return { url: r.url, title: r.title };
-                    });
-                    renderRelated(items);
-                }).catch(function() {});
-        }
-
-        fetch('/data/ontology-graph.json')
-            .then(function(r) { return r.ok ? r.json() : null; })
-            .then(function(graph) {
-                if (!graph) { fallbackToEmbeddings(); return; }
-                var focalNode = (graph.nodes || {})[slug] ||
-                    Object.values(graph.nodes || {}).find(function(n) { return n && n.id && n.id.replace(/^[^\/]+\//, '') === slug; });
-                if (!focalNode) { fallbackToEmbeddings(); return; }
-                var focalId = focalNode.id;
-                var related = (graph.edges || [])
-                    .filter(function(e) { return e.from === focalId || e.to === focalId; })
-                    .map(function(e) {
-                        var otherId = e.from === focalId ? e.to : e.from;
-                        var n = (graph.nodes || {})[otherId];
-                        if (!n) return null;
-                        var url = n.url || (TYPE_URL_PREFIX[n.type] || '/concept/') + n.id.replace(/^[^\/]+\//, '') + '/';
-                        return { url: url, title: n.title || otherId };
-                    })
-                    .filter(Boolean);
-                if (!related.length) { fallbackToEmbeddings(); return; }
-                renderRelated(related);
-            }).catch(function() { fallbackToEmbeddings(); });
-    })();
-    </script>
+    <div id="backlinks-container"></div>
+    <script src="/js/entity-relations.js"></script>
 
     {% if page.comment != false %}
     {% include comment.html %}

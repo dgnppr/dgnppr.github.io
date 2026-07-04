@@ -1,0 +1,66 @@
+---
+layout: default
+title: 시리즈
+permalink: /series/
+---
+
+<div class="onto-page">
+  <div class="onto-hero">
+    <span class="onto-hero__kicker">Series</span>
+    <h1 class="onto-hero__title" id="series-title">시리즈</h1>
+    <p class="onto-hero__sub" id="series-desc">같은 주제로 이어지는 문서 묶음</p>
+  </div>
+  <div id="series-root"></div>
+</div>
+
+<script>
+(function () {
+  function esc(s){ var d=document.createElement('div'); d.textContent=(s==null)?'':String(s); return d.innerHTML; }
+
+  fetch('/data/series.json').then(function(r){return r.ok?r.json():null;}).then(function(data){
+    var root = document.getElementById('series-root');
+    var titleEl = document.getElementById('series-title');
+    var descEl = document.getElementById('series-desc');
+    if (!data) { root.innerHTML = '<div class="onto-empty">시리즈 데이터를 불러오지 못했습니다.</div>'; return; }
+
+    function indexHTML(names) {
+      return '<div class="series-grid">' + names.map(function(n){
+        return '<a class="series-card" href="#' + encodeURIComponent(n) + '">' +
+          '<span class="series-card__name">' + esc(n) + '</span>' +
+          '<span class="series-card__count">' + data[n].length + '</span></a>';
+      }).join('') + '</div>';
+    }
+
+    function render() {
+      var name = decodeURIComponent((location.hash || '').replace(/^#/, ''));
+      var items = name && data[name];
+      if (name && items && items.length) {
+        titleEl.textContent = name;
+        descEl.textContent = items.length + '개 문서로 이어지는 시리즈';
+        root.innerHTML = '<a class="series-back" href="/series/">← 전체 시리즈</a>' +
+          '<ol class="series-detail">' + items.map(function(it){
+            return '<li><a href="' + it.url + '">' + esc(it.title) + '</a></li>';
+          }).join('') + '</ol>';
+      } else {
+        titleEl.textContent = '시리즈';
+        descEl.textContent = '같은 주제로 이어지는 문서 묶음';
+        var names = Object.keys(data).sort();
+        if (name) {
+          root.innerHTML = '<div class="onto-empty">"' + esc(name) + '" 시리즈를 찾을 수 없습니다.</div>' +
+            '<div style="height:16px"></div>' + indexHTML(names);
+        } else if (!names.length) {
+          root.innerHTML = '<div class="onto-empty">아직 시리즈가 없습니다.</div>';
+        } else {
+          root.innerHTML = indexHTML(names);
+        }
+      }
+      window.scrollTo(0, 0);
+    }
+
+    window.addEventListener('hashchange', render);
+    render();
+  }).catch(function(){
+    document.getElementById('series-root').innerHTML = '<div class="onto-empty">불러오기 실패.</div>';
+  });
+})();
+</script>

@@ -1,0 +1,92 @@
+---
+layout: default
+title: 온톨로지 헬스
+permalink: /health/
+sitemap: false
+---
+
+<meta name="robots" content="noindex, nofollow">
+
+<div class="onto-page">
+  <div class="onto-hero">
+    <span class="onto-hero__kicker">Ontology Health</span>
+    <h1 class="onto-hero__title">온톨로지 헬스</h1>
+  </div>
+  <div id="health-stats" class="stat-grid"></div>
+  <div id="health-root"></div>
+</div>
+
+<script>
+(function () {
+  var TYPE_URL_PREFIX = { concept:'/concept/', insight:'/insight/', problem:'/problem/', tool:'/tool/', event:'/event/', adr:'/adr/' };
+  function urlOf(n){ return n.url || (TYPE_URL_PREFIX[n.type] || '/concept/') + n.id.replace(/^[^\/]+\//,'') + '/'; }
+  function esc(s){ var d=document.createElement('div'); d.textContent=(s==null)?'':String(s); return d.innerHTML; }
+  function stripPrefix(id){ return String(id).replace(/^[^\/]+\//,''); }
+
+  fetch('/data/ontology-graph.json').then(function(r){return r.ok?r.json():null;}).then(function(graph){
+    var root = document.getElementById('health-root');
+    if (!graph || !graph.nodes) { root.innerHTML = '<div class="onto-empty">그래프 데이터를 불러오지 못했습니다.</div>'; return; }
+    var nodes = graph.nodes, edges = graph.edges || [];
+    var ids = Object.keys(nodes);
+
+    var degree = {}, nodeSet = {};
+    ids.forEach(function(id){ degree[id] = 0; nodeSet[id] = true; });
+    var deadLinks = [];
+    edges.forEach(function(e){
+      if (nodeSet[e.from]) degree[e.from]++;
+      if (nodeSet[e.to]) degree[e.to]++;
+      if (!nodeSet[e.to]) deadLinks.push({ from: e.from, to: e.to, type: e.type });
+      if (!nodeSet[e.from]) deadLinks.push({ from: e.from, to: e.to, type: e.type });
+    });
+
+    var orphans = ids.filter(function(id){ return degree[id] === 0; }).map(function(id){ return nodes[id]; });
+    var shallow = ids.filter(function(id){ var d = nodes[id].content_depth; return typeof d === 'number' && d < 0.4; }).map(function(id){ return nodes[id]; });
+
+    var catCount = {};
+    ids.forEach(function(id){
+      var parts = id.split('/');
+      if (parts.length < 3) return;
+      var key = parts[0] + '/' + parts[1];
+      catCount[key] = (catCount[key] || 0) + 1;
+    });
+    var thinCats = Object.keys(catCount).filter(function(k){ return catCount[k] < 2; });
+
+    // 상단 통계 (심각도 색상)
+    var stats = [
+      ['전체 문서', ids.length, ''],
+      ['연결(엣지)', edges.length, ''],
+      ['고아 노드', orphans.length, orphans.length ? 'warn' : 'zero'],
+      ['데드링크', deadLinks.length, deadLinks.length ? 'alert' : 'zero'],
+      ['얕은 문서', shallow.length, shallow.length ? 'warn' : 'zero']
+    ];
+    document.getElementById('health-stats').innerHTML = stats.map(function(s){
+      return '<div class="stat-card' + (s[2] ? ' stat-card--' + s[2] : '') + '">' +
+        '<div class="stat-card__num">' + s[1] + '</div><div class="stat-card__label">' + s[0] + '</div></div>';
+    }).join('');
+
+    function nodeLinks(list, limit){
+      if (!list.length) return '<div class="ok">없음 ✓</div>';
+      var shown = list.slice(0, limit || 60);
+      var extra = list.length > shown.length ? '<div class="muted">…외 ' + (list.length - shown.length) + '개</div>' : '';
+      return shown.map(function(n){ return '<a href="' + urlOf(n) + '">' + esc(n.title || n.id) + '</a>'; }).join('') + extra;
+    }
+    function block(title, count, desc, inner){
+      return '<div class="health-block' + (count === 0 ? ' is-clean' : '') + '">' +
+        '<div class="health-block__head"><span class="health-block__title">' + title + '</span>' +
+        '<span class="health-block__count">' + count + '</span>' +
+        '<span class="health-block__desc">' + desc + '</span></div>' +
+        '<div class="health-block__body"><div class="health-items">' + inner + '</div></div></div>';
+    }
+
+    root.innerHTML =
+      block('고아 노드', orphans.length, '어떤 관계로도 연결되지 않음 · relations 후보', nodeLinks(orphans)) +
+      block('얕은 문서', shallow.length, 'content_depth &lt; 0.4 · 한계·예외·코드 보강', nodeLinks(shallow)) +
+      block('데드링크', deadLinks.length, 'target이 노드로 해석되지 않는 엣지',
+        (deadLinks.length ? deadLinks.slice(0, 60).map(function(d){ return '<div class="muted">' + esc(stripPrefix(d.from)) + ' —' + esc(d.type) + '→ <strong>' + esc(d.to) + '</strong></div>'; }).join('') : '<div class="ok">없음 ✓</div>')) +
+      block('빈약 카테고리', thinCats.length, '문서 2개 미만 · 공백(gap) 후보',
+        (thinCats.length ? thinCats.map(function(k){ return '<div class="muted">' + esc(k) + ' (' + catCount[k] + ')</div>'; }).join('') : '<div class="ok">없음 ✓</div>'));
+  }).catch(function(){
+    document.getElementById('health-root').innerHTML = '<div class="onto-empty">불러오기 실패.</div>';
+  });
+})();
+</script>

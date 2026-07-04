@@ -8,6 +8,7 @@ layout: default
 <div class="post">
     <header class="post-header">
         <br>
+        {% include breadcrumb.html %}
         <h1 class="page-title">{{ page.title }}</h1>
         <div class="history-button">
             <p>Created: {{ page.date | date: '%Y.%m.%d' }}</p>
@@ -47,9 +48,13 @@ layout: default
         </div>
     </div>
 
+    <input type="hidden" id="thisName" value="{{ page.id | remove: '/adr/' }}"/>
     <article class="post-content">
         {{ content }}
     </article>
+    <div id="related-posts-container"></div>
+    <div id="backlinks-container"></div>
+    <script src="/js/entity-relations.js"></script>
 </div>
 
 <script>

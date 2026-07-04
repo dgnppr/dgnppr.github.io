@@ -1,0 +1,15 @@
+{% comment %} URL 경로 기반 브레드크럼 (홈 › 타입 › 카테고리). parent.js 대체 — 데이터 의존 없이 항상 정확 {% endcomment %}
+{% assign _seg = page.url | split: '/' %}
+{% assign _type = _seg[1] %}
+{% assign _cat = _seg[2] %}
+<nav class="breadcrumb" aria-label="breadcrumb">
+    <a href="{{ '/' | prepend: site.baseurl }}">홈</a>
+    {% if _type and _type != '' %}
+    <span>›</span>
+    <a href="{{ '/all/' | prepend: site.baseurl }}">{{ _type | capitalize }}</a>
+    {% endif %}
+    {% if _cat and _cat != '' %}
+    <span>›</span>
+    <a href="{{ '/series/#' | append: _cat | prepend: site.baseurl }}">{{ _cat }}</a>
+    {% endif %}
+</nav>

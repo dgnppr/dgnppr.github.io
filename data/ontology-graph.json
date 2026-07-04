@@ -95,10 +95,10 @@
         "문서 없이 리뷰어의 경험에 의존"
       ],
       "content_depth": 0.65,
-      "importance": 13,
+      "importance": 15,
       "depth": 0.53,
       "unanswered_questions": 0,
-      "learning_pressure": 6.14
+      "learning_pressure": 7.09
     },
     "adr/data-engineering/2026-002-feature-mart-checklist": {
       "id": "adr/data-engineering/2026-002-feature-mart-checklist",
@@ -129,83 +129,6 @@
       "depth": 0.43,
       "unanswered_questions": 0,
       "learning_pressure": 0.57
-    },
-    "adr/work/2026-001-estimating-unknown-work": {
-      "id": "adr/work/2026-001-estimating-unknown-work",
-      "type": "adr",
-      "title": "잘 모르는 일의 일정 산정",
-      "path": "_adr/work/2026-001-estimating-unknown-work.md",
-      "status": "accepted",
-      "tags": [
-        "estimation",
-        "planning",
-        "engineering-practice",
-        "work"
-      ],
-      "date": "2026-07-04",
-      "mentioned_terms": [
-        "내 무지의 크기",
-        "계획 오류(planning fallacy)",
-        "수행",
-        "추정과 약속의 구분",
-        "확신 있는 즉답으로 신뢰를 먼저 얻는 방식",
-        "모든 산정에 기계적 버퍼(×2)를 거는 방식",
-        "산정 자체를 거부하는 방식(노 에스티메이트)"
-      ],
-      "content_depth": 0.65,
-      "importance": 2,
-      "depth": 0.4,
-      "unanswered_questions": 0,
-      "learning_pressure": 1.2
-    },
-    "adr/work/2026-002-how-to-work-well": {
-      "id": "adr/work/2026-002-how-to-work-well",
-      "type": "adr",
-      "title": "일을 잘한다는 것",
-      "path": "_adr/work/2026-002-how-to-work-well.md",
-      "status": "accepted",
-      "tags": [
-        "work",
-        "craftsmanship",
-        "ai",
-        "engineering-practice"
-      ],
-      "date": "2026-07-04",
-      "mentioned_terms": [
-        "상대가 받은 것의 품질",
-        "결과물에 대한 책임",
-        "사람 사이에서만 성립하는 개념"
-      ],
-      "content_depth": 0.65,
-      "importance": 3,
-      "depth": 0.43,
-      "unanswered_questions": 0,
-      "learning_pressure": 1.72
-    },
-    "adr/work/2026-003-how-to-prompt-well": {
-      "id": "adr/work/2026-003-how-to-prompt-well",
-      "type": "adr",
-      "title": "프롬프트 질문을 잘하는 방법",
-      "path": "_adr/work/2026-003-how-to-prompt-well.md",
-      "status": "accepted",
-      "tags": [
-        "prompt",
-        "ai",
-        "llm",
-        "work",
-        "engineering-practice"
-      ],
-      "date": "2026-07-04",
-      "mentioned_terms": [
-        "요구를 언어화하는 오래된 능력",
-        "프롬프트 템플릿·치트시트 수집",
-        "시행착오로 체득(원칙 없이 많이 써보기)"
-      ],
-      "content_depth": 0.65,
-      "importance": 1,
-      "depth": 0.4,
-      "unanswered_questions": 0,
-      "learning_pressure": 0.6
     },
     "concept/cloud/00_pca_study_plan": {
       "id": "concept/cloud/00_pca_study_plan",
@@ -2132,28 +2055,23 @@
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
-        "\"이 채널에 다음 1억을 더 써도 되는가\"",
-        "채널별 예산 배분",
-        "증액·감액의 시점",
-        "채널 포트폴리오 리스크",
-        "배분",
+        "\"이 채널에 돈을 더 써도 되는가\"",
+        "어트리뷰션",
         "홀드아웃 테스트",
-        "스파이크 대조",
-        "한계 CAC",
-        "획득 × 리텐션",
-        "획득 × 매출",
-        "획득 × 인게이지먼트",
-        "채널 품질의 조기 신호",
-        "읽는 순서",
-        "어느 채널이 \"남는 유저\"를 데려오는가",
-        "한계 CAC가 LTV를 넘는 지점이 어디인가",
-        "오가닉과 페이드의 상호작용"
+        "추가 지출 구간의 CAC",
+        "유저 1행",
+        "일 × 채널 × 캠페인 1행",
+        "유저 × 일 1행",
+        "같은 테이블을 공유",
+        "획득 → 인게이지먼트",
+        "획득 → 리텐션",
+        "획득 → 매출"
       ],
-      "content_depth": 0.57,
-      "importance": 5,
-      "depth": 0.82,
+      "content_depth": 0.77,
+      "importance": 7,
+      "depth": 0.92,
       "unanswered_questions": 0,
-      "learning_pressure": 0.88
+      "learning_pressure": 0.56
     },
     "concept/data-analytics/08_engagement_analysis": {
       "id": "concept/data-analytics/08_engagement_analysis",
@@ -2172,33 +2090,26 @@
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
-        "리텐션의 선행 지표",
-        "활성화(activation)의 측정",
-        "온보딩 투자 여부와 지점",
-        "기능 로드맵의 우선순위",
-        "제품 건강도의 조기 경보",
+        "유저가 첫 가치를 경험하는가",
+        "얼마나 자주, 깊이 쓰는가",
+        "어떤 기능이 실제로 쓰이는가",
         "활동일수 히스토그램",
-        "후보 탐색(상관)",
-        "혼동 요인 통제",
-        "실험 검증(인과)",
-        "채택률",
-        "재사용률",
-        "유저-일 활동 스냅샷",
-        "인게이지먼트 × 리텐션",
-        "인게이지먼트 × 획득",
-        "인게이지먼트 × 매출",
-        "읽는 순서",
-        "가치 경험의 관문이 어디인가",
-        "유저 분포가 어느 방향으로 움직이는가",
-        "파워 유저는 무엇이 다른가",
-        "어떤 기능이 정착하는가",
-        "인게이지먼트 하락의 조기 경보"
+        "후보 찾기",
+        "다른 요인 제거",
+        "실험으로 확인",
+        "한 장의 테이블",
+        "유저 × 일 1행",
+        "이 테이블이 중요한 이유",
+        "유저 × 기능 × 일 1행",
+        "인게이지먼트 → 리텐션",
+        "인게이지먼트 → 획득",
+        "인게이지먼트 → 매출"
       ],
-      "content_depth": 0.65,
+      "content_depth": 0.77,
       "importance": 3,
-      "depth": 0.85,
+      "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 0.44
+      "learning_pressure": 0.32
     },
     "concept/data-analytics/09_conversion_analysis": {
       "id": "concept/data-analytics/09_conversion_analysis",
@@ -2216,32 +2127,19 @@
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
-        "지렛대의 위치를 알려준다",
-        "개선 투자의 우선순위",
-        "실험 로드맵",
-        "캠페인·리타게팅 타이밍",
-        "오독이 가장 쉬운 지표",
-        "분모가 무엇인가",
-        "세그먼트로 쪼갠다",
-        "전환 윈도우",
-        "미성숙 코호트 처리",
-        "고관여 상품의 분석 단위",
+        "\"유저가 어디서, 왜 새는가\"",
+        "분모",
+        "유저 × 일(또는 세션) 1행",
+        "주문 1행",
         "전환 × 획득",
-        "전환 × 리텐션",
         "전환 × 매출",
-        "전환 × 인게이지먼트",
-        "읽는 순서",
-        "가장 비싼 병목이 어디인가",
-        "어느 세그먼트가 평균을 끌어내리는가",
-        "전환 소요 시간의 구조",
-        "마이크로 전환과 최종 전환의 연결 강도",
-        "개선의 누적 기록"
+        "전환 × 리텐션"
       ],
-      "content_depth": 0.65,
+      "content_depth": 0.85,
       "importance": 3,
-      "depth": 0.85,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 0.44
+      "learning_pressure": 0.31
     },
     "concept/data-analytics/10_revenue_analysis": {
       "id": "concept/data-analytics/10_revenue_analysis",
@@ -2260,36 +2158,19 @@
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
-        "gross",
-        "discount",
-        "refund",
-        "fee",
-        "net",
-        "분해",
-        "단가 감각의 공급",
-        "매출 변동의 원인 귀속과 담당 배정",
-        "획득 예산의 상한",
-        "가격·프로모션 정책",
         "MRR 브리지",
-        "추정치에는 반드시 불확실성 표기",
-        "중앙값과 분위수(p50/p90/p99)를 병기",
-        "마진 반영 증분",
+        "주문 1행",
+        "유저 × 월 1행",
+        "가입 월 × 경과 개월 (× 채널) 1행",
         "매출 × 획득",
         "매출 × 리텐션",
-        "매출 × 전환",
-        "매출 × 인게이지먼트",
-        "읽는 순서",
-        "매출 변동의 귀속",
-        "수익화의 개선 추세",
-        "CAC 상한",
-        "매출의 리스크 구조",
-        "수익화 레버의 우선순위"
+        "매출 × 전환"
       ],
-      "content_depth": 0.65,
+      "content_depth": 0.85,
       "importance": 1,
-      "depth": 0.83,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 0.17
+      "learning_pressure": 0.1
     },
     "concept/data-analytics/11_retention_analysis": {
       "id": "concept/data-analytics/11_retention_analysis",
@@ -2302,41 +2183,58 @@
         "aarrr",
         "cohort",
         "churn",
-        "survival-analysis",
         "data-analytics"
       ],
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
-        "성장 투자 확대의 선행 조건 판정",
-        "제품 개선의 최종 성적표",
-        "이탈 개입의 대상과 시점",
-        "형태",
-        "플래토(평탄화)가 생기는가",
-        "플래토의 높이와 도달 속도",
-        "세로로 읽기",
-        "가로로 읽기",
-        "대각선으로 읽기",
-        "세그먼트별 커브",
-        "생존 분석",
-        "개입 시점",
+        "코호트",
+        "Day 0",
+        "어느 수준에서 평평해지는가(플래토)",
+        "계속 내려가는가",
+        "세로",
+        "가로",
+        "대각선",
+        "인게이지먼트와 같은 활동 스냅샷을 공유하는 것",
+        "유저 × 일 1행",
+        "유저 1행",
+        "가입 월 × 경과 기간 (× 세그먼트) 1행",
         "리텐션 × 획득",
         "리텐션 × 인게이지먼트",
         "리텐션 × 매출",
-        "리텐션 × 전환",
-        "읽는 순서",
-        "플래토의 존재와 높이",
-        "커브를 가르는 초기 행동",
-        "성장의 질",
-        "코호트 세대별 개선의 실증",
-        "이탈의 선행 신호와 개입 효과",
-        "리텐션 %p의 화폐 가치"
+        "리텐션 × 전환"
       ],
-      "content_depth": 0.65,
+      "content_depth": 0.77,
       "importance": 1,
-      "depth": 0.83,
+      "depth": 0.87,
       "unanswered_questions": 0,
-      "learning_pressure": 0.17
+      "learning_pressure": 0.13
+    },
+    "concept/data-analytics/12_attribution": {
+      "id": "concept/data-analytics/12_attribution",
+      "type": "concept",
+      "title": "어트리뷰션 개념과 마트 설계",
+      "path": "_concept/data-analytics/12_attribution.md",
+      "status": "complete",
+      "tags": [
+        "attribution",
+        "marketing-analytics",
+        "data-mart",
+        "data-analytics"
+      ],
+      "date": "2026-07-05",
+      "confidence": "high",
+      "mentioned_terms": [
+        "model",
+        "접점 1행",
+        "전환 1행",
+        "전환 × 기여 접점 1행"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.87,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.13
     },
     "concept/data-architect/00_what_is_medaliion_architecture": {
       "id": "concept/data-architect/00_what_is_medaliion_architecture",
@@ -4158,6 +4056,86 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.22
     },
+    "insight/essay/05_estimating_unknown_work": {
+      "id": "insight/essay/05_estimating_unknown_work",
+      "type": "insight",
+      "title": "잘 모르는 일의 일정 산정",
+      "path": "_insight/essay/05_estimating_unknown_work.md",
+      "status": "complete",
+      "tags": [
+        "estimation",
+        "planning",
+        "work",
+        "essay"
+      ],
+      "date": "2026-07-04",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "내 무지의 크기",
+        "계획 오류(planning fallacy)",
+        "수행",
+        "추정과 약속의 구분",
+        "확신 있는 즉답으로 신뢰를 먼저 얻는 방식",
+        "모든 산정에 기계적 버퍼(×2)를 거는 방식",
+        "산정 자체를 거부하는 방식(노 에스티메이트)"
+      ],
+      "content_depth": 0.65,
+      "importance": 2,
+      "depth": 0.65,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.69
+    },
+    "insight/essay/06_how_to_work_well": {
+      "id": "insight/essay/06_how_to_work_well",
+      "type": "insight",
+      "title": "일을 잘한다는 것",
+      "path": "_insight/essay/06_how_to_work_well.md",
+      "status": "complete",
+      "tags": [
+        "work",
+        "craftsmanship",
+        "ai",
+        "essay"
+      ],
+      "date": "2026-07-04",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "상대가 받은 것의 품질",
+        "결과물에 대한 책임",
+        "사람 사이에서만 성립하는 개념"
+      ],
+      "content_depth": 0.65,
+      "importance": 3,
+      "depth": 0.68,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.97
+    },
+    "insight/essay/07_how_to_prompt_well": {
+      "id": "insight/essay/07_how_to_prompt_well",
+      "type": "insight",
+      "title": "프롬프트 질문을 잘하는 방법",
+      "path": "_insight/essay/07_how_to_prompt_well.md",
+      "status": "complete",
+      "tags": [
+        "prompt",
+        "ai",
+        "llm",
+        "work",
+        "essay"
+      ],
+      "date": "2026-07-04",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "요구를 언어화하는 오래된 능력",
+        "프롬프트 템플릿·치트시트 수집",
+        "시행착오로 체득(원칙 없이 많이 써보기)"
+      ],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.65,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.35
+    },
     "tool/cloud/03_how_to_use_terraform": {
       "id": "tool/cloud/03_how_to_use_terraform",
       "type": "tool",
@@ -4247,16 +4225,6 @@
     {
       "from": "adr/data-engineering/2026-002-feature-mart-checklist",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
-      "type": "references"
-    },
-    {
-      "from": "adr/work/2026-002-how-to-work-well",
-      "to": "adr/work/2026-001-estimating-unknown-work",
-      "type": "references"
-    },
-    {
-      "from": "adr/work/2026-003-how-to-prompt-well",
-      "to": "adr/work/2026-002-how-to-work-well",
       "type": "references"
     },
     {
@@ -4506,11 +4474,6 @@
     },
     {
       "from": "concept/data-analytics/09_conversion_analysis",
-      "to": "concept/data-analytics/06_ga4_data_model",
-      "type": "references"
-    },
-    {
-      "from": "concept/data-analytics/09_conversion_analysis",
       "to": "adr/data-engineering/2026-001-data-mart-checklist",
       "type": "references"
     },
@@ -4551,6 +4514,21 @@
     },
     {
       "from": "concept/data-analytics/11_retention_analysis",
+      "to": "adr/data-engineering/2026-001-data-mart-checklist",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/12_attribution",
+      "to": "concept/data-analytics/07_acquisition_analysis",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/12_attribution",
+      "to": "concept/data-analytics/06_ga4_data_model",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/12_attribution",
       "to": "adr/data-engineering/2026-001-data-mart-checklist",
       "type": "references"
     },
@@ -4775,6 +4753,16 @@
       "type": "references"
     },
     {
+      "from": "insight/essay/06_how_to_work_well",
+      "to": "insight/essay/05_estimating_unknown_work",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/07_how_to_prompt_well",
+      "to": "insight/essay/06_how_to_work_well",
+      "type": "references"
+    },
+    {
       "from": "tool/cloud/03_how_to_use_terraform",
       "to": "concept/cloud/03_vpc_for_pca",
       "type": "implements"
@@ -4832,17 +4820,6 @@
         "concept/dbt/02_dbt_advanced",
         "concept/dbt/03_dbt_in_practice",
         "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
-      "term": "읽는 순서",
-      "count": 5,
-      "mentioned_by": [
-        "concept/data-analytics/07_acquisition_analysis",
-        "concept/data-analytics/08_engagement_analysis",
-        "concept/data-analytics/09_conversion_analysis",
-        "concept/data-analytics/10_revenue_analysis",
-        "concept/data-analytics/11_retention_analysis"
       ]
     },
     {
@@ -5055,6 +5032,15 @@
         "concept/data-analytics/01_behavioral_analytics_techniques",
         "concept/data-architect/03_medallion_advanced_patterns",
         "insight/data-architect/01_medallion_with_ontology"
+      ]
+    },
+    {
+      "term": "유저 × 일 1행",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-analytics/07_acquisition_analysis",
+        "concept/data-analytics/08_engagement_analysis",
+        "concept/data-analytics/11_retention_analysis"
       ]
     },
     {
@@ -5570,6 +5556,14 @@
       ]
     },
     {
+      "term": "코호트",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-analytics/01_behavioral_analytics_techniques",
+        "concept/data-analytics/11_retention_analysis"
+      ]
+    },
+    {
       "term": "items",
       "count": 2,
       "mentioned_by": [
@@ -5607,6 +5601,30 @@
       "mentioned_by": [
         "concept/data-analytics/06_ga4_data_model",
         "concept/system-design/02_notification_system_design"
+      ]
+    },
+    {
+      "term": "유저 1행",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-analytics/07_acquisition_analysis",
+        "concept/data-analytics/11_retention_analysis"
+      ]
+    },
+    {
+      "term": "주문 1행",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-analytics/09_conversion_analysis",
+        "concept/data-analytics/10_revenue_analysis"
+      ]
+    },
+    {
+      "term": "model",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-analytics/12_attribution",
+        "concept/dbt/03_dbt_in_practice"
       ]
     },
     {

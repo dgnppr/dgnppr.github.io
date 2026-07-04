@@ -148,12 +148,38 @@ function saveTagCount(tagMap) {
 
 function saveSeries(pageMap) {
     const seriesMap = {};
+
+    // 1) 명시적 series frontmatter — 기존 동작(업데이트일 순)
     Object.entries(pageMap).forEach(([slug, page]) => {
         if (!page.series) return;
         if (!seriesMap[page.series]) seriesMap[page.series] = [];
         seriesMap[page.series].push({ slug, title: page.title, url: page.url, updated: page.updated || '' });
     });
     Object.values(seriesMap).forEach(entries => entries.sort((a, b) => a.updated.localeCompare(b.updated)));
+
+    // 2) 자동 파생 — 같은 카테고리에서 파일명이 숫자 프리픽스(NN_)인 문서가 2개 이상이면 시리즈로 묶고 숫자순 정렬.
+    //    명시적 series가 있는 문서/시리즈명은 제외. (adr/blog 제외 — ADR은 결정 타임라인이 담당)
+    const SERIES_TYPES = new Set(['concept', 'insight', 'problem', 'tool', 'event']);
+    const groups = {};
+    Object.entries(pageMap).forEach(([slug, page]) => {
+        if (page.series) return;
+        if (!SERIES_TYPES.has(page.type)) return;
+        const parts = slug.split('/');
+        if (parts.length < 2) return;                 // 카테고리 없는 문서 제외
+        const m = parts[parts.length - 1].match(/^(\d+)_/);
+        if (!m) return;                               // NN_ 프리픽스만
+        const cat = parts[0];
+        const key = page.type + '::' + cat;
+        if (!groups[key]) groups[key] = { cat, entries: [] };
+        groups[key].entries.push({ slug, title: page.title, url: page.url, order: parseInt(m[1], 10) });
+    });
+    Object.values(groups).forEach(({ cat, entries }) => {
+        if (entries.length < 2) return;               // 2개 이상만 시리즈
+        if (seriesMap[cat]) return;                   // 명시적 series명과 충돌 시 자동 생성 안 함
+        entries.sort((a, b) => a.order - b.order);
+        seriesMap[cat] = entries.map(e => ({ slug: e.slug, title: e.title, url: e.url }));
+    });
+
     fs.writeFileSync('./data/series.json', JSON.stringify(seriesMap));
     console.log('The file "./data/series.json" has been saved.');
 }

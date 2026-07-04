@@ -1,0 +1,61 @@
+---
+layout: default
+title: 결정 타임라인
+permalink: /decisions/
+---
+
+<div class="onto-page">
+  <div class="onto-hero">
+    <span class="onto-hero__kicker">Decisions</span>
+    <h1 class="onto-hero__title">결정 타임라인</h1>
+    <p class="onto-hero__sub">ADR(아키텍처 결정 기록)을 시간순으로. <code>supersedes</code> 관계가 있으면 어떤 결정을 대체했는지 표시합니다.</p>
+  </div>
+  <div id="tl-root"></div>
+</div>
+
+<script>
+(function () {
+  function urlOf(n){ return n.url || '/adr/' + n.id.replace(/^[^\/]+\//,'') + '/'; }
+  function esc(s){ var d=document.createElement('div'); d.textContent=(s==null)?'':String(s); return d.innerHTML; }
+
+  fetch('/data/ontology-graph.json').then(function(r){return r.ok?r.json():null;}).then(function(graph){
+    var root = document.getElementById('tl-root');
+    if (!graph || !graph.nodes) { root.innerHTML = '<div class="onto-empty">그래프 데이터를 불러오지 못했습니다.</div>'; return; }
+    var nodes = graph.nodes;
+
+    var supersedes = {}, supersededBy = {};
+    (graph.edges || []).forEach(function(e){
+      if (e.type !== 'supersedes') return;
+      supersedes[e.from] = e.to;
+      supersededBy[e.to] = e.from;
+    });
+
+    var adrs = Object.keys(nodes).map(function(k){ return nodes[k]; })
+      .filter(function(n){ return n.type === 'adr'; })
+      .sort(function(a, b){ return String(b.date || b.valid_from || '').localeCompare(String(a.date || a.valid_from || '')); });
+
+    if (!adrs.length) { root.innerHTML = '<div class="onto-empty">ADR 문서가 없습니다.</div>'; return; }
+
+    root.innerHTML = '<div class="timeline">' + adrs.map(function(n){
+      var status = supersededBy[n.id] ? 'superseded' : (n.status || '');
+      var statusBadge = status ? '<span class="tl-status tl-status--' + esc(status) + '">' + esc(status) + '</span>' : '';
+      var superLine = '';
+      if (supersedes[n.id]) {
+        var tgt = nodes[supersedes[n.id]];
+        superLine += '<div class="tl-super">대체함 → ' + (tgt ? '<a href="' + urlOf(tgt) + '">' + esc(tgt.title || tgt.id) + '</a>' : esc(supersedes[n.id])) + '</div>';
+      }
+      if (supersededBy[n.id]) {
+        var by = nodes[supersededBy[n.id]];
+        superLine += '<div class="tl-super">대체됨 ← ' + (by ? '<a href="' + urlOf(by) + '">' + esc(by.title || by.id) + '</a>' : esc(supersededBy[n.id])) + '</div>';
+      }
+      return '<div class="tl-node">' +
+        '<div class="tl-node__date">' + esc(n.date || n.valid_from || '') + '</div>' +
+        '<a class="tl-node__title" href="' + urlOf(n) + '">' + esc(n.title || n.id) + '</a>' +
+        '<div class="tl-node__meta">' + statusBadge + superLine + '</div>' +
+        '</div>';
+    }).join('') + '</div>';
+  }).catch(function(){
+    document.getElementById('tl-root').innerHTML = '<div class="onto-empty">불러오기 실패.</div>';
+  });
+})();
+</script>

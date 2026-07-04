@@ -1,0 +1,57 @@
+// 엔티티 관계 UI — 관계유형 배지 / 백링크 / 모순 / 브레드크럼
+// (관련글 리스트 자체 스타일은 _layout.scss 의 .related-posts 를 재사용)
+
+// ── 관계유형 배지 ────────────────────────────────────────────
+.related-posts__title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.rel-badge {
+    flex-shrink: 0;
+    margin-left: 10px;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    color: var(--color-text-secondary);
+    background: var(--color-surface-hover);
+    border: 1px solid var(--color-border-subtle);
+
+    &--supersedes {
+        color: var(--color-entity-event);
+        background: var(--color-entity-event-bg);
+        border-color: transparent;
+    }
+}
+
+// ── 백링크 섹션(관련글과 동일 구조, 헤딩만 구분) ───────────────
+.backlinks {
+    .related-posts__item::before { content: "↩"; }
+}
+
+// ── 브레드크럼 (parent 체인) ─────────────────────────────────
+.breadcrumb {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin: 0 0 0.8rem;
+    font-size: 0.76rem;
+    color: var(--color-text-tertiary);
+
+    &:empty { display: none; }
+
+    a {
+        color: var(--color-text-tertiary);
+        text-decoration: none;
+
+        &:hover { color: var(--color-interactive); }
+    }
+
+    span { color: var(--color-text-tertiary); opacity: 0.6; }
+}
