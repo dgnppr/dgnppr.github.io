@@ -7,12 +7,20 @@ sitemap: false
 
 <meta name="robots" content="noindex, nofollow">
 
-<div class="onto-page">
-  <div class="onto-hero">
-    <span class="onto-hero__kicker">Ontology Health</span>
-    <h1 class="onto-hero__title">온톨로지 헬스</h1>
-  </div>
-  <div id="health-stats" class="stat-grid"></div>
+<style>
+  .health { max-width: 760px; margin: 48px auto 80px; padding: 0 20px; }
+  .health h1 { font-size: 1.6rem; margin: 0 0 4px; }
+  .health__meta { color: var(--color-text-tertiary); font-size: 0.85rem; margin: 0 0 28px; }
+  .health h2 { font-size: 1rem; margin: 26px 0 8px; padding-bottom: 4px; border-bottom: 1px solid var(--color-border-subtle); }
+  .health ul { margin: 0; padding-left: 18px; }
+  .health li { font-size: 0.88rem; line-height: 1.7; }
+  .health__none { color: var(--color-text-tertiary); font-size: 0.88rem; }
+  .health__dead { color: var(--color-text-secondary); font-size: 0.84rem; line-height: 1.7; }
+</style>
+
+<div class="health">
+  <h1>온톨로지 헬스</h1>
+  <p class="health__meta" id="health-meta"></p>
   <div id="health-root"></div>
 </div>
 
@@ -25,7 +33,7 @@ sitemap: false
 
   fetch('/data/ontology-graph.json').then(function(r){return r.ok?r.json():null;}).then(function(graph){
     var root = document.getElementById('health-root');
-    if (!graph || !graph.nodes) { root.innerHTML = '<div class="onto-empty">그래프 데이터를 불러오지 못했습니다.</div>'; return; }
+    if (!graph || !graph.nodes) { root.textContent = '그래프 데이터를 불러오지 못했습니다.'; return; }
     var nodes = graph.nodes, edges = graph.edges || [];
     var ids = Object.keys(nodes);
 
@@ -35,8 +43,7 @@ sitemap: false
     edges.forEach(function(e){
       if (nodeSet[e.from]) degree[e.from]++;
       if (nodeSet[e.to]) degree[e.to]++;
-      if (!nodeSet[e.to]) deadLinks.push({ from: e.from, to: e.to, type: e.type });
-      if (!nodeSet[e.from]) deadLinks.push({ from: e.from, to: e.to, type: e.type });
+      if (!nodeSet[e.to]) deadLinks.push(e);
     });
 
     var orphans = ids.filter(function(id){ return degree[id] === 0; }).map(function(id){ return nodes[id]; });
@@ -46,47 +53,29 @@ sitemap: false
     ids.forEach(function(id){
       var parts = id.split('/');
       if (parts.length < 3) return;
-      var key = parts[0] + '/' + parts[1];
-      catCount[key] = (catCount[key] || 0) + 1;
+      catCount[parts[0] + '/' + parts[1]] = (catCount[parts[0] + '/' + parts[1]] || 0) + 1;
     });
     var thinCats = Object.keys(catCount).filter(function(k){ return catCount[k] < 2; });
 
-    // 상단 통계 (심각도 색상)
-    var stats = [
-      ['전체 문서', ids.length, ''],
-      ['연결(엣지)', edges.length, ''],
-      ['고아 노드', orphans.length, orphans.length ? 'warn' : 'zero'],
-      ['데드링크', deadLinks.length, deadLinks.length ? 'alert' : 'zero'],
-      ['얕은 문서', shallow.length, shallow.length ? 'warn' : 'zero']
-    ];
-    document.getElementById('health-stats').innerHTML = stats.map(function(s){
-      return '<div class="stat-card' + (s[2] ? ' stat-card--' + s[2] : '') + '">' +
-        '<div class="stat-card__num">' + s[1] + '</div><div class="stat-card__label">' + s[0] + '</div></div>';
-    }).join('');
+    document.getElementById('health-meta').textContent = '전체 ' + ids.length + '개 · 연결 ' + edges.length + '개';
 
-    function nodeLinks(list, limit){
-      if (!list.length) return '<div class="ok">없음 ✓</div>';
-      var shown = list.slice(0, limit || 60);
-      var extra = list.length > shown.length ? '<div class="muted">…외 ' + (list.length - shown.length) + '개</div>' : '';
-      return shown.map(function(n){ return '<a href="' + urlOf(n) + '">' + esc(n.title || n.id) + '</a>'; }).join('') + extra;
+    function nodeList(list){
+      if (!list.length) return '<p class="health__none">없음</p>';
+      return '<ul>' + list.map(function(n){ return '<li><a href="' + urlOf(n) + '">' + esc(n.title || n.id) + '</a></li>'; }).join('') + '</ul>';
     }
-    function block(title, count, desc, inner){
-      return '<div class="health-block' + (count === 0 ? ' is-clean' : '') + '">' +
-        '<div class="health-block__head"><span class="health-block__title">' + title + '</span>' +
-        '<span class="health-block__count">' + count + '</span>' +
-        '<span class="health-block__desc">' + desc + '</span></div>' +
-        '<div class="health-block__body"><div class="health-items">' + inner + '</div></div></div>';
-    }
+    function sec(title, count, body){ return '<h2>' + title + ' (' + count + ')</h2>' + body; }
 
     root.innerHTML =
-      block('고아 노드', orphans.length, '어떤 관계로도 연결되지 않음 · relations 후보', nodeLinks(orphans)) +
-      block('얕은 문서', shallow.length, 'content_depth &lt; 0.4 · 한계·예외·코드 보강', nodeLinks(shallow)) +
-      block('데드링크', deadLinks.length, 'target이 노드로 해석되지 않는 엣지',
-        (deadLinks.length ? deadLinks.slice(0, 60).map(function(d){ return '<div class="muted">' + esc(stripPrefix(d.from)) + ' —' + esc(d.type) + '→ <strong>' + esc(d.to) + '</strong></div>'; }).join('') : '<div class="ok">없음 ✓</div>')) +
-      block('빈약 카테고리', thinCats.length, '문서 2개 미만 · 공백(gap) 후보',
-        (thinCats.length ? thinCats.map(function(k){ return '<div class="muted">' + esc(k) + ' (' + catCount[k] + ')</div>'; }).join('') : '<div class="ok">없음 ✓</div>'));
+      sec('고아 노드', orphans.length, nodeList(orphans)) +
+      sec('얕은 문서', shallow.length, nodeList(shallow)) +
+      sec('데드링크', deadLinks.length, deadLinks.length
+        ? deadLinks.map(function(d){ return '<div class="health__dead">' + esc(stripPrefix(d.from)) + ' → ' + esc(d.to) + '</div>'; }).join('')
+        : '<p class="health__none">없음</p>') +
+      sec('빈약 카테고리', thinCats.length, thinCats.length
+        ? '<ul>' + thinCats.map(function(k){ return '<li>' + esc(k) + ' (' + catCount[k] + ')</li>'; }).join('') + '</ul>'
+        : '<p class="health__none">없음</p>');
   }).catch(function(){
-    document.getElementById('health-root').innerHTML = '<div class="onto-empty">불러오기 실패.</div>';
+    document.getElementById('health-root').textContent = '불러오기 실패.';
   });
 })();
 </script>

@@ -56,38 +56,25 @@
             return el;
         }
 
-        /* 첫/끝 + 현재±1 만 노출, 나머지는 … */
-        function windowPages(cur) {
-            var keep = {}, out = [], prev = 0;
-            [1, pages, cur, cur - 1, cur + 1].forEach(function (p) {
-                if (p >= 1 && p <= pages) keep[p] = true;
-            });
-            Object.keys(keep).map(Number).sort(function (a, b) { return a - b; })
-                .forEach(function (p) {
-                    if (p - prev > 1) out.push('gap');
-                    out.push(p);
-                    prev = p;
-                });
-            return out;
-        }
-
+        /* 5개씩 묶음(1~5, 6~10 …) + 처음/마지막 버튼 */
+        var BLOCK = 5;
         function renderPager(cur) {
             pager.innerHTML = '';
             if (pages <= 1) { pager.style.display = 'none'; return; }
             pager.style.display = '';
 
-            pager.appendChild(makeBtn('‹', cur - 1, { nav: true, disabled: cur === 1, aria: '이전' }));
-            windowPages(cur).forEach(function (p) {
-                if (p === 'gap') {
-                    var s = document.createElement('span');
-                    s.className = 'pager__ellipsis';
-                    s.textContent = '…';
-                    pager.appendChild(s);
-                } else {
-                    pager.appendChild(makeBtn(String(p), p, { current: p === cur }));
-                }
-            });
-            pager.appendChild(makeBtn('›', cur + 1, { nav: true, disabled: cur === pages, aria: '다음' }));
+            var blockStart = Math.floor((cur - 1) / BLOCK) * BLOCK + 1;
+            var blockEnd = Math.min(blockStart + BLOCK - 1, pages);
+
+            var prevBlock = blockStart - BLOCK;
+            var nextBlock = blockStart + BLOCK;
+            pager.appendChild(makeBtn('«', Math.max(1, prevBlock), { nav: true, disabled: blockStart === 1, aria: '이전 묶음' }));
+            pager.appendChild(makeBtn('‹', cur - 1, { nav: true, disabled: cur === 1, aria: '이전 페이지' }));
+            for (var p = blockStart; p <= blockEnd; p++) {
+                pager.appendChild(makeBtn(String(p), p, { current: p === cur }));
+            }
+            pager.appendChild(makeBtn('›', cur + 1, { nav: true, disabled: cur === pages, aria: '다음 페이지' }));
+            pager.appendChild(makeBtn('»', nextBlock, { nav: true, disabled: nextBlock > pages, aria: '다음 묶음' }));
         }
 
         window.addEventListener('hashchange', function () { show(readPage()); });

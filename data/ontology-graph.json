@@ -1917,10 +1917,10 @@
         "L3 여정 재구성"
       ],
       "content_depth": 0.85,
-      "importance": 5,
-      "depth": 0.85,
+      "importance": 3,
+      "depth": 0.82,
       "unanswered_questions": 0,
-      "learning_pressure": 0.76
+      "learning_pressure": 0.53
     },
     "concept/data-analytics/05_customer_segmentation": {
       "id": "concept/data-analytics/05_customer_segmentation",
@@ -1970,10 +1970,10 @@
         "해석"
       ],
       "content_depth": 0.85,
-      "importance": 5,
-      "depth": 0.9,
+      "importance": 3,
+      "depth": 0.87,
       "unanswered_questions": 0,
-      "learning_pressure": 0.51
+      "learning_pressure": 0.38
     },
     "concept/data-analytics/06_ga4_data_model": {
       "id": "concept/data-analytics/06_ga4_data_model",
@@ -2033,10 +2033,10 @@
         "어제 확정 대시보드"
       ],
       "content_depth": 0.85,
-      "importance": 7,
-      "depth": 0.92,
+      "importance": 5,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 0.54
+      "learning_pressure": 0.51
     },
     "concept/data-analytics/07_acquisition_analysis": {
       "id": "concept/data-analytics/07_acquisition_analysis",
@@ -2055,17 +2055,26 @@
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
+        "정기적으로:",
+        "트리거가 있을 때:",
+        "새 채널 테스트를 시작할 때",
+        "CAC가 급등했을 때",
+        "전체 리텐션·활성화율이 움직였을 때",
+        "예산 증액·감액을 결정할 때",
+        "신규 유입이 급증했을 때",
+        "채널 × 가입 코호트",
         "\"이 채널에 돈을 더 써도 되는가\"",
-        "어트리뷰션",
+        "채널별 예산 배분",
+        "증액·감액 시점",
+        "채널 리스크 관리",
         "홀드아웃 테스트",
         "추가 지출 구간의 CAC",
-        "유저 1행",
-        "일 × 채널 × 캠페인 1행",
-        "유저 × 일 1행",
         "같은 테이블을 공유",
-        "획득 → 인게이지먼트",
-        "획득 → 리텐션",
-        "획득 → 매출"
+        "활용 예시 — 채널별 D30 리텐션:",
+        "마트를 만들 때 중요한 것:",
+        "어느 채널이 남는 유저를 데려오는가",
+        "한계 CAC가 LTV에 닿는 지점이 어디인가",
+        "페이드를 줄이면 오가닉이 얼마나 남는가"
       ],
       "content_depth": 0.77,
       "importance": 7,
@@ -2090,26 +2099,34 @@
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
+        "정기적으로:",
+        "트리거가 있을 때:",
+        "리텐션이 떨어졌을 때",
+        "온보딩·핵심 UX를 개편했을 때",
+        "새 기능을 출시했을 때",
+        "가입이 급증한 뒤",
+        "알림·푸시 정책을 바꿨을 때",
+        "신규와 기존 유저를 분리",
         "유저가 첫 가치를 경험하는가",
-        "얼마나 자주, 깊이 쓰는가",
-        "어떤 기능이 실제로 쓰이는가",
+        "떠나기 전의 신호를 잡는다",
+        "기능 투자를 어디에 할 것인가",
         "활동일수 히스토그램",
         "후보 찾기",
         "다른 요인 제거",
-        "실험으로 확인",
-        "한 장의 테이블",
-        "유저 × 일 1행",
-        "이 테이블이 중요한 이유",
-        "유저 × 기능 × 일 1행",
-        "인게이지먼트 → 리텐션",
-        "인게이지먼트 → 획득",
-        "인게이지먼트 → 매출"
+        "실험 확인",
+        "활용 예시 — L28 분포:",
+        "마트를 만들 때 중요한 것:",
+        "첫 가치 경험의 관문이 어디인가",
+        "유저 분포가 어느 방향으로 움직이는가",
+        "파워 유저는 무엇이 다른가",
+        "어떤 기능이 정착하는가",
+        "어느 세그먼트에서 사용 깊이가 먼저 빠지는가"
       ],
-      "content_depth": 0.77,
+      "content_depth": 0.68,
       "importance": 3,
-      "depth": 0.89,
+      "depth": 0.84,
       "unanswered_questions": 0,
-      "learning_pressure": 0.32
+      "learning_pressure": 0.49
     },
     "concept/data-analytics/09_conversion_analysis": {
       "id": "concept/data-analytics/09_conversion_analysis",
@@ -2127,19 +2144,31 @@
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
-        "\"유저가 어디서, 왜 새는가\"",
+        "정기적으로:",
+        "트리거가 있을 때:",
+        "전환율이 급변했을 때",
+        "결제·가입 플로우를 개편할 때",
+        "가격·배송비·혜택 정책을 바꿀 때",
+        "개선 우선순위를 정할 때",
+        "리타게팅·리마인드 타이밍을 설계할 때",
         "분모",
-        "유저 × 일(또는 세션) 1행",
-        "주문 1행",
-        "전환 × 획득",
-        "전환 × 매출",
-        "전환 × 리텐션"
+        "\"유저가 어디서, 왜 새는가\"",
+        "개선 투자의 위치",
+        "실험 로드맵",
+        "개입 타이밍",
+        "활용 예시 — 플랫폼별 단계 전환율:",
+        "마트를 만들 때 중요한 것:",
+        "가장 기대 효과가 큰 병목이 어디인가",
+        "평균을 끌어내리는 세그먼트가 어디인가",
+        "전환 소요 시간의 구조가 어떤가",
+        "어떤 마이크로 전환이 최종 전환을 예측하는가",
+        "무엇이 통하고 무엇이 안 통했는가"
       ],
-      "content_depth": 0.85,
-      "importance": 3,
-      "depth": 0.9,
+      "content_depth": 0.77,
+      "importance": 1,
+      "depth": 0.84,
       "unanswered_questions": 0,
-      "learning_pressure": 0.31
+      "learning_pressure": 0.16
     },
     "concept/data-analytics/10_revenue_analysis": {
       "id": "concept/data-analytics/10_revenue_analysis",
@@ -2158,19 +2187,27 @@
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
+        "정기적으로:",
+        "트리거가 있을 때:",
+        "매출이 급변했을 때",
+        "프로모션·할인 전후",
+        "획득 예산을 계획할 때",
+        "가격·요금제를 바꿀 때",
+        "성장 지표는 좋은데 불안할 때",
         "MRR 브리지",
-        "주문 1행",
-        "유저 × 월 1행",
-        "가입 월 × 경과 개월 (× 채널) 1행",
-        "매출 × 획득",
-        "매출 × 리텐션",
-        "매출 × 전환"
+        "활용 예시 — 방정식 분해용 월별 집계:",
+        "마트를 만들 때 중요한 것:",
+        "매출 변동이 어느 항에서 왔는가",
+        "수익화가 실제로 개선되고 있는가",
+        "채널·세그먼트별 LTV가 얼마인가",
+        "매출의 리스크 구조가 어떤가",
+        "수익화 레버 중 어디의 지렛대가 큰가"
       ],
-      "content_depth": 0.85,
+      "content_depth": 0.77,
       "importance": 1,
-      "depth": 0.9,
+      "depth": 0.84,
       "unanswered_questions": 0,
-      "learning_pressure": 0.1
+      "learning_pressure": 0.16
     },
     "concept/data-analytics/11_retention_analysis": {
       "id": "concept/data-analytics/11_retention_analysis",
@@ -2188,6 +2225,13 @@
       "date": "2026-07-05",
       "confidence": "high",
       "mentioned_terms": [
+        "정기적으로:",
+        "트리거가 있을 때:",
+        "성장 투자(마케팅 확대)를 결정하기 전",
+        "온보딩·제품을 개선한 뒤",
+        "전체 리텐션이 움직였을 때",
+        "MAU가 정체·하락할 때",
+        "이탈 개입(알림·혜택)을 설계할 때",
         "코호트",
         "Day 0",
         "어느 수준에서 평평해지는가(플래토)",
@@ -2196,19 +2240,19 @@
         "가로",
         "대각선",
         "인게이지먼트와 같은 활동 스냅샷을 공유하는 것",
-        "유저 × 일 1행",
-        "유저 1행",
-        "가입 월 × 경과 기간 (× 세그먼트) 1행",
-        "리텐션 × 획득",
-        "리텐션 × 인게이지먼트",
-        "리텐션 × 매출",
-        "리텐션 × 전환"
+        "활용 예시 — 코호트 트라이앵글:",
+        "마트를 만들 때 중요한 것:",
+        "커브에 플래토가 있는가, 높이는 얼마인가",
+        "커브를 가르는 초기 행동이 무엇인가",
+        "성장의 질이 어떤가",
+        "제품 개선이 잔존을 실제로 바꾸고 있는가",
+        "리텐션 %p의 화폐 가치가 얼마인가"
       ],
-      "content_depth": 0.77,
+      "content_depth": 0.68,
       "importance": 1,
-      "depth": 0.87,
+      "depth": 0.81,
       "unanswered_questions": 0,
-      "learning_pressure": 0.13
+      "learning_pressure": 0.19
     },
     "concept/data-analytics/12_attribution": {
       "id": "concept/data-analytics/12_attribution",
@@ -2231,10 +2275,10 @@
         "전환 × 기여 접점 1행"
       ],
       "content_depth": 0.85,
-      "importance": 1,
-      "depth": 0.87,
+      "importance": 3,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 0.13
+      "learning_pressure": 0.31
     },
     "concept/data-architect/00_what_is_medaliion_architecture": {
       "id": "concept/data-architect/00_what_is_medaliion_architecture",
@@ -4088,7 +4132,7 @@
     "insight/essay/06_how_to_work_well": {
       "id": "insight/essay/06_how_to_work_well",
       "type": "insight",
-      "title": "일을 잘한다는 것",
+      "title": "AI시대에서 일을 잘한다는 것",
       "path": "_insight/essay/06_how_to_work_well.md",
       "status": "complete",
       "tags": [
@@ -4434,7 +4478,7 @@
     },
     {
       "from": "concept/data-analytics/07_acquisition_analysis",
-      "to": "concept/data-analytics/06_ga4_data_model",
+      "to": "concept/data-analytics/12_attribution",
       "type": "references"
     },
     {
@@ -4445,11 +4489,6 @@
     {
       "from": "concept/data-analytics/08_engagement_analysis",
       "to": "concept/data-analytics/01_behavioral_analytics_techniques",
-      "type": "references"
-    },
-    {
-      "from": "concept/data-analytics/08_engagement_analysis",
-      "to": "concept/data-analytics/04_user_behavior_analytics_framework",
       "type": "references"
     },
     {
@@ -4489,11 +4528,6 @@
     },
     {
       "from": "concept/data-analytics/10_revenue_analysis",
-      "to": "concept/data-analytics/09_conversion_analysis",
-      "type": "references"
-    },
-    {
-      "from": "concept/data-analytics/10_revenue_analysis",
       "to": "adr/data-engineering/2026-001-data-mart-checklist",
       "type": "references"
     },
@@ -4505,11 +4539,6 @@
     {
       "from": "concept/data-analytics/11_retention_analysis",
       "to": "concept/data-analytics/07_acquisition_analysis",
-      "type": "references"
-    },
-    {
-      "from": "concept/data-analytics/11_retention_analysis",
-      "to": "concept/data-analytics/05_customer_segmentation",
       "type": "references"
     },
     {
@@ -4823,6 +4852,39 @@
       ]
     },
     {
+      "term": "정기적으로:",
+      "count": 5,
+      "mentioned_by": [
+        "concept/data-analytics/07_acquisition_analysis",
+        "concept/data-analytics/08_engagement_analysis",
+        "concept/data-analytics/09_conversion_analysis",
+        "concept/data-analytics/10_revenue_analysis",
+        "concept/data-analytics/11_retention_analysis"
+      ]
+    },
+    {
+      "term": "트리거가 있을 때:",
+      "count": 5,
+      "mentioned_by": [
+        "concept/data-analytics/07_acquisition_analysis",
+        "concept/data-analytics/08_engagement_analysis",
+        "concept/data-analytics/09_conversion_analysis",
+        "concept/data-analytics/10_revenue_analysis",
+        "concept/data-analytics/11_retention_analysis"
+      ]
+    },
+    {
+      "term": "마트를 만들 때 중요한 것:",
+      "count": 5,
+      "mentioned_by": [
+        "concept/data-analytics/07_acquisition_analysis",
+        "concept/data-analytics/08_engagement_analysis",
+        "concept/data-analytics/09_conversion_analysis",
+        "concept/data-analytics/10_revenue_analysis",
+        "concept/data-analytics/11_retention_analysis"
+      ]
+    },
+    {
       "term": "Regional",
       "count": 4,
       "mentioned_by": [
@@ -5032,15 +5094,6 @@
         "concept/data-analytics/01_behavioral_analytics_techniques",
         "concept/data-architect/03_medallion_advanced_patterns",
         "insight/data-architect/01_medallion_with_ontology"
-      ]
-    },
-    {
-      "term": "유저 × 일 1행",
-      "count": 3,
-      "mentioned_by": [
-        "concept/data-analytics/07_acquisition_analysis",
-        "concept/data-analytics/08_engagement_analysis",
-        "concept/data-analytics/11_retention_analysis"
       ]
     },
     {
@@ -5601,22 +5654,6 @@
       "mentioned_by": [
         "concept/data-analytics/06_ga4_data_model",
         "concept/system-design/02_notification_system_design"
-      ]
-    },
-    {
-      "term": "유저 1행",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analytics/07_acquisition_analysis",
-        "concept/data-analytics/11_retention_analysis"
-      ]
-    },
-    {
-      "term": "주문 1행",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analytics/09_conversion_analysis",
-        "concept/data-analytics/10_revenue_analysis"
       ]
     },
     {

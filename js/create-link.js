@@ -85,10 +85,8 @@
                 item.innerText = data.title;
                 return;
             })
-            .catch(function (error) {
+            .catch(function () {
                 item.classList.add('broken-link');
-                item.innerHTML += `<sub class="link-${status}"></sub>`
-                console.log(target, status);
             });
     }
 })();
