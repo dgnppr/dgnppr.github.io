@@ -127,15 +127,16 @@
     }
 }
 
-.pager__ellipsis {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 32px;
-    color: var(--color-text-tertiary);
-    font-size: 0.82rem;
-    user-select: none;
+// 모바일: 버튼 9개가 한 줄에 들어가도록 축소 (줄바꿈 방지)
+@media (max-width: 480px) {
+    .pager { gap: 4px; }
+    .pager__btn {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+
+        &--nav { font-size: 0.85rem; }
+    }
 }
 
 .home-footer {
