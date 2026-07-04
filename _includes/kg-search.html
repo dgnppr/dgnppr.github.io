@@ -1,7 +1,42 @@
-{% comment %} 지식 그래프 제목·태그 검색 인풋 — include.id 필수, include.size="sm" 선택 {% endcomment %}
-<div class="kg-search{% if include.size == 'sm' %} kg-search--sm{% endif %}">
-    <svg class="kg-search__icon" viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.2" y1="10.2" x2="14" y2="14"/>
-    </svg>
-    <input id="{{ include.id }}" class="kg-search__input" type="text" placeholder="제목 · 태그 검색" autocomplete="off" spellcheck="false" aria-label="지식 그래프 제목·태그 검색">
+{% comment %} 지식 그래프 제목·태그 검색 — 기본은 돋보기 아이콘, 클릭 시 입력창 펼침. include.id 필수, include.size="sm" 선택 {% endcomment %}
+<div class="kg-search{% if include.size == 'sm' %} kg-search--sm{% endif %}" data-kg-search>
+    <input id="{{ include.id }}" class="kg-search__input" type="text" placeholder="제목 · 태그 검색" autocomplete="off" spellcheck="false" aria-label="지식 그래프 제목·태그 검색" tabindex="-1">
+    <button type="button" class="kg-search__toggle" aria-label="제목·태그 검색" title="제목·태그 검색">
+        <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="6.5" cy="6.5" r="4.5"/><line x1="10.2" y1="10.2" x2="14" y2="14"/>
+        </svg>
+    </button>
 </div>
+<script>
+(function () {
+    if (window.__kgSearchToggleBound) return;
+    window.__kgSearchToggleBound = true;
+
+    document.addEventListener('click', function (e) {
+        var t = e.target.closest('.kg-search__toggle');
+        if (!t) return;
+        var wrap = t.closest('.kg-search');
+        var input = wrap.querySelector('.kg-search__input');
+        if (wrap.classList.toggle('is-open')) {
+            input.removeAttribute('tabindex');
+            input.focus();
+        } else {
+            input.blur();
+            if (input.value) {
+                input.value = '';
+                input.dispatchEvent(new Event('input', { bubbles: true }));
+            }
+        }
+    });
+
+    /* 입력창 밖으로 포커스 이동 + 내용 비어있으면 접기 */
+    document.addEventListener('focusout', function (e) {
+        var input = e.target.closest && e.target.closest('.kg-search__input');
+        if (!input) return;
+        var wrap = input.closest('.kg-search');
+        if (!wrap) return;
+        if (e.relatedTarget && wrap.contains(e.relatedTarget)) return; /* 토글 버튼으로 이동 시 무시 */
+        if (!input.value.trim()) wrap.classList.remove('is-open');
+    });
+})();
+</script>

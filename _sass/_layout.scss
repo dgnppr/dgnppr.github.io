@@ -272,57 +272,92 @@ body {
 }
 
 // ── Knowledge-graph search (홈 / 전체문서 / 미니 그래프 공용) ──────
+// 기본은 돋보기 아이콘 버튼만(공간=아이콘 크기), .is-open 시 그 자리에서 검색창으로 확장.
+// 아이콘은 입력창 위에 겹쳐 두어 별도 공간을 차지하지 않는다.
 .kg-search {
     position: relative;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     flex-shrink: 0;
+    width: 27px;               // 접힘: 아이콘 크기
+    height: 27px;
+    border-radius: 999px;
+    transition: width 0.2s ease;
 
-    &__icon {
-        position: absolute;
-        left: 10px;
+    &.is-open { width: 200px; }
+
+    &__toggle {
+        position: relative;
+        z-index: 2;            // 입력창 위에 겹침
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 27px;
+        height: 27px;
+        padding: 0;
+        background: none;
+        border: none;
+        border-radius: 999px;
+        cursor: pointer;
         color: var(--color-text-tertiary);
-        pointer-events: none;
-        transition: color 0.15s;
+        flex-shrink: 0;
+        transition: color 0.15s, background 0.15s;
     }
 
-    &:focus-within &__icon {
-        color: var(--color-interactive);
+    &:not(.is-open) &__toggle:hover {
+        color: var(--color-text-primary);
+        background: var(--color-surface-hover);
     }
 
     &__input {
-        width: 120px;
-        height: 27px;
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        padding: 0 12px 0 29px;   // 왼쪽 패딩으로 아이콘 자리 확보
         background: var(--color-surface);
-        border: 1px solid var(--color-border-subtle);
+        border: 1px solid transparent;
         border-radius: 999px;
-        padding: 0 12px 0 29px;
         font-size: 0.76rem;
         font-weight: 400;
         font-family: inherit;
         color: var(--color-text-primary);
         outline: none;
-        transition: width 0.18s ease, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.15s ease, border-color 0.15s, box-shadow 0.15s;
 
         &::placeholder { color: var(--color-text-tertiary); }
+    }
 
-        &:hover { border-color: var(--color-border); }
+    &.is-open &__input {
+        opacity: 1;
+        pointer-events: auto;
+        border-color: var(--color-border-subtle);
 
         &:focus {
-            width: 230px;
-            background: var(--color-surface);
             border-color: var(--color-interactive);
             box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 12%, transparent);
         }
     }
 
-    /* 미니 그래프 헤더용 — 크기만 축소 (흰 배경은 공통) */
-    &--sm &__input {
-        width: 96px;
+    /* 미니 그래프 헤더용 — 크기만 축소 */
+    &--sm {
+        width: 24px;
         height: 24px;
-        font-size: 0.72rem;
 
-        &:focus { width: 188px; }
+        &.is-open { width: 160px; }
+    }
+
+    &--sm &__toggle {
+        width: 24px;
+        height: 24px;
+    }
+
+    &--sm &__input {
+        font-size: 0.72rem;
+        padding: 0 10px 0 27px;
     }
 }
 
