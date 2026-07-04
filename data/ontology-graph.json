@@ -153,10 +153,34 @@
         "산정 자체를 거부하는 방식(노 에스티메이트)"
       ],
       "content_depth": 0.65,
-      "importance": 0,
-      "depth": 0.38,
+      "importance": 2,
+      "depth": 0.4,
       "unanswered_questions": 0,
-      "learning_pressure": 0
+      "learning_pressure": 1.2
+    },
+    "adr/work/2026-002-how-to-work-well": {
+      "id": "adr/work/2026-002-how-to-work-well",
+      "type": "adr",
+      "title": "일을 잘한다는 것",
+      "path": "_adr/work/2026-002-how-to-work-well.md",
+      "status": "accepted",
+      "tags": [
+        "work",
+        "craftsmanship",
+        "ai",
+        "engineering-practice"
+      ],
+      "date": "2026-07-04",
+      "mentioned_terms": [
+        "상대가 받은 것의 품질",
+        "결과물에 대한 책임",
+        "사람 사이에서만 성립하는 개념"
+      ],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.4,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.6
     },
     "concept/cloud/00_pca_study_plan": {
       "id": "concept/cloud/00_pca_study_plan",
@@ -3975,6 +3999,11 @@
     {
       "from": "adr/data-engineering/2026-002-feature-mart-checklist",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
+      "type": "references"
+    },
+    {
+      "from": "adr/work/2026-002-how-to-work-well",
+      "to": "adr/work/2026-001-estimating-unknown-work",
       "type": "references"
     },
     {
