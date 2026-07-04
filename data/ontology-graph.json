@@ -177,6 +177,31 @@
         "사람 사이에서만 성립하는 개념"
       ],
       "content_depth": 0.65,
+      "importance": 3,
+      "depth": 0.43,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.72
+    },
+    "adr/work/2026-003-how-to-prompt-well": {
+      "id": "adr/work/2026-003-how-to-prompt-well",
+      "type": "adr",
+      "title": "프롬프트 질문을 잘하는 방법",
+      "path": "_adr/work/2026-003-how-to-prompt-well.md",
+      "status": "accepted",
+      "tags": [
+        "prompt",
+        "ai",
+        "llm",
+        "work",
+        "engineering-practice"
+      ],
+      "date": "2026-07-04",
+      "mentioned_terms": [
+        "요구를 언어화하는 오래된 능력",
+        "프롬프트 템플릿·치트시트 수집",
+        "시행착오로 체득(원칙 없이 많이 써보기)"
+      ],
+      "content_depth": 0.65,
       "importance": 1,
       "depth": 0.4,
       "unanswered_questions": 0,
@@ -4004,6 +4029,11 @@
     {
       "from": "adr/work/2026-002-how-to-work-well",
       "to": "adr/work/2026-001-estimating-unknown-work",
+      "type": "references"
+    },
+    {
+      "from": "adr/work/2026-003-how-to-prompt-well",
+      "to": "adr/work/2026-002-how-to-work-well",
       "type": "references"
     },
     {

@@ -74,6 +74,69 @@
     white-space: nowrap;
 }
 
+// ── /all 페이지네이션 ────────────────────────────────────────────
+.pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 1.6rem 0 2.2rem;
+}
+
+.pager__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 9px;
+    border: 1px solid var(--color-border-subtle);
+    border-radius: 8px;
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    font-size: 0.82rem;
+    font-family: inherit;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.12s ease, border-color 0.12s ease, color 0.12s ease;
+
+    &:hover {
+        background: var(--color-surface-hover);
+        border-color: var(--color-border);
+        color: var(--color-text-primary);
+    }
+
+    &--nav {
+        font-size: 1.05rem;
+        color: var(--color-text-tertiary);
+    }
+
+    &.is-current {
+        background: var(--color-interactive);
+        border-color: var(--color-interactive);
+        color: #fff;
+        font-weight: 600;
+        cursor: default;
+    }
+
+    &.is-disabled {
+        opacity: 0.35;
+        cursor: default;
+    }
+}
+
+.pager__ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 32px;
+    color: var(--color-text-tertiary);
+    font-size: 0.82rem;
+    user-select: none;
+}
+
 .home-footer {
     padding: 8px 4px 20px;
 
