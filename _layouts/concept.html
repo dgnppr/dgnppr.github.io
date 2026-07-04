@@ -30,6 +30,7 @@ layout: default
     <div class="concept-mini-graph" id="concept-mini-graph-wrap">
         <div class="concept-mini-graph__header">
             <span class="concept-mini-graph__title">Knowledge Graph</span>
+            {% include kg-search.html id="mini-kg-search" size="sm" %}
             <button class="concept-mini-graph__expand" id="concept-mini-graph-expand" aria-label="전체 지식 그래프 보기" title="전체 지식 그래프 보기">
                 <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <path d="M6 2H2v4M10 2h4v4M6 14H2v-4M10 14h4v-4"/>
@@ -234,13 +235,15 @@ layout: default
     var el = document.getElementById('concept-mini-graph');
     if (!el) return;
 
+    var searchEl = document.getElementById('mini-kg-search');
+
     function loadKg3D() {
         if (window.KnowledgeGraph3D) {
             window.KnowledgeGraph3D.init({
                 container:  el,
                 focusSlug:  currentSlug,
                 miniMode:   true,
-                search: null, groups: null, stats: null,
+                search: searchEl, groups: null, stats: null,
             });
             return;
         }
@@ -251,7 +254,7 @@ layout: default
                 container:  el,
                 focusSlug:  currentSlug,
                 miniMode:   true,
-                search: null, groups: null, stats: null,
+                search: searchEl, groups: null, stats: null,
             });
         };
         document.head.appendChild(s);

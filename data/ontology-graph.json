@@ -43,6 +43,121 @@
       "unanswered_questions": 0,
       "learning_pressure": 0
     },
+    "adr/data-analytics/2026-001-ga4-analysis-checklist": {
+      "id": "adr/data-analytics/2026-001-ga4-analysis-checklist",
+      "type": "adr",
+      "title": "GA4 분석 체크리스트",
+      "path": "_adr/data-analytics/2026-001-ga4-analysis-checklist.md",
+      "status": "completed",
+      "tags": [
+        "ga4",
+        "analytics",
+        "bigquery",
+        "data-analytics",
+        "checklist"
+      ],
+      "date": "2026-07-04",
+      "valid_from": "Sat",
+      "mentioned_terms": [
+        "signup",
+        ", 이벤트 수집 시점 원본은",
+        ", 그리고",
+        "발생 건수",
+        "과거 보고서 숫자도 바뀌므로",
+        "최초 획득",
+        "수집 건강도 지표",
+        "UI 보고서만으로 분석",
+        "자체 이벤트 트래킹으로 전면 대체"
+      ],
+      "content_depth": 0.57,
+      "importance": 1,
+      "depth": 0.42,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.58
+    },
+    "adr/data-engineering/2026-001-data-mart-checklist": {
+      "id": "adr/data-engineering/2026-001-data-mart-checklist",
+      "type": "adr",
+      "title": "데이터 마트 구축 체크리스트",
+      "path": "_adr/data-engineering/2026-001-data-mart-checklist.md",
+      "status": "",
+      "tags": [
+        "data-mart",
+        "data-modeling",
+        "data-engineering",
+        "checklist"
+      ],
+      "date": "2026-07-04",
+      "mentioned_terms": [
+        "unknown",
+        "paid",
+        "cancelled",
+        "문서 없이 리뷰어의 경험에 의존"
+      ],
+      "content_depth": 0.65,
+      "importance": 3,
+      "depth": 0.48,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.57
+    },
+    "adr/data-engineering/2026-002-feature-mart-checklist": {
+      "id": "adr/data-engineering/2026-002-feature-mart-checklist",
+      "type": "adr",
+      "title": "피쳐 마트 구축 체크리스트",
+      "path": "_adr/data-engineering/2026-002-feature-mart-checklist.md",
+      "status": "completed",
+      "tags": [
+        "feature-mart",
+        "feature-engineering",
+        "ml",
+        "data-engineering",
+        "checklist"
+      ],
+      "date": "2026-07-04",
+      "mentioned_terms": [
+        "미래 데이터 누수(leakage)",
+        "point-in-time 위반",
+        "training-serving skew",
+        "관찰 시점",
+        "유저 등급, 상품 카테고리 같은 속성을",
+        "전체 기간·전체 데이터로 fit",
+        "같은 값",
+        "일반 데이터 마트 체크리스트만 재사용"
+      ],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.43,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.57
+    },
+    "adr/work/2026-001-estimating-unknown-work": {
+      "id": "adr/work/2026-001-estimating-unknown-work",
+      "type": "adr",
+      "title": "잘 모르는 일의 일정 산정",
+      "path": "_adr/work/2026-001-estimating-unknown-work.md",
+      "status": "accepted",
+      "tags": [
+        "estimation",
+        "planning",
+        "engineering-practice",
+        "work"
+      ],
+      "date": "2026-07-04",
+      "mentioned_terms": [
+        "내 무지의 크기",
+        "계획 오류(planning fallacy)",
+        "수행",
+        "추정과 약속의 구분",
+        "확신 있는 즉답으로 신뢰를 먼저 얻는 방식",
+        "모든 산정에 기계적 버퍼(×2)를 거는 방식",
+        "산정 자체를 거부하는 방식(노 에스티메이트)"
+      ],
+      "content_depth": 0.65,
+      "importance": 0,
+      "depth": 0.38,
+      "unanswered_questions": 0,
+      "learning_pressure": 0
+    },
     "concept/cloud/00_pca_study_plan": {
       "id": "concept/cloud/00_pca_study_plan",
       "type": "concept",
@@ -1739,10 +1854,10 @@
         "운영"
       ],
       "content_depth": 0.68,
-      "importance": 3,
-      "depth": 0.79,
+      "importance": 7,
+      "depth": 0.84,
       "unanswered_questions": 0,
-      "learning_pressure": 0.64
+      "learning_pressure": 1.13
     },
     "concept/data-analytics/03_metrics_framework": {
       "id": "concept/data-analytics/03_metrics_framework",
@@ -1790,10 +1905,10 @@
         "Goodhart's Law 방어"
       ],
       "content_depth": 0.77,
-      "importance": 3,
-      "depth": 0.82,
+      "importance": 7,
+      "depth": 0.87,
       "unanswered_questions": 0,
-      "learning_pressure": 0.54
+      "learning_pressure": 0.91
     },
     "concept/data-analytics/04_user_behavior_analytics_framework": {
       "id": "concept/data-analytics/04_user_behavior_analytics_framework",
@@ -1888,6 +2003,69 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.15
     },
+    "concept/data-analytics/06_ga4_data_model": {
+      "id": "concept/data-analytics/06_ga4_data_model",
+      "type": "concept",
+      "title": "GA4 데이터 모델",
+      "path": "_concept/data-analytics/06_ga4_data_model.md",
+      "status": "complete",
+      "tags": [
+        "ga4",
+        "analytics",
+        "event-model",
+        "bigquery",
+        "attribution",
+        "data-analytics"
+      ],
+      "date": "2026-07-04",
+      "valid_from": "Sat",
+      "confidence": "high",
+      "mentioned_terms": [
+        "purchase",
+        "scroll",
+        "click",
+        "login",
+        "/g/collect",
+        "sendBeacon",
+        "items[]",
+        "items",
+        "device",
+        "geo",
+        "platform",
+        "ecommerce",
+        "(data)",
+        "이벤트",
+        "파생",
+        "커스텀 디멘션/메트릭으로 등록",
+        "reporting identity",
+        "device-based",
+        "observed",
+        "blended",
+        "부풀려진 근사치",
+        "세션 시작 시각의 Unix epoch 초",
+        "참여 세션(engaged session)",
+        "engagement rate",
+        "참여 시간",
+        "Active User",
+        "`items` 배열",
+        "현재값",
+        "세 가지 스코프로 따로 존재",
+        "최초 획득(first touch)",
+        "데이터 스트림",
+        "적용 시점 이후만",
+        "export는 연동 시점부터만 쌓인다",
+        "최대 72시간까지 갱신",
+        "샤딩 테이블",
+        "일 100만 이벤트 한도",
+        "UI와 불일치는 정상이다",
+        "어제 확정 대시보드"
+      ],
+      "content_depth": 0.85,
+      "importance": 3,
+      "depth": 0.87,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.38
+    },
     "concept/data-architect/00_what_is_medaliion_architecture": {
       "id": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "concept",
@@ -1904,10 +2082,10 @@
       "confidence": "high",
       "mentioned_terms": [],
       "content_depth": 0.68,
-      "importance": 12,
+      "importance": 16,
       "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 1.34
+      "learning_pressure": 1.79
     },
     "concept/data-architect/01_how_to_architect_medallion_well": {
       "id": "concept/data-architect/01_how_to_architect_medallion_well",
@@ -1973,10 +2151,10 @@
         "격리(quarantine)"
       ],
       "content_depth": 0.85,
-      "importance": 3,
-      "depth": 0.77,
+      "importance": 5,
+      "depth": 0.8,
       "unanswered_questions": 0,
-      "learning_pressure": 0.68
+      "learning_pressure": 1.01
     },
     "concept/data-architect/03_medallion_advanced_patterns": {
       "id": "concept/data-architect/03_medallion_advanced_patterns",
@@ -2846,10 +3024,10 @@
         "프로덕션 오브젝트를 참조"
       ],
       "content_depth": 0.85,
-      "importance": 1,
-      "depth": 0.55,
+      "importance": 3,
+      "depth": 0.57,
       "unanswered_questions": 0,
-      "learning_pressure": 0.45
+      "learning_pressure": 1.28
     },
     "concept/design-pattern/00_how_to_use_strategy_pattern": {
       "id": "concept/design-pattern/00_how_to_use_strategy_pattern",
@@ -3760,6 +3938,46 @@
   },
   "edges": [
     {
+      "from": "adr/data-analytics/2026-001-ga4-analysis-checklist",
+      "to": "concept/data-analytics/06_ga4_data_model",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-analytics/2026-001-ga4-analysis-checklist",
+      "to": "concept/data-analytics/02_event_tracking_design",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-analytics/2026-001-ga4-analysis-checklist",
+      "to": "concept/data-analytics/03_metrics_framework",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-001-data-mart-checklist",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-001-data-mart-checklist",
+      "to": "concept/data-architect/02_how_to_architect_medallion_well",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-001-data-mart-checklist",
+      "to": "concept/dbt/04_dbt_operational_knowhow",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-002-feature-mart-checklist",
+      "to": "adr/data-engineering/2026-001-data-mart-checklist",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-002-feature-mart-checklist",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
+      "type": "references"
+    },
+    {
       "from": "concept/cloud/00_pca_study_plan",
       "to": "concept/cloud/06_compute_for_pca",
       "type": "references"
@@ -3947,6 +4165,16 @@
     {
       "from": "concept/data-analytics/05_customer_segmentation",
       "to": "concept/data-analytics/04_user_behavior_analytics_framework",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/06_ga4_data_model",
+      "to": "concept/data-analytics/02_event_tracking_design",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/06_ga4_data_model",
+      "to": "concept/data-analytics/03_metrics_framework",
       "type": "references"
     },
     {
@@ -4586,6 +4814,22 @@
       ]
     },
     {
+      "term": "unknown",
+      "count": 2,
+      "mentioned_by": [
+        "adr/data-engineering/2026-001-data-mart-checklist",
+        "concept/data-architect/02_how_to_architect_medallion_well"
+      ]
+    },
+    {
+      "term": "같은 값",
+      "count": 2,
+      "mentioned_by": [
+        "adr/data-engineering/2026-002-feature-mart-checklist",
+        "insight/data-architect/01_medallion_with_ontology"
+      ]
+    },
+    {
       "term": "AI Hypercomputer",
       "count": 2,
       "mentioned_by": [
@@ -4938,11 +5182,43 @@
       ]
     },
     {
+      "term": "items",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-analytics/02_event_tracking_design",
+        "concept/data-analytics/06_ga4_data_model"
+      ]
+    },
+    {
+      "term": "platform",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-analytics/02_event_tracking_design",
+        "concept/data-analytics/06_ga4_data_model"
+      ]
+    },
+    {
+      "term": "items[]",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-analytics/02_event_tracking_design",
+        "concept/data-analytics/06_ga4_data_model"
+      ]
+    },
+    {
       "term": "운영",
       "count": 2,
       "mentioned_by": [
         "concept/data-analytics/02_event_tracking_design",
         "concept/data-engineering/00_how_to_use_dataform_well"
+      ]
+    },
+    {
+      "term": "device",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-analytics/06_ga4_data_model",
+        "concept/system-design/02_notification_system_design"
       ]
     },
     {

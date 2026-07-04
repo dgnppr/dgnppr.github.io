@@ -680,6 +680,17 @@
             renderer.domElement.addEventListener('pointerleave', function () {
                 pointerInside = false; lastInteract = performance.now();
             });
+            /* 드래그 중 탭 전환·제스처 취소 등으로 pointerup이 유실될 때 상태 복구 */
+            renderer.domElement.addEventListener('pointercancel', function () {
+                if (isDragging) {
+                    sim.force('charge').strength(-180);
+                    sim.force('link').strength(function (d) { return 0.2 + (d.score || 0.7) * 0.35; });
+                    sim.alphaTarget(0).alpha(0.15);
+                }
+                dragMesh = null; isDragging = false; downAt = null; dragConnSet = null;
+                controls.enabled = true;
+                pointerInside = false; lastInteract = performance.now();
+            });
 
             /* TrackballControls — 극점 제한 없는 자유 360° 회전 */
             var controls = new THREE.TrackballControls(camera, renderer.domElement);
@@ -783,6 +794,11 @@
 
             function onDown(e) {
                 if (e.button !== 0) return;
+                /* 캔버스 밖에서 버튼을 놓아도 pointerup 수신 —
+                   isDragging/controls.enabled 고착으로 회전이 멈추는 것 방지 */
+                if (renderer.domElement.setPointerCapture) {
+                    try { renderer.domElement.setPointerCapture(e.pointerId); } catch (err) {}
+                }
                 lastInteract = performance.now();
                 setPtr(e);
                 camera.updateMatrixWorld();
@@ -894,6 +910,13 @@
             }
 
             function onUp(e) {
+                if (renderer.domElement.releasePointerCapture) {
+                    try { renderer.domElement.releasePointerCapture(e.pointerId); } catch (err) {}
+                }
+                /* 터치는 pointerleave가 불안정 → 손을 떼면 hover 상태 해제해 자동회전 재개 */
+                if (e.pointerType === 'touch') {
+                    pointerInside = false; lastInteract = performance.now();
+                }
                 controls.enabled = true; // 노드 드래그 종료 시 항상 복원
 
                 if (dragMesh) {
@@ -1008,7 +1031,11 @@
                             m.userData.labelDiv.style.fontSize = ok ? '11px' : '9px';
                         }
                     });
-                    linkObjs.forEach(function (lo) { lo.connected = false; lo.dimmed = true; });
+                    /* 양끝이 모두 매칭된 링크만 유지, 나머지는 디밍(렌더 루프에서 숨김) */
+                    linkObjs.forEach(function (lo) {
+                        lo.connected = false;
+                        lo.dimmed = lo.sm.userData.dimmed || lo.tm.userData.dimmed;
+                    });
                 });
             }
 
@@ -1253,7 +1280,8 @@
                         }
                     } else {
                         if (lo.scoreDiv) lo.scoreDiv.style.display = 'none';
-                        var opa2 = (pinnedNode && lo.dimmed) ? 0 : (lo.dimmed ? 0.04 : (dark ? 0.4 : 0.32));
+                        /* 검색·태그 하이라이트 중에는 디밍된 링크를 완전히 숨김 (잔상 방지) */
+                        var opa2 = ((pinnedNode || activeSearch) && lo.dimmed) ? 0 : (lo.dimmed ? 0.04 : (dark ? 0.4 : 0.32));
                         mat.opacity = opa2;
                         lo.arrowMatTo.opacity = opa2;
                         if (lo.arrowMatFrom) lo.arrowMatFrom.opacity = opa2;
@@ -1300,12 +1328,35 @@
             function updatePreviewPos() {
                 var m = nodeById[pinnedNode.slug];
                 if (!m) return;
-                var vw    = window.innerWidth, vh = window.innerHeight;
+                var rect  = renderer.domElement.getBoundingClientRect();
                 var sp    = viewportOf(m);
+                var pad   = 8;
                 var tipW  = previewEl.offsetWidth  || 240;
                 var tipH  = previewEl.offsetHeight || 80;
-                var gap   = Math.max(12, m.userData.r + 6);
-                var pad   = 8;
+
+                /* 그래프가 화면에 보이는 영역 = 캔버스 ∩ 뷰포트 */
+                var visL = Math.max(rect.left, 0);
+                var visR = Math.min(rect.right, window.innerWidth);
+                var visT = Math.max(rect.top, 0);
+                var visB = Math.min(rect.bottom, window.innerHeight);
+
+                /* 그래프가 화면 밖이거나(스크롤 이탈) 노드가 보이는 영역을
+                   벗어나면 툴팁 숨김 — 그래프 안에서만 보이도록 */
+                if (visR <= visL || visB <= visT ||
+                    sp.x < visL || sp.x > visR ||
+                    sp.y < visT || sp.y > visB) {
+                    previewEl.classList.remove('is-visible');
+                    return;
+                }
+                previewEl.classList.add('is-visible');
+
+                var gap  = Math.max(12, m.userData.r + 6);
+
+                /* 클램프 경계 = 보이는 영역 */
+                var minL = visL + pad;
+                var maxL = visR - tipW - pad;
+                var minT = visT + pad;
+                var maxT = visB - tipH - pad;
 
                 /* 이웃 노드 뷰포트 위치 */
                 var nbPos = [];
@@ -1328,8 +1379,9 @@
                         var dx = Math.abs(nb.x - cx), dy = Math.abs(nb.y - cy);
                         if (dx < tipW / 2 + 30 && dy < tipH / 2 + 30) sc++;
                     });
-                    if (c.l < pad || c.l + tipW > vw - pad) sc += 5;
-                    if (c.tp < pad || c.tp + tipH > vh - pad) sc += 5;
+                    /* 그래프 경계를 벗어나는 후보에 페널티 */
+                    if (c.l < minL || c.l > maxL) sc += 5;
+                    if (c.tp < minT || c.tp > maxT) sc += 5;
                     return sc;
                 }
 
@@ -1337,8 +1389,8 @@
                     return overlapScore(cur) < overlapScore(prev) ? cur : prev;
                 });
 
-                previewEl.style.left = Math.max(pad, Math.min(best.l,  vw - tipW - pad)) + 'px';
-                previewEl.style.top  = Math.max(pad, Math.min(best.tp, vh - tipH - pad)) + 'px';
+                previewEl.style.left = Math.max(minL, Math.min(best.l,  maxL)) + 'px';
+                previewEl.style.top  = Math.max(minT, Math.min(best.tp, maxT)) + 'px';
             }
             animate();
 
@@ -1410,7 +1462,11 @@
                         m.userData.labelDiv.style.fontSize = ok ? '11px' : '9px';
                     }
                 });
-                linkObjs.forEach(function (lo) { lo.connected = false; lo.dimmed = true; });
+                /* 양끝이 모두 매칭된 링크만 유지, 나머지는 디밍(렌더 루프에서 숨김) */
+                linkObjs.forEach(function (lo) {
+                    lo.connected = false;
+                    lo.dimmed = lo.sm.userData.dimmed || lo.tm.userData.dimmed;
+                });
             };
             container._kg3dClearHighlight = function () {
                 activeSearch = false;

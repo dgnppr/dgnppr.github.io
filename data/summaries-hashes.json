@@ -47,7 +47,6 @@
   "data-analytics/03_metrics_framework": "d83d3d2766b0d442bcfbfdc1e30f6453",
   "data-architect/00_ontology_core_examples": "ef92fc22a08ac3b49fbe60386ccf605c",
   "data-architect/01_medallion_with_ontology": "403b0fc563f436ab3a0d8423f1387459",
-  "security/2026-06-24-002-gcp-key-management-status": "6cd14ca3d40c0e234d2810c760d4eee3",
   "data-analytics/04_user_behavior_analytics_framework": "29df63e19a69420628a56edcb59a1828",
   "cloud/00_pca_study_plan": "1f662e6c70ab5690991fdb749d5e824b",
   "cloud/06_compute_for_pca": "00ebf84d82ecff16f9f6354f091aebdf",
@@ -68,5 +67,6 @@
   "dbt/01_dbt_core_features": "4459273ca3a23a587e26f4c12dd93e69",
   "dbt/02_dbt_advanced": "fceb0cb3dcd2698fdc84e2af75b3a8b2",
   "dbt/03_dbt_in_practice": "64a0b7178992cb71987ff5bab3e89df9",
-  "dbt/04_dbt_operational_knowhow": "9ad710412510614a5753c2464da720aa"
+  "dbt/04_dbt_operational_knowhow": "9ad710412510614a5753c2464da720aa",
+  "data-engineering/2026-001-data-mart-checklist": "e8aa8c11c3bbff7cb9dfb4aeed175954"
 }

@@ -24,3 +24,9 @@ _workspace_prev
 _adr/**
 !_adr/architecture/
 !_adr/architecture/2026-06-24-001-adr-guide.md
+!_adr/data-engineering/
+!_adr/data-engineering/**
+!_adr/work/
+!_adr/work/**
+!_adr/data-analytics/
+!_adr/data-analytics/**

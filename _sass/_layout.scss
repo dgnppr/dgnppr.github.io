@@ -271,6 +271,61 @@ body {
     }
 }
 
+// ── Knowledge-graph search (홈 / 전체문서 / 미니 그래프 공용) ──────
+.kg-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+
+    &__icon {
+        position: absolute;
+        left: 10px;
+        color: var(--color-text-tertiary);
+        pointer-events: none;
+        transition: color 0.15s;
+    }
+
+    &:focus-within &__icon {
+        color: var(--color-interactive);
+    }
+
+    &__input {
+        width: 120px;
+        height: 27px;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border-subtle);
+        border-radius: 999px;
+        padding: 0 12px 0 29px;
+        font-size: 0.76rem;
+        font-weight: 400;
+        font-family: inherit;
+        color: var(--color-text-primary);
+        outline: none;
+        transition: width 0.18s ease, border-color 0.15s, background 0.15s, box-shadow 0.15s;
+
+        &::placeholder { color: var(--color-text-tertiary); }
+
+        &:hover { border-color: var(--color-border); }
+
+        &:focus {
+            width: 230px;
+            background: var(--color-surface);
+            border-color: var(--color-interactive);
+            box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 12%, transparent);
+        }
+    }
+
+    /* 미니 그래프 헤더용 — 크기만 축소 (흰 배경은 공통) */
+    &--sm &__input {
+        width: 96px;
+        height: 24px;
+        font-size: 0.72rem;
+
+        &:focus { width: 188px; }
+    }
+}
+
 // ── Wiki prev/next navigation ──────────────────────────────
 .concept-prev-next {
     display: flex;
