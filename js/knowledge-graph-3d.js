@@ -386,7 +386,7 @@
                 var col = degreeColor(n);
 
                 var isFocal = focusSlug && n.slug === focusSlug;
-                var visR = isFocal ? r * 2.2 : r * 1.5;
+                var visR = isFocal ? r * 1.1 : r * 0.6;   /* 레퍼런스: 끝점 작게 */
 
                 var mesh = new THREE.Mesh(
                     new THREE.SphereGeometry(visR, 28, 28),
@@ -541,6 +541,36 @@
                     n.z = sphereR * Math.cos(phi);
                 });
             })();
+
+            /* ── 레퍼런스 디자인: 구 표면 와이어프레임 + 중심 방사 spoke ── */
+            var WIRE_HEX  = dark ? 0xcfe0ff : 0x64748b;
+            var SPOKE_BLUE = 0x669dfd, SPOKE_GREEN = 0x86efac;
+            var wireframe = new THREE.LineSegments(
+                new THREE.WireframeGeometry(new THREE.IcosahedronGeometry(sphereR, 4)),
+                new THREE.LineBasicMaterial({
+                    color: WIRE_HEX, transparent: true,
+                    opacity: dark ? 0.07 : 0.11, depthWrite: false,
+                })
+            );
+            wireframe.renderOrder = -3;
+            scene.add(wireframe);
+
+            /* 중심 → 각 노드 방사선 */
+            var spokeObjs = [];
+            nodes.forEach(function (n) {
+                var g = new THREE.BufferGeometry();
+                g.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(6), 3));
+                var m = new THREE.LineBasicMaterial({
+                    color: WIRE_HEX, transparent: true,
+                    opacity: dark ? 0.14 : 0.18, depthWrite: false,
+                });
+                var line = new THREE.Line(g, m);
+                line.renderOrder = -2;
+                scene.add(line);
+                var s = { node: n, line: line, mat: m };
+                spokeObjs.push(s);
+                n._spoke = s;
+            });
 
             var sim = d3.forceSimulation(nodes)
                 .force('link', d3.forceLink(links)
@@ -1203,6 +1233,26 @@
                     ud.sprite.material.opacity = hidden ? 0 : (sel ? 0.55 : 0);
                 });
 
+                /* 방사 spoke: 끝점을 노드 위치에 맞추고, 선택/연결 시 강조 색 */
+                spokeObjs.forEach(function (s) {
+                    var p  = s.node._mesh.position;
+                    var a  = s.line.geometry.attributes.position.array;
+                    a[3] = p.x; a[4] = p.y; a[5] = p.z;      /* a[0..2]=원점 0 */
+                    s.line.geometry.attributes.position.needsUpdate = true;
+
+                    var ud = s.node._mesh.userData;
+                    var isFocus = focusSlug && s.node.slug === focusSlug;
+                    var hidden  = ud.dimmed && (pinnedNode || activeSearch);
+                    if (isFocus) {
+                        s.mat.color.set(SPOKE_GREEN); s.mat.opacity = 0.9;
+                    } else if (ud.selected || ud.active) {
+                        s.mat.color.set(SPOKE_BLUE);  s.mat.opacity = 0.85;
+                    } else {
+                        s.mat.color.set(WIRE_HEX);
+                        s.mat.opacity = hidden ? 0 : (ud.dimmed ? 0.04 : (dark ? 0.14 : 0.18));
+                    }
+                });
+
                 linkObjs.forEach(function (lo) {
                     if (!lo.line.visible) return;
                     var sp  = lo.sm.position, tp = lo.tm.position;
@@ -1310,7 +1360,7 @@
                     } else {
                         if (lo.scoreDiv) lo.scoreDiv.style.display = 'none';
                         /* 검색·태그 하이라이트 중에는 디밍된 링크를 완전히 숨김 (잔상 방지) */
-                        var opa2 = ((pinnedNode || activeSearch) && lo.dimmed) ? 0 : (lo.dimmed ? 0.04 : (dark ? 0.4 : 0.32));
+                        var opa2 = ((pinnedNode || activeSearch) && lo.dimmed) ? 0 : (lo.dimmed ? 0.03 : (dark ? 0.10 : 0.09));
                         mat.opacity = opa2;
                         lo.arrowMatTo.opacity = opa2;
                         if (lo.arrowMatFrom) lo.arrowMatFrom.opacity = opa2;
