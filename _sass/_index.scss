@@ -85,10 +85,14 @@
     justify-content: space-between;
     gap: 8px;
     margin: 2.4rem 4px 1.1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--color-border-subtle);   // 밑줄을 줄 전체에
 
     .home-section-title {
         white-space: nowrap;   // 검색 펼침에도 "All Documents" 줄바꿈 방지
         flex-shrink: 0;
+        padding-bottom: 0;     // 제목만 긋던 밑줄 제거
+        border-bottom: none;
     }
 }
 
@@ -119,36 +123,58 @@
     }
 }
 
-// 검색: 기본 아이콘만, 열리면 입력 슬라이드
+// 검색: 지식 그래프 검색과 동일한 pill UX — 아이콘 위 겹침, 입력 슬라이드
 .feed-search {
-    display: flex;
+    position: relative;
+    display: inline-flex;
     align-items: center;
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 999px;
+    transition: width 0.2s ease;
+
+    &.is-open { width: min(200px, 46vw); }
+
+    // 토글 아이콘 버튼: 입력창 위에 겹쳐 항상 왼쪽 고정
+    .feed-icon-btn {
+        position: relative;
+        z-index: 2;
+        flex-shrink: 0;
+    }
 }
 
 .feed-search-input {
-    width: 0;
-    padding: 0;
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    padding: 0 12px 0 32px;   // 왼쪽 패딩으로 아이콘 자리 확보
     border: 1px solid transparent;
-    border-radius: 8px;
+    border-radius: 999px;
     background: var(--color-surface);
     color: var(--color-text-primary);
-    font-size: 0.85rem;
+    font-size: 0.82rem;
     font-family: inherit;
     line-height: 1.2;
     opacity: 0;
-    overflow: hidden;
-    transition: width 0.18s ease, padding 0.18s ease, opacity 0.18s ease;
+    pointer-events: none;
+    transition: opacity 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 
     &::placeholder { color: var(--color-text-tertiary); }
-    &:focus { outline: none; border-color: var(--color-interactive); }
+    &:focus { outline: none; }
 }
 
 .feed-search.is-open .feed-search-input {
-    width: min(160px, 42vw);   // 모바일에서 폭 초과로 밀지 않게
-    padding: 6px 10px;
-    margin-left: 4px;
-    border-color: var(--color-border-subtle);
     opacity: 1;
+    pointer-events: auto;
+    border-color: var(--color-border-subtle);
+
+    &:focus {
+        border-color: var(--color-interactive);
+        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-interactive) 12%, transparent);
+    }
 }
 
 // 페이지당 개수: 숫자 라벨 버튼
