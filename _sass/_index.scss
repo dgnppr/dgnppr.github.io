@@ -9,18 +9,22 @@
 .home-feed {
     list-style: none;
     padding: 0;
-    margin: 0 0 1rem;
+    margin: 0 0 1.5rem;
+}
+
+.home-feed-item + .home-feed-item {
+    border-top: 1px solid var(--color-border-subtle);
 }
 
 .home-feed-link {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
-    gap: 12px;
-    padding: 10px 4px;
+    gap: 14px;
+    padding: 15px 8px;
     text-decoration: none;
     color: inherit;
-    border-radius: 4px;
+    border-radius: 6px;
     transition: background 0.1s ease;
 
     &:link, &:visited {
@@ -80,14 +84,19 @@
     align-items: center;
     justify-content: space-between;
     gap: 8px;
-    margin: 1.2rem 4px 0.4rem;
+    margin: 2.4rem 4px 1.1rem;
+
+    .home-section-title {
+        white-space: nowrap;   // 검색 펼침에도 "All Documents" 줄바꿈 방지
+        flex-shrink: 0;
+    }
 }
 
 .feed-tools {
     display: flex;
     align-items: center;
     gap: 4px;
-    flex-shrink: 0;
+    min-width: 0;              // 검색 펼치면 이 그룹이 줄어들도록
 }
 
 .feed-icon-btn {
@@ -135,7 +144,7 @@
 }
 
 .feed-search.is-open .feed-search-input {
-    width: 160px;
+    width: min(160px, 42vw);   // 모바일에서 폭 초과로 밀지 않게
     padding: 6px 10px;
     margin-left: 4px;
     border-color: var(--color-border-subtle);
@@ -312,9 +321,9 @@
 }
 
 .home-kg-card {
-    margin: 0.5rem 0 0;
+    margin: 1rem 0 0;
     border: 1px solid var(--color-border-subtle);
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
     background: var(--color-surface-hover);
 }
@@ -323,11 +332,15 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    padding: 8px 12px;
+    padding: 10px 14px;
     border-bottom: 1px solid var(--color-border-subtle);
 
     > span {
         flex: 1;
+        min-width: 0;
+        white-space: nowrap;       // 검색 펼침에도 "Knowledge Graph" 줄바꿈 방지
+        overflow: hidden;
+        text-overflow: ellipsis;
         font-size: 0.82rem;
         font-weight: 600;
         color: var(--color-text-tertiary);
