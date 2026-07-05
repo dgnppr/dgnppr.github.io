@@ -50,6 +50,7 @@ regenerate: true
                 <ul class="feed-sort-menu" id="feed-sort-menu" role="menu" hidden>
                     <li><button type="button" role="menuitemradio" data-sort="date-desc">최신순</button></li>
                     <li><button type="button" role="menuitemradio" data-sort="date-asc">오래된순</button></li>
+                    <li><button type="button" role="menuitemradio" data-sort="weight-desc">연결 많은순</button></li>
                     <li><button type="button" role="menuitemradio" data-sort="title-asc">제목 A→Z</button></li>
                     <li><button type="button" role="menuitemradio" data-sort="title-desc">제목 Z→A</button></li>
                 </ul>
@@ -60,7 +61,7 @@ regenerate: true
         {% assign all_docs = site.concept | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event | concat: site.adr %}
         {% assign documents = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | sort: 'updated' | reverse %}
         {% for doc in documents %}
-        <li class="home-feed-item" data-title="{{ doc.title | downcase | escape }}" data-tags="{{ doc.tag | downcase | escape }}" data-date="{{ doc.updated | date: '%Y-%m-%d' }}">
+        <li class="home-feed-item" data-title="{{ doc.title | downcase | escape }}" data-tags="{{ doc.tag | downcase | escape }}" data-date="{{ doc.updated | date: '%Y-%m-%d' }}" data-weight="0">
             <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
                 <span class="home-feed-title">{{ doc.title }}</span>
                 <span class="home-feed-meta">

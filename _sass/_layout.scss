@@ -673,7 +673,9 @@ body {
     }
 
     &__search-wrap {
-        flex: 1;
+        flex: 0 1 240px;
+        max-width: 240px;
+        margin-right: auto;
         position: relative;
         display: flex;
         align-items: center;

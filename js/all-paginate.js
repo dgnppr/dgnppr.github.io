@@ -42,14 +42,18 @@
         }
 
         var SORTS = {
-            'date-desc':  function (a, b) { return cmp(b, a, 'data-date'); },
-            'date-asc':   function (a, b) { return cmp(a, b, 'data-date'); },
-            'title-asc':  function (a, b) { return cmp(a, b, 'data-title'); },
-            'title-desc': function (a, b) { return cmp(b, a, 'data-title'); }
+            'date-desc':   function (a, b) { return cmp(b, a, 'data-date'); },
+            'date-asc':    function (a, b) { return cmp(a, b, 'data-date'); },
+            'weight-desc': function (a, b) { return numCmp(b, a, 'data-weight') || cmp(b, a, 'data-date'); },
+            'title-asc':   function (a, b) { return cmp(a, b, 'data-title'); },
+            'title-desc':  function (a, b) { return cmp(b, a, 'data-title'); }
         };
         function cmp(a, b, attr) {
             var x = a.getAttribute(attr) || '', y = b.getAttribute(attr) || '';
             return x.localeCompare(y);
+        }
+        function numCmp(a, b, attr) {
+            return (parseInt(a.getAttribute(attr), 10) || 0) - (parseInt(b.getAttribute(attr), 10) || 0);
         }
 
         /* 검색+정렬 재계산 후 DOM 재배치. 페이지는 호출자가 지정. */
@@ -158,6 +162,33 @@
             });
         }
 
+        /* 지식 그래프 연결 수(degree)를 지연 로드해 각 항목에 data-weight로 부여.
+         * 그래프 노드 id = href에서 앞뒤 슬래시 제거한 경로. */
+        var weightsLoaded = false, weightsLoading = false;
+        function ensureWeights(cb) {
+            if (weightsLoaded) { cb(); return; }
+            if (weightsLoading) return;
+            weightsLoading = true;
+            fetch('/data/ontology-graph.json')
+                .then(function (r) { return r.json(); })
+                .then(function (g) {
+                    var deg = {};
+                    (g.edges || []).forEach(function (e) {
+                        if (e.from) deg[e.from] = (deg[e.from] || 0) + 1;
+                        if (e.to)   deg[e.to]   = (deg[e.to]   || 0) + 1;
+                    });
+                    all.forEach(function (it) {
+                        var link = it.querySelector('.home-feed-link');
+                        var href = link ? link.getAttribute('href') : '';
+                        var id = (href || '').replace(/^\/+|\/+$/g, '');
+                        it.setAttribute('data-weight', String(deg[id] || 0));
+                    });
+                    weightsLoaded = true;
+                })
+                .catch(function () { /* 실패 시 weight 0 유지 */ })
+                .then(function () { weightsLoading = false; cb(); });
+        }
+
         /* 정렬 아이콘 → 드롭다운 메뉴 */
         function openSort(open) {
             if (!sortMenu) return;
@@ -183,7 +214,11 @@
                 curSort = b.getAttribute('data-sort');
                 markSort();
                 openSort(false);
-                rebuild(1, true);
+                if (curSort === 'weight-desc') {
+                    ensureWeights(function () { rebuild(1, true); });
+                } else {
+                    rebuild(1, true);
+                }
             });
         }
         document.addEventListener('click', function (e) {
