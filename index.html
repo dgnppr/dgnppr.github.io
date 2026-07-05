@@ -33,6 +33,16 @@ regenerate: true
                 </button>
                 <input type="search" id="feed-search" class="feed-search-input" placeholder="제목·태그 검색" aria-label="문서 검색" autocomplete="off">
             </div>
+            <div class="feed-sort" id="feed-perpage-wrap">
+                <button type="button" class="feed-icon-btn" id="feed-perpage-toggle" aria-label="페이지당 개수" aria-haspopup="true" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                </button>
+                <ul class="feed-sort-menu" id="feed-perpage-menu" role="menu" hidden>
+                    <li><button type="button" role="menuitemradio" data-per="5">5개씩</button></li>
+                    <li><button type="button" role="menuitemradio" data-per="10">10개씩</button></li>
+                    <li><button type="button" role="menuitemradio" data-per="50">50개씩</button></li>
+                </ul>
+            </div>
             <div class="feed-sort" id="feed-sort-wrap">
                 <button type="button" class="feed-icon-btn" id="feed-sort-toggle" aria-label="정렬" aria-haspopup="true" aria-expanded="false">
                     <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="14" y2="6"/><line x1="3" y1="12" x2="11" y2="12"/><line x1="3" y1="18" x2="8" y2="18"/><polyline points="16 15 19 18 22 15"/><line x1="19" y1="6" x2="19" y2="18"/></svg>

@@ -1,8 +1,8 @@
-/* All Documents 목록 — 클라이언트 검색·정렬·페이지네이션 (10개 단위).
+/* All Documents 목록 — 클라이언트 검색·정렬·페이지당 개수·페이지네이션.
  * 목록은 서버에서 전부 렌더됨. JS로 필터→정렬→한 페이지분만 표시.
  * 페이지는 URL 해시(#page=N)에 저장 → 뒤로가기/공유 지원. */
 (function () {
-    var PER_PAGE = 10;
+    var PER_PAGE = 5;
 
     function init() {
         var list   = document.querySelector('.home-feed');
@@ -15,6 +15,10 @@
         var sortWrap    = document.getElementById('feed-sort-wrap');
         var sortBtn     = document.getElementById('feed-sort-toggle');
         var sortMenu    = document.getElementById('feed-sort-menu');
+        var perWrap     = document.getElementById('feed-perpage-wrap');
+        var perBtn      = document.getElementById('feed-perpage-toggle');
+        var perMenu     = document.getElementById('feed-perpage-menu');
+        var perLabel    = document.getElementById('feed-perpage-label');
         var countEl     = document.getElementById('feed-count');
         var emptyEl     = document.getElementById('feed-empty');
         var curSort     = 'date-desc';
@@ -186,6 +190,41 @@
             if (sortWrap && !sortWrap.contains(e.target)) openSort(false);
         });
         markSort();
+
+        /* 페이지당 개수 아이콘 → 드롭다운 (5 / 10 / 50) */
+        function openPer(open) {
+            if (!perMenu) return;
+            perMenu.hidden = !open;
+            if (perBtn) perBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+        function markPer() {
+            if (perLabel) perLabel.textContent = String(PER_PAGE);
+            if (perBtn) perBtn.setAttribute('aria-label', '페이지당 ' + PER_PAGE + '개');
+            if (!perMenu) return;
+            perMenu.querySelectorAll('[data-per]').forEach(function (b) {
+                b.setAttribute('aria-checked', parseInt(b.getAttribute('data-per'), 10) === PER_PAGE ? 'true' : 'false');
+            });
+        }
+        if (perBtn) {
+            perBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                openPer(perMenu.hidden);
+            });
+        }
+        if (perMenu) {
+            perMenu.addEventListener('click', function (e) {
+                var b = e.target.closest('[data-per]');
+                if (!b) return;
+                PER_PAGE = parseInt(b.getAttribute('data-per'), 10) || 5;
+                markPer();
+                openPer(false);
+                rebuild(1, true);
+            });
+        }
+        document.addEventListener('click', function (e) {
+            if (perWrap && !perWrap.contains(e.target)) openPer(false);
+        });
+        markPer();
 
         window.addEventListener('hashchange', function () { show(readPage()); });
 

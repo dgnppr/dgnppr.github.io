@@ -142,6 +142,13 @@
     opacity: 1;
 }
 
+// 페이지당 개수: 숫자 라벨 버튼
+.feed-perpage-btn {
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: inherit;
+}
+
 // 정렬: 아이콘 버튼 + 드롭다운 메뉴
 .feed-sort {
     position: relative;
