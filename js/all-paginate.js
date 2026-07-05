@@ -1,17 +1,27 @@
-/* /all 문서 목록 클라이언트 페이지네이션 — 10개 단위.
- * 목록은 이미 전부 렌더되어 있고, JS로 한 페이지분만 표시한다.
- * 현재 페이지는 URL 해시(#page=N)에 저장 → 뒤로가기/공유 지원. */
+/* All Documents 목록 — 클라이언트 검색·정렬·페이지네이션 (10개 단위).
+ * 목록은 서버에서 전부 렌더됨. JS로 필터→정렬→한 페이지분만 표시.
+ * 페이지는 URL 해시(#page=N)에 저장 → 뒤로가기/공유 지원. */
 (function () {
     var PER_PAGE = 10;
 
     function init() {
-        var list  = document.querySelector('.home-feed');
-        var pager = document.getElementById('all-pager');
+        var list   = document.querySelector('.home-feed');
+        var pager  = document.getElementById('all-pager');
         if (!list || !pager) return;
 
-        var items = Array.prototype.slice.call(list.querySelectorAll('.home-feed-item'));
-        var total = items.length;
-        var pages = Math.max(1, Math.ceil(total / PER_PAGE));
+        var search      = document.getElementById('feed-search');
+        var searchWrap  = document.getElementById('feed-search-wrap');
+        var searchBtn   = document.getElementById('feed-search-toggle');
+        var sortWrap    = document.getElementById('feed-sort-wrap');
+        var sortBtn     = document.getElementById('feed-sort-toggle');
+        var sortMenu    = document.getElementById('feed-sort-menu');
+        var countEl     = document.getElementById('feed-count');
+        var emptyEl     = document.getElementById('feed-empty');
+        var curSort     = 'date-desc';
+
+        var all = Array.prototype.slice.call(list.querySelectorAll('.home-feed-item'));
+        var view = all.slice();          // 현재 필터+정렬된 목록
+        var pages = 1;
 
         function clamp(p) { return Math.min(Math.max(1, p), pages); }
 
@@ -20,11 +30,49 @@
             return clamp(m ? parseInt(m[1], 10) : 1);
         }
 
-        function show(page) {
-            var start = (page - 1) * PER_PAGE, end = start + PER_PAGE;
-            items.forEach(function (it, i) {
-                it.style.display = (i >= start && i < end) ? '' : 'none';
+        function matches(it, q) {
+            if (!q) return true;
+            var t = it.getAttribute('data-title') || '';
+            var g = it.getAttribute('data-tags') || '';
+            return (t + ' ' + g).indexOf(q) !== -1;
+        }
+
+        var SORTS = {
+            'date-desc':  function (a, b) { return cmp(b, a, 'data-date'); },
+            'date-asc':   function (a, b) { return cmp(a, b, 'data-date'); },
+            'title-asc':  function (a, b) { return cmp(a, b, 'data-title'); },
+            'title-desc': function (a, b) { return cmp(b, a, 'data-title'); }
+        };
+        function cmp(a, b, attr) {
+            var x = a.getAttribute(attr) || '', y = b.getAttribute(attr) || '';
+            return x.localeCompare(y);
+        }
+
+        /* 검색+정렬 재계산 후 DOM 재배치. 페이지는 호출자가 지정. */
+        function rebuild(page, scroll) {
+            var q = (search && search.value || '').trim().toLowerCase();
+            var sortFn = SORTS[curSort] || SORTS['date-desc'];
+
+            view = all.filter(function (it) { return matches(it, q); });
+            view.sort(sortFn);
+
+            /* 정렬 순서대로 DOM 재배치 (필터 아웃 항목은 뒤로) */
+            view.forEach(function (it) { list.appendChild(it); });
+            all.forEach(function (it) {
+                if (view.indexOf(it) === -1) list.appendChild(it);
             });
+
+            pages = Math.max(1, Math.ceil(view.length / PER_PAGE));
+            if (countEl) countEl.textContent = view.length + '개 문서';
+            if (emptyEl) emptyEl.hidden = view.length !== 0;
+            go(page, scroll);
+        }
+
+        function show(page) {
+            page = clamp(page);
+            all.forEach(function (it) { it.style.display = 'none'; });
+            var start = (page - 1) * PER_PAGE, end = start + PER_PAGE;
+            view.slice(start, end).forEach(function (it) { it.style.display = ''; });
             renderPager(page);
         }
 
@@ -48,7 +96,7 @@
                 (opts.disabled ? ' is-disabled' : '');
             el.textContent = label;
             if (!inert) {
-                if (opts.type) el.type = 'button';
+                el.type = 'button';
                 el.addEventListener('click', function () { go(page, true); });
                 el.setAttribute('aria-label', opts.aria || (label + ' 페이지'));
             }
@@ -77,8 +125,71 @@
             pager.appendChild(makeBtn('»', nextBlock, { nav: true, disabled: nextBlock > pages, aria: '다음 묶음' }));
         }
 
+        var debounce;
+        if (search) {
+            search.addEventListener('input', function () {
+                clearTimeout(debounce);
+                debounce = setTimeout(function () { rebuild(1, false); }, 150);
+            });
+        }
+
+        /* 검색 아이콘 토글 — 열면 입력 노출·포커스, 비어서 닫으면 숨김 */
+        function openSearch(open) {
+            if (!searchWrap) return;
+            searchWrap.classList.toggle('is-open', open);
+            if (searchBtn) searchBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            if (open && search) search.focus();
+        }
+        if (searchBtn) {
+            searchBtn.addEventListener('click', function () {
+                openSearch(!searchWrap.classList.contains('is-open'));
+            });
+        }
+        if (search) {
+            search.addEventListener('blur', function () {
+                if (!search.value.trim()) openSearch(false);
+            });
+            search.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') { search.value = ''; rebuild(1, false); openSearch(false); }
+            });
+        }
+
+        /* 정렬 아이콘 → 드롭다운 메뉴 */
+        function openSort(open) {
+            if (!sortMenu) return;
+            sortMenu.hidden = !open;
+            if (sortBtn) sortBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        }
+        function markSort() {
+            if (!sortMenu) return;
+            sortMenu.querySelectorAll('[data-sort]').forEach(function (b) {
+                b.setAttribute('aria-checked', b.getAttribute('data-sort') === curSort ? 'true' : 'false');
+            });
+        }
+        if (sortBtn) {
+            sortBtn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                openSort(sortMenu.hidden);
+            });
+        }
+        if (sortMenu) {
+            sortMenu.addEventListener('click', function (e) {
+                var b = e.target.closest('[data-sort]');
+                if (!b) return;
+                curSort = b.getAttribute('data-sort');
+                markSort();
+                openSort(false);
+                rebuild(1, true);
+            });
+        }
+        document.addEventListener('click', function (e) {
+            if (sortWrap && !sortWrap.contains(e.target)) openSort(false);
+        });
+        markSort();
+
         window.addEventListener('hashchange', function () { show(readPage()); });
-        show(readPage());
+
+        rebuild(readPage(), false);
     }
 
     if (document.readyState === 'loading') {

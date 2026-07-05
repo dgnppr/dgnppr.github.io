@@ -30,7 +30,6 @@ jobs:
         run: |
           mkdir -p data/tags data/metadata
           node scripts/generateData.js
-          node scripts/generate-writing-stats.js
 
       - uses: ruby/setup-ruby@v1
         with:

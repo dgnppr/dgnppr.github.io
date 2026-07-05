@@ -24,12 +24,33 @@ regenerate: true
         </div>
     </div>
 
-    <p class="home-section-title" style="margin-top:2rem">All Documents</p>
+    <div class="feed-head" style="margin-top:2rem">
+        <p class="home-section-title" style="margin:0">All Documents</p>
+        <div class="feed-tools">
+            <div class="feed-search" id="feed-search-wrap">
+                <button type="button" class="feed-icon-btn" id="feed-search-toggle" aria-label="검색" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+                </button>
+                <input type="search" id="feed-search" class="feed-search-input" placeholder="제목·태그 검색" aria-label="문서 검색" autocomplete="off">
+            </div>
+            <div class="feed-sort" id="feed-sort-wrap">
+                <button type="button" class="feed-icon-btn" id="feed-sort-toggle" aria-label="정렬" aria-haspopup="true" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="6" x2="14" y2="6"/><line x1="3" y1="12" x2="11" y2="12"/><line x1="3" y1="18" x2="8" y2="18"/><polyline points="16 15 19 18 22 15"/><line x1="19" y1="6" x2="19" y2="18"/></svg>
+                </button>
+                <ul class="feed-sort-menu" id="feed-sort-menu" role="menu" hidden>
+                    <li><button type="button" role="menuitemradio" data-sort="date-desc">최신순</button></li>
+                    <li><button type="button" role="menuitemradio" data-sort="date-asc">오래된순</button></li>
+                    <li><button type="button" role="menuitemradio" data-sort="title-asc">제목 A→Z</button></li>
+                    <li><button type="button" role="menuitemradio" data-sort="title-desc">제목 Z→A</button></li>
+                </ul>
+            </div>
+        </div>
+    </div>
     <ul class="home-feed">
         {% assign all_docs = site.concept | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event | concat: site.adr %}
         {% assign documents = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | sort: 'updated' | reverse %}
         {% for doc in documents %}
-        <li class="home-feed-item">
+        <li class="home-feed-item" data-title="{{ doc.title | downcase | escape }}" data-tags="{{ doc.tag | downcase | escape }}" data-date="{{ doc.updated | date: '%Y-%m-%d' }}">
             <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
                 <span class="home-feed-title">{{ doc.title }}</span>
                 <span class="home-feed-meta">
@@ -43,6 +64,7 @@ regenerate: true
         </li>
         {% endfor %}
     </ul>
+    <p class="feed-empty" id="feed-empty" hidden>검색 결과 없음</p>
     <nav class="pager" id="all-pager" aria-label="문서 목록 페이지"></nav>
 </div>
 
