@@ -1,0 +1,163 @@
+---
+layout: null
+permalink: /resume/en/
+sitemap: false
+---
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Yonghyun Yun — Resume</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --sub: #8a8a8a;
+      --line: #eee;
+      --maxw: 640px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--ink);
+      background: #fff;
+      line-height: 1.5;
+      font-size: 14px;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: inherit; text-decoration: none; }
+    a:hover { text-decoration: underline; text-underline-offset: 2px; }
+
+    .page { max-width: var(--maxw); margin: 0 auto; padding: 44px 28px 56px; }
+
+    /* Header */
+    .name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
+    .name .en { color: var(--sub); font-weight: 400; font-size: 14px; margin-left: 7px; }
+    .role { font-size: 14px; color: var(--sub); margin: 2px 0 0; }
+    .contact { margin: 8px 0 0; font-size: 13px; color: var(--sub); }
+    .contact a:hover { color: var(--ink); }
+    .contact .sep { margin: 0 7px; color: #d5d5d5; }
+
+    /* Sections */
+    section { margin-top: 22px; }
+    h2 {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--sub);
+      margin: 0 0 9px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid var(--line);
+    }
+    .summary { margin: 0; color: #333; }
+
+    /* Entry list */
+    .entries { list-style: none; margin: 0; padding: 0; }
+    .entry { margin-bottom: 11px; }
+    .entry:last-child { margin-bottom: 0; }
+    .entry-head {
+      display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    }
+    .entry-line { font-weight: 600; }
+    .entry-line .at { color: var(--sub); font-weight: 400; }
+    .entry-date { color: var(--sub); font-size: 12px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+    .entry-notes { margin: 3px 0 0; padding-left: 15px; }
+    .entry-notes li { margin: 1px 0; color: #444; }
+
+    /* Stack */
+    .stack { list-style: none; margin: 0; padding: 0; }
+    .stack li { margin: 3px 0; color: #444; }
+    .stack strong { color: var(--ink); font-weight: 600; display: inline-block; min-width: 84px; }
+
+    @media (max-width: 560px) {
+      .page { padding: 32px 18px 40px; }
+      .entry-head { flex-direction: column; gap: 0; }
+      .stack strong { display: block; min-width: 0; }
+    }
+
+    @media print {
+      .page { padding: 0; max-width: none; }
+      @page { margin: 14mm; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1 class="name">Yonghyun Yun<span class="en">윤용현</span></h1>
+      <p class="role">Data Engineer</p>
+      <p class="contact">
+        <a href="mailto:dgnppr@gmail.com">dgnppr@gmail.com</a><span class="sep">·</span><a href="https://www.linkedin.com/in/dgpr/">LinkedIn</a><span class="sep">·</span><a href="https://github.com/dgnppr">GitHub</a><span class="sep">·</span><a href="/CV.pdf">CV</a>
+      </p>
+    </header>
+
+    <section>
+      <h2>Summary</h2>
+      <p class="summary">Data engineer who designs and operates data pipelines and cloud infrastructure. Strong in large-scale batch/streaming processing, data warehouse modeling, and cost optimization. Put a 2–3 line summary here.</p>
+    </section>
+
+    <section>
+      <h2>Work Experience</h2>
+      <ul class="entries">
+        <li class="entry">
+          <div class="entry-head">
+            <span class="entry-line">Company Name <span class="at">— Senior Data Engineer</span></span>
+            <span class="entry-date">2023 — Present</span>
+          </div>
+          <ul class="entry-notes">
+            <li>Key achievement — metric, scale, impact (e.g. cut pipeline latency by 40%).</li>
+            <li>Systems owned, tech stack, role.</li>
+          </ul>
+        </li>
+        <li class="entry">
+          <div class="entry-head">
+            <span class="entry-line">Previous Company <span class="at">— Data Engineer</span></span>
+            <span class="entry-date">2020 — 2023</span>
+          </div>
+          <ul class="entry-notes">
+            <li>Key achievement in one line.</li>
+          </ul>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <ul class="entries">
+        <li class="entry">
+          <div class="entry-head">
+            <span class="entry-line">Major / Degree <span class="at">— University Name</span></span>
+            <span class="entry-date">2016 — 2020</span>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Development Stack</h2>
+      <ul class="stack">
+        <li><strong>Languages</strong> Python, SQL, Scala, Java</li>
+        <li><strong>Data</strong> Spark, Airflow, Kafka, Flink, dbt, Iceberg</li>
+        <li><strong>Cloud</strong> GCP (BigQuery, Dataflow, Composer), AWS</li>
+        <li><strong>Infra</strong> Docker, Kubernetes, Terraform</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Publications</h2>
+      <ul class="entries">
+        <li class="entry">
+          <div class="entry-head">
+            <span class="entry-line">Author, "Title", Venue.</span>
+            <span class="entry-date">2024</span>
+          </div>
+          <div class="entry-date">[paper] [code]</div>
+        </li>
+      </ul>
+    </section>
+  </main>
+</body>
+</html>
