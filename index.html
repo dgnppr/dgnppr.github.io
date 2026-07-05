@@ -4,6 +4,9 @@ adsense: false
 regenerate: true
 ---
 
+<div class="progress-container">
+    <div class="progress-bar" id="myBar"></div>
+</div>
 <div class="home">
     <div class="home-kg-card">
         <div class="home-kg-title-row">
@@ -21,11 +24,11 @@ regenerate: true
         </div>
     </div>
 
-    <p class="home-section-title" style="margin-top:2rem">Recently Changed Documents</p>
+    <p class="home-section-title" style="margin-top:2rem">All Documents</p>
     <ul class="home-feed">
         {% assign all_docs = site.concept | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event | concat: site.adr %}
         {% assign documents = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | sort: 'updated' | reverse %}
-        {% for doc in documents limit: 10 %}
+        {% for doc in documents %}
         <li class="home-feed-item">
             <a class="home-feed-link" href="{{ doc.url | prepend: site.baseurl }}">
                 <span class="home-feed-title">{{ doc.title }}</span>
@@ -40,10 +43,7 @@ regenerate: true
         </li>
         {% endfor %}
     </ul>
-    <div class="home-footer">
-        {% assign count = all_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" | size %}
-        <a href="{{ '/all/' | prepend: site.baseurl }}">View All Documents ({{ count }} items) →</a>
-    </div>
+    <nav class="pager" id="all-pager" aria-label="문서 목록 페이지"></nav>
 </div>
 
 <script>
@@ -108,3 +108,5 @@ regenerate: true
 })();
 </script>
 {% include createLink.html %}
+<script src="/js/scroll.js"></script>
+<script src="/js/all-paginate.js"></script>
