@@ -1,7 +1,7 @@
 services:
   jekyll:
     image: jekyll/jekyll:latest
-    command: jekyll serve --incremental --trace --config _config.yml,_config.local.yml
+    command: sh -c "bundle install && jekyll serve --host 0.0.0.0 --incremental --trace --config _config.yml,_config.local.yml"
     ports:
       - 4000:4000
     volumes:

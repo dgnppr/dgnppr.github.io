@@ -7,7 +7,6 @@ const ENTITY_TYPES = new Set(['insight', 'problem', 'tool', 'event', 'adr']);
 main();
 
 function cleanDir(dir) {
-    if (!fs.existsSync(dir)) return;
     fs.rmSync(dir, { recursive: true, force: true });
     fs.mkdirSync(dir, { recursive: true });
 }
