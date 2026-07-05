@@ -51,7 +51,7 @@
 /* 라이트: thumb는 왼쪽, 오른쪽 빈 공간에 태양(빨강, 채움) */
 .toggle-icon--sun {
     right: 2px;
-    color: #ef4444;
+    color: var(--color-accent);
     opacity: 1;
 }
 
