@@ -1491,6 +1491,7 @@
                 if (previewEl.parentNode) previewEl.remove();
                 linkObjs.forEach(function (lo) { if (lo.scoreDiv && lo.scoreDiv.parentNode) lo.scoreDiv.remove(); });
                 renderer.dispose();
+                if (renderer.domElement && renderer.domElement.parentNode) renderer.domElement.remove();
             };
             container._kg3dDispose = _dispose;
 
