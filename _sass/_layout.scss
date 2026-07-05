@@ -901,6 +901,9 @@ body {
     }
 }
 
+/* 미니 그래프 확대(focus 모드): 카테고리 패널 숨기고 그래프만 */
+.kg-modal-overlay.is-focus .kg-modal__panel { display: none; }
+
 @media (max-width: 600px) {
     .kg-modal__panel { display: none; }
     .gp-chip {

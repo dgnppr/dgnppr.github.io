@@ -40,32 +40,33 @@
     var statsEl  = document.getElementById('modal-kg-stats');
     if (!overlay) return;
 
-    var initialized = false;
+    /* undefined = 아직 init 안 함, null = 전체 그래프, 문자열 = 해당 slug focus */
+    var currentFocus = undefined;
 
-    /* d3 → knowledge-graph-3d.js 순차 로드 후 init */
-    function loadAndInit() {
-        if (initialized) return;
-        initialized = true;
+    /* focus 있으면 미니 그래프처럼 연결 노드만, 없으면 전체(카테고리 패널) */
+    function doInit(focusSlug) {
+        if (!window.KnowledgeGraph3D || !window.KnowledgeGraph3D.init) return;
+        var extra = window.KG_EXTRA_OPTS || {};
+        var base = focusSlug
+            ? { container: graphEl, search: searchEl, focusSlug: focusSlug, miniMode: true, groups: null, stats: null }
+            : { container: graphEl, search: searchEl, groups: groupsEl, stats: statsEl };
+        window.KnowledgeGraph3D.init(Object.assign(base, extra));
+        currentFocus = focusSlug || null;
+    }
 
-        function doInit() {
-            if (!window.KnowledgeGraph3D || !window.KnowledgeGraph3D.init) return;
-            var extra = window.KG_EXTRA_OPTS || {};
-            window.KnowledgeGraph3D.init(Object.assign({
-                container: graphEl,
-                search:    searchEl,
-                groups:    groupsEl,
-                stats:     statsEl,
-            }, extra));
+    /* d3 → knowledge-graph-3d.js 순차 로드 후, 모드 바뀌면 재init */
+    function loadAndInit(focusSlug) {
+        var want = focusSlug || null;
+        function run() {
+            if (currentFocus !== want) doInit(want);
         }
-
         function loadKg() {
-            if (window.KnowledgeGraph3D && window.KnowledgeGraph3D.init) { doInit(); return; }
+            if (window.KnowledgeGraph3D && window.KnowledgeGraph3D.init) { run(); return; }
             var s = document.createElement('script');
             s.src = '/js/knowledge-graph-3d.js';
-            s.onload = doInit;
+            s.onload = run;
             document.head.appendChild(s);
         }
-
         if (window.d3) { loadKg(); return; }
         var s = document.createElement('script');
         s.src = 'https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js';
@@ -73,17 +74,19 @@
         document.head.appendChild(s);
     }
 
-    function openModal() {
+    function openModal(focusSlug) {
+        var want = focusSlug || null;
         overlay.classList.add('is-open');
+        overlay.classList.toggle('is-focus', !!want);   // focus 모드: 카테고리 패널 숨김
         document.body.style.overflow = 'hidden';
         if (searchEl) { searchEl.value = ''; searchEl.focus(); }
         document.querySelectorAll('.graph-tooltip').forEach(function (tip) {
             tip.classList.remove('is-visible');
         });
 
-        /* 첫 오픈에만 초기화 (requestAnimationFrame으로 컨테이너 크기 확보 후) */
+        /* 컨테이너 크기 확보 후 init/재init */
         requestAnimationFrame(function () {
-            requestAnimationFrame(loadAndInit);
+            requestAnimationFrame(function () { loadAndInit(want); });
         });
     }
 
@@ -98,10 +101,19 @@
     window.openKnowledgeGraphModal = openModal;
 
     document.addEventListener('click', function (e) {
-        var trigger = e.target.closest('[data-kg-open], #concept-mini-graph-expand');
-        if (!trigger) return;
-        e.preventDefault();
-        openModal();
+        /* 글 상세 미니 그래프 확대 → 연결 노드만 focus */
+        var miniExpand = e.target.closest('#concept-mini-graph-expand');
+        if (miniExpand) {
+            e.preventDefault();
+            var nameEl = document.getElementById('thisName');
+            openModal(nameEl && nameEl.value ? nameEl.value : null);
+            return;
+        }
+        /* 햄버거·홈 확대 → 전체 그래프 (변형 없음) */
+        if (e.target.closest('[data-kg-open]')) {
+            e.preventDefault();
+            openModal(null);
+        }
     });
 
     if (closeBtn) closeBtn.addEventListener('click', closeModal);
