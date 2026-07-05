@@ -352,9 +352,38 @@
             var meshes = [], nodeById = {};
             var hiddenCats = new Set();
 
+            /* 노드 색: 파랑 계열 고정 hue(0.60). 같은 계열이되 엔티티 타입별로
+             * 명암(명도)과 채도를 다르게 줘 깊이를 구분한다.
+             * 링크(degree)가 많을수록 한 단계 더 진하고 선명하게. */
+            /* 레퍼런스 감성: 다크 배경 위 옅은 흰-파랑 메시, 파랑은 은은한 강조.
+             * 타입은 채도로만 미세 구분(전부 저채도), degree가 파랑 강조를 주도. */
+            var TYPE_S = {              // 기본 채도(전부 낮음) — 타입 미세 구분
+                concept: 0.10,
+                blog:    0.11,
+                insight: 0.13,
+                tool:    0.15,
+                event:   0.17,
+                problem: 0.19,
+                adr:     0.22
+            };
+            var maxDeg = 1;
+            nodes.forEach(function (n) { if (n.degree > maxDeg) maxDeg = n.degree; });
+            function degreeColor(n) {
+                var t = Math.sqrt((n.degree || 0) / maxDeg);   // 0(고립)~1(최다연결)
+                if (dark) {
+                    // 다크모드: 현행 유지 — 옅은 흰-파랑, degree가 파랑 강조 주도
+                    var baseS = TYPE_S[n.type] != null ? TYPE_S[n.type] : 0.14;
+                    return new THREE.Color().setHSL(0.60, Math.min(0.80, baseS + 0.45 * t), 0.86 - 0.14 * t);
+                }
+                // 라이트모드: 이메일 구독 버튼(#669DFD) 계열을 살짝 연하게. 허브일수록 accent에 근접
+                var s = Math.min(0.96, 0.82 + 0.12 * t);
+                var l = 0.80 - 0.12 * t;                       // 0.80(연함) → 0.68(accent 근처)
+                return new THREE.Color().setHSL(0.603, s, l);
+            }
+
             nodes.forEach(function (n) {
                 var r   = nodeR(n);
-                var col = themedColor(n.colorKey || n.cat);
+                var col = degreeColor(n);
 
                 var isFocal = focusSlug && n.slug === focusSlug;
                 var visR = isFocal ? r * 2.2 : r * 1.5;
@@ -1059,7 +1088,7 @@
 
                 /* 노드 재색상 */
                 meshes.forEach(function (m) {
-                    var col = themedColor(m.userData.node.colorKey || m.userData.node.cat);
+                    var col = degreeColor(m.userData.node);
                     m.material.color.set(col);
                     if (m.userData.borderMesh) m.userData.borderMesh.material.color.set(col);
                     if (m.userData.haloMesh)   m.userData.haloMesh.material.color.set(col);
@@ -1296,7 +1325,7 @@
                     : miniMode ? !pointerInside
                     : (!pinnedNode && !pointerInside && (now - lastInteract > IDLE_MS));
                 if (shouldRotate) {
-                    var _a = miniMode ? 0.004 : 0.003;
+                    var _a = miniMode ? 0.0008 : 0.0006;
                     var _px = camera.position.x - controls.target.x;
                     var _pz = camera.position.z - controls.target.z;
                     var _c = Math.cos(_a), _s = Math.sin(_a);
