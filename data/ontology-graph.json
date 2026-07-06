@@ -48,7 +48,7 @@
       "type": "adr",
       "title": "GA4 분석 체크리스트",
       "path": "_adr/data-analytics/2026-001-ga4-analysis-checklist.md",
-      "status": "completed",
+      "status": "accepted",
       "tags": [
         "ga4",
         "analytics",
@@ -59,9 +59,13 @@
       "date": "2026-07-04",
       "valid_from": "Sat",
       "mentioned_terms": [
+        "items",
         "signup",
+        "UNNEST(items)",
         ", 이벤트 수집 시점 원본은",
+        "LIMIT 10",
         ", 그리고",
+        "파생",
         "발생 건수",
         "과거 보고서 숫자도 바뀌므로",
         "최초 획득",
@@ -70,17 +74,51 @@
         "자체 이벤트 트래킹으로 전면 대체"
       ],
       "content_depth": 0.57,
-      "importance": 1,
-      "depth": 0.42,
+      "importance": 3,
+      "depth": 0.45,
       "unanswered_questions": 0,
-      "learning_pressure": 0.58
+      "learning_pressure": 1.65
+    },
+    "adr/data-analytics/2026-002-metric-change-investigation-checklist": {
+      "id": "adr/data-analytics/2026-002-metric-change-investigation-checklist",
+      "type": "adr",
+      "title": "지표 급변 원인 조사 체크리스트",
+      "path": "_adr/data-analytics/2026-002-metric-change-investigation-checklist.md",
+      "status": "accepted",
+      "tags": [
+        "metrics",
+        "anomaly",
+        "investigation",
+        "data-analytics",
+        "checklist"
+      ],
+      "date": "2026-07-07",
+      "valid_from": "Tue",
+      "mentioned_terms": [
+        "FULL OUTER JOIN",
+        "LAG(value, 7)",
+        "\"급변\"이라는 전제 자체를 검증하지 않는 것",
+        "전주 동요일 대비",
+        "계단(step)",
+        "분모 급증으로 비율이 떨어지는 경우",
+        "시점 일치",
+        "지표 변화량을 정량적으로 설명하는지",
+        "이상 탐지 자동 알람에 의존",
+        "원인 후보를 정하고 그 데이터만 조사",
+        "모든 급변을 정식 조사로 처리"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.52,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.48
     },
     "adr/data-engineering/2026-001-data-mart-checklist": {
       "id": "adr/data-engineering/2026-001-data-mart-checklist",
       "type": "adr",
       "title": "데이터 마트 구축 체크리스트",
       "path": "_adr/data-engineering/2026-001-data-mart-checklist.md",
-      "status": "",
+      "status": "accepted",
       "tags": [
         "data-mart",
         "data-modeling",
@@ -89,23 +127,31 @@
       ],
       "date": "2026-07-04",
       "mentioned_terms": [
+        "INNER JOIN",
+        "LIMIT 10",
+        "'ABC'",
+        "'abc '",
+        "' Abc'",
         "unknown",
         "paid",
         "cancelled",
+        "CASE WHEN",
+        "INSERT OVERWRITE",
+        "[certified]",
         "문서 없이 리뷰어의 경험에 의존"
       ],
-      "content_depth": 0.65,
-      "importance": 15,
-      "depth": 0.53,
+      "content_depth": 0.85,
+      "importance": 19,
+      "depth": 0.6,
       "unanswered_questions": 0,
-      "learning_pressure": 7.09
+      "learning_pressure": 7.65
     },
     "adr/data-engineering/2026-002-feature-mart-checklist": {
       "id": "adr/data-engineering/2026-002-feature-mart-checklist",
       "type": "adr",
       "title": "피쳐 마트 구축 체크리스트",
       "path": "_adr/data-engineering/2026-002-feature-mart-checklist.md",
-      "status": "completed",
+      "status": "accepted",
       "tags": [
         "feature-mart",
         "feature-engineering",
@@ -118,17 +164,47 @@
         "미래 데이터 누수(leakage)",
         "point-in-time 위반",
         "training-serving skew",
+        "학습셋 재현성",
         "관찰 시점",
         "유저 등급, 상품 카테고리 같은 속성을",
         "전체 기간·전체 데이터로 fit",
         "같은 값",
         "일반 데이터 마트 체크리스트만 재사용"
       ],
-      "content_depth": 0.65,
-      "importance": 1,
-      "depth": 0.43,
+      "content_depth": 0.85,
+      "importance": 3,
+      "depth": 0.52,
       "unanswered_questions": 0,
-      "learning_pressure": 0.57
+      "learning_pressure": 1.43
+    },
+    "adr/data-engineering/2026-003-backfill-checklist": {
+      "id": "adr/data-engineering/2026-003-backfill-checklist",
+      "type": "adr",
+      "title": "백필 체크리스트",
+      "path": "_adr/data-engineering/2026-003-backfill-checklist.md",
+      "status": "accepted",
+      "tags": [
+        "backfill",
+        "data-pipeline",
+        "airflow",
+        "bigquery",
+        "data-engineering",
+        "checklist"
+      ],
+      "date": "2026-07-07",
+      "valid_from": "Tue",
+      "mentioned_terms": [
+        "catchup=True",
+        "오늘의 환율",
+        "오늘의 카테고리",
+        "백필을 일반 배치 재실행과 동일하게 취급",
+        "백필을 원천 차단(과거는 절대 안 고침)"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.52,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.48
     },
     "concept/cloud/00_pca_study_plan": {
       "id": "concept/cloud/00_pca_study_plan",
@@ -2174,10 +2250,10 @@
         "Goodhart's Law 방어"
       ],
       "content_depth": 0.77,
-      "importance": 11,
+      "importance": 13,
       "depth": 0.92,
       "unanswered_questions": 0,
-      "learning_pressure": 0.89
+      "learning_pressure": 1.05
     },
     "concept/data-analytics/04_user_behavior_analytics_framework": {
       "id": "concept/data-analytics/04_user_behavior_analytics_framework",
@@ -3535,10 +3611,10 @@
         "프로덕션 오브젝트를 참조"
       ],
       "content_depth": 0.85,
-      "importance": 3,
-      "depth": 0.57,
+      "importance": 5,
+      "depth": 0.6,
       "unanswered_questions": 0,
-      "learning_pressure": 1.28
+      "learning_pressure": 2.01
     },
     "concept/design-pattern/00_how_to_use_strategy_pattern": {
       "id": "concept/design-pattern/00_how_to_use_strategy_pattern",
@@ -4544,6 +4620,21 @@
       "type": "references"
     },
     {
+      "from": "adr/data-analytics/2026-002-metric-change-investigation-checklist",
+      "to": "concept/data-analytics/03_metrics_framework",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-analytics/2026-002-metric-change-investigation-checklist",
+      "to": "adr/data-analytics/2026-001-ga4-analysis-checklist",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-analytics/2026-002-metric-change-investigation-checklist",
+      "to": "adr/data-engineering/2026-001-data-mart-checklist",
+      "type": "references"
+    },
+    {
       "from": "adr/data-engineering/2026-001-data-mart-checklist",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "references"
@@ -4566,6 +4657,21 @@
     {
       "from": "adr/data-engineering/2026-002-feature-mart-checklist",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-003-backfill-checklist",
+      "to": "adr/data-engineering/2026-001-data-mart-checklist",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-003-backfill-checklist",
+      "to": "adr/data-engineering/2026-002-feature-mart-checklist",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-003-backfill-checklist",
+      "to": "concept/dbt/04_dbt_operational_knowhow",
       "type": "references"
     },
     {
@@ -5381,6 +5487,15 @@
       ]
     },
     {
+      "term": "items",
+      "count": 3,
+      "mentioned_by": [
+        "adr/data-analytics/2026-001-ga4-analysis-checklist",
+        "concept/data-analytics/02_event_tracking_design",
+        "concept/data-analytics/06_ga4_data_model"
+      ]
+    },
+    {
       "term": "Gemini Cloud Assist",
       "count": 3,
       "mentioned_by": [
@@ -5624,11 +5739,35 @@
       ]
     },
     {
+      "term": "LIMIT 10",
+      "count": 2,
+      "mentioned_by": [
+        "adr/data-analytics/2026-001-ga4-analysis-checklist",
+        "adr/data-engineering/2026-001-data-mart-checklist"
+      ]
+    },
+    {
+      "term": "파생",
+      "count": 2,
+      "mentioned_by": [
+        "adr/data-analytics/2026-001-ga4-analysis-checklist",
+        "concept/data-analytics/06_ga4_data_model"
+      ]
+    },
+    {
       "term": "unknown",
       "count": 2,
       "mentioned_by": [
         "adr/data-engineering/2026-001-data-mart-checklist",
         "concept/data-architect/02_how_to_architect_medallion_well"
+      ]
+    },
+    {
+      "term": "CASE WHEN",
+      "count": 2,
+      "mentioned_by": [
+        "adr/data-engineering/2026-001-data-mart-checklist",
+        "concept/data-architect/01_how_to_architect_medallion_well"
       ]
     },
     {
@@ -6085,14 +6224,6 @@
       "mentioned_by": [
         "concept/data-analytics/01_behavioral_analytics_techniques",
         "concept/data-analytics/11_retention_analysis"
-      ]
-    },
-    {
-      "term": "items",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-analytics/02_event_tracking_design",
-        "concept/data-analytics/06_ga4_data_model"
       ]
     },
     {
