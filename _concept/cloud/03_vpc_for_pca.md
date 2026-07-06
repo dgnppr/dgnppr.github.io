@@ -2,7 +2,7 @@
 layout  : concept
 title   : Google Cloud VPC 네트워크 설계 결정
 date    : 2026-06-25 00:00:00 +0900
-updated : 2026-06-25 00:00:00 +0900
+updated : 2026-07-06 00:00:00 +0900
 tag     : cloud gcp network vpc
 toc     : true
 comment : true
@@ -203,11 +203,19 @@ Shared VPC 권한은 두 단계로 나뉜다.
 
 ### Cloud VPN / Interconnect — 온프렘으로 가는 길 (6편 예고)
 
-위 둘은 GCP 내부 연결이다. **온프렘 데이터센터**와의 사설 연결은 다른 도구를 쓴다. **Cloud VPN**은 IPsec 암호화 터널을 인터넷 위에 세운다(저비용·빠른 구축, HA VPN은 99.99% SLA). **Dedicated/Partner Interconnect**는 물리 전용 회선이다(고대역 10/100 Gbps·저지연·고비용).
+위 둘은 GCP 내부 연결이다. **온프렘 데이터센터**와의 사설 연결은 다른 도구를 쓴다. 셋의 갈림은 **암호화 여부 · 대역폭 규모 · SLA 요구**로 정리한다.
+
+- **Cloud VPN**: IPsec 암호화 터널을 **공용 인터넷 위**에 세운다. 저비용·빠른 구축이 강점. **HA VPN**은 이중 터널 구성으로 높은 가용성 SLA를 제공한다. 전용 회선 없이 며칠 안에 붙일 수 있어 초기·중소 대역에 적합.
+- **Dedicated Interconnect**: Google과 **물리 전용 회선**을 직접 연결한다. 고대역·낮은 지연·안정성이 필요할 때. 회선 구성에 리드타임이 크고 비용이 높다.
+- **Partner Interconnect**: 통신사(서비스 파트너)를 경유해 연결한다. Dedicated보다 유연한 대역·짧은 구축 기간이 강점으로, VPN과 Dedicated 사이의 중간 선택지.
+
+<div class="callout-warning">
+구체적 <strong>처리량·터널 수·회선 대역(예: 터널당 Gbps, 최대 터널 수, 10/100 Gbps 회선 단위)</strong>은 최근 상향 이력이 있어 값이 자주 바뀐다. 시험·설계에서 특정 숫자를 외워 단정하기보다 <strong>선택 기준(암호화 필요? · 대역폭 규모? · SLA·지연 요구?)</strong>으로 판별하라. 정확한 한도는 반드시 공식 Interconnect/Cloud VPN 문서로 확인한다.
+</div>
 
 **케이스 적용 — 하이브리드 연동**: 온프렘 DB와 GCP가 사설 통신, 일 수백 GB 동기화, 지연 중요하나 초저지연까지는 아님 → 초기엔 **HA VPN**으로 시작, 대역·안정성 요구가 커지면 **Interconnect**로 승급. 둘 다 Cloud Router(BGP)로 경로 교환.
 
-**결론**: 저비용·빠른 구축 → VPN, 고대역·저지연·안정성 → Interconnect. 상세 비교·SLA·대역 산정은 6편. 연결을 봤으니, 외부 IP 없이 사는 법이다.
+**결론**: 암호화·저비용·빠른 구축 → VPN, 고대역·저지연·안정성 → Interconnect, 통신사 경유 중간 대역 → Partner Interconnect. 상세 비교·SLA·대역 산정은 6편. 연결을 봤으니, 외부 IP 없이 사는 법이다.
 
 ---
 
@@ -365,6 +373,41 @@ projects/vendor-proj/regions/us-central1/serviceAttachments/svc-attach
 
 **결론**: 전체 VPC 연결·신뢰 도메인 내부 = **Peering/Shared VPC**, 특정 서비스만 단방향 사설 노출·CIDR 충돌 회피·타 조직 서비스 소비 = **PSC**. "외부 IP 없이 Google API"는 PGA가 기본, 내부 IP 통제·온프렘 사설 호출이 필요하면 **PSC for Google APIs**.
 
+### 네 도구를 한 표로 — PSC vs VPC Peering vs PGA vs Cloud NAT
+
+시험에서 가장 자주 뒤섞이는 네 가지다. 이름이 비슷하고 "사설"이라는 단어가 공통이지만, **푸는 문제가 전부 다르다.** 아래 표는 "무엇을 위한 것인가"를 한 축에 모은 것이다.
+
+| 기준 | VPC Peering | Private Service Connect | Private Google Access | Cloud NAT |
+|------|-------------|--------------------------|------------------------|-----------|
+| 푸는 문제 | 두 VPC 전체를 사설로 연결 | 특정 서비스 하나를 사설로 노출/소비 | 외부 IP 없는 VM이 Google API 접근 | 외부 IP 없는 VM의 일반 인터넷 egress |
+| 연결 대상 | VPC ↔ VPC(전체 서브넷) | 엔드포인트 ↔ service attachment | VM → Google API(공인 IP 대역) | VM → 임의 외부 인터넷 |
+| 방향 | 양방향 | 단방향(consumer→producer) | egress(요청→응답) | **egress 전용**(인바운드 불가) |
+| CIDR 중첩 | **불가** | 허용(NAT 경유) | 무관(서브넷 설정) | 무관 |
+| 인터넷 경유 | 아니오(Google 백본) | 아니오 | 아니오(사설 경로) | **예**(외부로 나감) |
+| 대표 신호어 | "두 VPC 내부 IP 통신" | "타 조직/SaaS 서비스만 사설 소비", "CIDR 겹치는데 연결" | "외부 IP 없이 GCS/BigQuery" | "외부 IP 없이 apt/패치 다운로드" |
+
+<div class="callout-warning">
+네 도구의 오답 유발 경로: ① <strong>PGA로 apt를 받으려는 실수</strong> — PGA는 Google API 전용, 일반 인터넷은 Cloud NAT. ② <strong>Cloud NAT로 인바운드를 받으려는 실수</strong> — NAT는 egress 전용, 외부 인입은 외부 IP나 LB가 필요. ③ <strong>CIDR이 겹치는데 Peering을 고르는 실수</strong> — Peering은 비중첩이 절대 전제, 이때는 PSC. ④ <strong>서드파티 SaaS에 PGA를 쓰려는 실수</strong> — PGA·PSC for Google APIs는 <em>Google</em> API 전용, 타 벤더 관리형 서비스는 PSC for published services.
+</div>
+
+### Shared VPC vs VPC Peering — 선택 기준을 못 박기
+
+둘 다 "내부 IP로 잇는다"라 헷갈리지만 **소유·거버넌스 모델이 정반대**다. 하나는 VPC를 **공유**하고, 다른 하나는 별개 VPC를 **연결**한다.
+
+| 기준 | Shared VPC | VPC Peering |
+|------|-----------|-------------|
+| 구조 | 하나의 VPC를 Host가 소유, Service Project가 공유 | 별개의 두 VPC를 연결 |
+| 경계 | **단일 조직 내부**(조직/폴더 하위) | 조직·프로젝트 경계를 넘어 가능 |
+| 네트워크 통제 | Host가 중앙 집중(팀은 컴퓨트만) | 각 VPC 소유자가 독립 관리 |
+| 전이성 | 해당 없음(한 VPC) | 비전이(A↔C 불가) |
+| 대표 용도 | 한 조직·여러 팀·중앙 거버넌스 | 서로 다른 조직/신뢰 도메인 간 사설 통신 |
+
+<div class="callout-note">
+선택 기준: <strong>"한 조직 안에서 네트워크를 보안팀이 중앙 통제"</strong> → Shared VPC. <strong>"서로 다른 조직/프로젝트가 각자 네트워크를 소유한 채 사설로만 통신"</strong> → VPC Peering. "여러 팀이 각 프로젝트를 쓰되 방화벽·서브넷은 한 곳에서" 같은 신호는 Shared VPC 쪽이다.
+</div>
+
+**결론**: Shared VPC = 한 조직·중앙 거버넌스·1 VPC 공유, VPC Peering = 독립 조직·각자 소유·별개 VPC 연결. Cloud NAT의 동작 범위는 **egress 전용**임을 다시 못 박아 둔다 — 인바운드가 필요하면 외부 IP나 로드밸런서다.
+
 ---
 
 ## 진단 도구 — 보이지 않는 것을 보이게
@@ -471,6 +514,20 @@ PCA 시험에서 <strong>Connectivity Tests</strong>가 가장 자주 나온다.
 | 4. 하이브리드 | 온프렘 DB ↔ GCP 사설 통신 | HA VPN(저비용) → Interconnect(승급) |
 
 케이스 3이 특히 함정이다. "외부 IP 금지"를 NAT/PGA 한 덩어리로 묶지 말 것 — 패치(apt)는 NAT, Google API(GCS·BQ)는 PGA, 유출 방지는 VPC-SC로 **세 도구가 각각** 들어간다.
+
+### 공식 케이스 스터디와 네트워크 결정
+
+PCA 시험은 EHR Healthcare · TerramEarth · Mountkirk Games 등 **공식 케이스 스터디**에서 문항을 뽑는다. 각 케이스의 요구사항이 어떤 네트워크 프리미티브로 매핑되는지 미리 손에 쥐어 두면 케이스 문항이 빨라진다.
+
+| 케이스 | 네트워크 관련 요구사항 | 매핑되는 프리미티브 |
+|--------|------------------------|----------------------|
+| **TerramEarth** | 현장 중장비·딜러망(100개국)에서 텔레메트리를 클라우드로 수집, 딜러 API 제공, 온프렘 데이터센터 병존 | 온프렘 연동은 하이브리드 연결(대역 규모에 따라 HA VPN → Interconnect 승급), 대량 배치 업로드 수집 경로 설계, 딜러 API를 사설로 노출할 땐 PSC for published services 고려 |
+| **EHR Healthcare** | 멀티병원 SaaS, HIPAA, 온프렘 레거시와 저지연·안정적 하이브리드 연결, 저장·전송 암호화, 전 접근 감사 | 온프렘↔클라우드 안정 연결은 **Dedicated Interconnect**(대역·SLA 요구), 데이터 유출 방지 경계는 VPC Service Controls, 중앙 네트워크 거버넌스는 Shared VPC로 통제 |
+| **Mountkirk Games** | 글로벌 동시 출시, 저지연 멀티플레이, 멀티리전 GKE, 실시간 분석 | VPC는 글로벌 리소스이므로 리전 간 사설 통신은 기본 라우팅, 멀티리전 서브넷 설계, 글로벌 저지연 진입은 Global external Application LB(7편) — VPC는 그 아래 네트워크 토대 |
+
+<div class="callout-note">
+케이스 함정: <strong>EHR·TerramEarth의 "온프렘 연동"</strong>을 보면 곧장 VPN/Interconnect를 떠올리되, <strong>대역·SLA·암호화 요구</strong>를 읽고 갈라야 한다 — "빠른 구축·암호화·중소 대역"이면 HA VPN, "대용량·저지연·안정 SLA"면 Dedicated Interconnect. <strong>Mountkirk의 "글로벌 저지연"</strong>은 리전 간 VPC 연결 문제가 아니라(같은 VPC면 기본 라우팅) 전역 진입점(Global LB) 문제라는 점을 혼동하지 말 것. 케이스 원문 세부 수치는 시험장 케이스 PDF 기준으로 재확인한다.
+</div>
 
 ---
 
@@ -719,6 +776,162 @@ Shared VPC 환경에서 Host Project가 VPC와 두 서브넷(`subnet-team-a`, `s
 | (A) | CIDR 중첩으로 Peering 자체가 불가. 또한 Peering은 VPC 전체를 연결해 과잉 노출 |
 | (C) | PGA는 **Google API 전용** — 서드파티 SaaS 도메인에는 적용되지 않음 |
 | (D) | Shared VPC는 **단일 조직 내** 네트워크 공유 모델 — 타 조직 벤더에 적용 불가 |
+
+</div>
+</details>
+
+---
+
+**Q7. 하이브리드 연결 선택 — EHR 케이스형**
+
+한 헬스케어 SaaS가 온프렘 레거시 시스템과 GCP 사이에 사설 연결을 구축한다. 요구는 다음과 같다.
+
+- 일 수 TB 규모의 안정적 동기화, 낮고 일관된 지연이 규제상 중요하다.
+- 장기 운영 기준의 높은 대역폭과 SLA가 필요하다.
+- 리드타임과 비용은 감수할 수 있다.
+
+가장 적합한 연결 방식은?
+
+- (A) HA VPN — IPsec 암호화 터널로 빠르게 구축한다.
+- (B) Dedicated Interconnect — Google과 물리 전용 회선을 직접 연결한다.
+- (C) VPC Peering — 온프렘 네트워크와 사설 IP로 Peering을 맺는다.
+- (D) Private Service Connect — 온프렘 서비스를 엔드포인트로 소비한다.
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (B)**
+
+"대용량·낮고 일관된 지연·높은 SLA·리드타임/비용 감수"는 **Dedicated Interconnect**를 가리키는 전형적 신호다. 물리 전용 회선이라 인터넷 경유 VPN보다 대역·지연·안정성이 우수하다.
+
+| 선택지 | 오답 이유 |
+|--------|----------|
+| (A) | HA VPN은 빠른 구축·암호화·중소 대역에 적합. "일관된 저지연 대용량 SLA" 요구엔 인터넷 경유라 한계 |
+| (C) | VPC Peering은 **VPC↔VPC** 연결 도구 — 온프렘 데이터센터에는 적용 불가 |
+| (D) | PSC는 GCP/SaaS 서비스를 사설 소비하는 도구지, 온프렘 하이브리드 백본 연결 수단이 아님 |
+
+구체적 회선 대역·터널 처리량 수치는 값이 자주 바뀌므로 외운 숫자가 아니라 **요구(대역·SLA·암호화)**로 판별한다.
+
+</div>
+</details>
+
+---
+
+**Q8. 4대 사설 접근 도구 구분 — TerramEarth 현장 수집형**
+
+외부 IP가 없는 수집용 VM들이 다음을 동시에 수행해야 한다.
+
+- ① OS 보안 패치를 위해 공용 패키지 저장소(인터넷)에서 다운로드
+- ② 수집한 텔레메트리를 Cloud Storage 버킷에 사설 경로로 적재
+- ③ 벤더가 제공하는 관리형 분석 API(자사 VPC와 CIDR이 겹침)를 사설로 호출
+
+각 작업에 맞는 도구 조합은?
+
+- (A) ① Cloud NAT · ② Private Google Access · ③ Private Service Connect(published services)
+- (B) ① Private Google Access · ② Cloud NAT · ③ VPC Peering
+- (C) ① Cloud NAT · ② Private Service Connect · ③ Private Google Access
+- (D) ① VPC Peering · ② Private Google Access · ③ Cloud NAT
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (A)**
+
+세 작업은 각각 다른 문제다.
+
+| 작업 | 도구 | 이유 |
+|------|------|------|
+| ① 인터넷 패키지 | Cloud NAT | 외부 IP 없는 VM의 일반 인터넷 egress |
+| ② GCS 적재 | Private Google Access | Google API 사설 경로 접근 |
+| ③ 벤더 관리형 API(CIDR 중첩) | PSC for published services | 타 조직 서비스만 단방향 사설 소비, NAT 경유로 CIDR 충돌 무관 |
+
+(B)는 ①에 PGA(일반 인터넷 불가), ②에 Cloud NAT(Google API 사설 접근 도구 아님)를 뒤바꾼 전형적 오답. (C)는 ③에 PGA를 썼으나 PGA는 **Google API 전용**이라 서드파티 벤더 API에 부적합. (D)는 CIDR이 겹치는 벤더 연결에 Peering을 시사(불가)하고 도구를 전반적으로 오배치.
+
+</div>
+</details>
+
+---
+
+**Q9. Dynamic Routing Mode — 온프렘 경로 전파 범위**
+
+온프렘과 HA VPN + Cloud Router(BGP)로 연결된 VPC가 있다. VPC에는 `us-central1`과 `asia-northeast3` 두 리전에 서브넷이 있다. 온프렘에서 광고한 경로가 **`us-central1`의 VM에서는 보이지만 `asia-northeast3`의 VM에서는 보이지 않는다.** 가장 가능성 높은 원인은?
+
+- (A) VPC의 Dynamic Routing Mode가 `Regional`이라 학습한 온프렘 경로가 Cloud Router와 같은 리전에만 전파된다.
+- (B) VPC Peering의 비전이성 때문에 두 번째 리전으로 경로가 전달되지 않는다.
+- (C) 방화벽 implied deny egress가 `asia-northeast3`에서 아웃바운드를 막고 있다.
+- (D) 서브넷 CIDR이 중첩되어 두 번째 리전에서 라우팅이 무효화되었다.
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (A)**
+
+Dynamic Routing Mode가 **`Regional`**(기본)이면 Cloud Router가 학습한 온프렘 BGP 경로가 **해당 Cloud Router와 같은 리전의 서브넷에만** 전파된다. 모든 리전 서브넷에 전파하려면 **`Global`**로 바꿔야 한다.
+
+| 선택지 | 오답 이유 |
+|--------|----------|
+| (B) | 여기엔 VPC Peering이 없다(HA VPN 하이브리드 연결). 비전이성은 무관 |
+| (C) | implied deny egress는 존재하지 않는다 — 기본은 implied **allow** egress. 방향·전제가 틀림 |
+| (D) | CIDR 중첩이면 애초에 라우팅 설정이 성립하지 않고, 특정 리전에서만 경로가 안 보이는 증상과 무관 |
+
+</div>
+</details>
+
+---
+
+**Q10. Shared VPC vs Peering 판별 — Mountkirk 멀티팀형**
+
+한 게임사가 단일 조직 안에서 여러 개발팀에게 각자 프로젝트를 주되, **네트워크(서브넷·방화벽·라우트)는 플랫폼팀이 한 곳에서 중앙 통제**하려 한다. 각 팀은 지정된 서브넷에 워크로드만 배포할 수 있어야 한다. 가장 적합한 구성은?
+
+- (A) 팀마다 VPC를 만들고 모두 VPC Peering으로 상호 연결한다.
+- (B) 플랫폼팀 Host Project가 Shared VPC를 소유하고, 각 팀 프로젝트를 Service Project로 붙인 뒤 서브넷 단위로 `compute.networkUser`를 부여한다.
+- (C) 팀마다 독립 VPC를 두고 Private Service Connect로 서비스만 노출한다.
+- (D) 단일 프로젝트에 모든 팀을 넣고 방화벽 태그로 분리한다.
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (B)**
+
+"단일 조직 · 여러 팀 · 네트워크 중앙 통제 · 팀은 워크로드만"은 **Shared VPC**의 정의 그대로다. Host가 네트워크를 소유하고, Service Project에 서브넷 단위 `compute.networkUser`를 주면 팀은 지정 서브넷에 배포만 할 수 있고 네트워크는 못 바꾼다.
+
+| 선택지 | 오답 이유 |
+|--------|----------|
+| (A) | Peering은 **독립 VPC 연결** 모델 — 중앙 거버넌스가 아니라 각 VPC가 독립 관리됨. 팀 수만큼 비전이 메시가 복잡해짐 |
+| (C) | PSC는 특정 서비스 노출 도구 — 팀별 네트워크 배포·거버넌스 요구와 맞지 않음 |
+| (D) | 단일 프로젝트+태그 분리는 프로젝트 단위 격리·IAM 경계를 못 세움. 태그는 보안 경계로 약함 |
+
+</div>
+</details>
+
+---
+
+**Q11. Cloud NAT 동작 범위 — 인바운드 오해**
+
+외부 IP가 없는 백엔드 VM들이 Cloud NAT를 통해 인터넷 egress를 한다. 이제 이 VM들이 **외부 파트너가 먼저 개시하는 인바운드 TCP 연결**을 받아야 한다. 올바른 판단은?
+
+- (A) Cloud NAT는 stateful이므로 인바운드 연결도 자동으로 허용된다.
+- (B) Cloud NAT는 egress 전용이라 외부에서 먼저 개시하는 인바운드는 처리하지 못한다. 외부 IP를 붙이거나 로드밸런서를 두어야 한다.
+- (C) Cloud NAT에 인바운드 규칙을 추가하면 포트 포워딩으로 인입을 받을 수 있다.
+- (D) Private Google Access를 켜면 외부 인바운드가 사설 경로로 들어온다.
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (B)**
+
+Cloud NAT는 **egress 전용**이다. 내부에서 나간 연결의 응답 트래픽은 돌아오지만(stateful), **외부에서 먼저 개시하는 인바운드**는 받지 못한다. 외부 인입이 필요하면 외부 IP를 부여하거나 로드밸런서(외부 LB)를 앞에 둔다.
+
+| 선택지 | 오답 이유 |
+|--------|----------|
+| (A) | stateful은 "나간 연결의 응답"만 자동 허용 — 새로 개시되는 인바운드와 다름 |
+| (C) | Cloud NAT는 인바운드 포트 포워딩 제품이 아니다. 인입은 외부 IP/LB의 몫 |
+| (D) | PGA는 외부 IP 없는 VM의 **Google API 아웃바운드** 접근 도구 — 외부 인바운드와 무관 |
 
 </div>
 </details>

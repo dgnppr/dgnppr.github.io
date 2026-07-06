@@ -2,7 +2,7 @@
 layout  : concept
 title   : Google Cloud 운영과 비용 최적화 설계 결정
 date    : 2026-06-30 00:00:00 +0900
-updated : 2026-06-30 00:00:00 +0900
+updated : 2026-07-06 00:00:00 +0900
 tag     : cloud gcp operations sre
 toc     : true
 comment : true
@@ -97,6 +97,33 @@ flowchart LR
 
 <div class="callout-warning">
 함정: 로그를 BigQuery·Splunk 등으로 보내는 것은 <strong>sink</strong>다. 특정 로그를 저장에서 빼는 것은 sink가 아니라 <strong>exclusion(제외) 필터</strong>다. "로그를 외부 SIEM으로 실시간 전송" → Pub/Sub sink. "비용 절감을 위해 불필요한 로그를 저장하지 않음" → exclusion 필터(수집은 되지만 저장 청구를 피함).
+</div>
+
+### Cloud Audit Logs — 네 종류와 함정
+
+"누가·언제·무엇을 했는가"는 일반 로그가 아니라 **Cloud Audit Logs**가 답한다. EHR·금융·정부처럼 전 접근을 감사해야 하는 요구에서 직접 등장한다. 네 종류의 성격이 다르고, 특히 **기본 켜짐 여부**가 시험 함정이다.
+
+| 감사 로그 종류 | 기록 내용 | 기본 상태 |
+|----------------|-----------|-----------|
+| **Admin Activity** | 리소스 구성·메타데이터를 바꾸는 관리 작업(생성·삭제·IAM 변경 등) | **항상 켜짐, 비활성화 불가·무료** |
+| **System Event** | Google 시스템이 자동 수행한 변경(예: 라이브 마이그레이션) | 항상 켜짐, 비활성화 불가·무료 |
+| **Data Access** | 데이터 읽기/쓰기, 리소스 메타데이터 조회 | **기본 꺼짐(opt-in), 대량·유료**(BigQuery 등 일부 예외) |
+| **Policy Denied** | 조직 정책·서비스 경계 위반으로 거부된 접근 | 위반 발생 시 기록(비활성화 불가) |
+
+- **Admin Activity / System Event**: 끌 수 없고 과금되지 않는다. "관리 작업 감사가 남는가?"의 답은 **항상 남는다**.
+- **Data Access**: 명시적으로 켜야 하고(IAM 정책에서 서비스·로그 종류·principal 지정), 볼륨이 커서 저장 비용이 든다. "데이터 조회까지 감사해야 한다(HIPAA·PCI)" → **Data Access 로그를 opt-in으로 활성화**.
+- 감사 로그는 `_Required` 버킷에 들어가는 항목(Admin Activity·System Event·Policy Denied)이 **400일 고정 보존, 변경 불가**다. 더 오래 보관하려면 **sink로 BigQuery/GCS에 내보내** 별도 보존한다.
+
+<div class="callout-warning">
+함정: "관리 작업(IAM·리소스 변경) 감사를 켜라"는 <strong>이미 켜져 있다</strong> — Admin Activity는 비활성화가 불가능하다. 진짜 추가 설정이 필요한 것은 <strong>Data Access 로그</strong>로, 기본이 <strong>꺼짐</strong>이라 규제 요구가 있으면 명시적으로 활성화해야 하고 볼륨·비용이 크다. "전 <strong>데이터 접근</strong>을 감사"(EHR/PCI) = Data Access opt-in, "<strong>구성 변경</strong> 감사" = Admin Activity(기본 제공).
+</div>
+
+### 조직 레벨 집계 싱크 (Aggregated Sink)
+
+멀티 프로젝트 환경에서 감사·보안 로그를 한 곳에 모으는 표준은 **조직/폴더 레벨 aggregated sink**다. 조직 노드에 sink를 만들고 `includeChildren=true`로 두면, **하위 모든 프로젝트의 로그가 자동으로 중앙 목적지**(보안팀 프로젝트의 Log 버킷·BigQuery·GCS)로 라우팅된다. 프로젝트를 새로 만들어도 자동 포함된다.
+
+<div class="callout-note">
+"조직 전체의 감사 로그를 중앙 보안 프로젝트에 모아 장기 보관·분석" = <strong>조직 레벨 aggregated sink</strong>(includeChildren) → BigQuery/GCS. 프로젝트마다 개별 sink를 만드는 것은 신규 프로젝트가 누락되는 반복 작업이다. 중앙 집계는 조직/폴더 레벨에서 한 번 건다.
 </div>
 
 ### Cloud Trace · Profiler · Error Reporting
@@ -546,6 +573,7 @@ flowchart LR
 
 - **Billing export to BigQuery**: 상세 사용·비용 데이터를 BigQuery로 내보내 SQL로 분석하고 Looker Studio로 대시보드화. 비용 귀속(어느 프로젝트·서비스·라벨이 얼마 썼나) 분석의 표준 방법이다. **라벨(label)**을 리소스에 일관되게 붙이면 팀·환경·서비스별 비용 가시성이 생긴다.
 - **계층별 가시성**: 조직 → 폴더 → 프로젝트 계층으로 비용을 집계·귀속한다. 프로젝트를 비용 경계로 설계하는 것이 가시성의 출발점이다.
+- **Cloud Billing reports(콘솔 내장)**: 별도 파이프라인 없이 콘솔에서 프로젝트·서비스·라벨·SKU별 비용 추이와 할인(CUD/SUD) 적용 현황을 바로 본다. "빠른 비용 조회·추세 파악"은 Billing reports, "SQL·커스텀 대시보드·타 데이터와 조인"은 BigQuery export로 가른다. **Cost breakdown/Recommender**는 낭비를 짚어주고, **FinOps**는 이 도구들(Billing reports·export·Recommender·budget·라벨)을 묶어 "가시화 → 최적화 → 운영"을 반복하는 실천이다.
 
 ```sql
 -- billing export 테이블에서 서비스별 30일 비용 상위 (확인 쿼리: 먼저 소량 확인)
@@ -619,6 +647,21 @@ LIMIT 10;
 
 ---
 
+## 케이스 스터디로 읽는 운영·비용
+
+PCA는 4개 공식 케이스 스터디(EHR Healthcare·Helicopter Racing League·Mountkirk Games·TerramEarth)에서 문항의 20~30%를 낸다. 운영·비용 도메인이 각 케이스에서 어떻게 요구로 나타나는지를 매핑하면, "요구사항 문장 → 서비스" 변환이 빨라진다.
+
+| 케이스 | 운영·비용 요구(원문 취지) | 이 글의 도구로 |
+|--------|---------------------------|----------------|
+| **EHR Healthcare** | 전 접근 감사 로깅, 통합 로깅·모니터링·알림, 멀티리전 99.99% | **Data Access 감사 로그 opt-in** + 조직 aggregated sink → BigQuery, Cloud Monitoring 통합 대시보드·알림, SLO(99.99%)·error budget |
+| **Mountkirk Games** | 게임 KPI(동시접속·세션·레이턴시) 실시간 대시보드, **구조화 로그**로 지표 산출, 글로벌 출시 | Cloud Monitoring 커스텀 메트릭·대시보드, **구조화(JSON) 로그 → 로그 기반 메트릭**, canary(리비전/Deployment) 배포, Spot 노드로 배치 비용 절감 |
+| **Helicopter Racing League** | 시청 지표 수집·예측 분석, 글로벌 스트리밍 관측성 강화 | Cloud Monitoring + Logging(시청 이벤트) → BigQuery export로 분석, 예측은 [[/concept/cloud/12_genai_for_pca]], 비용은 CDN egress 절감·리전 배치 |
+| **TerramEarth** | 텔레메트리 파이프라인 관측, 딜러 API 운영, 데이터 처리 현대화 | Pub/Sub·Dataflow 파이프라인 Monitoring, 딜러 API는 **Apigee**(포털·쿼터·분석), 대량 배치는 Spot, 비용은 라벨·Billing export로 귀속 |
+
+<div class="callout-note">
+케이스에서 "<strong>감사</strong>"(EHR)가 나오면 Data Access 로그 opt-in을, "<strong>실시간 KPI·구조화 로그</strong>"(Mountkirk)가 나오면 커스텀 메트릭·로그 기반 메트릭을, "<strong>시청/예측 지표</strong>"(HRL)가 나오면 Logging→BigQuery export 분석을 먼저 떠올린다. 운영 도메인의 케이스 답은 대개 "관리형 관측 + 중앙 집계 로그 + SLO"의 조합이다.
+</div>
+
 ## 시험장에서 — 문제 유형별 공략
 
 ### 관측 도구 선택형
@@ -630,6 +673,9 @@ LIMIT 10;
 | VM 메모리·디스크 사용률 알림 | Ops Agent 설치 후 Monitoring |
 | 로그를 SQL로 분석 | Logging sink → BigQuery |
 | 로그를 서드파티 SIEM으로 실시간 | Logging sink → Pub/Sub |
+| 관리 작업(IAM·리소스 변경) 감사 | Admin Activity 로그(기본 켜짐·비활성 불가) |
+| 데이터 읽기/쓰기까지 감사(HIPAA·PCI) | Data Access 로그 opt-in(기본 꺼짐·유료) |
+| 조직 전체 로그를 중앙에 집계 | 조직 레벨 aggregated sink(includeChildren) |
 | 저장 비용 절감(불필요 로그) | exclusion(제외) 필터 |
 | 로그에만 있는 정보로 알림 | 로그 기반 메트릭 |
 | 마이크로서비스 지연 구간 추적 | Cloud Trace |
@@ -964,6 +1010,165 @@ blue-green과 canary의 차이(전체 전환 vs 점진 이전)가 핵심.
 
 ---
 
+---
+
+**Q9. 감사 로그 종류 — 무엇을 켜야 하는가 (EHR)**
+
+의료 SaaS가 규제 대응으로 "**모든 환자 데이터에 대한 읽기·쓰기 접근을 빠짐없이 감사**하고, 리소스·IAM **구성 변경도 감사**해야 한다"는 요구를 받았다. 가장 정확한 대응은?
+
+- (A) 기본 상태로 충분하다 — Cloud Audit Logs가 모든 데이터 접근을 자동으로 기록한다.
+- (B) 구성 변경(Admin Activity)은 기본 켜짐이므로 그대로 두고, **Data Access 로그를 명시적으로 활성화**한다(볼륨·비용 증가를 고지). 필요 시 sink로 BigQuery에 장기 보관한다.
+- (C) Data Access 로그는 항상 켜져 있으니, 오히려 Admin Activity를 켜야 한다.
+- (D) Cloud Monitoring 알림 정책만 설정하면 데이터 접근 감사가 된다.
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (B)**
+
+- **Admin Activity**(구성·IAM 변경)는 **항상 켜져 있고 끌 수 없으며 무료** — 별도 설정 불필요.
+- **Data Access**(데이터 읽기/쓰기)는 **기본 꺼짐(opt-in)**이라 규제 요구가 있으면 IAM 정책에서 명시적으로 활성화해야 하고, 볼륨이 커 저장 비용이 든다. 400일 이상 보관하려면 sink로 BigQuery/GCS에 내보낸다.
+
+| 선택지 | 문제점 |
+|--------|--------|
+| (A) | Data Access는 기본 꺼짐 — "자동 기록"은 틀림 |
+| (C) | 켜짐/꺼짐을 뒤바꿈. Admin Activity가 기본 켜짐, Data Access가 꺼짐 |
+| (D) | Monitoring 알림은 감사 로그 기록 수단이 아님 |
+
+핵심: "**데이터 접근** 감사"는 opt-in인 **Data Access** 로그를 켜는 것이 답.
+
+</div>
+</details>
+
+---
+
+**Q10. 조직 전체 로그 중앙 집계**
+
+수백 개 프로젝트를 가진 조직이 "**모든 프로젝트(신규 포함)의 감사 로그를 보안팀 프로젝트 한 곳에 모아** 장기 보관·SQL 분석"하려 한다. 가장 적절한 구성은?
+
+- (A) 프로젝트마다 개별 sink를 만들어 보안팀 BigQuery로 보낸다.
+- (B) 조직(또는 폴더) 레벨 **aggregated sink**를 `includeChildren=true`로 만들어 하위 전 프로젝트 로그를 보안팀 BigQuery/GCS로 라우팅한다.
+- (C) 각 프로젝트의 `_Required` 버킷 보존 기간을 늘린다.
+- (D) exclusion 필터로 불필요한 로그만 제외하면 자동으로 집계된다.
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (B)**
+
+**조직/폴더 레벨 aggregated sink**(`includeChildren=true`)는 하위 모든 프로젝트의 로그를 중앙 목적지로 자동 라우팅하고, **새로 생성되는 프로젝트도 자동 포함**한다. 대규모 조직의 중앙 감사·SIEM 표준이다.
+
+| 선택지 | 문제점 |
+|--------|--------|
+| (A) | 프로젝트마다 개별 sink는 신규 프로젝트가 누락되는 반복 작업 |
+| (C) | `_Required` 보존만으로는 중앙 집계·SQL 분석이 안 됨(각 프로젝트에 흩어짐) |
+| (D) | exclusion은 로그를 제외하는 필터이지 집계 수단이 아님 |
+
+핵심: "조직 전체·신규 포함 중앙 집계" = 조직 레벨 aggregated sink.
+
+</div>
+</details>
+
+---
+
+**Q11. 게임 KPI 실시간 관측 (Mountkirk)**
+
+모바일 멀티플레이어 게임이 "**동시접속·세션 수·매치 지연** 같은 게임 KPI를 실시간 대시보드로 보고, 앱이 남기는 **구조화(JSON) 로그**에서 이 지표를 뽑아 임계치 알림을 걸고 싶다"고 한다. 가장 적절한 조합은?
+
+- (A) Cloud Trace로 KPI 대시보드를 만든다.
+- (B) 애플리케이션 **커스텀 메트릭**을 Cloud Monitoring에 보내 대시보드·알림을 구성하고, 로그에만 있는 값은 **로그 기반 메트릭**으로 추출해 알림을 건다.
+- (C) Error Reporting으로 동시접속 수를 집계한다.
+- (D) 모든 KPI를 BigQuery로만 보내면 실시간 알림이 자동 생성된다.
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (B)**
+
+게임 KPI는 애플리케이션이 아는 값이므로 **커스텀 메트릭**으로 Cloud Monitoring에 보내 대시보드·알림을 만든다. 지표가 **구조화 로그에만** 존재하면 **로그 기반 메트릭**(카운터/분포)으로 추출해 알림 조건으로 쓴다.
+
+| 선택지 | 문제점 |
+|--------|--------|
+| (A) | Trace는 요청 지연 구간 추적용이지 KPI 대시보드용이 아님 |
+| (C) | Error Reporting은 예외 그룹핑용 — KPI 집계가 아님 |
+| (D) | BigQuery는 분석·보관용, 실시간 임계치 알림을 자동 제공하지 않음 |
+
+핵심: KPI = 커스텀 메트릭 + (로그에만 있으면) 로그 기반 메트릭.
+
+</div>
+</details>
+
+---
+
+**Q12. 시청 지표 분석 (HRL) — 로그를 분석으로**
+
+글로벌 스트리밍 서비스가 "**시청 이벤트 로그**를 대량으로 축적해 SQL로 시청 패턴·지역별 지표를 분석하고, 별도 BI 대시보드로 시각화"하려 한다. 로그 처리 경로로 가장 적절한 것은?
+
+- (A) exclusion 필터로 로그를 제외한다.
+- (B) Logging **sink → BigQuery**로 시청 로그를 내보내 SQL로 분석하고 Looker Studio로 대시보드화한다.
+- (C) Logging sink → Pub/Sub만으로 SQL 분석과 대시보드가 완성된다.
+- (D) `_Default` 버킷(30일)에 두고 콘솔 로그 뷰어로 매번 조회한다.
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (B)**
+
+"대량 로그를 **SQL로 분석 + BI 대시보드**"의 표준은 **Logging sink → BigQuery**(→ Looker Studio)다. Pub/Sub sink는 실시간 스트리밍·서드파티 연동용이고, 그 자체로 SQL 분석·대시보드를 제공하지 않는다.
+
+| 선택지 | 문제점 |
+|--------|--------|
+| (A) | exclusion은 로그를 버리는 것 — 분석 요구 위반 |
+| (C) | Pub/Sub는 스트리밍 전달일 뿐, SQL 분석·대시보드는 별도 소비자 필요 |
+| (D) | 30일 보관·수동 조회는 대량 분석·시각화에 부적합 |
+
+핵심: SQL 분석·BI = sink → BigQuery, 실시간 외부 전달 = sink → Pub/Sub.
+
+</div>
+</details>
+
+---
+
+**Q13. FinOps 도구 선택 — 조회 vs 커스텀 분석**
+
+재무·플랫폼 팀이 두 가지를 원한다.
+
+- ① 매주 **콘솔에서 빠르게** 프로젝트·서비스별 비용 추세와 CUD/SUD 할인 적용을 확인.
+- ② 비용 데이터를 **사내 사용량 데이터와 조인**해 팀별 단가 모델을 SQL로 만들고 커스텀 대시보드화.
+
+각각에 맞는 도구는?
+
+- (A) ① BigQuery export, ② Billing reports
+- (B) ① **Cloud Billing reports(콘솔)**, ② **Billing export → BigQuery**
+- (C) ① Budget alert, ② Quota
+- (D) 둘 다 Recommender로 해결된다.
+
+<details>
+<summary>정답 및 해설</summary>
+<div markdown="1">
+
+**정답: (B)**
+
+- ① **빠른 콘솔 조회·추세** = **Cloud Billing reports**(내장, 파이프라인 불필요).
+- ② **SQL·타 데이터 조인·커스텀 대시보드** = **Billing export → BigQuery**(→ Looker Studio).
+
+| 선택지 | 문제점 |
+|--------|--------|
+| (A) | 두 도구를 뒤바꿈 — 빠른 조회에 export는 과하고, 커스텀 SQL을 콘솔 리포트로는 못 함 |
+| (C) | Budget alert는 통지, Quota는 수량 제한 — 비용 분석 도구가 아님 |
+| (D) | Recommender는 낭비 권고 도구이지 비용 조회·커스텀 분석 플랫폼이 아님 |
+
+핵심: 빠른 조회=Billing reports, 커스텀 SQL 분석=BigQuery export. 둘은 FinOps 가시화의 상호 보완 도구.
+
+</div>
+</details>
+
+---
+
 ## 마무리
 
 운영·비용 도메인의 판단은 세 묶음으로 압축된다.
@@ -988,6 +1193,7 @@ blue-green과 canary의 차이(전체 전환 vs 점진 이전)가 핵심.
 | budget alert vs 자동 차단 | alert=통지뿐 / 차단은 Pub/Sub+Cloud Function 직접 구성 |
 | ingress vs egress | ingress 대체로 무료 / egress(인터넷·리전 간)는 과금 |
 | Apigee vs API Gateway | Apigee=풀 라이프사이클(포털·수익화·정책·분석) / API Gateway=서버리스 경량 노출 |
+| Admin Activity vs Data Access | Admin Activity=구성 변경·기본 켜짐·무료 / Data Access=데이터 접근·기본 꺼짐(opt-in)·유료 |
 
 ---
 

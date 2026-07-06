@@ -310,9 +310,14 @@
         "Host Project 전체",
         "Shared VPC",
         "온프렘 데이터센터",
+        "암호화 여부 · 대역폭 규모 · SLA 요구",
         "Cloud VPN",
-        "케이스 적용 — 하이브리드 연동",
+        "공용 인터넷 위",
         "HA VPN",
+        "Dedicated Interconnect",
+        "물리 전용 회선",
+        "Partner Interconnect",
+        "케이스 적용 — 하이브리드 연동",
         "Interconnect",
         "서로 다른 문제",
         "Cloud NAT — 일반 인터넷 egress",
@@ -344,6 +349,11 @@
         "서비스만",
         "Peering/Shared VPC",
         "PSC",
+        "egress 전용",
+        "소유·거버넌스 모델이 정반대",
+        "공유",
+        "연결",
+        "단일 조직 내부",
         "진단",
         "샘플링 비율",
         "Connectivity Tests",
@@ -355,6 +365,10 @@
         "Cloud VPN(HA)",
         "VPC Service Controls",
         "세 도구가 각각",
+        "공식 케이스 스터디",
+        "TerramEarth",
+        "EHR Healthcare",
+        "Mountkirk Games",
         "함정 8쌍",
         "숫자 낮을수록 우선",
         "DENY",
@@ -377,7 +391,14 @@
         "CIDR 중첩",
         "서비스 단위 최소 노출",
         "service attachment 하나",
-        "단일 조직 내"
+        "단일 조직 내",
+        "VPC↔VPC",
+        "요구(대역·SLA·암호화)",
+        "정답: (A)",
+        "`Regional`",
+        "독립 VPC 연결",
+        "외부에서 먼저 개시하는 인바운드",
+        "Google API 아웃바운드"
       ],
       "content_depth": 1,
       "importance": 9,
@@ -407,6 +428,7 @@
         "Initial",
         "hostPID: true",
         "hostPID",
+        "hostNetwork: true",
         "Standard",
         "Autopilot",
         "Control Plane",
@@ -421,6 +443,9 @@
         "사용자",
         "Google",
         "Pod 리소스 요청",
+        "실행 중에 동적으로 리사이즈",
+        "워크로드 단위 선택",
+        "워크로드 수준 결정",
         "Service",
         "ClusterIP",
         "NodePort",
@@ -445,14 +470,28 @@
         "서비스 계정 키 파일을 사용하지 않는",
         "작동 원리",
         "신뢰할 수 있는 서명(attestation)",
-        "Workload Identity",
-        "Binary Authorization",
+        "여러 클러스터를 하나의 논리 단위로 묶어 관리",
+        "Fleet",
+        "집합 전체에 걸쳐",
+        "Policy Controller",
+        "Cloud Service Mesh",
+        "Fleet-wide 관측성",
+        "여러 클러스터를 하나로",
+        "GKE Enterprise(fleet)",
+        "글로벌 동시 출시",
+        "멀티리전 배포",
+        "HPA",
+        "Cluster Autoscaler",
+        "Spanner",
+        "실시간 경기 예측(ML)",
+        "GKE Standard + GPU 노드 풀",
         "VPC-native 클러스터",
         "Private nodes",
         "Private endpoint",
-        "HPA",
         "VPA",
-        "Cluster Autoscaler",
+        "Node Auto Provisioning",
+        "Binary Authorization",
+        "GKE Enterprise (fleet)",
         "정답: (B)",
         "키 파일이 존재하지 않으므로",
         "공개 인터넷에 노출",
@@ -462,7 +501,20 @@
         "같은 메트릭",
         "Secondary range 2개",
         "자동 생성되지 않음",
-        "별도 range"
+        "별도 range",
+        "글로벌 상태는 관리형 DB로 외부화",
+        "강한 일관성 아님",
+        "일관되게 강제",
+        "멀티클러스터 관리",
+        "단일 클러스터 HA",
+        "스케줄링 속도·워크로드 단위 유연성",
+        "호스트 네임스페이스 접근 금지",
+        "범위",
+        "사람",
+        "커스텀 GPU 추론 컨테이너",
+        "NAP",
+        "training",
+        "추론 서빙"
       ],
       "content_depth": 1,
       "importance": 6,
@@ -492,9 +544,16 @@
         "Owner",
         "Editor",
         "Viewer",
+        "gcloud",
+        "gsutil",
+        "force",
+        "load",
         "roles/owner",
+        "cryptoKeyEncrypterDecrypter",
         "), ② IAM (",
         "roles/editor",
+        "roles/viewer",
+        "editor",
         "Principal(주체)",
         "Role(역할)",
         "Policy Binding",
@@ -527,6 +586,14 @@
         "Provider",
         "내부",
         "외부",
+        "사람",
+        "직원 신원",
+        "앱·서비스·CI/CD",
+        "SA 키 파일 제거",
+        "직원·사용자",
+        "기존 IdP로 GCP 콘솔 접근",
+        "로그인하는 직원",
+        "호출하는 앱",
         "위험한 권한 조합이 한 주체에 모이지 않게",
         "역할을 다른 그룹·주체에 분배",
         "Custom Role로 금지 조합 배제",
@@ -540,6 +607,17 @@
         "List",
         "자주 나오는 Constraints",
         "케이스 적용",
+        "누적",
+        "별개로 작동하는 상한/차단 레이어",
+        "Org Policy (조직 정책)",
+        "리소스가 무엇을 할 수 있나",
+        "리소스 구성",
+        "IAM Deny (거부 정책)",
+        "이 주체의 이 권한을 막는다",
+        "Principal + permission",
+        "PAB",
+        "를 정한다 — 주체별 권한",
+        "IAM Allow(바인딩)",
         "조건이 충족될 때만",
         "케이스 — 분기 감사 접근",
         "IAM Conditions",
@@ -549,7 +627,15 @@
         "Org Policy (constraints)",
         "IAM 바인딩",
         "SA 연결 + 메타데이터 서버",
+        "IAM Deny 정책",
         "직무 분리",
+        "규제·감사가 강한 EHR Healthcare",
+        "전 접근 감사 로깅",
+        "로그 관리 ≠ 로그 운영 직무 분리",
+        ", 온프렘 앱은",
+        "Apigee로 게이트",
+        "PAB로 연합 주체 상한",
+        "그룹 기반 부여 + 상한(PAB)",
         "정답: (B)",
         "Custom 역할",
         "누적(additive)",
@@ -560,6 +646,25 @@
         "클러스터 내부",
         "암복호화 자체는 못 한다",
         "유효 권한 합산",
+        "Okta",
+        "온프레미스 배치 애플리케이션",
+        "주체가 사람인가 기계인가",
+        "직원(사람)",
+        "애플리케이션(기계)",
+        "특정 인턴 계정",
+        "절대",
+        "상위 폴더 상속",
+        "리소스 범위 자체",
+        "리소스 동작",
+        "상한(ceiling)",
+        "개별 바인딩",
+        "데이터 exfiltration용 서비스 경계",
+        "로그 라우팅·삭제 권한을 별도 그룹으로 분리",
+        "최소 권한 + 직무 분리",
+        "분리가 오히려 무너짐",
+        "장수명 SA 키를 배포하지 말 것",
+        "으로 연합하며, 딜러를",
+        "전 세계 누구나",
         "함정 8쌍"
       ],
       "content_depth": 1,
@@ -649,6 +754,9 @@
         "오토스케일링",
         "롤링 업데이트",
         "로드 밸런싱 연동",
+        "stateless(무상태)",
+        "고유한 상태",
+        "stateful MIG",
         "CPU 사용률",
         "로드 밸런싱 처리 용량",
         "Cloud Monitoring 커스텀 메트릭",
@@ -679,8 +787,7 @@
         "Cloud Run Jobs",
         "CPU 할당",
         "min instances",
-        "Cloud Functions",
-        "Cloud Run functions",
+        "Cloud Run 산하로 통합되며",
         "이벤트나 HTTP 요청에 반응",
         "HTTP 트리거",
         "이벤트 트리거",
@@ -688,6 +795,7 @@
         "Pub/Sub 트리거",
         "Cloud Run 위에서 동작",
         "추상화 수준이 다르다",
+        "Cloud Run functions",
         "커넥터 리소스를 별도 프로비저닝",
         "Direct VPC egress",
         "없이",
@@ -710,11 +818,20 @@
         "비용 모델",
         "세밀한 제어(GPU·커널·DaemonSet)",
         "Compute Engine",
+        "Stateful MIG",
         "GKE",
         "GKE Autopilot",
         "Cloud Run (Services)",
         "App Engine Flexible",
         "Compute Engine + Spot VM",
+        "구체적 요구사항 문장",
+        "글로벌 동시 출시",
+        "GKE(멀티리전/리전 클러스터)",
+        "컴퓨트 최적화 머신(C 계열) 노드풀",
+        "컴퓨트 런타임 선택",
+        "배치 처리 워크로드",
+        "이벤트 반응 처리",
+        "GKE Spot 노드풀",
         "Regional",
         "재생성",
         "트래픽만 제외",
@@ -732,6 +849,12 @@
         "ingress를 internal",
         "수백 대의 VMware vSphere VM",
         "재플랫폼 없이 단기간에",
+        "고정된 인스턴스 이름과 특정 영구 디스크",
+        "고정 이름·특정 디스크를 보존",
+        "Cloud Storage 버킷에 업로드",
+        "파일이 Cloud Storage에 업로드되면",
+        "비용 0(scale to zero)",
+        "명칭·통합 변화이지 폐기·재작성이 아니다",
         "함정 묶음"
       ],
       "content_depth": 1,
@@ -777,7 +900,11 @@
         "노출 방향",
         "OSI 계층",
         "연결 처리",
+        "구명칭이 여전히 등장",
+        "(global) |",
+        "(classic) |",
         "Internal Application LB",
+        "Network Load Balancing",
         "패스스루 vs 프록시",
         "— 패킷을 변형 없이 백엔드로 전달,",
         "External Proxy Network LB",
@@ -796,6 +923,7 @@
         "프로토콜·호스트·쿼리스트링 포함/제외",
         "Signed URL",
         "Signed Cookie",
+        "| 안 붙음 |",
         "사전 구성 WAF 규칙",
         "DDoS 방어",
         "Rate limiting",
@@ -834,8 +962,11 @@
         "온프렘 ↔ GCP",
         "타 클라우드(AWS·Azure 등) ↔ GCP",
         "Cross-Cloud Interconnect",
-        "제약된 관계",
+        "글로벌 스트리밍의 HRL",
+        "글로벌 저지연 게임의 Mountkirk",
         "Cloud CDN",
+        "단일 글로벌 IP",
+        "제약된 관계",
         "Signed URL/Cookie",
         "HA VPN",
         "Application",
@@ -863,7 +994,17 @@
         "단일 글로벌 anycast IP",
         "탐지하고 가시화",
         "east-west(VM 간 횡적 이동)",
-        "탐지/가시성(차단 안 함)"
+        "탐지/가시성(차단 안 함)",
+        "HTTP(S) Load Balancer",
+        "단일 리전에서만",
+        "기능이고, 데이터 거주(단일 리전 처리)는",
+        "패스스루 NLB",
+        "AWS에 남아",
+        "공용 인터넷을 거치지 않고",
+        "인터넷 경유",
+        "GCP VPC 사이",
+        "기본 비암호화",
+        "타 클라우드↔GCP"
       ],
       "content_depth": 1,
       "importance": 3,
@@ -981,6 +1122,10 @@
         "네트워크 격리",
         "Private IP",
         "VPC Service Controls",
+        "EHR Healthcare",
+        "교차 리전 읽기 복제본 + 승격",
+        "TerramEarth",
+        "Mountkirk Games",
         "Firestore (Native)",
         "Firestore (Datastore 모드)",
         "Nearline / Coldline",
@@ -1003,6 +1148,9 @@
         "정답: (C)",
         "같은 단일 region",
         "NFS 마운트 경로에 파일을 읽고 쓰도록",
+        "단일 글로벌 리더보드",
+        "같은 최신 데이터에 대해",
+        "Turbo Replication",
         "요구사항 키워드를 서비스 특성에 매핑",
         "Spanner 오버킬",
         "Bigtable 데이터 모델 오용"
@@ -1026,6 +1174,8 @@
         "kms",
         "vpcsc",
         "iap",
+        "armor",
+        "compliance",
         "pca"
       ],
       "date": "2026-06-30",
@@ -1131,6 +1281,28 @@
         "개별 앱/VM 앞단(L7)",
         "Context-Aware Access",
         "콘솔·API·앱 접근 전반",
+        "누가",
+        "Cloud Armor",
+        "무엇",
+        "엣지에서",
+        "DDoS 방어",
+        "WAF 규칙",
+        "rate limiting",
+        "allow/deny/redirect",
+        "엣지 보안 정책",
+        "Cloud Armor와 IAP를 동시에",
+        "Cloud Armor가 먼저",
+        "무엇을 무엇으로부터 보호하는지",
+        "외부 공개 앱",
+        "엣지 트래픽",
+        "앱·VM 접근 게이트",
+        "사용자",
+        "신원+컨텍스트",
+        "VPC-SC",
+        "관리형 서비스 데이터",
+        "데이터 유출(exfiltration)",
+        "데이터 평면 경계",
+        "Cloud Armor가 IAP보다 먼저 평가",
         "자산 인벤토리",
         "취약점 탐지",
         "위협 탐지",
@@ -1160,10 +1332,8 @@
         "Confidential VM",
         "CMEK 사용 강제",
         "Shielded VM으로 강제",
-        "Cloud Armor",
         "접근 통제·암호화·감사·데이터 거주·유출 방지",
         "HIPAA",
-        "VPC-SC",
         "GDPR",
         "Sensitive Data Protection",
         "COPPA",
@@ -1174,6 +1344,11 @@
         "데이터 거주(residency)",
         "데이터 주권(sovereignty)",
         "폴더 단위로 강제·검증",
+        "\"키를 누가 저장·통제하는가\"",
+        "\"규제 경계 자체를 강제하는가\"",
+        "Google-managed",
+        "Google KMS",
+        "묶어서",
         "PII/민감정보",
         "탐지·분류·비식별(de-identify)",
         "탐지(inspect)",
@@ -1210,13 +1385,24 @@
         "GKE/Cloud Run",
         "Audit Log",
         "거버넌스 레이어 서브그래프",
+        "EHR Healthcare",
+        "TerramEarth",
+        "Dedicated Interconnect",
+        "Cloud Audit Logs",
         "SCC Premium",
+        "외부 파트너에게 API를 안전하게 노출",
+        "통제된 데이터 반출",
+        "Apigee",
+        "통제된",
+        "VPC-SC egress 규칙",
+        "결론(케이스)",
         "SCC Enterprise",
         "Shielded VM",
         "계층형 방화벽 정책",
         "`resourceLocations`",
         "Data Access 감사 로그",
         "Access Transparency",
+        "Cloud Armor 먼저",
         "Version",
         "정답: (C)",
         "BigQuery는 CSEK 미지원",
@@ -1238,6 +1424,19 @@
         "읽기/쓰기",
         "기본 비활성",
         "Google 인력",
+        "데이터 유출",
+        "신원",
+        "Cloud Armor가 IAP보다 먼저",
+        "여러 레이어의 조합",
+        "Data Access 로그",
+        "BAA 체결",
+        "egress 규칙",
+        "들어오는",
+        "FedRAMP",
+        "키 메커니즘",
+        "규제 경계 컨테이너",
+        "메모리에서 처리되는 동안(in-use)",
+        "저장(at-rest)",
         "키 통제권을 고객에게 옮기는 정도의 차이",
         "경계"
       ],
@@ -1264,6 +1463,7 @@
       "confidence": "high",
       "mentioned_terms": [
         "gcloud storage",
+        "gcloud",
         "마이그레이션",
         "데이터 전송",
         "DR/BCP",
@@ -1276,6 +1476,12 @@
         "Rip and replace",
         "Assess(현황 평가·종속성 파악)",
         "결론",
+        "Rehost",
+        "Replatform",
+        "Refactor / Re-architect",
+        "Repurchase",
+        "Retain",
+        "Retire",
         "자산 발견·인벤토리",
         "TCO 평가",
         "마이그레이션 그룹화·계획",
@@ -1363,11 +1569,23 @@
         "Assess(평가·인벤토리·종속성)",
         "Migration Center 의존성 매핑",
         "Transfer Appliance(오프라인)",
+        "VM(OS·앱 통째)",
+        "운영 DB",
+        "객체·파일(온라인)",
+        "객체·파일(오프라인)",
+        "분석 데이터(→BQ)",
         "동기 복제 / 다중 리전 Spanner",
         "리전 내 다중 존(Regional 배치)",
         "멀티리전 / 교차 리전 복제",
         "Spanner 다중 리전",
         "교차 리전 읽기 복제본 → 승격",
+        "Replatform → GKE",
+        "Dedicated Interconnect",
+        "멀티리전/교차 리전 복제",
+        "Pub/Sub 수집 + Dataflow 처리",
+        "Bigtable",
+        "Helicopter Racing League",
+        "Mountkirk Games",
         "함정 9쌍",
         "정답: (C)",
         "데이터량 ÷ 대역폭 = 전송 시간",
@@ -1383,7 +1601,23 @@
         "Assess·Plan",
         "실행",
         "물리 코어 단위 SQL Server 라이선스",
-        "sole-tenant 노드 + BYOL"
+        "sole-tenant 노드 + BYOL",
+        "GKE",
+        "상시로 안정적·저지연",
+        "일회성 전송이 아니라 \"상시 연동\"",
+        "일회성 오프라인 전송",
+        "복사",
+        "Amazon Redshift",
+        "주기적으로 증분 적재",
+        "BigQuery로 정기/증분 적재",
+        "운영 트랜잭션 DB",
+        "\"여러 워크로드 정책 표준화·중앙 관리\"",
+        "Oracle",
+        "PostgreSQL(AlloyDB)",
+        "다른 엔진",
+        "이질(heterogeneous) 마이그레이션",
+        "변환",
+        "동질(변환 불필요) vs 이질(변환 필요)"
       ],
       "content_depth": 1,
       "importance": 7,
@@ -1407,6 +1641,7 @@
       "valid_from": "Tue",
       "confidence": "high",
       "mentioned_terms": [
+        "includeChildren=true",
         "maxSurge",
         "maxUnavailable",
         "gcloud",
@@ -1444,6 +1679,17 @@
         "Pub/Sub",
         "다른 Log 버킷",
         "분포형",
+        "Cloud Audit Logs",
+        "기본 켜짐 여부",
+        "Admin Activity",
+        "항상 켜짐, 비활성화 불가·무료",
+        "System Event",
+        "Data Access",
+        "기본 꺼짐(opt-in), 대량·유료",
+        "Policy Denied",
+        "항상 남는다",
+        "sink로 BigQuery/GCS에 내보내",
+        "조직/폴더 레벨 aggregated sink",
         "어디서 지연이 발생하는지",
         "결론",
         "기준선(baseline)",
@@ -1534,6 +1780,7 @@
         "비용 가시화",
         "라벨(label)",
         "계층별 가시성",
+        "는 낭비를 짚어주고,",
         "Ingress(들어오는 트래픽)",
         "리전 내 다른 존 간",
         "리전 간(inter-region)",
@@ -1548,6 +1795,14 @@
         "Enhanced",
         "Premium",
         "관리형 서비스·자동화·관측 강화",
+        "EHR Healthcare",
+        "Data Access 감사 로그 opt-in",
+        "Mountkirk Games",
+        "구조화 로그",
+        "구조화(JSON) 로그 → 로그 기반 메트릭",
+        "Helicopter Racing League",
+        "TerramEarth",
+        "Apigee",
         "정답: (B)",
         "실제 트래픽의 소수에게 먼저 노출",
         "정답: (C)",
@@ -1563,7 +1818,6 @@
         "외부 SIEM(Splunk)",
         "API 키와 JWT 검증만 붙여 가볍게 노출",
         "개발자 포털·수익화·정교한 정책·분석",
-        "Apigee",
         "서버리스 백엔드를 키/JWT로 가볍게 노출",
         "API Gateway",
         "부하 테스트",
@@ -1572,6 +1826,28 @@
         "Cloud Emulators",
         "비용 없이·빠르게",
         "로컬·CI 검증용",
+        "하고, 리소스·IAM",
+        "Data Access 로그를 명시적으로 활성화",
+        "항상 켜져 있고 끌 수 없으며 무료",
+        "기본 꺼짐(opt-in)",
+        "데이터 접근",
+        "aggregated sink",
+        "새로 생성되는 프로젝트도 자동 포함",
+        "동시접속·세션 수·매치 지연",
+        "구조화(JSON) 로그",
+        "로그 기반 메트릭",
+        "구조화 로그에만",
+        "시청 이벤트 로그",
+        "sink → BigQuery",
+        "SQL로 분석 + BI 대시보드",
+        "Logging sink → BigQuery",
+        "콘솔에서 빠르게",
+        "사내 사용량 데이터와 조인",
+        "Cloud Billing reports(콘솔)",
+        "Billing export → BigQuery",
+        "빠른 콘솔 조회·추세",
+        "Cloud Billing reports",
+        "SQL·타 데이터 조인·커스텀 대시보드",
         "관측",
         "신뢰성·배포",
         "비용",
@@ -1632,6 +1908,15 @@
         "멀티모달",
         "모델 등급(tier) 트레이드오프",
         "접근 경로 두 갈래",
+        "어느 ML 제품",
+        "팀의 ML 전문성과 요구되는 커스터마이즈 수준",
+        "없음 — 표준 인지 작업",
+        "낮음 — 자체 데이터, 코드 최소",
+        "높음 — 완전 통제",
+        "생성형/파운데이션 활용",
+        "→ 학습 없이",
+        "생성·요약·대화·멀티모달인가",
+        "Gemini 모델 호출",
         "모델 카탈로그",
         "오픈 모델(공개 가중치)",
         "\"관리형 vs 자체 호스팅\"의 트레이드오프",
@@ -1682,16 +1967,28 @@
         "\"설계에 반영해야 할 비기능 요구\"",
         "Gemini Cloud Assist",
         "GCP 플랫폼 자체를 다루는 보조 도구",
+        "경기 결과·시청 관련 실시간 예측 정확도 향상",
+        "저지연 글로벌 콘텐츠 배포",
+        "리전에 배포",
+        "요지",
+        "모델 학습/선택",
+        "리전 배포·엔드포인트",
+        "Bigtable",
+        "커스텀 학습",
+        "AutoML",
         "엔티티",
         "관계",
         "행위",
-        "`Perimeter —protects→`"
+        "`Perimeter —protects→`",
+        "정답 (B)",
+        "정답 (C)",
+        "정답 (A)"
       ],
-      "content_depth": 0.77,
+      "content_depth": 0.85,
       "importance": 5,
-      "depth": 0.74,
+      "depth": 0.77,
       "unanswered_questions": 0,
-      "learning_pressure": 1.28
+      "learning_pressure": 1.14
     },
     "concept/data-analytics/00_how_to_design_funnel": {
       "id": "concept/data-analytics/00_how_to_design_funnel",
@@ -4895,6 +5192,16 @@
       ]
     },
     {
+      "term": "Dedicated Interconnect",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca"
+      ]
+    },
+    {
       "term": "VPC Service Controls",
       "count": 4,
       "mentioned_by": [
@@ -4902,6 +5209,46 @@
         "concept/cloud/08_databases_and_storage_for_pca",
         "concept/cloud/09_security_for_pca",
         "concept/cloud/12_genai_for_pca"
+      ]
+    },
+    {
+      "term": "TerramEarth",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "EHR Healthcare",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Mountkirk Games",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "정답: (A)",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/05_iam_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca"
       ]
     },
     {
@@ -5043,12 +5390,39 @@
       ]
     },
     {
-      "term": "정답: (A)",
+      "term": "Spanner",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/04_gke_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca"
+      ]
+    },
+    {
+      "term": "gcloud",
+      "count": 3,
+      "mentioned_by": [
         "concept/cloud/05_iam_for_pca",
-        "concept/cloud/08_databases_and_storage_for_pca"
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "gsutil",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/05_iam_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Bigtable",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/12_genai_for_pca"
       ]
     },
     {
@@ -5076,6 +5450,15 @@
         "concept/cloud/08_databases_and_storage_for_pca",
         "concept/cloud/09_security_for_pca",
         "concept/cloud/12_genai_for_pca"
+      ]
+    },
+    {
+      "term": "System Event",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/data-analytics/02_event_tracking_design"
       ]
     },
     {
@@ -5313,6 +5696,14 @@
       ]
     },
     {
+      "term": "Partner Interconnect",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca"
+      ]
+    },
+    {
       "term": "Interconnect",
       "count": 2,
       "mentioned_by": [
@@ -5345,6 +5736,14 @@
       ]
     },
     {
+      "term": "공유",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/09_security_for_pca"
+      ]
+    },
+    {
       "term": "함정 8쌍",
       "count": 2,
       "mentioned_by": [
@@ -5358,6 +5757,14 @@
       "mentioned_by": [
         "concept/cloud/04_gke_for_pca",
         "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "사용자",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/09_security_for_pca"
       ]
     },
     {
@@ -5385,10 +5792,34 @@
       ]
     },
     {
+      "term": "글로벌 동시 출시",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/06_compute_for_pca"
+      ]
+    },
+    {
       "term": "Binary Authorization",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/04_gke_for_pca",
+        "concept/cloud/09_security_for_pca"
+      ]
+    },
+    {
+      "term": "사람",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/05_iam_for_pca"
+      ]
+    },
+    {
+      "term": "누가",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/05_iam_for_pca",
         "concept/cloud/09_security_for_pca"
       ]
     },
@@ -5417,11 +5848,27 @@
       ]
     },
     {
+      "term": "GKE",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/06_compute_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca"
+      ]
+    },
+    {
       "term": "exposure",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/07_load_balancing_and_connectivity_for_pca",
         "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
+      "term": "DDoS 방어",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/cloud/09_security_for_pca"
       ]
     },
     {
@@ -5450,14 +5897,6 @@
     },
     {
       "term": "Cloud SQL",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca"
-      ]
-    },
-    {
-      "term": "Spanner",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
@@ -5537,11 +5976,27 @@
       ]
     },
     {
-      "term": "System Event",
+      "term": "Admin Activity",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/09_security_for_pca",
-        "concept/data-analytics/02_event_tracking_design"
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Data Access",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Policy Denied",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
       ]
     },
     {
@@ -5550,6 +6005,22 @@
       "mentioned_by": [
         "concept/cloud/09_security_for_pca",
         "concept/cloud/10_migration_and_dr_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud Audit Logs",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Apigee",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca"
       ]
     },
     {
@@ -5569,7 +6040,7 @@
       ]
     },
     {
-      "term": "gsutil",
+      "term": "Helicopter Racing League",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/10_migration_and_dr_for_pca",
