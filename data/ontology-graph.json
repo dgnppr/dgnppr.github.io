@@ -238,10 +238,10 @@
         "신규 범위 주의:"
       ],
       "content_depth": 0.72,
-      "importance": 5,
+      "importance": 13,
       "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 0.49
+      "learning_pressure": 1.27
     },
     "concept/cloud/01_how_to_operate_iam_well": {
       "id": "concept/cloud/01_how_to_operate_iam_well",
@@ -477,10 +477,10 @@
         "Google API 아웃바운드"
       ],
       "content_depth": 1,
-      "importance": 11,
+      "importance": 15,
       "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 1.1
+      "learning_pressure": 1.5
     },
     "concept/cloud/04_gke_for_pca": {
       "id": "concept/cloud/04_gke_for_pca",
@@ -593,10 +593,10 @@
         "추론 서빙"
       ],
       "content_depth": 1,
-      "importance": 8,
-      "depth": 0.85,
+      "importance": 14,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 1.2
+      "learning_pressure": 1.4
     },
     "concept/cloud/05_iam_for_pca": {
       "id": "concept/cloud/05_iam_for_pca",
@@ -744,10 +744,10 @@
         "함정 8쌍"
       ],
       "content_depth": 1,
-      "importance": 11,
+      "importance": 13,
       "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 1.1
+      "learning_pressure": 1.3
     },
     "concept/cloud/06_compute_for_pca": {
       "id": "concept/cloud/06_compute_for_pca",
@@ -1083,10 +1083,10 @@
         "타 클라우드↔GCP"
       ],
       "content_depth": 1,
-      "importance": 5,
-      "depth": 0.93,
+      "importance": 9,
+      "depth": 0.98,
       "unanswered_questions": 0,
-      "learning_pressure": 0.38
+      "learning_pressure": 0.23
     },
     "concept/cloud/08_databases_and_storage_for_pca": {
       "id": "concept/cloud/08_databases_and_storage_for_pca",
@@ -1232,7 +1232,7 @@
         "Bigtable 데이터 모델 오용"
       ],
       "content_depth": 1,
-      "importance": 7,
+      "importance": 15,
       "depth": 1,
       "unanswered_questions": 0,
       "learning_pressure": 0
@@ -1517,7 +1517,7 @@
         "경계"
       ],
       "content_depth": 1,
-      "importance": 11,
+      "importance": 19,
       "depth": 1,
       "unanswered_questions": 0,
       "learning_pressure": 0
@@ -1696,7 +1696,7 @@
         "동질(변환 불필요) vs 이질(변환 필요)"
       ],
       "content_depth": 1,
-      "importance": 9,
+      "importance": 17,
       "depth": 1,
       "unanswered_questions": 0,
       "learning_pressure": 0
@@ -1931,7 +1931,7 @@
         "함정 7쌍"
       ],
       "content_depth": 1,
-      "importance": 5,
+      "importance": 11,
       "depth": 1,
       "unanswered_questions": 0,
       "learning_pressure": 0
@@ -2061,10 +2061,10 @@
         "정답 (A)"
       ],
       "content_depth": 0.85,
-      "importance": 7,
-      "depth": 0.8,
+      "importance": 13,
+      "depth": 0.85,
       "unanswered_questions": 0,
-      "learning_pressure": 1.42
+      "learning_pressure": 1.98
     },
     "concept/cloud/13_cheat_sheet_for_pca": {
       "id": "concept/cloud/13_cheat_sheet_for_pca",
@@ -2172,6 +2172,301 @@
       "depth": 0.82,
       "unanswered_questions": 0,
       "learning_pressure": 0.18
+    },
+    "concept/cloud/14_case_altostrat_media_for_pca": {
+      "id": "concept/cloud/14_case_altostrat_media_for_pca",
+      "type": "concept",
+      "title": "PCA 케이스 스터디 Altostrat Media (미디어 GenAI·하이브리드 GKE)",
+      "path": "_concept/cloud/14_case_altostrat_media_for_pca.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "pca",
+        "certification",
+        "case-study"
+      ],
+      "date": "2026-07-07",
+      "valid_from": "Tue",
+      "confidence": "high",
+      "mentioned_terms": [
+        "요구사항 → 키워드 → GCP 서비스",
+        "GenAI + 하이브리드 GKE",
+        "회사:",
+        "솔루션 컨셉:",
+        "생성형 AI",
+        "기존 환경:",
+        "GKE",
+        "Cloud Storage",
+        "BigQuery",
+        "Cloud Run functions",
+        "온프레 레거시",
+        "Exec 한 줄:",
+        "신뢰성과 비용 관리가 우리의 최우선순위",
+        "핵심 판단 축:",
+        "GKE Enterprise(Fleet)",
+        "Autoclass",
+        "BigQuery ML",
+        "하이브리드 연결",
+        "Cloud Observability",
+        "Cloud Deploy",
+        "Config Sync",
+        "GKE Autopilot",
+        "Cloud Build/Cloud Deploy",
+        "Artifact Registry",
+        "Cloud Storage Autoclass",
+        "Gemini 멀티모달",
+        "BigQuery + Looker",
+        "Video Intelligence",
+        "Model Armor",
+        "Gemini",
+        "CI/CD:",
+        "엣지:",
+        "\"동영상에서 부적절 장면 탐지\"",
+        "\"AI 결정을 설명·감사 가능하게\"",
+        ", 감사는",
+        "\"24/7 자연어 지원·개인화 추천\"",
+        "\"메타데이터 추출(NLP+CV 동시)\"",
+        "신뢰성·비용 최우선",
+        "hybrid k8s를 GKE로만 답하면 감점",
+        "GKE Enterprise/Anthos",
+        "유해 콘텐츠 = 무조건 Model Armor",
+        "Gemini/Vertex AI 관리형"
+      ],
+      "content_depth": 0.75,
+      "importance": 5,
+      "depth": 0.91,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.44
+    },
+    "concept/cloud/15_case_cymbal_retail_for_pca": {
+      "id": "concept/cloud/15_case_cymbal_retail_for_pca",
+      "type": "concept",
+      "title": "PCA 케이스 스터디 Cymbal Retail (커머스 GenAI·카탈로그·대화형)",
+      "path": "_concept/cloud/15_case_cymbal_retail_for_pca.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "pca",
+        "certification",
+        "case-study"
+      ],
+      "date": "2026-07-07",
+      "valid_from": "Tue",
+      "confidence": "high",
+      "mentioned_terms": [
+        "커머스 GenAI",
+        "회사:",
+        "솔루션 컨셉(3대 축):",
+        "카탈로그·콘텐츠 보강",
+        "대화형 커머스 + 상품 탐색",
+        "Discovery AI",
+        "기술 스택 현대화",
+        "기존 환경:",
+        "현 문제:",
+        "Exec 한 줄:",
+        "핵심 판단 축:",
+        "커머스 특화 GenAI 제품",
+        "DMS",
+        "GKE",
+        "Conversational Agents",
+        "Cloud Observability",
+        "Gemini 멀티모달",
+        "Imagen",
+        "클라우드 마이그레이션(서버리스)",
+        "Cloud Run 커스텀 앱",
+        "HITL이 명시 요구",
+        "데이터 현대화",
+        "\"공급사 이미지에서 상품 속성·설명 생성\"",
+        "\"기존 이미지로 색상 변형·배경 교체\"",
+        "\"자연어로 상품 검색·추천\"",
+        "\"콜센터 비용 절감 + 셀프서비스\"",
+        "\"gen AI 산출물 품질 보증\"",
+        "Human-in-the-Loop 리뷰 UI",
+        "\"카드·PII 안전 처리\"",
+        "HITL 요구를 무시하고 자동 게시",
+        "레거시 SFTP/ETL을 그대로 유지",
+        "MongoDB를 Cloud SQL로",
+        "PII/카드 처리에 DLP·경계 통제 누락",
+        "HITL 리뷰 UI"
+      ],
+      "content_depth": 0.83,
+      "importance": 5,
+      "depth": 0.94,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.3
+    },
+    "concept/cloud/16_case_ehr_healthcare_for_pca": {
+      "id": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "type": "concept",
+      "title": "PCA 케이스 스터디 EHR Healthcare (하이브리드·컨테이너·규제)",
+      "path": "_concept/cloud/16_case_ehr_healthcare_for_pca.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "pca",
+        "certification",
+        "case-study"
+      ],
+      "date": "2026-07-07",
+      "valid_from": "Tue",
+      "confidence": "high",
+      "mentioned_terms": [
+        "정통 인프라 케이스",
+        "회사:",
+        "전자건강기록(EHR) SaaS",
+        "솔루션 컨셉:",
+        "기하급수 성장",
+        "기존 환경:",
+        "colocation",
+        "한 DC 리스 만료 임박",
+        "컨테이너화 → Kubernetes 클러스터群",
+        "— 수년 내 교체 예정,",
+        "Exec 한 줄:",
+        "확장·복원력 있는 단일 일관 플랫폼",
+        "핵심 판단 축:",
+        "GKE",
+        "Fleet/Config Sync",
+        "Cloud SQL",
+        "DMS",
+        "Memorystore for Redis",
+        "MongoDB Atlas(파트너)",
+        "이전 계획 없음",
+        "하이브리드 연결",
+        "Cloud Identity + AD 페더레이션",
+        "Managed Microsoft AD",
+        "Cloud Observability",
+        "SLO 기반 알림",
+        "Apigee",
+        "Terraform",
+        "Cloud SQL HA",
+        "Cloud Monitoring/Logging",
+        "지연 감소",
+        "규제 준수",
+        "CMEK(Cloud KMS)",
+        "VPC-SC",
+        "Assured Workloads",
+        "Cloud Audit Logs",
+        "온프레·클라우드 양쪽",
+        "HA VPN/Interconnect",
+        "GKE Fleet + Config Sync",
+        "안전·고성능",
+        "Dedicated Interconnect",
+        "Cloud Logging",
+        "Monitoring",
+        "Terraform(IaC)",
+        "DR:",
+        "\"MySQL·SQL Server를 관리형으로\"",
+        "MongoDB는 Cloud SQL 아님",
+        "Memorystore",
+        "(GCDS/AD FS) 또는",
+        "\"온프레↔GCP 안전·고성능\"",
+        "\"글로벌 고객 지연 감소\"",
+        "\"규제 준수·키 직접 관리·유출 방지\"",
+        "CMEK",
+        "\"알림이 무시되는 문제\"",
+        "SLO 기반 의미있는 알림",
+        "MongoDB를 Cloud SQL로",
+        "보험사 레거시를 \"이전/재작성\"으로",
+        "하이브리드 연결 유지",
+        "리스 만료를 refactor로",
+        "rehost 우선",
+        "온프레 연결을 무조건 HA VPN",
+        "Interconnect",
+        "다중 GKE 클러스터를 개별 관리",
+        "Migrate to VMs(rehost)",
+        "NCC"
+      ],
+      "content_depth": 0.83,
+      "importance": 5,
+      "depth": 0.94,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.3
+    },
+    "concept/cloud/17_case_knightmotives_automotive_for_pca": {
+      "id": "concept/cloud/17_case_knightmotives_automotive_for_pca",
+      "type": "concept",
+      "title": "PCA 케이스 스터디 KnightMotives Automotive (자율주행·데이터 수익화·EU 규제)",
+      "path": "_concept/cloud/17_case_knightmotives_automotive_for_pca.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "pca",
+        "certification",
+        "case-study"
+      ],
+      "date": "2026-07-07",
+      "valid_from": "Tue",
+      "confidence": "high",
+      "mentioned_terms": [
+        "가장 넓은 케이스",
+        "회사:",
+        "자율주행 차량",
+        "하이브리드·ICE는 구식",
+        "솔루션 컨셉:",
+        "자동차 경험",
+        "데이터 수익화",
+        "기존 환경:",
+        "온프레",
+        "구식 메인프레임",
+        "ERP도 구식",
+        "다중 코드베이스·기술부채",
+        "공장 네트워크·시골 차량 연결",
+        "비즈니스 요구:",
+        "build-to-order",
+        "기업 데이터 수익화",
+        "보안 최우선(과거 침해 이력)",
+        "EU 데이터 보호(GDPR) 특히 자율주행",
+        "핵심 판단 축:",
+        "여러 도메인이 한꺼번에",
+        "하이브리드 클라우드 전략",
+        "메인프레임",
+        "Mainframe Modernization",
+        "ERP 구식",
+        "사일로",
+        "obsolete",
+        "BigQuery + Dataplex",
+        "Vertex AI",
+        "연결 난제",
+        "데이터 침해",
+        "Vertex AI(Gemini)",
+        "Cloud Run/GKE 앱",
+        "Apigee",
+        "Analytics Hub",
+        "보안 최우선(과거 침해)",
+        "EU 데이터 보호(GDPR·자율주행)",
+        "시뮬레이션",
+        "EU 자율주행 데이터",
+        "Assured Workloads",
+        "Cloud EKM",
+        "\"구식 메인프레임(공급망) 현대화\"",
+        "\"기업 데이터를 외부에 안전하게 공유·수익화\"",
+        "\"과거 침해 → 포괄 보안 태세\"",
+        "Security Command Center",
+        "\"시골·실시간 차량 AI, 저연결\"",
+        "\"자율주행 대규모 학습·시뮬레이션\"",
+        "AI Hypercomputer(GPU/TPU)",
+        "\"공장↔HQ 대역·이행 연결\"",
+        "→ 정답은",
+        "EU 규제를 VPC-SC만으로",
+        "메인프레임을 Migrate to VMs로",
+        "시골 연결을 일반 리전 서비스로",
+        "엣지(GDC Edge)",
+        "자율주행 학습을 표준 VM으로",
+        "AI Hypercomputer(TPU/GPU)",
+        "\"보안\"을 단일 서비스로",
+        "가장 표준적 변화·이해관계자 관리",
+        "Dataplex",
+        "GDC Edge + Pub/Sub"
+      ],
+      "content_depth": 0.75,
+      "importance": 5,
+      "depth": 0.91,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.44
     },
     "concept/data-analytics/00_how_to_design_funnel": {
       "id": "concept/data-analytics/00_how_to_design_funnel",
@@ -4906,6 +5201,26 @@
       "type": "references"
     },
     {
+      "from": "concept/cloud/00_pca_study_plan",
+      "to": "concept/cloud/14_case_altostrat_media_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/00_pca_study_plan",
+      "to": "concept/cloud/15_case_cymbal_retail_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/00_pca_study_plan",
+      "to": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/00_pca_study_plan",
+      "to": "concept/cloud/17_case_knightmotives_automotive_for_pca",
+      "type": "references"
+    },
+    {
       "from": "concept/cloud/01_how_to_operate_iam_well",
       "to": "concept/cloud/02_authenticate_gcp_without_service_accounts",
       "type": "references"
@@ -5052,6 +5367,176 @@
     },
     {
       "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/12_genai_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/14_case_altostrat_media_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/15_case_cymbal_retail_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/17_case_knightmotives_automotive_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/14_case_altostrat_media_for_pca",
+      "to": "concept/cloud/00_pca_study_plan",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/14_case_altostrat_media_for_pca",
+      "to": "concept/cloud/04_gke_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/14_case_altostrat_media_for_pca",
+      "to": "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/14_case_altostrat_media_for_pca",
+      "to": "concept/cloud/08_databases_and_storage_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/14_case_altostrat_media_for_pca",
+      "to": "concept/cloud/09_security_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/14_case_altostrat_media_for_pca",
+      "to": "concept/cloud/10_migration_and_dr_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/14_case_altostrat_media_for_pca",
+      "to": "concept/cloud/11_operations_and_cost_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/14_case_altostrat_media_for_pca",
+      "to": "concept/cloud/12_genai_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/15_case_cymbal_retail_for_pca",
+      "to": "concept/cloud/00_pca_study_plan",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/15_case_cymbal_retail_for_pca",
+      "to": "concept/cloud/04_gke_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/15_case_cymbal_retail_for_pca",
+      "to": "concept/cloud/08_databases_and_storage_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/15_case_cymbal_retail_for_pca",
+      "to": "concept/cloud/09_security_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/15_case_cymbal_retail_for_pca",
+      "to": "concept/cloud/10_migration_and_dr_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/15_case_cymbal_retail_for_pca",
+      "to": "concept/cloud/12_genai_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "to": "concept/cloud/00_pca_study_plan",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "to": "concept/cloud/03_vpc_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "to": "concept/cloud/04_gke_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "to": "concept/cloud/05_iam_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "to": "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "to": "concept/cloud/08_databases_and_storage_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "to": "concept/cloud/09_security_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "to": "concept/cloud/10_migration_and_dr_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/16_case_ehr_healthcare_for_pca",
+      "to": "concept/cloud/11_operations_and_cost_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/17_case_knightmotives_automotive_for_pca",
+      "to": "concept/cloud/00_pca_study_plan",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/17_case_knightmotives_automotive_for_pca",
+      "to": "concept/cloud/03_vpc_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/17_case_knightmotives_automotive_for_pca",
+      "to": "concept/cloud/08_databases_and_storage_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/17_case_knightmotives_automotive_for_pca",
+      "to": "concept/cloud/09_security_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/17_case_knightmotives_automotive_for_pca",
+      "to": "concept/cloud/10_migration_and_dr_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/17_case_knightmotives_automotive_for_pca",
+      "to": "concept/cloud/11_operations_and_cost_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/17_case_knightmotives_automotive_for_pca",
       "to": "concept/cloud/12_genai_for_pca",
       "type": "references"
     },
@@ -5504,6 +5989,42 @@
       ]
     },
     {
+      "term": "Dedicated Interconnect",
+      "count": 6,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
+      "term": "GKE",
+      "count": 6,
+      "mentioned_by": [
+        "concept/cloud/06_compute_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/14_case_altostrat_media_for_pca",
+        "concept/cloud/15_case_cymbal_retail_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
+      "term": "BigQuery",
+      "count": 6,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/14_case_altostrat_media_for_pca"
+      ]
+    },
+    {
       "term": "incremental",
       "count": 6,
       "mentioned_by": [
@@ -5513,17 +6034,6 @@
         "concept/dbt/02_dbt_advanced",
         "concept/dbt/03_dbt_in_practice",
         "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
-      "term": "Dedicated Interconnect",
-      "count": 5,
-      "mentioned_by": [
-        "concept/cloud/03_vpc_for_pca",
-        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
-        "concept/cloud/09_security_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -5538,14 +6048,25 @@
       ]
     },
     {
-      "term": "BigQuery",
+      "term": "Cloud Storage",
       "count": 5,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
         "concept/cloud/09_security_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca",
         "concept/cloud/11_operations_and_cost_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/14_case_altostrat_media_for_pca"
+      ]
+    },
+    {
+      "term": "Apigee",
+      "count": 5,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca",
+        "concept/cloud/17_case_knightmotives_automotive_for_pca"
       ]
     },
     {
@@ -5662,6 +6183,16 @@
       ]
     },
     {
+      "term": "Cloud SQL",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
       "term": "Bigtable",
       "count": 4,
       "mentioned_by": [
@@ -5672,13 +6203,13 @@
       ]
     },
     {
-      "term": "Cloud Storage",
+      "term": "CMEK",
       "count": 4,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
         "concept/cloud/09_security_for_pca",
-        "concept/cloud/11_operations_and_cost_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
+        "concept/cloud/12_genai_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
       ]
     },
     {
@@ -5689,6 +6220,36 @@
         "concept/cloud/09_security_for_pca",
         "concept/cloud/10_migration_and_dr_for_pca",
         "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "회사:",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/14_case_altostrat_media_for_pca",
+        "concept/cloud/15_case_cymbal_retail_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca",
+        "concept/cloud/17_case_knightmotives_automotive_for_pca"
+      ]
+    },
+    {
+      "term": "기존 환경:",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/14_case_altostrat_media_for_pca",
+        "concept/cloud/15_case_cymbal_retail_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca",
+        "concept/cloud/17_case_knightmotives_automotive_for_pca"
+      ]
+    },
+    {
+      "term": "핵심 판단 축:",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/14_case_altostrat_media_for_pca",
+        "concept/cloud/15_case_cymbal_retail_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca",
+        "concept/cloud/17_case_knightmotives_automotive_for_pca"
       ]
     },
     {
@@ -5827,6 +6388,24 @@
       ]
     },
     {
+      "term": "Interconnect",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
+      "term": "VPC-SC",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
       "term": "gcloud",
       "count": 3,
       "mentioned_by": [
@@ -5854,12 +6433,12 @@
       ]
     },
     {
-      "term": "GKE",
+      "term": "Cloud Run functions",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/06_compute_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/14_case_altostrat_media_for_pca"
       ]
     },
     {
@@ -5872,12 +6451,12 @@
       ]
     },
     {
-      "term": "Cloud SQL",
+      "term": "Memorystore",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
       ]
     },
     {
@@ -5890,12 +6469,39 @@
       ]
     },
     {
-      "term": "CMEK",
+      "term": "Autoclass",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/14_case_altostrat_media_for_pca"
+      ]
+    },
+    {
+      "term": "Security Command Center",
+      "count": 3,
+      "mentioned_by": [
         "concept/cloud/09_security_for_pca",
-        "concept/cloud/12_genai_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/17_case_knightmotives_automotive_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud EKM",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/17_case_knightmotives_automotive_for_pca"
+      ]
+    },
+    {
+      "term": "Artifact Registry",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/14_case_altostrat_media_for_pca"
       ]
     },
     {
@@ -5908,6 +6514,15 @@
       ]
     },
     {
+      "term": "Assured Workloads",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca",
+        "concept/cloud/17_case_knightmotives_automotive_for_pca"
+      ]
+    },
+    {
       "term": "System Event",
       "count": 3,
       "mentioned_by": [
@@ -5917,12 +6532,12 @@
       ]
     },
     {
-      "term": "Apigee",
+      "term": "Cloud Audit Logs",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/09_security_for_pca",
         "concept/cloud/11_operations_and_cost_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
       ]
     },
     {
@@ -5932,6 +6547,51 @@
         "concept/cloud/11_operations_and_cost_for_pca",
         "concept/cloud/13_cheat_sheet_for_pca",
         "concept/data-analytics/01_behavioral_analytics_techniques"
+      ]
+    },
+    {
+      "term": "Cloud Deploy",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/14_case_altostrat_media_for_pca"
+      ]
+    },
+    {
+      "term": "Model Armor",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/12_genai_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/14_case_altostrat_media_for_pca"
+      ]
+    },
+    {
+      "term": "솔루션 컨셉:",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/14_case_altostrat_media_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca",
+        "concept/cloud/17_case_knightmotives_automotive_for_pca"
+      ]
+    },
+    {
+      "term": "Exec 한 줄:",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/14_case_altostrat_media_for_pca",
+        "concept/cloud/15_case_cymbal_retail_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud Observability",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/14_case_altostrat_media_for_pca",
+        "concept/cloud/15_case_cymbal_retail_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
       ]
     },
     {
@@ -6185,27 +6845,11 @@
       ]
     },
     {
-      "term": "Interconnect",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/03_vpc_for_pca",
-        "concept/cloud/07_load_balancing_and_connectivity_for_pca"
-      ]
-    },
-    {
       "term": "Private Google Access",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/03_vpc_for_pca",
         "concept/cloud/13_cheat_sheet_for_pca"
-      ]
-    },
-    {
-      "term": "VPC-SC",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/03_vpc_for_pca",
-        "concept/cloud/09_security_for_pca"
       ]
     },
     {
@@ -6393,14 +7037,6 @@
       ]
     },
     {
-      "term": "Cloud Run functions",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/06_compute_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
-      ]
-    },
-    {
       "term": "Cloud Run",
       "count": 2,
       "mentioned_by": [
@@ -6414,6 +7050,14 @@
       "mentioned_by": [
         "concept/cloud/06_compute_for_pca",
         "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "GKE Autopilot",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/06_compute_for_pca",
+        "concept/cloud/14_case_altostrat_media_for_pca"
       ]
     },
     {
@@ -6465,14 +7109,6 @@
       ]
     },
     {
-      "term": "Memorystore",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
-      ]
-    },
-    {
       "term": "동시에",
       "count": 2,
       "mentioned_by": [
@@ -6505,31 +7141,15 @@
       ]
     },
     {
-      "term": "Autoclass",
+      "term": "CMEK(Cloud KMS)",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
       ]
     },
     {
       "term": "Secret Manager",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/09_security_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
-      ]
-    },
-    {
-      "term": "Security Command Center",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/09_security_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
-      ]
-    },
-    {
-      "term": "Cloud EKM",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/09_security_for_pca",
@@ -6585,14 +7205,6 @@
       ]
     },
     {
-      "term": "Artifact Registry",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/09_security_for_pca",
-        "concept/cloud/11_operations_and_cost_for_pca"
-      ]
-    },
-    {
       "term": "EKM",
       "count": 2,
       "mentioned_by": [
@@ -6630,14 +7242,6 @@
       "mentioned_by": [
         "concept/cloud/09_security_for_pca",
         "concept/cloud/10_migration_and_dr_for_pca"
-      ]
-    },
-    {
-      "term": "Cloud Audit Logs",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/09_security_for_pca",
-        "concept/cloud/11_operations_and_cost_for_pca"
       ]
     },
     {
@@ -6697,6 +7301,14 @@
       ]
     },
     {
+      "term": "Cloud Logging",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
       "term": "SLI",
       "count": 2,
       "mentioned_by": [
@@ -6714,14 +7326,6 @@
     },
     {
       "term": "Canary",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/11_operations_and_cost_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
-      ]
-    },
-    {
-      "term": "Cloud Deploy",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/11_operations_and_cost_for_pca",
@@ -6793,14 +7397,6 @@
       ]
     },
     {
-      "term": "Model Armor",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/12_genai_for_pca",
-        "concept/cloud/13_cheat_sheet_for_pca"
-      ]
-    },
-    {
       "term": "관계",
       "count": 2,
       "mentioned_by": [
@@ -6814,6 +7410,46 @@
       "mentioned_by": [
         "concept/cloud/12_genai_for_pca",
         "concept/data-architect/07_ontology_core_concepts"
+      ]
+    },
+    {
+      "term": "Terraform",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
+      "term": "하이브리드 연결",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/14_case_altostrat_media_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
+      "term": "Gemini 멀티모달",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/14_case_altostrat_media_for_pca",
+        "concept/cloud/15_case_cymbal_retail_for_pca"
+      ]
+    },
+    {
+      "term": "DMS",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/15_case_cymbal_retail_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
+      ]
+    },
+    {
+      "term": "MongoDB를 Cloud SQL로",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/15_case_cymbal_retail_for_pca",
+        "concept/cloud/16_case_ehr_healthcare_for_pca"
       ]
     },
     {

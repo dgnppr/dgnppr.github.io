@@ -24,6 +24,10 @@ relations:
   - { type: references, target: /concept/cloud/10_migration_and_dr_for_pca }
   - { type: references, target: /concept/cloud/11_operations_and_cost_for_pca }
   - { type: references, target: /concept/cloud/12_genai_for_pca }
+  - { type: references, target: /concept/cloud/14_case_altostrat_media_for_pca }
+  - { type: references, target: /concept/cloud/15_case_cymbal_retail_for_pca }
+  - { type: references, target: /concept/cloud/16_case_ehr_healthcare_for_pca }
+  - { type: references, target: /concept/cloud/17_case_knightmotives_automotive_for_pca }
 ---
 
 * TOC
@@ -268,4 +272,4 @@ relations:
 
 ---
 
-> 이 치트시트는 심화 문서의 결론만 모은 인덱스다. 특정 항목이 흔들리면 해당 `[[...]]` 링크로 들어가 근거를 확인하라. 케이스 스터디 4종(Altostrat Media·Cymbal Retail·EHR Healthcare·KnightMotives Automotive)은 이 매핑을 요구사항에 적용하는 연습으로 대비한다 — 목록·성격은 [[/concept/cloud/00_pca_study_plan]] 참조.
+> 이 치트시트는 심화 문서의 결론만 모은 인덱스다. 특정 항목이 흔들리면 해당 `[[...]]` 링크로 들어가 근거를 확인하라. 케이스 스터디 4종은 이 매핑을 요구사항에 적용하는 연습으로 대비한다 — 케이스별 딥다이브: [[/concept/cloud/14_case_altostrat_media_for_pca]] · [[/concept/cloud/15_case_cymbal_retail_for_pca]] · [[/concept/cloud/16_case_ehr_healthcare_for_pca]] · [[/concept/cloud/17_case_knightmotives_automotive_for_pca]]. 목록·성격은 [[/concept/cloud/00_pca_study_plan]] 참조.

@@ -48,7 +48,7 @@
   "data-architect/00_ontology_core_examples": "ef92fc22a08ac3b49fbe60386ccf605c",
   "data-architect/01_medallion_with_ontology": "403b0fc563f436ab3a0d8423f1387459",
   "data-analytics/04_user_behavior_analytics_framework": "29df63e19a69420628a56edcb59a1828",
-  "cloud/00_pca_study_plan": "1f662e6c70ab5690991fdb749d5e824b",
+  "cloud/00_pca_study_plan": "f1e781a292f8e58a407e9792bccdf94e",
   "cloud/06_compute_for_pca": "33a6ec70c0314740698a5498bc88dec5",
   "cloud/07_load_balancing_and_connectivity_for_pca": "b2568bc34f6a97162de967df489a2f88",
   "cloud/08_databases_and_storage_for_pca": "fd43d3fb05a6333447dfe4e70c009b84",
@@ -69,7 +69,7 @@
   "dbt/03_dbt_in_practice": "64a0b7178992cb71987ff5bab3e89df9",
   "dbt/04_dbt_operational_knowhow": "9ad710412510614a5753c2464da720aa",
   "data-engineering/2026-001-data-mart-checklist": "e8d7daf0109b77d619e1e64261b8ea76",
-  "cloud/13_cheat_sheet_for_pca": "bee8c148d7a1be7afb5513c834e3e6f3",
+  "cloud/13_cheat_sheet_for_pca": "e32dd92b21ae62c3014111b24085b623",
   "data-analytics/06_ga4_data_model": "e051d690794d1af33a20ddaf00478a01",
   "data-analytics/07_acquisition_analysis": "701c51aba0ddb9c7bc30d69dba7d91f0",
   "data-analytics/08_engagement_analysis": "a89a9e998de56bc67b0ae66aff035511",
@@ -87,5 +87,9 @@
   "data-engineering/2026-004-store-monthly-dimensional-model": "016a0d78147ce1623e2cc3fff52cfe46",
   "security/2026-06-24-002-gcp-key-management-status": "6cd14ca3d40c0e234d2810c760d4eee3",
   "essay/08_how_to_plan_a_dashboard": "9cee2a8800234eb4e3c402ca34c95369",
-  "cloud/01_gcp_iam_for_new_to_cloud_org": "161601c8c295cd029681384c620619bb"
+  "cloud/01_gcp_iam_for_new_to_cloud_org": "161601c8c295cd029681384c620619bb",
+  "cloud/14_case_altostrat_media_for_pca": "153f1fe3d7d6952ba612678832d7357f",
+  "cloud/15_case_cymbal_retail_for_pca": "88cd92e3b34c23f2a684ae88419b721e",
+  "cloud/16_case_ehr_healthcare_for_pca": "eb06648e098e1467d0d4b475ee30e19d",
+  "cloud/17_case_knightmotives_automotive_for_pca": "954bf5e451023a67fffd647071b329eb"
 }
