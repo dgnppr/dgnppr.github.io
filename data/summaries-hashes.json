@@ -85,5 +85,7 @@
   "data-engineering/2026-002-feature-mart-checklist": "580d7911f227ac28b9651bc51e962bc0",
   "data-engineering/2026-003-backfill-checklist": "654aacb95773f6e6c4d11d5c6f044f5d",
   "data-engineering/2026-004-store-monthly-dimensional-model": "016a0d78147ce1623e2cc3fff52cfe46",
-  "security/2026-06-24-002-gcp-key-management-status": "6cd14ca3d40c0e234d2810c760d4eee3"
+  "security/2026-06-24-002-gcp-key-management-status": "6cd14ca3d40c0e234d2810c760d4eee3",
+  "essay/08_how_to_plan_a_dashboard": "9cee2a8800234eb4e3c402ca34c95369",
+  "cloud/01_gcp_iam_for_new_to_cloud_org": "161601c8c295cd029681384c620619bb"
 }

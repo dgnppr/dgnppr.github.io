@@ -141,10 +141,10 @@
         "문서 없이 리뷰어의 경험에 의존"
       ],
       "content_depth": 0.85,
-      "importance": 19,
+      "importance": 21,
       "depth": 0.6,
       "unanswered_questions": 0,
-      "learning_pressure": 7.65
+      "learning_pressure": 8.45
     },
     "adr/data-engineering/2026-002-feature-mart-checklist": {
       "id": "adr/data-engineering/2026-002-feature-mart-checklist",
@@ -278,10 +278,10 @@
         "GCP Service Account 패턴"
       ],
       "content_depth": 0.68,
-      "importance": 11,
+      "importance": 13,
       "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 1.23
+      "learning_pressure": 1.46
     },
     "concept/cloud/02_authenticate_gcp_without_service_accounts": {
       "id": "concept/cloud/02_authenticate_gcp_without_service_accounts",
@@ -303,10 +303,10 @@
         "온보딩 스크립트에 포함:"
       ],
       "content_depth": 0.75,
-      "importance": 3,
-      "depth": 0.71,
+      "importance": 5,
+      "depth": 0.74,
       "unanswered_questions": 0,
-      "learning_pressure": 0.86
+      "learning_pressure": 1.31
     },
     "concept/cloud/03_vpc_for_pca": {
       "id": "concept/cloud/03_vpc_for_pca",
@@ -2357,10 +2357,10 @@
         "Goodhart's Law 방어"
       ],
       "content_depth": 0.77,
-      "importance": 13,
+      "importance": 15,
       "depth": 0.92,
       "unanswered_questions": 0,
-      "learning_pressure": 1.05
+      "learning_pressure": 1.21
     },
     "concept/data-analytics/04_user_behavior_analytics_framework": {
       "id": "concept/data-analytics/04_user_behavior_analytics_framework",
@@ -4660,6 +4660,80 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.35
     },
+    "insight/essay/08_how_to_plan_a_dashboard": {
+      "id": "insight/essay/08_how_to_plan_a_dashboard",
+      "type": "insight",
+      "title": "쓰이는 대시보드를 기획한다는 것 — 분석가·기획자·경영진의 세 시선",
+      "path": "_insight/essay/08_how_to_plan_a_dashboard.md",
+      "status": "complete",
+      "tags": [
+        "bi",
+        "dashboard",
+        "analytics",
+        "planning",
+        "essay"
+      ],
+      "date": "2026-07-07",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "반복 소비가 확인된 질문",
+        "한 곳",
+        "점진적으로 노출",
+        "셀프서비스 BI로 각자 알아서 만들게 한다",
+        "대시보드의 본질은 시각화다",
+        "실시간일수록 좋다"
+      ],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.7,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.3
+    },
+    "tool/cloud/01_gcp_iam_for_new_to_cloud_org": {
+      "id": "tool/cloud/01_gcp_iam_for_new_to_cloud_org",
+      "type": "tool",
+      "title": "클라우드가 처음인 조직에서 GCP IAM 잘 관리하기",
+      "path": "_tool/cloud/01_gcp_iam_for_new_to_cloud_org.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "iam",
+        "governance",
+        "least-privilege"
+      ],
+      "date": "2026-07-07",
+      "confidence": "high",
+      "mentioned_terms": [
+        "Owner",
+        "Editor",
+        "prod",
+        "nonprod",
+        "gcp-prod-viewers@",
+        "gcp-billing-admins@",
+        "gcp-shop-developers@",
+        "roles/owner",
+        "roles/editor",
+        "roles/viewer",
+        "| 기본 SA에",
+        "editor",
+        "아는 것과 별개의 문제",
+        "순서와 성숙도별 도입 경로",
+        "순서와 소유권 부재",
+        "custom role은 Run 단계로 미룬다",
+        "실수해도 막히도록",
+        "최고 권한은",
+        "못 한다",
+        "Crawl",
+        "Walk",
+        "Run"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.85,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.15
+    },
     "tool/cloud/03_how_to_use_terraform": {
       "id": "tool/cloud/03_how_to_use_terraform",
       "type": "tool",
@@ -5354,6 +5428,31 @@
     {
       "from": "insight/essay/07_how_to_prompt_well",
       "to": "insight/essay/06_how_to_work_well",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/08_how_to_plan_a_dashboard",
+      "to": "adr/data-engineering/2026-001-data-mart-checklist",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/08_how_to_plan_a_dashboard",
+      "to": "adr/data-engineering/2026-004-store-monthly-dimensional-model",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/08_how_to_plan_a_dashboard",
+      "to": "concept/data-analytics/03_metrics_framework",
+      "type": "references"
+    },
+    {
+      "from": "tool/cloud/01_gcp_iam_for_new_to_cloud_org",
+      "to": "concept/cloud/01_how_to_operate_iam_well",
+      "type": "references"
+    },
+    {
+      "from": "tool/cloud/01_gcp_iam_for_new_to_cloud_org",
+      "to": "concept/cloud/02_authenticate_gcp_without_service_accounts",
       "type": "references"
     },
     {
@@ -6219,6 +6318,54 @@
       "mentioned_by": [
         "concept/cloud/04_gke_for_pca",
         "concept/cloud/05_iam_for_pca"
+      ]
+    },
+    {
+      "term": "Owner",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/05_iam_for_pca",
+        "tool/cloud/01_gcp_iam_for_new_to_cloud_org"
+      ]
+    },
+    {
+      "term": "Editor",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/05_iam_for_pca",
+        "tool/cloud/01_gcp_iam_for_new_to_cloud_org"
+      ]
+    },
+    {
+      "term": "roles/owner",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/05_iam_for_pca",
+        "tool/cloud/01_gcp_iam_for_new_to_cloud_org"
+      ]
+    },
+    {
+      "term": "roles/editor",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/05_iam_for_pca",
+        "tool/cloud/01_gcp_iam_for_new_to_cloud_org"
+      ]
+    },
+    {
+      "term": "roles/viewer",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/05_iam_for_pca",
+        "tool/cloud/01_gcp_iam_for_new_to_cloud_org"
+      ]
+    },
+    {
+      "term": "editor",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/05_iam_for_pca",
+        "tool/cloud/01_gcp_iam_for_new_to_cloud_org"
       ]
     },
     {
