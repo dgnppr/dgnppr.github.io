@@ -238,10 +238,10 @@
         "신규 범위 주의:"
       ],
       "content_depth": 0.72,
-      "importance": 3,
+      "importance": 5,
       "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 0.29
+      "learning_pressure": 0.49
     },
     "concept/cloud/01_how_to_operate_iam_well": {
       "id": "concept/cloud/01_how_to_operate_iam_well",
@@ -477,10 +477,10 @@
         "Google API 아웃바운드"
       ],
       "content_depth": 1,
-      "importance": 9,
-      "depth": 0.88,
+      "importance": 11,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 1.13
+      "learning_pressure": 1.1
     },
     "concept/cloud/04_gke_for_pca": {
       "id": "concept/cloud/04_gke_for_pca",
@@ -593,10 +593,10 @@
         "추론 서빙"
       ],
       "content_depth": 1,
-      "importance": 6,
-      "depth": 0.83,
+      "importance": 8,
+      "depth": 0.85,
       "unanswered_questions": 0,
-      "learning_pressure": 1.05
+      "learning_pressure": 1.2
     },
     "concept/cloud/05_iam_for_pca": {
       "id": "concept/cloud/05_iam_for_pca",
@@ -744,10 +744,10 @@
         "함정 8쌍"
       ],
       "content_depth": 1,
-      "importance": 9,
-      "depth": 0.88,
+      "importance": 11,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 1.13
+      "learning_pressure": 1.1
     },
     "concept/cloud/06_compute_for_pca": {
       "id": "concept/cloud/06_compute_for_pca",
@@ -934,10 +934,10 @@
         "함정 묶음"
       ],
       "content_depth": 1,
-      "importance": 3,
-      "depth": 0.9,
+      "importance": 5,
+      "depth": 0.93,
       "unanswered_questions": 0,
-      "learning_pressure": 0.3
+      "learning_pressure": 0.38
     },
     "concept/cloud/07_load_balancing_and_connectivity_for_pca": {
       "id": "concept/cloud/07_load_balancing_and_connectivity_for_pca",
@@ -1083,10 +1083,10 @@
         "타 클라우드↔GCP"
       ],
       "content_depth": 1,
-      "importance": 3,
-      "depth": 0.9,
+      "importance": 5,
+      "depth": 0.93,
       "unanswered_questions": 0,
-      "learning_pressure": 0.3
+      "learning_pressure": 0.38
     },
     "concept/cloud/08_databases_and_storage_for_pca": {
       "id": "concept/cloud/08_databases_and_storage_for_pca",
@@ -1232,7 +1232,7 @@
         "Bigtable 데이터 모델 오용"
       ],
       "content_depth": 1,
-      "importance": 5,
+      "importance": 7,
       "depth": 1,
       "unanswered_questions": 0,
       "learning_pressure": 0
@@ -1517,10 +1517,10 @@
         "경계"
       ],
       "content_depth": 1,
-      "importance": 9,
-      "depth": 0.98,
+      "importance": 11,
+      "depth": 1,
       "unanswered_questions": 0,
-      "learning_pressure": 0.23
+      "learning_pressure": 0
     },
     "concept/cloud/10_migration_and_dr_for_pca": {
       "id": "concept/cloud/10_migration_and_dr_for_pca",
@@ -1696,7 +1696,7 @@
         "동질(변환 불필요) vs 이질(변환 필요)"
       ],
       "content_depth": 1,
-      "importance": 7,
+      "importance": 9,
       "depth": 1,
       "unanswered_questions": 0,
       "learning_pressure": 0
@@ -1931,10 +1931,10 @@
         "함정 7쌍"
       ],
       "content_depth": 1,
-      "importance": 3,
-      "depth": 0.98,
+      "importance": 5,
+      "depth": 1,
       "unanswered_questions": 0,
-      "learning_pressure": 0.08
+      "learning_pressure": 0
     },
     "concept/cloud/12_genai_for_pca": {
       "id": "concept/cloud/12_genai_for_pca",
@@ -2061,10 +2061,117 @@
         "정답 (A)"
       ],
       "content_depth": 0.85,
-      "importance": 5,
-      "depth": 0.77,
+      "importance": 7,
+      "depth": 0.8,
       "unanswered_questions": 0,
-      "learning_pressure": 1.14
+      "learning_pressure": 1.42
+    },
+    "concept/cloud/13_cheat_sheet_for_pca": {
+      "id": "concept/cloud/13_cheat_sheet_for_pca",
+      "type": "concept",
+      "title": "GCP Professional Cloud Architect 시험 치트시트",
+      "path": "_concept/cloud/13_cheat_sheet_for_pca.md",
+      "status": "complete",
+      "tags": [
+        "cloud",
+        "gcp",
+        "pca",
+        "certification",
+        "cheat-sheet"
+      ],
+      "date": "2026-07-07",
+      "valid_from": "Tue",
+      "confidence": "high",
+      "mentioned_terms": [
+        "단일 치트시트",
+        "의사결정 표 + 키워드→서비스 매핑",
+        "Compute Engine",
+        "GKE",
+        "Autopilot",
+        "Cloud Run",
+        "Cloud Run functions",
+        "Batch",
+        "컴퓨트 비용 레버 (섹션 2·4 단골):",
+        "Spot VM",
+        "CUD",
+        "SUD",
+        "Active Assist 추천",
+        "Cloud Storage",
+        "Filestore",
+        "Cloud SQL",
+        "Spanner",
+        "Bigtable",
+        "Firestore",
+        "Memorystore",
+        "BigQuery",
+        "Autoclass",
+        "로드밸런서 선택 (신 명칭):",
+        "클라이언트 IP 보존",
+        "Internal Application LB",
+        "하이브리드 연결 선택:",
+        "HA VPN",
+        "Dedicated Interconnect",
+        "Partner Interconnect",
+        "VPC Peering",
+        "프라이빗 접근 / 격리:",
+        "Private Google Access",
+        "Shared VPC",
+        "VPC Service Controls",
+        "IAM 골격:",
+        "조직 > 폴더 > 프로젝트 > 리소스",
+        "Deny 정책이 우선",
+        "키 만들지 마라",
+        "impersonation(SA 가장)",
+        "직무 분리(SoD):",
+        "데이터 반출 차단",
+        "IAP",
+        "Access Context Manager",
+        "키를 내가 관리",
+        "CMEK (Cloud KMS)",
+        "Cloud EKM",
+        "Secret Manager",
+        "Cloud Armor",
+        "Security Command Center",
+        "Model Armor",
+        "마이그레이션 도구:",
+        "Migration Center",
+        "Storage Transfer Service",
+        "Transfer Appliance",
+        "속도·마찰 최소 = Rehost 우선",
+        "Backup and DR Service",
+        "관측성·신뢰성:",
+        "SLI",
+        "SLO",
+        "Error Budget",
+        "Rolling",
+        "Blue-Green",
+        "Canary",
+        "Cloud Deploy",
+        "부하 테스트",
+        "카오스 엔지니어링",
+        "침투 테스트",
+        "구현 도구:",
+        "Apigee",
+        "Terraform",
+        "Cloud Emulators",
+        "Gemini Cloud Assist",
+        "비용 최적화 레버:",
+        "CapEx→OpEx",
+        "Model Garden",
+        "AI Hypercomputer",
+        "Sensitive Data Protection",
+        "CMEK(KMS)",
+        "EKM",
+        "Migrate to VMs",
+        "Organization Policy",
+        "SA 키 발급·다운로드가 답이면 의심",
+        "CMEK ≠ CSEK ≠ EKM"
+      ],
+      "content_depth": 0.48,
+      "importance": 1,
+      "depth": 0.82,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.18
     },
     "concept/data-analytics/00_how_to_design_funnel": {
       "id": "concept/data-analytics/00_how_to_design_funnel",
@@ -4820,6 +4927,61 @@
       "type": "references"
     },
     {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/00_pca_study_plan",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/03_vpc_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/04_gke_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/05_iam_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/06_compute_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/08_databases_and_storage_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/09_security_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/10_migration_and_dr_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/11_operations_and_cost_for_pca",
+      "type": "references"
+    },
+    {
+      "from": "concept/cloud/13_cheat_sheet_for_pca",
+      "to": "concept/cloud/12_genai_for_pca",
+      "type": "references"
+    },
+    {
       "from": "concept/data-analytics/00_how_to_design_funnel",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "references"
@@ -5255,6 +5417,39 @@
       ]
     },
     {
+      "term": "Dedicated Interconnect",
+      "count": 5,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "VPC Service Controls",
+      "count": 5,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/12_genai_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "BigQuery",
+      "count": 5,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
       "term": "정기적으로:",
       "count": 5,
       "mentioned_by": [
@@ -5288,6 +5483,16 @@
       ]
     },
     {
+      "term": "Gemini Cloud Assist",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/00_pca_study_plan",
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/12_genai_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
       "term": "Regional",
       "count": 4,
       "mentioned_by": [
@@ -5295,26 +5500,6 @@
         "concept/cloud/04_gke_for_pca",
         "concept/cloud/06_compute_for_pca",
         "concept/cloud/10_migration_and_dr_for_pca"
-      ]
-    },
-    {
-      "term": "Dedicated Interconnect",
-      "count": 4,
-      "mentioned_by": [
-        "concept/cloud/03_vpc_for_pca",
-        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
-        "concept/cloud/09_security_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca"
-      ]
-    },
-    {
-      "term": "VPC Service Controls",
-      "count": 4,
-      "mentioned_by": [
-        "concept/cloud/03_vpc_for_pca",
-        "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/09_security_for_pca",
-        "concept/cloud/12_genai_for_pca"
       ]
     },
     {
@@ -5368,13 +5553,33 @@
       ]
     },
     {
-      "term": "BigQuery",
+      "term": "Spanner",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Bigtable",
+      "count": 4,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/12_genai_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud Storage",
       "count": 4,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
         "concept/cloud/09_security_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca",
-        "concept/cloud/11_operations_and_cost_for_pca"
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -5496,21 +5701,30 @@
       ]
     },
     {
-      "term": "Gemini Cloud Assist",
+      "term": "AI Hypercomputer",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/00_pca_study_plan",
-        "concept/cloud/11_operations_and_cost_for_pca",
-        "concept/cloud/12_genai_for_pca"
+        "concept/cloud/12_genai_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
-      "term": "Spanner",
+      "term": "HA VPN",
       "count": 3,
       "mentioned_by": [
-        "concept/cloud/04_gke_for_pca",
-        "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca"
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Partner Interconnect",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -5532,25 +5746,43 @@
       ]
     },
     {
-      "term": "Bigtable",
+      "term": "SUD",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/06_compute_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "GKE",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/06_compute_for_pca",
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud Armor",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/07_load_balancing_and_connectivity_for_pca",
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud SQL",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
         "concept/cloud/10_migration_and_dr_for_pca",
-        "concept/cloud/12_genai_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
       "term": "Pub/Sub",
-      "count": 3,
-      "mentioned_by": [
-        "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/09_security_for_pca",
-        "concept/cloud/11_operations_and_cost_for_pca"
-      ]
-    },
-    {
-      "term": "Cloud Storage",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
@@ -5568,12 +5800,39 @@
       ]
     },
     {
+      "term": "Sensitive Data Protection",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/12_genai_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
       "term": "System Event",
       "count": 3,
       "mentioned_by": [
         "concept/cloud/09_security_for_pca",
         "concept/cloud/11_operations_and_cost_for_pca",
         "concept/data-analytics/02_event_tracking_design"
+      ]
+    },
+    {
+      "term": "Apigee",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Rolling",
+      "count": 3,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca",
+        "concept/data-analytics/01_behavioral_analytics_techniques"
       ]
     },
     {
@@ -5779,14 +6038,6 @@
       ]
     },
     {
-      "term": "AI Hypercomputer",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/00_pca_study_plan",
-        "concept/cloud/12_genai_for_pca"
-      ]
-    },
-    {
       "term": "allow",
       "count": 2,
       "mentioned_by": [
@@ -5827,19 +6078,11 @@
       ]
     },
     {
-      "term": "HA VPN",
+      "term": "Shared VPC",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/03_vpc_for_pca",
-        "concept/cloud/07_load_balancing_and_connectivity_for_pca"
-      ]
-    },
-    {
-      "term": "Partner Interconnect",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/03_vpc_for_pca",
-        "concept/cloud/07_load_balancing_and_connectivity_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -5848,6 +6091,14 @@
       "mentioned_by": [
         "concept/cloud/03_vpc_for_pca",
         "concept/cloud/07_load_balancing_and_connectivity_for_pca"
+      ]
+    },
+    {
+      "term": "Private Google Access",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -5883,6 +6134,14 @@
       ]
     },
     {
+      "term": "VPC Peering",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/03_vpc_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
       "term": "함정 8쌍",
       "count": 2,
       "mentioned_by": [
@@ -5896,6 +6155,14 @@
       "mentioned_by": [
         "concept/cloud/04_gke_for_pca",
         "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Autopilot",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/04_gke_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -5971,14 +6238,6 @@
       ]
     },
     {
-      "term": "SUD",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/06_compute_for_pca",
-        "concept/cloud/11_operations_and_cost_for_pca"
-      ]
-    },
-    {
       "term": "Spot",
       "count": 2,
       "mentioned_by": [
@@ -5987,11 +6246,27 @@
       ]
     },
     {
-      "term": "GKE",
+      "term": "Cloud Run functions",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/06_compute_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud Run",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/06_compute_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Compute Engine",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/06_compute_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -6003,15 +6278,15 @@
       ]
     },
     {
-      "term": "DDoS 방어",
+      "term": "Internal Application LB",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/07_load_balancing_and_connectivity_for_pca",
-        "concept/cloud/09_security_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
-      "term": "Cloud Armor",
+      "term": "DDoS 방어",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/07_load_balancing_and_connectivity_for_pca",
@@ -6035,11 +6310,19 @@
       ]
     },
     {
-      "term": "Cloud SQL",
+      "term": "Firestore",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
-        "concept/cloud/10_migration_and_dr_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Memorystore",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -6059,11 +6342,51 @@
       ]
     },
     {
+      "term": "Filestore",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
       "term": "인증·인가",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/08_databases_and_storage_for_pca",
         "concept/cloud/12_genai_for_pca"
+      ]
+    },
+    {
+      "term": "Autoclass",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/08_databases_and_storage_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Secret Manager",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Security Command Center",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud EKM",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -6080,6 +6403,22 @@
       "mentioned_by": [
         "concept/cloud/09_security_for_pca",
         "concept/cloud/11_operations_and_cost_for_pca"
+      ]
+    },
+    {
+      "term": "Access Context Manager",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "IAP",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/09_security_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -6107,11 +6446,11 @@
       ]
     },
     {
-      "term": "Sensitive Data Protection",
+      "term": "EKM",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/09_security_for_pca",
-        "concept/cloud/12_genai_for_pca"
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -6155,14 +6494,6 @@
       ]
     },
     {
-      "term": "Apigee",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/09_security_for_pca",
-        "concept/cloud/11_operations_and_cost_for_pca"
-      ]
-    },
-    {
       "term": "경계",
       "count": 2,
       "mentioned_by": [
@@ -6179,6 +6510,38 @@
       ]
     },
     {
+      "term": "Migration Center",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Transfer Appliance",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Storage Transfer Service",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Backup and DR Service",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/10_migration_and_dr_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
       "term": "Helicopter Racing League",
       "count": 2,
       "mentioned_by": [
@@ -6187,11 +6550,35 @@
       ]
     },
     {
-      "term": "Rolling",
+      "term": "SLI",
       "count": 2,
       "mentioned_by": [
         "concept/cloud/11_operations_and_cost_for_pca",
-        "concept/data-analytics/01_behavioral_analytics_techniques"
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "SLO",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Canary",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud Deploy",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
@@ -6200,6 +6587,70 @@
       "mentioned_by": [
         "concept/cloud/11_operations_and_cost_for_pca",
         "concept/dbt/00_what_is_dbt"
+      ]
+    },
+    {
+      "term": "CUD",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Spot VM",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "부하 테스트",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "카오스 엔지니어링",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "침투 테스트",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Cloud Emulators",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/11_operations_and_cost_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Model Garden",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/12_genai_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
+      ]
+    },
+    {
+      "term": "Model Armor",
+      "count": 2,
+      "mentioned_by": [
+        "concept/cloud/12_genai_for_pca",
+        "concept/cloud/13_cheat_sheet_for_pca"
       ]
     },
     {
