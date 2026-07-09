@@ -84,7 +84,7 @@
   "data-analytics/2026-002-metric-change-investigation-checklist": "50115c513088b0e2057906bc16ff760a",
   "data-engineering/2026-002-feature-mart-checklist": "580d7911f227ac28b9651bc51e962bc0",
   "data-engineering/2026-003-backfill-checklist": "654aacb95773f6e6c4d11d5c6f044f5d",
-  "data-engineering/2026-004-store-monthly-dimensional-model": "016a0d78147ce1623e2cc3fff52cfe46",
+  "data-engineering/2026-004-store-monthly-dimensional-model": "a4d36c290a2650dd4860b04265d4d208",
   "security/2026-06-24-002-gcp-key-management-status": "6cd14ca3d40c0e234d2810c760d4eee3",
   "essay/08_how_to_plan_a_dashboard": "9cee2a8800234eb4e3c402ca34c95369",
   "cloud/01_gcp_iam_for_new_to_cloud_org": "161601c8c295cd029681384c620619bb",
@@ -95,5 +95,6 @@
   "ai/00_ilya_recommended_papers": "7af0c75197328ff7d877cb606da1711e",
   "bi/00_how_to_build_bi_dashboard": "3a78a43255ee511624fd7ee4bc10451c",
   "ai/01_cs231n_cnn": "9594be83cb1af7c3854509e6d49f2b57",
-  "essay/09_how_to_persuade_non_experts": "248a7df1f3e97db7c179d82796ba6bdb"
+  "essay/09_how_to_persuade_non_experts": "248a7df1f3e97db7c179d82796ba6bdb",
+  "data-engineering/2026-005-identify-data-domains": "5299f384eb3df74f09a7ef68624121e1"
 }

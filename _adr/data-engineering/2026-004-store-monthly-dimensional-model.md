@@ -5,7 +5,7 @@ date       : 2026-07-07 00:00:00 +0900
 updated    : 2026-07-07 00:00:00 +0900
 tag        : dimensional-modeling star-schema scd2 grain data-engineering
 status     : proposed
-deciders   : 윤용현 (Data Engineering)
+deciders   : https://www.linkedin.com/in/dgpr
 public     : false
 confidence : medium
 relations:

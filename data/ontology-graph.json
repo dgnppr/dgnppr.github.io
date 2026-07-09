@@ -141,10 +141,10 @@
         "문서 없이 리뷰어의 경험에 의존"
       ],
       "content_depth": 0.85,
-      "importance": 21,
+      "importance": 23,
       "depth": 0.6,
       "unanswered_questions": 0,
-      "learning_pressure": 8.45
+      "learning_pressure": 9.26
     },
     "adr/data-engineering/2026-002-feature-mart-checklist": {
       "id": "adr/data-engineering/2026-002-feature-mart-checklist",
@@ -205,6 +205,27 @@
       "depth": 0.52,
       "unanswered_questions": 0,
       "learning_pressure": 0.48
+    },
+    "adr/data-engineering/2026-005-identify-data-domains": {
+      "id": "adr/data-engineering/2026-005-identify-data-domains",
+      "type": "adr",
+      "title": "데이터 도메인 식별 — 무엇을 기준으로 경계를 자를 것인가",
+      "path": "_adr/data-engineering/2026-005-identify-data-domains.md",
+      "status": "completed",
+      "tags": [
+        "data-domain",
+        "domain-driven-design",
+        "data-modeling",
+        "data-engineering"
+      ],
+      "date": "2026-07-09",
+      "confidence": "medium",
+      "mentioned_terms": [],
+      "content_depth": 0.68,
+      "importance": 1,
+      "depth": 0.54,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.46
     },
     "concept/ai/00_ilya_recommended_papers": {
       "id": "concept/ai/00_ilya_recommended_papers",
@@ -3234,10 +3255,10 @@
       "confidence": "high",
       "mentioned_terms": [],
       "content_depth": 0.68,
-      "importance": 16,
+      "importance": 18,
       "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 1.79
+      "learning_pressure": 2.02
     },
     "concept/data-architect/01_how_to_architect_medallion_well": {
       "id": "concept/data-architect/01_how_to_architect_medallion_well",
@@ -5341,6 +5362,21 @@
     {
       "from": "adr/data-engineering/2026-003-backfill-checklist",
       "to": "concept/dbt/04_dbt_operational_knowhow",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-005-identify-data-domains",
+      "to": "adr/data-engineering/2026-004-store-monthly-dimensional-model",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-005-identify-data-domains",
+      "to": "adr/data-engineering/2026-001-data-mart-checklist",
+      "type": "references"
+    },
+    {
+      "from": "adr/data-engineering/2026-005-identify-data-domains",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "references"
     },
     {
