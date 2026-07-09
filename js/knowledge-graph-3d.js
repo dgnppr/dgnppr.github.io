@@ -707,10 +707,13 @@
             previewEl.style.zIndex = '3200';
             document.body.appendChild(previewEl);
 
+            var prevTipPos = null; /* 직전 프리뷰 위치 (히스테리시스용) */
+
             function showPreview(n) {
                 var title = n.title.replace(/^[""""]|[""""]$/g, '');
                 previewEl.innerHTML = '<strong>' + title + '</strong>';
                 previewEl.classList.add('is-visible');
+                prevTipPos = null; /* 노드가 바뀌면 위치 새로 계산 */
             }
 
             /* ─────────────────────────────────────────────────────
@@ -1444,32 +1447,59 @@
                     if (nm && nm.visible) nbPos.push(viewportOf(nm));
                 });
 
-                /* 4방향 후보 */
-                var candidates = [
-                    { l: sp.x + gap,            tp: sp.y - tipH / 2 },
-                    { l: sp.x - tipW - gap,     tp: sp.y - tipH / 2 },
-                    { l: sp.x - tipW / 2,       tp: sp.y + gap       },
-                    { l: sp.x - tipW / 2,       tp: sp.y - tipH - gap },
-                ];
-
-                function overlapScore(c) {
-                    var cx = c.l + tipW / 2, cy = c.tp + tipH / 2, sc = 0;
-                    nbPos.forEach(function (nb) {
-                        var dx = Math.abs(nb.x - cx), dy = Math.abs(nb.y - cy);
-                        if (dx < tipW / 2 + 30 && dy < tipH / 2 + 30) sc++;
+                /* 8방향 × 2단계 거리 후보 — 이웃이 몰려 있어도 빈 방향을 찾는다 */
+                var candidates = [];
+                [
+                    [1, 0], [-1, 0], [0, -1], [0, 1],
+                    [1, -1], [-1, -1], [1, 1], [-1, 1],
+                ].forEach(function (d) {
+                    [0, 70].forEach(function (extra) {
+                        var g = gap + extra;
+                        candidates.push({
+                            l:  sp.x + (d[0] > 0 ? g : d[0] < 0 ? -tipW - g : -tipW / 2),
+                            tp: sp.y + (d[1] > 0 ? g : d[1] < 0 ? -tipH - g : -tipH / 2),
+                        });
                     });
-                    /* 그래프 경계를 벗어나는 후보에 페널티 */
-                    if (c.l < minL || c.l > maxL) sc += 5;
-                    if (c.tp < minT || c.tp > maxT) sc += 5;
+                });
+
+                function clampPos(c) {
+                    return {
+                        l:  Math.max(minL, Math.min(c.l,  maxL)),
+                        tp: Math.max(minT, Math.min(c.tp, maxT)),
+                    };
+                }
+
+                /* 겹침 점수: 클램프된 실제 표시 위치 기준으로 툴팁 사각형
+                   (여유 24px)이 덮는 이웃 노드 수 + 핀 노드 가림 + 클램프 밀림량 */
+                function overlapScore(c, orig) {
+                    var m = 24, sc = 0;
+                    nbPos.forEach(function (nb) {
+                        if (nb.x > c.l - m && nb.x < c.l + tipW + m &&
+                            nb.y > c.tp - m && nb.y < c.tp + tipH + m) sc++;
+                    });
+                    if (sp.x > c.l && sp.x < c.l + tipW &&
+                        sp.y > c.tp && sp.y < c.tp + tipH) sc += 2;
+                    sc += (Math.abs(c.l - orig.l) + Math.abs(c.tp - orig.tp)) / 200;
                     return sc;
                 }
 
-                var best = candidates.reduce(function (prev, cur) {
-                    return overlapScore(cur) < overlapScore(prev) ? cur : prev;
+                var best = null, bestScore = Infinity;
+                candidates.forEach(function (orig) {
+                    var c  = clampPos(orig);
+                    var sc = overlapScore(c, orig);
+                    if (sc < bestScore) { bestScore = sc; best = c; }
                 });
 
-                previewEl.style.left = Math.max(minL, Math.min(best.l,  maxL)) + 'px';
-                previewEl.style.top  = Math.max(minT, Math.min(best.tp, maxT)) + 'px';
+                /* 히스테리시스: 직전 위치가 여전히 비슷하게 좋으면 유지해
+                   시뮬레이션 중 툴팁이 프레임마다 튀는 것을 막는다 */
+                if (prevTipPos) {
+                    var pc = clampPos(prevTipPos);
+                    if (overlapScore(pc, prevTipPos) <= bestScore + 0.5) best = pc;
+                }
+                prevTipPos = { l: best.l, tp: best.tp };
+
+                previewEl.style.left = best.l + 'px';
+                previewEl.style.top  = best.tp + 'px';
             }
             animate();
 
