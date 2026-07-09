@@ -224,10 +224,69 @@
         "한 줄 지도"
       ],
       "content_depth": 0.55,
-      "importance": 0,
-      "depth": 0.69,
+      "importance": 2,
+      "depth": 0.72,
       "unanswered_questions": 0,
-      "learning_pressure": 0
+      "learning_pressure": 0.56
+    },
+    "concept/ai/01_cs231n_cnn": {
+      "id": "concept/ai/01_cs231n_cnn",
+      "type": "concept",
+      "title": "CS231n 리뷰 — 선형 분류기에서 CNN까지, 이미지 인식의 뼈대",
+      "path": "_concept/ai/01_cs231n_cnn.md",
+      "status": "complete",
+      "tags": [
+        "ai",
+        "deep-learning",
+        "cnn",
+        "cs231n",
+        "computer-vision",
+        "backpropagation"
+      ],
+      "date": "2026-07-09",
+      "confidence": "high",
+      "mentioned_terms": [
+        "train / validation / test",
+        "명시적 규칙으로 짤 수 없다",
+        "semantic gap",
+        "템플릿",
+        "숫자 하나로 측정",
+        "regularization",
+        "gradient",
+        "mini-batch",
+        "선형을 아무리 쌓아도 선형",
+        "비선형 activation",
+        "computational graph",
+        "local gradient",
+        "DAG 위의 chain rule + 캐싱",
+        "파라미터 폭발",
+        "공간 구조 무시",
+        "Convolution",
+        "Local connectivity",
+        "파라미터 공유를 통한 압축",
+        "Translation invariance",
+        "feature map",
+        "Conv layer",
+        "ReLU",
+        "Pooling",
+        "Fully-connected",
+        "feature hierarchy",
+        "데이터에서 특징 계층을 스스로 학습",
+        "학습을 굴러가게 만드는 것",
+        "Regularization",
+        "dropout",
+        "data augmentation",
+        "Batch Normalization",
+        "Hyperparameter 튜닝",
+        "모든 딥러닝에 공통인 사고 틀",
+        "글자 그대로 똑같이",
+        "시간/순서"
+      ],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.75,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.25
     },
     "concept/bi/00_how_to_build_bi_dashboard": {
       "id": "concept/bi/00_how_to_build_bi_dashboard",
@@ -5000,10 +5059,10 @@
         "사람 사이에서만 성립하는 개념"
       ],
       "content_depth": 0.65,
-      "importance": 3,
-      "depth": 0.68,
+      "importance": 5,
+      "depth": 0.7,
       "unanswered_questions": 0,
-      "learning_pressure": 0.97
+      "learning_pressure": 1.49
     },
     "insight/essay/07_how_to_prompt_well": {
       "id": "insight/essay/07_how_to_prompt_well",
@@ -5026,10 +5085,10 @@
         "시행착오로 체득(원칙 없이 많이 써보기)"
       ],
       "content_depth": 0.65,
-      "importance": 1,
-      "depth": 0.65,
+      "importance": 3,
+      "depth": 0.68,
       "unanswered_questions": 0,
-      "learning_pressure": 0.35
+      "learning_pressure": 0.97
     },
     "insight/essay/08_how_to_plan_a_dashboard": {
       "id": "insight/essay/08_how_to_plan_a_dashboard",
@@ -5059,6 +5118,36 @@
       "depth": 0.7,
       "unanswered_questions": 0,
       "learning_pressure": 0.3
+    },
+    "insight/essay/09_how_to_persuade_non_experts": {
+      "id": "insight/essay/09_how_to_persuade_non_experts",
+      "type": "insight",
+      "title": "비전문가를 논리로 설득한다는 것",
+      "path": "_insight/essay/09_how_to_persuade_non_experts.md",
+      "status": "complete",
+      "tags": [
+        "persuasion",
+        "communication",
+        "logic",
+        "work",
+        "essay"
+      ],
+      "date": "2026-07-09",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "비용, 리스크, 일정, 고객 영향",
+        "인지 부담을 줄이는 설계",
+        "결정을 가르는 숫자 하나",
+        "\"이 사람 말을 믿어도 되는가\"",
+        "틀렸을 때 빠르게 인정한 이력",
+        "상대가 스스로 그 결론에 도달한 것처럼",
+        "상대의 세계를 상상하는 능력"
+      ],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.68,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.32
     },
     "tool/cloud/01_gcp_iam_for_new_to_cloud_org": {
       "id": "tool/cloud/01_gcp_iam_for_new_to_cloud_org",
@@ -5225,6 +5314,11 @@
       "from": "adr/data-engineering/2026-003-backfill-checklist",
       "to": "concept/dbt/04_dbt_operational_knowhow",
       "type": "references"
+    },
+    {
+      "from": "concept/ai/01_cs231n_cnn",
+      "to": "concept/ai/00_ilya_recommended_papers",
+      "type": "part-of"
     },
     {
       "from": "concept/bi/00_how_to_build_bi_dashboard",
@@ -6014,6 +6108,16 @@
     {
       "from": "insight/essay/08_how_to_plan_a_dashboard",
       "to": "concept/data-analytics/03_metrics_framework",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/09_how_to_persuade_non_experts",
+      "to": "insight/essay/06_how_to_work_well",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/09_how_to_persuade_non_experts",
+      "to": "insight/essay/07_how_to_prompt_well",
       "type": "references"
     },
     {
