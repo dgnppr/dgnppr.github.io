@@ -91,5 +91,7 @@
   "cloud/14_case_altostrat_media_for_pca": "153f1fe3d7d6952ba612678832d7357f",
   "cloud/15_case_cymbal_retail_for_pca": "88cd92e3b34c23f2a684ae88419b721e",
   "cloud/16_case_ehr_healthcare_for_pca": "eb06648e098e1467d0d4b475ee30e19d",
-  "cloud/17_case_knightmotives_automotive_for_pca": "954bf5e451023a67fffd647071b329eb"
+  "cloud/17_case_knightmotives_automotive_for_pca": "954bf5e451023a67fffd647071b329eb",
+  "ai/00_ilya_recommended_papers": "7af0c75197328ff7d877cb606da1711e",
+  "bi/00_how_to_build_bi_dashboard": "3a78a43255ee511624fd7ee4bc10451c"
 }

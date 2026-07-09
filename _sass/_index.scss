@@ -134,7 +134,7 @@
     border-radius: 999px;
     transition: width 0.2s ease;
 
-    &.is-open { width: min(200px, 46vw); }
+    &.is-open { width: #{'min(200px, 46vw)'}; }
 
     // 토글 아이콘 버튼: 입력창 위에 겹쳐 항상 왼쪽 고정
     .feed-icon-btn {

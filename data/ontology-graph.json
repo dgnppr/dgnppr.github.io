@@ -206,6 +206,82 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.48
     },
+    "concept/ai/00_ilya_recommended_papers": {
+      "id": "concept/ai/00_ilya_recommended_papers",
+      "type": "concept",
+      "title": "일리야 서츠케버 추천 AI 핵심 논문 27선",
+      "path": "_concept/ai/00_ilya_recommended_papers.md",
+      "status": "complete",
+      "tags": [
+        "ai",
+        "deep-learning",
+        "reading-list",
+        "transformer"
+      ],
+      "date": "2026-07-09",
+      "confidence": "high",
+      "mentioned_terms": [
+        "한 줄 지도"
+      ],
+      "content_depth": 0.55,
+      "importance": 0,
+      "depth": 0.69,
+      "unanswered_questions": 0,
+      "learning_pressure": 0
+    },
+    "concept/bi/00_how_to_build_bi_dashboard": {
+      "id": "concept/bi/00_how_to_build_bi_dashboard",
+      "type": "concept",
+      "title": "좋은 BI 대시보드를 만드는 법",
+      "path": "_concept/bi/00_how_to_build_bi_dashboard.md",
+      "status": "complete",
+      "tags": [
+        "bi",
+        "dashboard",
+        "data-visualization",
+        "analytics",
+        "governance"
+      ],
+      "date": "2026-07-09",
+      "confidence": "high",
+      "mentioned_terms": [
+        "반복되는 의사결정을 자동화하는 인터페이스",
+        "그 화면을 보고 행동이 바뀌는가",
+        "가장 마지막 표면",
+        "의사결정 질문 정의",
+        "오디언스 정의",
+        "단일 지표 정의",
+        "데이터 신선도 SLA",
+        "집계 계층",
+        "접근 권한 / 행 수준 보안",
+        "최상단",
+        "중단",
+        "하단",
+        "기준선 대비",
+        "강조·경보(임계 초과)",
+        "집계 테이블/materialized view",
+        "만능 대시보드",
+        "Vanity metrics",
+        "컨텍스트 없는 숫자",
+        "Chart junk",
+        "지표 정의 표류",
+        "실시간 강박",
+        "Raw 위 live query",
+        "신선도 미표기",
+        "알림 없는 대시보드",
+        "정의의 단일성",
+        "의사결정",
+        "단일 정의 소스",
+        "비교 기준",
+        "데이터 기준 시각/신선도",
+        "순서"
+      ],
+      "content_depth": 0.48,
+      "importance": 1,
+      "depth": 0.72,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.28
+    },
     "concept/cloud/00_pca_study_plan": {
       "id": "concept/cloud/00_pca_study_plan",
       "type": "concept",
@@ -2496,10 +2572,10 @@
         "overall"
       ],
       "content_depth": 0.68,
-      "importance": 5,
-      "depth": 0.71,
+      "importance": 7,
+      "depth": 0.74,
       "unanswered_questions": 0,
-      "learning_pressure": 1.43
+      "learning_pressure": 1.83
     },
     "concept/data-analytics/01_behavioral_analytics_techniques": {
       "id": "concept/data-analytics/01_behavioral_analytics_techniques",
@@ -2652,10 +2728,10 @@
         "Goodhart's Law 방어"
       ],
       "content_depth": 0.77,
-      "importance": 15,
+      "importance": 17,
       "depth": 0.92,
       "unanswered_questions": 0,
-      "learning_pressure": 1.21
+      "learning_pressure": 1.37
     },
     "concept/data-analytics/04_user_behavior_analytics_framework": {
       "id": "concept/data-analytics/04_user_behavior_analytics_framework",
@@ -5148,6 +5224,16 @@
     {
       "from": "adr/data-engineering/2026-003-backfill-checklist",
       "to": "concept/dbt/04_dbt_operational_knowhow",
+      "type": "references"
+    },
+    {
+      "from": "concept/bi/00_how_to_build_bi_dashboard",
+      "to": "concept/data-analytics/03_metrics_framework",
+      "type": "references"
+    },
+    {
+      "from": "concept/bi/00_how_to_build_bi_dashboard",
+      "to": "concept/data-analytics/00_how_to_design_funnel",
       "type": "references"
     },
     {
