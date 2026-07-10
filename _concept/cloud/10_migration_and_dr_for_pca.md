@@ -241,7 +241,7 @@ DMS의 표준 흐름은 **초기 적재(full dump) → 연속 변경 복제(CDC)
 ```mermaid
 flowchart LR
   SRC["소스 DB<br/>(가동 중)"] -->|1. 초기 스냅샷| DEST["대상 DB<br/>(Cloud SQL/AlloyDB)"]
-  SRC -->|2. 연속 변경(CDC)<br/>지속 복제| DEST
+  SRC -->|2. 연속 변경·CDC<br/>지속 복제| DEST
   DEST -->|3. 지연 0 근접 시<br/>컷오버| APP["앱 연결 전환"]
 ```
 
