@@ -3255,10 +3255,10 @@
       "confidence": "high",
       "mentioned_terms": [],
       "content_depth": 0.68,
-      "importance": 18,
+      "importance": 20,
       "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 2.02
+      "learning_pressure": 2.24
     },
     "concept/data-architect/01_how_to_architect_medallion_well": {
       "id": "concept/data-architect/01_how_to_architect_medallion_well",
@@ -3409,10 +3409,10 @@
         "과형식화"
       ],
       "content_depth": 0.92,
-      "importance": 11,
+      "importance": 13,
       "depth": 0.87,
       "unanswered_questions": 0,
-      "learning_pressure": 1.41
+      "learning_pressure": 1.66
     },
     "concept/data-architect/05_ontology_objects_summary": {
       "id": "concept/data-architect/05_ontology_objects_summary",
@@ -3645,10 +3645,10 @@
         "정의의 시제"
       ],
       "content_depth": 0.83,
-      "importance": 3,
-      "depth": 0.89,
+      "importance": 7,
+      "depth": 0.94,
       "unanswered_questions": 0,
-      "learning_pressure": 0.33
+      "learning_pressure": 0.42
     },
     "concept/data-architect/08_record_linkage_basics": {
       "id": "concept/data-architect/08_record_linkage_basics",
@@ -3694,10 +3694,10 @@
         "스케일"
       ],
       "content_depth": 0.77,
-      "importance": 3,
-      "depth": 0.64,
+      "importance": 5,
+      "depth": 0.67,
       "unanswered_questions": 0,
-      "learning_pressure": 1.07
+      "learning_pressure": 1.65
     },
     "concept/data-architect/09_privacy_preserving_matching": {
       "id": "concept/data-architect/09_privacy_preserving_matching",
@@ -3843,6 +3843,88 @@
       "depth": 0.55,
       "unanswered_questions": 0,
       "learning_pressure": 1.36
+    },
+    "concept/data-engineering/01_lakehouse_table_formats": {
+      "id": "concept/data-engineering/01_lakehouse_table_formats",
+      "type": "concept",
+      "title": "Lakehouse 테이블 포맷 — Iceberg·Delta·Hudi",
+      "path": "_concept/data-engineering/01_lakehouse_table_formats.md",
+      "status": "complete",
+      "tags": [
+        "lakehouse",
+        "iceberg",
+        "delta-lake",
+        "hudi",
+        "data-engineering"
+      ],
+      "date": "2026-07-10",
+      "valid_from": "Fri",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "WHERE dt = '2026-07-10'",
+        "day(ts)",
+        "hour(ts)",
+        "copy-on-write",
+        "merge-on-read",
+        "add",
+        "remove",
+        "Iceberg, Delta, Hudi",
+        "메타데이터/로그 계층",
+        "compaction",
+        "기본 성향이 다르다",
+        "엔진 중립성과 깨끗한 스펙",
+        "카탈로그가 가리키는 포인터를 원자적으로 교체",
+        "내부 ID",
+        "spec v2",
+        "spec v3",
+        "REST catalog 스펙",
+        "엔진 지원:",
+        "순차 로그",
+        "액션의 목록",
+        "checkpoint",
+        "`OPTIMIZE`",
+        "Z-ordering",
+        "deletion vector",
+        "liquid clustering",
+        "`VACUUM`",
+        "UniForm",
+        "adoop",
+        "pserts",
+        "eletes and",
+        "timeline",
+        "record-level index",
+        "record key",
+        "upsert가 빠르다",
+        "테이블 타입",
+        "Copy-on-Write 테이블",
+        "Merge-on-Read 테이블",
+        "log(delta) 파일",
+        "snapshot query",
+        "read-optimized query",
+        "incremental query",
+        "증분 ETL/CDC 파이프라인",
+        "레코드 인덱스",
+        "최상",
+        "지원(고유)",
+        "네이티브",
+        "가장 넓음",
+        "Iceberg REST catalog",
+        "Delta UniForm",
+        "Apache XTable",
+        "메타데이터를 서로 번역",
+        "벤더 정렬",
+        "엔진 지원 범위",
+        "트랜잭션 메타데이터",
+        "CoW vs MoR",
+        "Iceberg",
+        "Delta",
+        "Hudi"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.75,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.25
     },
     "concept/dbt/00_what_is_dbt": {
       "id": "concept/dbt/00_what_is_dbt",
@@ -4408,6 +4490,120 @@
       "unanswered_questions": 0,
       "learning_pressure": 1.04
     },
+    "concept/knowledge-graph/00_what_is_graph_database": {
+      "id": "concept/knowledge-graph/00_what_is_graph_database",
+      "type": "concept",
+      "title": "그래프 데이터베이스는 조인이 아니라 탐색이다",
+      "path": "_concept/knowledge-graph/00_what_is_graph_database.md",
+      "status": "draft",
+      "tags": [
+        "graph-database",
+        "rdf",
+        "data-engineering"
+      ],
+      "date": "2026-07-10",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "follows",
+        "since:2021",
+        "relations:",
+        "references",
+        "make ontology",
+        "neighborhood",
+        "hop이 늘어날 때",
+        "인덱스를 다시 뒤져 관계를 재계산",
+        "값의 일치",
+        "index-free adjacency",
+        "전체 데이터 크기와 무관",
+        "읽기(탐색)",
+        "쓰기",
+        "집계 스캔",
+        "깊게 연결된 데이터를 탐색",
+        "레이블과 속성(key-value)",
+        "(Neo4j·openCypher),",
+        "GQL",
+        "(주어, 술어, 목적어) 삼항(triple)",
+        "IRI",
+        "OWL",
+        "저장·질의 엔진",
+        "Cypher",
+        "경로 패턴",
+        "SPARQL",
+        "다단계 관계 탐색이 질의의 본질",
+        "스키마가 자주 바뀌고 관계 종류가 늘어날",
+        "경로 자체가 답",
+        "대량 집계·스캔",
+        "얕고 고정적",
+        "supernode 문제",
+        "데이터의 모양",
+        "엣지를 포인터처럼 따라가는"
+      ],
+      "content_depth": 0.77,
+      "importance": 3,
+      "depth": 0.52,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.44
+    },
+    "concept/knowledge-graph/01_what_is_knowledge_graph": {
+      "id": "concept/knowledge-graph/01_what_is_knowledge_graph",
+      "type": "concept",
+      "title": "지식 그래프는 그래프 DB에 의미를 얹은 것이다",
+      "path": "_concept/knowledge-graph/01_what_is_knowledge_graph.md",
+      "status": "draft",
+      "tags": [
+        "knowledge-graph",
+        "graphrag",
+        "data-engineering"
+      ],
+      "date": "2026-07-10",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "(:Node)-[:EDGE]->(:Node)",
+        "concept/insight/adr",
+        "references/extends",
+        "A-[:직원]->B",
+        "A-[:경쟁사]->B",
+        "근무",
+        "users",
+        ":Person",
+        "[:ORDERED]",
+        "(엔티티, 관계, 엔티티)",
+        "\"Google\"",
+        "\"Google LLC\"",
+        "\"구글\"",
+        ":Organization",
+        "neighborhood",
+        "relations",
+        "의미 있는 내용물",
+        "저장·질의 엔진",
+        "그래프 DB",
+        "온톨로지",
+        "지식 그래프",
+        "기존 데이터로부터 조립",
+        "정형 데이터",
+        "비정형 데이터",
+        "LLM으로 triple을 추출",
+        "하나의 정규 노드로 병합",
+        "Google Knowledge Graph",
+        "Wikidata",
+        "기업 지식 그래프",
+        "의미 유사도",
+        "GraphRAG",
+        "지식 그래프의 서브그래프",
+        "지식 그래프를 먼저 구축·유지해야 한다",
+        "구축·유지 비용",
+        "엔티티 해소 정확도가 상한을 정한다",
+        "스키마 진화",
+        "규모 vs 표현력 트레이드오프",
+        "파이프라인을 계속 돌보는 비용",
+        "신선하게 유지하는 것"
+      ],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.53,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.47
+    },
     "concept/llm/00_why_llm_is_decoder_only": {
       "id": "concept/llm/00_why_llm_is_decoder_only",
       "type": "concept",
@@ -4512,10 +4708,10 @@
         "반복 실행되는 메타데이터 연산"
       ],
       "content_depth": 1,
-      "importance": 5,
-      "depth": 0.63,
+      "importance": 7,
+      "depth": 0.65,
       "unanswered_questions": 0,
-      "learning_pressure": 1.88
+      "learning_pressure": 2.45
     },
     "concept/spark/01_structured_streaming": {
       "id": "concept/spark/01_structured_streaming",
@@ -6010,6 +6206,16 @@
       "type": "references"
     },
     {
+      "from": "concept/data-engineering/01_lakehouse_table_formats",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/01_lakehouse_table_formats",
+      "to": "concept/spark/00_what_is_pyspark",
+      "type": "references"
+    },
+    {
       "from": "concept/dbt/00_what_is_dbt",
       "to": "concept/data-engineering/00_how_to_use_dataform_well",
       "type": "references"
@@ -6057,6 +6263,31 @@
     {
       "from": "concept/java/00_what_is_java_virtual_thread",
       "to": "insight/essay/01_why_redis_single_threaded",
+      "type": "references"
+    },
+    {
+      "from": "concept/knowledge-graph/00_what_is_graph_database",
+      "to": "concept/data-architect/07_ontology_core_concepts",
+      "type": "references"
+    },
+    {
+      "from": "concept/knowledge-graph/01_what_is_knowledge_graph",
+      "to": "concept/knowledge-graph/00_what_is_graph_database",
+      "type": "extends"
+    },
+    {
+      "from": "concept/knowledge-graph/01_what_is_knowledge_graph",
+      "to": "concept/data-architect/04_what_is_ontology",
+      "type": "references"
+    },
+    {
+      "from": "concept/knowledge-graph/01_what_is_knowledge_graph",
+      "to": "concept/data-architect/07_ontology_core_concepts",
+      "type": "references"
+    },
+    {
+      "from": "concept/knowledge-graph/01_what_is_knowledge_graph",
+      "to": "concept/data-architect/08_record_linkage_basics",
       "type": "references"
     },
     {
@@ -6917,6 +7148,15 @@
       "mentioned_by": [
         "concept/data-architect/06_how_to_implement_ontology",
         "concept/data-architect/07_ontology_core_concepts",
+        "insight/data-architect/01_medallion_with_ontology"
+      ]
+    },
+    {
+      "term": "온톨로지",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-architect/06_how_to_implement_ontology",
+        "concept/knowledge-graph/01_what_is_knowledge_graph",
         "insight/data-architect/01_medallion_with_ontology"
       ]
     },
@@ -7899,14 +8139,6 @@
       ]
     },
     {
-      "term": "온톨로지",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/06_how_to_implement_ontology",
-        "insight/data-architect/01_medallion_with_ontology"
-      ]
-    },
-    {
       "term": "P31/P279*",
       "count": 2,
       "mentioned_by": [
@@ -7928,6 +8160,14 @@
       "mentioned_by": [
         "concept/data-architect/07_ontology_core_concepts",
         "insight/data-architect/00_ontology_core_examples"
+      ]
+    },
+    {
+      "term": "Wikidata",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/07_ontology_core_concepts",
+        "concept/knowledge-graph/01_what_is_knowledge_graph"
       ]
     },
     {
@@ -7960,6 +8200,14 @@
       "mentioned_by": [
         "concept/data-engineering/00_how_to_use_dataform_well",
         "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "checkpoint",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-engineering/01_lakehouse_table_formats",
+        "concept/spark/01_structured_streaming"
       ]
     },
     {
@@ -8088,6 +8336,22 @@
       "mentioned_by": [
         "concept/jpa/00_jpa_dirty_checking",
         "concept/springboot/00_why_rollback_marked_transaction_is_unusable"
+      ]
+    },
+    {
+      "term": "neighborhood",
+      "count": 2,
+      "mentioned_by": [
+        "concept/knowledge-graph/00_what_is_graph_database",
+        "concept/knowledge-graph/01_what_is_knowledge_graph"
+      ]
+    },
+    {
+      "term": "저장·질의 엔진",
+      "count": 2,
+      "mentioned_by": [
+        "concept/knowledge-graph/00_what_is_graph_database",
+        "concept/knowledge-graph/01_what_is_knowledge_graph"
       ]
     },
     {
