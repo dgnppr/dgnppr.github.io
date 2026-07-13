@@ -3637,10 +3637,10 @@
         "정의의 시제"
       ],
       "content_depth": 0.83,
-      "importance": 7,
+      "importance": 9,
       "depth": 0.94,
       "unanswered_questions": 0,
-      "learning_pressure": 0.42
+      "learning_pressure": 0.54
     },
     "concept/data-architect/08_record_linkage_basics": {
       "id": "concept/data-architect/08_record_linkage_basics",
@@ -3686,10 +3686,10 @@
         "스케일"
       ],
       "content_depth": 0.77,
-      "importance": 5,
-      "depth": 0.67,
+      "importance": 7,
+      "depth": 0.69,
       "unanswered_questions": 0,
-      "learning_pressure": 1.65
+      "learning_pressure": 2.14
     },
     "concept/data-architect/09_privacy_preserving_matching": {
       "id": "concept/data-architect/09_privacy_preserving_matching",
@@ -3729,10 +3729,10 @@
         "임계값"
       ],
       "content_depth": 0.65,
-      "importance": 1,
-      "depth": 0.55,
+      "importance": 3,
+      "depth": 0.58,
       "unanswered_questions": 0,
-      "learning_pressure": 0.45
+      "learning_pressure": 1.27
     },
     "concept/data-architect/10_trustworthy_controlled_experiments": {
       "id": "concept/data-architect/10_trustworthy_controlled_experiments",
@@ -3771,6 +3771,57 @@
       "depth": 0.52,
       "unanswered_questions": 0,
       "learning_pressure": 0.95
+    },
+    "concept/data-architect/11_entity_resolution_in_practice": {
+      "id": "concept/data-architect/11_entity_resolution_in_practice",
+      "type": "concept",
+      "title": "실무 환경의 Entity Resolution 파이프라인과 도구와 운영",
+      "path": "_concept/data-architect/11_entity_resolution_in_practice.md",
+      "status": "draft",
+      "tags": [
+        "data-architecture",
+        "entity-resolution",
+        "record-linkage",
+        "mdm",
+        "data-integration"
+      ],
+      "date": "2026-07-13",
+      "confidence": "high",
+      "mentioned_terms": [
+        "Bob",
+        "Robert",
+        "\"NULL\"",
+        "\"999-9999\"",
+        "표준화",
+        "서빙",
+        "입력 정규화",
+        "멀티패스 blocking이 기본값",
+        "scorer는 해석 가능성 우선",
+        "A와 C는 남남",
+        "Splink",
+        "Zingg",
+        "dedupe",
+        "Spark + GraphFrames",
+        "AWS Entity Resolution",
+        "Senzing",
+        "안정적",
+        "surrogate key",
+        "기존 클러스터에 신규만 매칭",
+        "Merge",
+        "Split",
+        "clerical review 큐",
+        "알려진 매치 심기",
+        "클러스터 크기 분포",
+        "신규 병합·분할 수",
+        "검토 큐 유입률",
+        "거의 모든 데이터 통합의 길목",
+        "상태를 가진 서비스"
+      ],
+      "content_depth": 0.68,
+      "importance": 1,
+      "depth": 0.61,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.39
     },
     "concept/data-engineering/00_how_to_use_dataform_well": {
       "id": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -5271,10 +5322,10 @@
         "산정 자체를 거부하는 방식(노 에스티메이트)"
       ],
       "content_depth": 0.65,
-      "importance": 2,
-      "depth": 0.65,
+      "importance": 4,
+      "depth": 0.68,
       "unanswered_questions": 0,
-      "learning_pressure": 0.69
+      "learning_pressure": 1.29
     },
     "insight/essay/06_how_to_work_well": {
       "id": "insight/essay/06_how_to_work_well",
@@ -5296,10 +5347,10 @@
         "사람 사이에서만 성립하는 개념"
       ],
       "content_depth": 0.65,
-      "importance": 5,
-      "depth": 0.7,
+      "importance": 7,
+      "depth": 0.73,
       "unanswered_questions": 0,
-      "learning_pressure": 1.49
+      "learning_pressure": 1.91
     },
     "insight/essay/07_how_to_prompt_well": {
       "id": "insight/essay/07_how_to_prompt_well",
@@ -5380,6 +5431,28 @@
         "상대가 스스로 그 결론에 도달한 것처럼",
         "상대의 세계를 상상하는 능력"
       ],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.68,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.32
+    },
+    "insight/essay/10_moving_forward_when_shaken": {
+      "id": "insight/essay/10_moving_forward_when_shaken",
+      "type": "insight",
+      "title": "안개 속에서 걷는다는 것",
+      "path": "_insight/essay/10_moving_forward_when_shaken.md",
+      "status": "complete",
+      "tags": [
+        "uncertainty",
+        "anxiety",
+        "direction",
+        "life",
+        "essay"
+      ],
+      "date": "2026-07-13",
+      "confidence": "medium",
+      "mentioned_terms": [],
       "content_depth": 0.65,
       "importance": 1,
       "depth": 0.68,
@@ -6193,6 +6266,21 @@
       "type": "extends"
     },
     {
+      "from": "concept/data-architect/11_entity_resolution_in_practice",
+      "to": "concept/data-architect/08_record_linkage_basics",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-architect/11_entity_resolution_in_practice",
+      "to": "concept/data-architect/09_privacy_preserving_matching",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-architect/11_entity_resolution_in_practice",
+      "to": "concept/data-architect/07_ontology_core_concepts",
+      "type": "references"
+    },
+    {
       "from": "concept/data-engineering/00_how_to_use_dataform_well",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "references"
@@ -6405,6 +6493,16 @@
     {
       "from": "insight/essay/09_how_to_persuade_non_experts",
       "to": "insight/essay/07_how_to_prompt_well",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/10_moving_forward_when_shaken",
+      "to": "insight/essay/06_how_to_work_well",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/10_moving_forward_when_shaken",
+      "to": "insight/essay/05_estimating_unknown_work",
       "type": "references"
     },
     {

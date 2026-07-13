@@ -99,5 +99,7 @@
   "data-engineering/2026-005-identify-data-domains": "5299f384eb3df74f09a7ef68624121e1",
   "data-engineering/01_lakehouse_table_formats": "a947bdf728705412ad7a6e27b3155d3e",
   "knowledge-graph/00_what_is_graph_database": "49b9c00bfade4a07b78c8f0364c3c585",
-  "knowledge-graph/01_what_is_knowledge_graph": "8dbf76b5a3c39a4824ea13749aceb0a7"
+  "knowledge-graph/01_what_is_knowledge_graph": "8dbf76b5a3c39a4824ea13749aceb0a7",
+  "essay/10_moving_forward_when_shaken": "aea33d5d95b0ffa757d6ddc8c3a48e50",
+  "data-architect/11_entity_resolution_in_practice": "e4865b08946ae5cfaf6168b545a3db30"
 }
