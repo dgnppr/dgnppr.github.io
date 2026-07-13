@@ -5440,24 +5440,37 @@
     "insight/essay/10_moving_forward_when_shaken": {
       "id": "insight/essay/10_moving_forward_when_shaken",
       "type": "insight",
-      "title": "안개 속에서 걷는다는 것",
+      "title": "막막하고 불안할 때, 무엇부터 하면 되나",
       "path": "_insight/essay/10_moving_forward_when_shaken.md",
       "status": "complete",
       "tags": [
         "uncertainty",
         "anxiety",
-        "direction",
+        "action",
         "life",
         "essay"
       ],
       "date": "2026-07-13",
       "confidence": "medium",
-      "mentioned_terms": [],
-      "content_depth": 0.65,
+      "mentioned_terms": [
+        "오늘 내가 뭘 하느냐",
+        "바꿀 수 있는 것",
+        "못 바꾸는 것",
+        "해보니 뭐가 재밌었고 뭐가 지겨웠는지",
+        "확실히 끝낼 수 있는 아주 작은 일",
+        "가본",
+        "안 가본",
+        "오늘",
+        "이번 주",
+        "매일",
+        "주변",
+        "주말"
+      ],
+      "content_depth": 0.48,
       "importance": 1,
-      "depth": 0.68,
+      "depth": 0.62,
       "unanswered_questions": 0,
-      "learning_pressure": 0.32
+      "learning_pressure": 0.38
     },
     "tool/cloud/01_gcp_iam_for_new_to_cloud_org": {
       "id": "tool/cloud/01_gcp_iam_for_new_to_cloud_org",
