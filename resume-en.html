@@ -34,8 +34,7 @@ sitemap: false
 
     /* Header */
     .name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
-    .name .en { color: var(--sub); font-weight: 400; font-size: 14px; margin-left: 7px; }
-    .role { font-size: 14px; color: var(--sub); margin: 2px 0 0; }
+    .name .bar { color: #d5d5d5; font-weight: 400; margin: 0 4px; }
     .contact { margin: 8px 0 0; font-size: 13px; color: var(--sub); }
     .contact a:hover { color: var(--ink); }
     .contact .sep { margin: 0 7px; color: #d5d5d5; }
@@ -67,6 +66,12 @@ sitemap: false
     .entry-notes { margin: 3px 0 0; padding-left: 15px; }
     .entry-notes li { margin: 1px 0; color: #444; }
 
+    /* Grouped entries */
+    .sub-entries { list-style: none; margin: 6px 0 0; padding: 0 0 0 15px; }
+    .sub-entry { margin-bottom: 10px; }
+    .sub-entry:last-child { margin-bottom: 0; }
+    .sub-entry .entry-line { font-size: 13px; }
+
     /* Stack */
     .stack { list-style: none; margin: 0; padding: 0; }
     .stack li { margin: 3px 0; color: #444; }
@@ -87,16 +92,15 @@ sitemap: false
 <body>
   <main class="page">
     <header>
-      <h1 class="name">Yonghyun Yun<span class="en">윤용현</span></h1>
-      <p class="role">Data Engineer</p>
+      <h1 class="name">Yonghyun Yun<span class="bar">|</span>Data Engineer</h1>
       <p class="contact">
-        <a href="mailto:dgnppr@gmail.com">dgnppr@gmail.com</a><span class="sep">·</span><a href="https://www.linkedin.com/in/dgpr/">LinkedIn</a><span class="sep">·</span><a href="https://github.com/dgnppr">GitHub</a><span class="sep">·</span><a href="/CV.pdf">CV</a>
+        <a href="mailto:dgnppr@gmail.com">dgnppr@gmail.com</a><span class="sep">·</span><a href="https://dgnppr.github.io">Blog</a><span class="sep">·</span><a href="https://www.linkedin.com/in/dgpr/">LinkedIn</a><span class="sep">·</span><a href="https://github.com/dgnppr">GitHub</a><span class="sep">·</span><a href="/resume.pdf">CV</a>
       </p>
     </header>
 
     <section>
       <h2>Summary</h2>
-      <p class="summary">Data engineer who designs and operates data pipelines and cloud infrastructure. Strong in large-scale batch/streaming processing, data warehouse modeling, and cost optimization. Put a 2–3 line summary here.</p>
+      <p class="summary">Data engineer who has established unified data models, standards, catalogs, and governance as systems on BigQuery with Dataform/dbt. Operated Kafka-based near-real-time pipelines handling 500K events/day with partners such as Coupang, Kakao, and Naver.</p>
     </section>
 
     <section>
@@ -104,21 +108,53 @@ sitemap: false
       <ul class="entries">
         <li class="entry">
           <div class="entry-head">
-            <span class="entry-line">Company Name <span class="at">— Senior Data Engineer</span></span>
-            <span class="entry-date">2023 — Present</span>
+            <span class="entry-line">Lotte Group <span class="at">— Data Engineer</span></span>
+            <span class="entry-date">2025.4 — Present</span>
           </div>
-          <ul class="entry-notes">
-            <li>Key achievement — metric, scale, impact (e.g. cut pipeline latency by 40%).</li>
-            <li>Systems owned, tech stack, role.</li>
+          <ul class="sub-entries">
+            <li class="sub-entry">
+              <div class="entry-head">
+                <span class="entry-line">Lotte Himart <span class="at">— AI Core TFT, AI·DATA Division (intra-group transfer)</span></span>
+                <span class="entry-date">2025.12 — Present</span>
+              </div>
+              <ul class="entry-notes">
+            <li>Built and operate a Customer Data Platform (CDP) with automated CRM (Braze) integration — Airflow, BigQuery, Dataform, Pub/Sub, Vertex AI Pipelines</li>
+            <li>Medallion architecture on BigQuery + Dataform: 100+ models across 6 domains, SSOT with separated standard/consumption marts</li>
+            <li>SCD2 history for dimension tables (snapshot → staging → assertion → upsert) with hash-based change detection and transactional idempotency for reproducibility</li>
+            <li>DQ gate with assertions mapped to every table, plus pre-commit hook + CI for automated metadata normalization</li>
+            <li>End-to-end pipelines from ERP sources to GCS, BigQuery, Braze, and Looker; multi-source incremental pipelines (GA, Amplitude) with idempotent partition DELETE-INSERT and partitioning/clustering optimization</li>
+            <li>Productized online-offline combined metrics — RFM, engagement score, browse intent, repurchase-cycle prediction — and designed 5 CRM analytics marts (NBA, LTV, health score, category penetration, channel journey)</li>
+            <li>Braze interface layer with tag/event-based automated targeting; designed new segments for wedding, moving, and appliance-replacement timing</li>
+            <li>Built a metadata-driven self-service environment where analysts and marketers extract data and segments directly with SQL; ran usage guides and onboarding training</li>
+              </ul>
+            </li>
+            <li class="sub-entry">
+              <div class="entry-head">
+                <span class="entry-line">Lotte Shopping <span class="at">— AI Core Team, HQ AI Center</span></span>
+                <span class="entry-date">2025.4 — 2025.12</span>
+              </div>
+              <ul class="entry-notes">
+            <li>Built a unified online-offline ad performance analytics platform across affiliates from zero to one — Airflow, BigQuery, dbt</li>
+            <li>Delivered governance framework and BI dashboards within 8 months from no existing infrastructure; used daily by 20+ analysts, GTM staff, and executives</li>
+            <li>Replaced manual aggregation with automated pipelines, cutting analysis lead time from daily to real time</li>
+            <li>Cost-aware mart modeling with master/summary table design; minimized query cost and scan range via idempotent partition DELETE-INSERT and partitioning/clustering optimization</li>
+            <li>Defined glossary and core metrics as data contracts with release-note change tracking; operated dbt-tests-based DQ gates and centralized lineage logging</li>
+            <li>Reverse-engineered per-affiliate sources, schemas, and code sets, mapped them to an ODS, and standardized keys and codes</li>
+              </ul>
+            </li>
           </ul>
         </li>
         <li class="entry">
           <div class="entry-head">
-            <span class="entry-line">Previous Company <span class="at">— Data Engineer</span></span>
-            <span class="entry-date">2020 — 2023</span>
+            <span class="entry-line">Kyobo Book Centre <span class="at">— Software Engineer, Order &amp; Payment Team, IT Division</span></span>
+            <span class="entry-date">2024.3 — 2025.4</span>
           </div>
           <ul class="entry-notes">
-            <li>Key achievement in one line.</li>
+            <li>Near-real-time, ordered and exactly-once synchronization of product/order/claim changes with partners (Coupang, Kakao, Naver) — Java, Kafka, Spring Boot, PostgreSQL, Redis</li>
+            <li>Managed 1M+ product states, processed 500K business events/day with a 5-minute SLA and FIFO/exactly-once guarantees</li>
+            <li>Per-partner/domain key design to distribute traffic and mitigate hot partitions; key-based partitioning for FIFO, idempotent producer/transactions, and sink UPSERT for dedup and ordering control</li>
+            <li>Fault isolation and resilience via rate limiting, circuit breakers, DLQ, and backfill</li>
+            <li>Applied the transactional outbox pattern — outbox writes inside OLTP transactions with a separate relay publishing to Kafka, combining at-least-once delivery with transactional consistency and async publishing</li>
           </ul>
         </li>
       </ul>
@@ -129,8 +165,8 @@ sitemap: false
       <ul class="entries">
         <li class="entry">
           <div class="entry-head">
-            <span class="entry-line">Major / Degree <span class="at">— University Name</span></span>
-            <span class="entry-date">2016 — 2020</span>
+            <span class="entry-line">B.S. in Computer Engineering <span class="at">— Inha University</span></span>
+            <span class="entry-date">2016.02 — 2022.02</span>
           </div>
         </li>
       </ul>
@@ -139,22 +175,26 @@ sitemap: false
     <section>
       <h2>Development Stack</h2>
       <ul class="stack">
-        <li><strong>Languages</strong> Python, SQL, Scala, Java</li>
-        <li><strong>Data</strong> Spark, Airflow, Kafka, Flink, dbt, Iceberg</li>
-        <li><strong>Cloud</strong> GCP (BigQuery, Dataflow, Composer), AWS</li>
-        <li><strong>Infra</strong> Docker, Kubernetes, Terraform</li>
+        <li><strong>Languages</strong> SQL, Python, Java</li>
+        <li><strong>Data</strong> BigQuery, Dataform, dbt, Airflow, Kafka, Pub/Sub</li>
+        <li><strong>Cloud</strong> GCP</li>
       </ul>
     </section>
 
     <section>
-      <h2>Publications</h2>
+      <h2>Certifications</h2>
       <ul class="entries">
         <li class="entry">
           <div class="entry-head">
-            <span class="entry-line">Author, "Title", Venue.</span>
-            <span class="entry-date">2024</span>
+            <span class="entry-line">Google Cloud Professional Cloud Architect</span>
+            <span class="entry-date">2026.07</span>
           </div>
-          <div class="entry-date">[paper] [code]</div>
+        </li>
+        <li class="entry">
+          <div class="entry-head">
+            <span class="entry-line">Google Cloud Professional Data Engineer</span>
+            <span class="entry-date">2026.02</span>
+          </div>
         </li>
       </ul>
     </section>

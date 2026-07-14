@@ -5347,10 +5347,10 @@
         "사람 사이에서만 성립하는 개념"
       ],
       "content_depth": 0.65,
-      "importance": 7,
-      "depth": 0.73,
+      "importance": 9,
+      "depth": 0.75,
       "unanswered_questions": 0,
-      "learning_pressure": 1.91
+      "learning_pressure": 2.23
     },
     "insight/essay/07_how_to_prompt_well": {
       "id": "insight/essay/07_how_to_prompt_well",
@@ -5432,10 +5432,10 @@
         "상대의 세계를 상상하는 능력"
       ],
       "content_depth": 0.65,
-      "importance": 1,
-      "depth": 0.68,
+      "importance": 3,
+      "depth": 0.7,
       "unanswered_questions": 0,
-      "learning_pressure": 0.32
+      "learning_pressure": 0.89
     },
     "insight/essay/10_moving_forward_when_shaken": {
       "id": "insight/essay/10_moving_forward_when_shaken",
@@ -5471,6 +5471,29 @@
       "depth": 0.62,
       "unanswered_questions": 0,
       "learning_pressure": 0.38
+    },
+    "insight/essay/11_how_to_prepare_resume_and_interview": {
+      "id": "insight/essay/11_how_to_prepare_resume_and_interview",
+      "type": "insight",
+      "title": "이직을 위한 이력서 작성과 면접 준비",
+      "path": "_insight/essay/11_how_to_prepare_resume_and_interview.md",
+      "status": "draft",
+      "tags": [
+        "career",
+        "resume",
+        "interview",
+        "essay"
+      ],
+      "date": "2026-07-15",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "내 경험의 재정리"
+      ],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.48,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.52
     },
     "tool/cloud/01_gcp_iam_for_new_to_cloud_org": {
       "id": "tool/cloud/01_gcp_iam_for_new_to_cloud_org",
@@ -6516,6 +6539,16 @@
     {
       "from": "insight/essay/10_moving_forward_when_shaken",
       "to": "insight/essay/05_estimating_unknown_work",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/11_how_to_prepare_resume_and_interview",
+      "to": "insight/essay/06_how_to_work_well",
+      "type": "references"
+    },
+    {
+      "from": "insight/essay/11_how_to_prepare_resume_and_interview",
+      "to": "insight/essay/09_how_to_persuade_non_experts",
       "type": "references"
     },
     {

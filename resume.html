@@ -34,8 +34,7 @@ sitemap: false
 
     /* Header */
     .name { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 0; }
-    .name .en { color: var(--sub); font-weight: 400; font-size: 14px; margin-left: 7px; }
-    .role { font-size: 14px; color: var(--sub); margin: 2px 0 0; }
+    .name .bar { color: #d5d5d5; font-weight: 400; margin: 0 4px; }
     .contact { margin: 8px 0 0; font-size: 13px; color: var(--sub); }
     .contact a:hover { color: var(--ink); }
     .contact .sep { margin: 0 7px; color: #d5d5d5; }
@@ -67,6 +66,12 @@ sitemap: false
     .entry-notes { margin: 3px 0 0; padding-left: 15px; }
     .entry-notes li { margin: 1px 0; color: #444; }
 
+    /* Grouped entries */
+    .sub-entries { list-style: none; margin: 6px 0 0; padding: 0 0 0 15px; }
+    .sub-entry { margin-bottom: 10px; }
+    .sub-entry:last-child { margin-bottom: 0; }
+    .sub-entry .entry-line { font-size: 13px; }
+
     /* Stack */
     .stack { list-style: none; margin: 0; padding: 0; }
     .stack li { margin: 3px 0; color: #444; }
@@ -87,16 +92,15 @@ sitemap: false
 <body>
   <main class="page">
     <header>
-      <h1 class="name">윤용현<span class="en">Yonghyun Yun</span></h1>
-      <p class="role">Data Engineer</p>
+      <h1 class="name">윤용현<span class="bar">|</span>Data Engineer</h1>
       <p class="contact">
-        <a href="mailto:dgnppr@gmail.com">dgnppr@gmail.com</a><span class="sep">·</span><a href="https://www.linkedin.com/in/dgpr/">LinkedIn</a><span class="sep">·</span><a href="https://github.com/dgnppr">GitHub</a><span class="sep">·</span><a href="/CV.pdf">CV</a>
+        <a href="mailto:dgnppr@gmail.com">dgnppr@gmail.com</a><span class="sep">·</span><a href="https://dgnppr.github.io">Blog</a><span class="sep">·</span><a href="https://www.linkedin.com/in/dgpr/">LinkedIn</a><span class="sep">·</span><a href="https://github.com/dgnppr">GitHub</a><span class="sep">·</span><a href="/resume.pdf">CV</a>
       </p>
     </header>
 
     <section>
       <h2>Summary</h2>
-      <p class="summary">데이터 파이프라인·클라우드 인프라를 설계·운영하는 데이터 엔지니어. 대규모 배치·스트리밍 처리, 데이터 웨어하우스 모델링, 비용 최적화에 강점. 여기에 2~3줄 요약.</p>
+      <p class="summary">BigQuery·Dataform/dbt 기반 통합 데이터 모델·표준·카탈로그·거버넌스를 시스템으로 정착시켜 온 데이터 엔지니어. Kafka 기반 일 50만 건 준실시간 파이프라인(쿠팡·카카오·네이버) 운영 경험 보유.</p>
     </section>
 
     <section>
@@ -104,21 +108,53 @@ sitemap: false
       <ul class="entries">
         <li class="entry">
           <div class="entry-head">
-            <span class="entry-line">회사 이름 <span class="at">— Senior Data Engineer</span></span>
-            <span class="entry-date">2023 — Present</span>
+            <span class="entry-line">롯데그룹 <span class="at">— 데이터 엔지니어</span></span>
+            <span class="entry-date">2025.4 — 현재</span>
           </div>
-          <ul class="entry-notes">
-            <li>핵심 성과 한 줄 — 지표·규모·임팩트 (예: 파이프라인 지연 40% 감소).</li>
-            <li>담당 시스템·기술 스택·역할.</li>
+          <ul class="sub-entries">
+            <li class="sub-entry">
+              <div class="entry-head">
+                <span class="entry-line">롯데하이마트 <span class="at">— AI·DATA부문 AI Core TFT (그룹사 내 계열사 전적)</span></span>
+                <span class="entry-date">2025.12 — 현재</span>
+              </div>
+              <ul class="entry-notes">
+            <li>CDP(Customer Data Platform) 구축·운영, CRM 솔루션(Braze) 연동 자동화 — Airflow, BigQuery, Dataform, Pub/Sub, Vertex AI Pipelines</li>
+            <li>BigQuery + Dataform 메달리온 아키텍처로 6개 도메인 100+ 모델 운영, 표준/소비 마트를 분리한 SSOT 구축</li>
+            <li>차원 테이블 SCD2 이력 관리(snapshot → staging → assertion → upsert), 해시 기반 변경 감지 + 트랜잭션 멱등으로 재현성 확보</li>
+            <li>전 테이블 assertion 매핑 DQ 게이트, pre-commit hook + CI 메타데이터 자동 정규화</li>
+            <li>ERP 원천 → GCS·BigQuery·Braze·Looker end-to-end 설계·운영, GA·Amplitude 멀티 소스 incremental 파이프라인(파티션 DELETE-INSERT 멱등) + 파티션·클러스터링 최적화</li>
+            <li>온·오프라인 결합 RFM·Engagement Score·Browse Intent·재구매 주기 예측 마트화, CRM 분석 마트 5종(NBA·LTV·Health Score·Category Penetration·Channel Journey) 설계</li>
+            <li>Braze 연동 interface layer + 태그·이벤트 기반 자동 타겟팅, 웨딩·이사·가전 교체 도래 세그먼트 신규 설계</li>
+            <li>분석가·마케터 등 비엔지니어가 SQL로 직접 분석·세그먼트를 추출하는 메타 기반 셀프서비스 환경 구축, 사용 가이드·온보딩 교육 운영</li>
+              </ul>
+            </li>
+            <li class="sub-entry">
+              <div class="entry-head">
+                <span class="entry-line">롯데쇼핑 <span class="at">— HQ AI센터 AI Core팀</span></span>
+                <span class="entry-date">2025.4 — 2025.12</span>
+              </div>
+              <ul class="entry-notes">
+            <li>계열사 통합 온·오프라인 광고 성과 분석 데이터 플랫폼 0→1 구축 — Airflow, BigQuery, dbt</li>
+            <li>광고 성과 분석 인프라가 전무한 상태에서 거버넌스 체계와 BI 대시보드를 8개월 내 구축, 분석가·GTM·임원 20여 명이 상시 활용</li>
+            <li>수작업 집계를 자동 파이프라인으로 전환, 분석 리드타임을 일 단위에서 실시간으로 단축</li>
+            <li>비용 효율을 고려한 마트 모델링·마스터/요약 테이블 설계, 파티션 DELETE-INSERT 멱등 + 파티션·클러스터링 최적화로 쿼리 비용·스캔 범위 최소화</li>
+            <li>용어사전과 핵심 지표를 데이터 계약으로 정의하고 릴리즈 노트로 변경 이력 관리, dbt tests 기반 DQ 게이트·중앙 리니지 로깅 운영</li>
+            <li>계열사별 소스·스키마·코드셋을 리버스 엔지니어링해 ODS로 매핑하고 키·코드 표준화</li>
+              </ul>
+            </li>
           </ul>
         </li>
         <li class="entry">
           <div class="entry-head">
-            <span class="entry-line">이전 회사 <span class="at">— Data Engineer</span></span>
-            <span class="entry-date">2020 — 2023</span>
+            <span class="entry-line">교보문고 <span class="at">— IT본부 주문결제개발팀 소프트웨어 엔지니어</span></span>
+            <span class="entry-date">2024.3 — 2025.4</span>
           </div>
           <ul class="entry-notes">
-            <li>핵심 성과 한 줄.</li>
+            <li>상품·주문·클레임 변경을 파트너사(쿠팡·카카오·네이버)와 준실시간 정확·순서 보장 동기화 — Java, Kafka, Spring Boot, PostgreSQL, Redis</li>
+            <li>상품 상태 100만+ 관리, 일 50만 비즈니스 이벤트 처리, SLA 5분, FIFO·Exactly-once 보장</li>
+            <li>파트너·도메인별 키 설계로 트래픽 분산·핫파티션 완화, 키 기준 파티션 FIFO + Idempotent Producer/트랜잭션 + 싱크 UPSERT로 중복·순서 제어</li>
+            <li>Rate limit·Circuit Breaker·DLQ·백필로 장애 격리 및 복원성 확보</li>
+            <li>트랜잭션 아웃박스 패턴 적용 — OLTP 트랜잭션 내 outbox 적재 + 별도 relay로 Kafka 발행, at-least-once 보장과 트랜잭션 일관성·비동기 발행 양립</li>
           </ul>
         </li>
       </ul>
@@ -129,8 +165,8 @@ sitemap: false
       <ul class="entries">
         <li class="entry">
           <div class="entry-head">
-            <span class="entry-line">학과 / 전공 <span class="at">— 학교 이름</span></span>
-            <span class="entry-date">2016 — 2020</span>
+            <span class="entry-line">컴퓨터공학과 학사 <span class="at">— 인하대학교</span></span>
+            <span class="entry-date">2016.02 — 2022.02</span>
           </div>
         </li>
       </ul>
@@ -139,22 +175,26 @@ sitemap: false
     <section>
       <h2>Development Stack</h2>
       <ul class="stack">
-        <li><strong>Languages</strong> Python, SQL, Scala, Java</li>
-        <li><strong>Data</strong> Spark, Airflow, Kafka, Flink, dbt, Iceberg</li>
-        <li><strong>Cloud</strong> GCP (BigQuery, Dataflow, Composer), AWS</li>
-        <li><strong>Infra</strong> Docker, Kubernetes, Terraform</li>
+        <li><strong>Languages</strong> SQL, Python, Java</li>
+        <li><strong>Data</strong> BigQuery, Dataform, dbt, Airflow, Kafka, Pub/Sub</li>
+        <li><strong>Cloud</strong> GCP</li>
       </ul>
     </section>
 
     <section>
-      <h2>Publications</h2>
+      <h2>Certifications</h2>
       <ul class="entries">
         <li class="entry">
           <div class="entry-head">
-            <span class="entry-line">저자, "제목", 학회/저널.</span>
-            <span class="entry-date">2024</span>
+            <span class="entry-line">Google Cloud Professional Cloud Architect</span>
+            <span class="entry-date">2026.07</span>
           </div>
-          <div class="entry-date">[paper] [code]</div>
+        </li>
+        <li class="entry">
+          <div class="entry-head">
+            <span class="entry-line">Google Cloud Professional Data Engineer</span>
+            <span class="entry-date">2026.02</span>
+          </div>
         </li>
       </ul>
     </section>
