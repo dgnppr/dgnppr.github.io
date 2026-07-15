@@ -2828,10 +2828,10 @@
         "Goodhart's Law 방어"
       ],
       "content_depth": 0.77,
-      "importance": 17,
+      "importance": 19,
       "depth": 0.92,
       "unanswered_questions": 0,
-      "learning_pressure": 1.37
+      "learning_pressure": 1.53
     },
     "concept/data-analytics/04_user_behavior_analytics_framework": {
       "id": "concept/data-analytics/04_user_behavior_analytics_framework",
@@ -3964,10 +3964,10 @@
         "Hudi"
       ],
       "content_depth": 0.85,
-      "importance": 3,
-      "depth": 0.77,
+      "importance": 5,
+      "depth": 0.8,
       "unanswered_questions": 0,
-      "learning_pressure": 0.68
+      "learning_pressure": 1.01
     },
     "concept/data-governance/00_what_is_data_governance": {
       "id": "concept/data-governance/00_what_is_data_governance",
@@ -3986,18 +3986,91 @@
       "date": "2026-07-15",
       "confidence": "medium",
       "mentioned_terms": [
-        "주인은 누구인가?",
-        "어떤 등급의 데이터인가?",
-        "누가 접근할 수 있는가?",
-        "정의는 무엇이고 어디에 기록돼 있는가?",
-        "언제까지 보관하고 언제 지우는가?",
-        "집행은 사람이 아니라 플랫폼이 자동으로 한다"
+        "pii/phone"
       ],
-      "content_depth": 0.65,
-      "importance": 1,
-      "depth": 0.5,
+      "content_depth": 0.57,
+      "importance": 7,
+      "depth": 0.55,
       "unanswered_questions": 0,
-      "learning_pressure": 0.5
+      "learning_pressure": 3.15
+    },
+    "concept/data-governance/01_metadata_management": {
+      "id": "concept/data-governance/01_metadata_management",
+      "type": "concept",
+      "title": "메타데이터 관리와 데이터 카탈로그",
+      "path": "_concept/data-governance/01_metadata_management.md",
+      "status": "draft",
+      "tags": [
+        "data-governance",
+        "metadata",
+        "data-catalog",
+        "glossary",
+        "lineage",
+        "active-metadata"
+      ],
+      "date": "2026-07-16",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "amount"
+      ],
+      "content_depth": 0.57,
+      "importance": 5,
+      "depth": 0.52,
+      "unanswered_questions": 0,
+      "learning_pressure": 2.38
+    },
+    "concept/data-governance/02_data_quality_and_contracts": {
+      "id": "concept/data-governance/02_data_quality_and_contracts",
+      "type": "concept",
+      "title": "데이터 품질과 데이터 계약",
+      "path": "_concept/data-governance/02_data_quality_and_contracts.md",
+      "status": "draft",
+      "tags": [
+        "data-governance",
+        "data-quality",
+        "data-contract",
+        "testing",
+        "sla",
+        "freshness"
+      ],
+      "date": "2026-07-16",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "WHERE status = 'COMPLETED'",
+        "status",
+        "amount >= 0",
+        "orders"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.57,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.43
+    },
+    "concept/data-governance/03_data_lifecycle_and_deletion": {
+      "id": "concept/data-governance/03_data_lifecycle_and_deletion",
+      "type": "concept",
+      "title": "데이터 수명주기와 삭제 요청 대응",
+      "path": "_concept/data-governance/03_data_lifecycle_and_deletion.md",
+      "status": "draft",
+      "tags": [
+        "data-governance",
+        "data-lifecycle",
+        "retention",
+        "deletion",
+        "privacy",
+        "pii"
+      ],
+      "date": "2026-07-16",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "users"
+      ],
+      "content_depth": 0.85,
+      "importance": 1,
+      "depth": 0.57,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.43
     },
     "concept/dbt/00_what_is_dbt": {
       "id": "concept/dbt/00_what_is_dbt",
@@ -4064,10 +4137,10 @@
         "자동 생성"
       ],
       "content_depth": 0.77,
-      "importance": 5,
-      "depth": 0.64,
+      "importance": 7,
+      "depth": 0.67,
       "unanswered_questions": 0,
-      "learning_pressure": 1.78
+      "learning_pressure": 2.31
     },
     "concept/dbt/01_dbt_core_features": {
       "id": "concept/dbt/01_dbt_core_features",
@@ -4144,10 +4217,10 @@
         "매크로"
       ],
       "content_depth": 0.85,
-      "importance": 5,
-      "depth": 0.67,
+      "importance": 7,
+      "depth": 0.7,
       "unanswered_questions": 0,
-      "learning_pressure": 1.64
+      "learning_pressure": 2.12
     },
     "concept/dbt/02_dbt_advanced": {
       "id": "concept/dbt/02_dbt_advanced",
@@ -4742,10 +4815,34 @@
         "평가와 검증"
       ],
       "content_depth": 0.65,
-      "importance": 1,
-      "depth": 0.75,
+      "importance": 3,
+      "depth": 0.78,
       "unanswered_questions": 0,
-      "learning_pressure": 0.25
+      "learning_pressure": 0.67
+    },
+    "concept/machine-learning/01_linear_models": {
+      "id": "concept/machine-learning/01_linear_models",
+      "type": "concept",
+      "title": "선형 회귀와 로지스틱 회귀",
+      "path": "_concept/machine-learning/01_linear_models.md",
+      "status": "complete",
+      "tags": [
+        "machine-learning",
+        "linear-regression",
+        "logistic-regression",
+        "regularization",
+        "mle"
+      ],
+      "date": "2026-07-16",
+      "confidence": "high",
+      "mentioned_terms": [
+        "normal equation"
+      ],
+      "content_depth": 0.48,
+      "importance": 1,
+      "depth": 0.69,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.31
     },
     "concept/spark/00_what_is_pyspark": {
       "id": "concept/spark/00_what_is_pyspark",
@@ -6416,6 +6513,51 @@
       "type": "references"
     },
     {
+      "from": "concept/data-governance/01_metadata_management",
+      "to": "concept/data-governance/00_what_is_data_governance",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-governance/01_metadata_management",
+      "to": "concept/data-analytics/03_metrics_framework",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/01_metadata_management",
+      "to": "concept/dbt/00_what_is_dbt",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/02_data_quality_and_contracts",
+      "to": "concept/data-governance/00_what_is_data_governance",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-governance/02_data_quality_and_contracts",
+      "to": "concept/data-governance/01_metadata_management",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/02_data_quality_and_contracts",
+      "to": "concept/dbt/01_dbt_core_features",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/03_data_lifecycle_and_deletion",
+      "to": "concept/data-governance/00_what_is_data_governance",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-governance/03_data_lifecycle_and_deletion",
+      "to": "concept/data-governance/01_metadata_management",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/03_data_lifecycle_and_deletion",
+      "to": "concept/data-engineering/01_lakehouse_table_formats",
+      "type": "references"
+    },
+    {
       "from": "concept/dbt/00_what_is_dbt",
       "to": "concept/data-engineering/00_how_to_use_dataform_well",
       "type": "references"
@@ -6494,6 +6636,11 @@
       "from": "concept/machine-learning/00_what_is_machine_learning",
       "to": "concept/ai/01_cs231n_cnn",
       "type": "references"
+    },
+    {
+      "from": "concept/machine-learning/01_linear_models",
+      "to": "concept/machine-learning/00_what_is_machine_learning",
+      "type": "extends"
     },
     {
       "from": "concept/spark/00_what_is_pyspark",
@@ -6780,6 +6927,17 @@
       ]
     },
     {
+      "term": "status",
+      "count": 5,
+      "mentioned_by": [
+        "concept/data-analytics/02_event_tracking_design",
+        "concept/data-architect/02_how_to_architect_medallion_well",
+        "concept/data-architect/04_what_is_ontology",
+        "concept/data-architect/05_ontology_objects_summary",
+        "concept/data-governance/02_data_quality_and_contracts"
+      ]
+    },
+    {
       "term": "정기적으로:",
       "count": 5,
       "mentioned_by": [
@@ -6960,16 +7118,6 @@
         "concept/cloud/15_case_cymbal_retail_for_pca",
         "concept/cloud/16_case_ehr_healthcare_for_pca",
         "concept/cloud/17_case_knightmotives_automotive_for_pca"
-      ]
-    },
-    {
-      "term": "status",
-      "count": 4,
-      "mentioned_by": [
-        "concept/data-analytics/02_event_tracking_design",
-        "concept/data-architect/02_how_to_architect_medallion_well",
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/05_ontology_objects_summary"
       ]
     },
     {
@@ -8433,6 +8581,22 @@
       "mentioned_by": [
         "concept/data-engineering/01_lakehouse_table_formats",
         "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
+      "term": "orders",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-governance/02_data_quality_and_contracts",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
+      "term": "users",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-governance/03_data_lifecycle_and_deletion",
+        "concept/knowledge-graph/01_what_is_knowledge_graph"
       ]
     },
     {
