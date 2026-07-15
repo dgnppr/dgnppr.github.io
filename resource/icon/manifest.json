@@ -1,5 +1,8 @@
 {
- "name": "App",
+ "name": "DRAGONAPPEAR",
+ "short_name": "DRAGONAPPEAR",
+ "theme_color": "#ffffff",
+ "background_color": "#ffffff",
  "icons": [
   {
    "src": "android-icon-36x36.png",
