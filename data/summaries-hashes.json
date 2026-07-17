@@ -56,8 +56,8 @@
   "cloud/10_migration_and_dr_for_pca": "d7899904e6f24f65d74ecfe7d1aa12cf",
   "cloud/11_operations_and_cost_for_pca": "b7dbb77997d417c284e59acdb6347b61",
   "cloud/12_genai_for_pca": "1a542ea55d923447d64af8915a01a602",
-  "data-architect/08_record_linkage_basics": "5f082fe3b2a262f5470bb7ad923de04e",
-  "data-architect/09_privacy_preserving_matching": "a33b0fcc6430693ba1c8b6054eb61347",
+  "data-architect/08_record_linkage_basics": "d07101d28bbe337621b2cd4c4cf34740",
+  "data-architect/09_privacy_preserving_matching": "f502e5bacd424dbf74c69e7e7e57b6a1",
   "data-architect/10_trustworthy_controlled_experiments": "4e935da0670d1f58cbf378f197fc55ca",
   "spark/00_what_is_pyspark": "da989c79fe695823f5a22c275e7f891e",
   "spark/01_structured_streaming": "81deef70ec5459719232457eb67dc998",
@@ -93,7 +93,7 @@
   "cloud/17_case_knightmotives_automotive_for_pca": "954bf5e451023a67fffd647071b329eb",
   "ai/00_ilya_recommended_papers": "7af0c75197328ff7d877cb606da1711e",
   "bi/00_how_to_build_bi_dashboard": "3a78a43255ee511624fd7ee4bc10451c",
-  "ai/01_cs231n_cnn": "9594be83cb1af7c3854509e6d49f2b57",
+  "ai/01_cs231n_cnn": "9392a7776933dc79a0e9e21c58a3b8ad",
   "essay/09_how_to_persuade_non_experts": "248a7df1f3e97db7c179d82796ba6bdb",
   "data-engineering/2026-005-identify-data-domains": "5299f384eb3df74f09a7ef68624121e1",
   "data-engineering/01_lakehouse_table_formats": "a947bdf728705412ad7a6e27b3155d3e",
@@ -102,5 +102,11 @@
   "essay/10_moving_forward_when_shaken": "1107f6340845ac3b72a75c27b2f61a82",
   "data-architect/11_entity_resolution_in_practice": "e4865b08946ae5cfaf6168b545a3db30",
   "essay/11_how_to_prepare_resume_and_interview": "313f64cba3daf65f0fb0562705c8578d",
-  "data-governance/00_what_is_data_governance": "f3aa4f5004c9ad59f663363fbcf6b7f9"
+  "data-governance/00_what_is_data_governance": "e5ee9b8730375ecb4d87a69f4467ecd3",
+  "data-governance/01_metadata_management": "3d2f418750259cb9619c315f1bbc9fc1",
+  "data-governance/02_data_quality_and_contracts": "6fcd9a4bd15d3bae7cbce943bb28fdf3",
+  "data-governance/03_data_lifecycle_and_deletion": "32008ea5c813ec720cb75f33ba9bce1b",
+  "data-governance/04_building_governance_on_gcp": "e8a36d02b67efa2693af125fb1d0d2ea",
+  "machine-learning/00_what_is_machine_learning": "d2e89fca759f4d0f482ab2070c2acc58",
+  "machine-learning/01_linear_models": "f9e31f050fb921333d2946bc71bfc27b"
 }

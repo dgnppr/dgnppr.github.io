@@ -462,10 +462,10 @@
         "GCP Service Account 패턴"
       ],
       "content_depth": 0.68,
-      "importance": 15,
+      "importance": 19,
       "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 1.68
+      "learning_pressure": 2.13
     },
     "concept/cloud/02_authenticate_gcp_without_service_accounts": {
       "id": "concept/cloud/02_authenticate_gcp_without_service_accounts",
@@ -2828,10 +2828,10 @@
         "Goodhart's Law 방어"
       ],
       "content_depth": 0.77,
-      "importance": 19,
+      "importance": 23,
       "depth": 0.92,
       "unanswered_questions": 0,
-      "learning_pressure": 1.53
+      "learning_pressure": 1.85
     },
     "concept/data-analytics/04_user_behavior_analytics_framework": {
       "id": "concept/data-analytics/04_user_behavior_analytics_framework",
@@ -2921,10 +2921,10 @@
         "해석"
       ],
       "content_depth": 0.85,
-      "importance": 3,
-      "depth": 0.87,
+      "importance": 5,
+      "depth": 0.9,
       "unanswered_questions": 0,
-      "learning_pressure": 0.38
+      "learning_pressure": 0.51
     },
     "concept/data-analytics/06_ga4_data_model": {
       "id": "concept/data-analytics/06_ga4_data_model",
@@ -3116,10 +3116,10 @@
         "무엇이 통하고 무엇이 안 통했는가"
       ],
       "content_depth": 0.77,
-      "importance": 1,
-      "depth": 0.84,
+      "importance": 5,
+      "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 0.16
+      "learning_pressure": 0.53
     },
     "concept/data-analytics/10_revenue_analysis": {
       "id": "concept/data-analytics/10_revenue_analysis",
@@ -3200,10 +3200,10 @@
         "리텐션 %p의 화폐 가치가 얼마인가"
       ],
       "content_depth": 0.68,
-      "importance": 1,
-      "depth": 0.81,
+      "importance": 3,
+      "depth": 0.84,
       "unanswered_questions": 0,
-      "learning_pressure": 0.19
+      "learning_pressure": 0.49
     },
     "concept/data-analytics/12_attribution": {
       "id": "concept/data-analytics/12_attribution",
@@ -3230,6 +3230,89 @@
       "depth": 0.9,
       "unanswered_questions": 0,
       "learning_pressure": 0.31
+    },
+    "concept/data-analytics/13_reading_numbers_critically": {
+      "id": "concept/data-analytics/13_reading_numbers_critically",
+      "type": "concept",
+      "title": "숫자를 그대로 믿지 않는 법",
+      "path": "_concept/data-analytics/13_reading_numbers_critically.md",
+      "status": "complete",
+      "tags": [
+        "data-analytics",
+        "data-literacy",
+        "critical-thinking"
+      ],
+      "date": "2026-07-17",
+      "confidence": "high",
+      "mentioned_terms": [],
+      "content_depth": 0.4,
+      "importance": 3,
+      "depth": 0.69,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.93
+    },
+    "concept/data-analytics/14_analytical_questions": {
+      "id": "concept/data-analytics/14_analytical_questions",
+      "type": "concept",
+      "title": "분석을 여는 질문 설계",
+      "path": "_concept/data-analytics/14_analytical_questions.md",
+      "status": "complete",
+      "tags": [
+        "data-analytics",
+        "metric-decomposition",
+        "hypothesis",
+        "data-literacy"
+      ],
+      "date": "2026-07-17",
+      "confidence": "high",
+      "mentioned_terms": [],
+      "content_depth": 0.57,
+      "importance": 3,
+      "depth": 0.8,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.6
+    },
+    "concept/data-analytics/15_disaggregation_and_simpsons_paradox": {
+      "id": "concept/data-analytics/15_disaggregation_and_simpsons_paradox",
+      "type": "concept",
+      "title": "평균이 감추는 것을 나누어 보기",
+      "path": "_concept/data-analytics/15_disaggregation_and_simpsons_paradox.md",
+      "status": "complete",
+      "tags": [
+        "data-analytics",
+        "segmentation",
+        "simpsons-paradox",
+        "cohort"
+      ],
+      "date": "2026-07-17",
+      "confidence": "high",
+      "mentioned_terms": [],
+      "content_depth": 0.65,
+      "importance": 3,
+      "depth": 0.83,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.52
+    },
+    "concept/data-analytics/16_difference_and_causation": {
+      "id": "concept/data-analytics/16_difference_and_causation",
+      "type": "concept",
+      "title": "차이와 원인을 판정하는 법",
+      "path": "_concept/data-analytics/16_difference_and_causation.md",
+      "status": "complete",
+      "tags": [
+        "data-analytics",
+        "ab-test",
+        "statistics",
+        "causation"
+      ],
+      "date": "2026-07-17",
+      "confidence": "high",
+      "mentioned_terms": [],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.8,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.2
     },
     "concept/data-architect/00_what_is_medaliion_architecture": {
       "id": "concept/data-architect/00_what_is_medaliion_architecture",
@@ -3767,10 +3850,10 @@
         "SUTVA"
       ],
       "content_depth": 0.57,
-      "importance": 2,
-      "depth": 0.52,
+      "importance": 4,
+      "depth": 0.55,
       "unanswered_questions": 0,
-      "learning_pressure": 0.95
+      "learning_pressure": 1.8
     },
     "concept/data-architect/11_entity_resolution_in_practice": {
       "id": "concept/data-architect/11_entity_resolution_in_practice",
@@ -3989,10 +4072,10 @@
         "pii/phone"
       ],
       "content_depth": 0.57,
-      "importance": 7,
+      "importance": 13,
       "depth": 0.55,
       "unanswered_questions": 0,
-      "learning_pressure": 3.15
+      "learning_pressure": 5.86
     },
     "concept/data-governance/01_metadata_management": {
       "id": "concept/data-governance/01_metadata_management",
@@ -4014,10 +4097,10 @@
         "amount"
       ],
       "content_depth": 0.57,
-      "importance": 5,
-      "depth": 0.52,
+      "importance": 9,
+      "depth": 0.55,
       "unanswered_questions": 0,
-      "learning_pressure": 2.38
+      "learning_pressure": 4.05
     },
     "concept/data-governance/02_data_quality_and_contracts": {
       "id": "concept/data-governance/02_data_quality_and_contracts",
@@ -4042,10 +4125,10 @@
         "orders"
       ],
       "content_depth": 0.85,
-      "importance": 1,
-      "depth": 0.57,
+      "importance": 5,
+      "depth": 0.62,
       "unanswered_questions": 0,
-      "learning_pressure": 0.43
+      "learning_pressure": 1.89
     },
     "concept/data-governance/03_data_lifecycle_and_deletion": {
       "id": "concept/data-governance/03_data_lifecycle_and_deletion",
@@ -4067,10 +4150,103 @@
         "users"
       ],
       "content_depth": 0.85,
-      "importance": 1,
-      "depth": 0.57,
+      "importance": 5,
+      "depth": 0.62,
       "unanswered_questions": 0,
-      "learning_pressure": 0.43
+      "learning_pressure": 1.89
+    },
+    "concept/data-governance/04_building_governance_on_gcp": {
+      "id": "concept/data-governance/04_building_governance_on_gcp",
+      "type": "concept",
+      "title": "GCP에서 데이터 거버넌스 구축하기",
+      "path": "_concept/data-governance/04_building_governance_on_gcp.md",
+      "status": "draft",
+      "tags": [
+        "data-governance",
+        "gcp",
+        "bigquery",
+        "dataplex",
+        "iam",
+        "terraform",
+        "vpc-sc",
+        "cmek",
+        "hands-on"
+      ],
+      "date": "2026-07-17",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "dp-raw-prod",
+        "dp-curated-prod",
+        "dp-mart-prod",
+        "-dev",
+        "dp-governance",
+        "bq cp",
+        "EXPORT DATA",
+        "labels",
+        "CREATE TABLE",
+        "description",
+        "pii-high",
+        "pii-low",
+        "COUNT(DISTINCT)",
+        "CREATE TABLE AS SELECT",
+        "enforced: true"
+      ],
+      "content_depth": 0.85,
+      "importance": 5,
+      "depth": 0.65,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.76
+    },
+    "concept/data-governance/05_data_classification_and_access_control": {
+      "id": "concept/data-governance/05_data_classification_and_access_control",
+      "type": "concept",
+      "title": "데이터 분류와 접근 제어",
+      "path": "_concept/data-governance/05_data_classification_and_access_control.md",
+      "status": "draft",
+      "tags": [
+        "data-governance",
+        "data-classification",
+        "access-control",
+        "rbac",
+        "abac",
+        "masking",
+        "pseudonymization",
+        "least-privilege"
+      ],
+      "date": "2026-07-17",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "orders"
+      ],
+      "content_depth": 0.85,
+      "importance": 3,
+      "depth": 0.65,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.06
+    },
+    "concept/data-governance/06_ownership_and_operating_model": {
+      "id": "concept/data-governance/06_ownership_and_operating_model",
+      "type": "concept",
+      "title": "데이터 오너십과 거버넌스 운영 모델",
+      "path": "_concept/data-governance/06_ownership_and_operating_model.md",
+      "status": "draft",
+      "tags": [
+        "data-governance",
+        "ownership",
+        "operating-model",
+        "data-steward",
+        "federated-governance",
+        "slo",
+        "standards"
+      ],
+      "date": "2026-07-17",
+      "confidence": "medium",
+      "mentioned_terms": [],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.53,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.47
     },
     "concept/dbt/00_what_is_dbt": {
       "id": "concept/dbt/00_what_is_dbt",
@@ -4815,10 +4991,10 @@
         "평가와 검증"
       ],
       "content_depth": 0.65,
-      "importance": 3,
-      "depth": 0.78,
+      "importance": 5,
+      "depth": 0.8,
       "unanswered_questions": 0,
-      "learning_pressure": 0.67
+      "learning_pressure": 0.99
     },
     "concept/machine-learning/01_linear_models": {
       "id": "concept/machine-learning/01_linear_models",
@@ -4839,10 +5015,32 @@
         "normal equation"
       ],
       "content_depth": 0.48,
-      "importance": 1,
-      "depth": 0.69,
+      "importance": 3,
+      "depth": 0.72,
       "unanswered_questions": 0,
-      "learning_pressure": 0.31
+      "learning_pressure": 0.85
+    },
+    "concept/machine-learning/02_trees_and_ensembles": {
+      "id": "concept/machine-learning/02_trees_and_ensembles",
+      "type": "concept",
+      "title": "결정 트리와 앙상블",
+      "path": "_concept/machine-learning/02_trees_and_ensembles.md",
+      "status": "complete",
+      "tags": [
+        "machine-learning",
+        "decision-tree",
+        "ensemble-learning",
+        "random-forest",
+        "gradient-boosting"
+      ],
+      "date": "2026-07-17",
+      "confidence": "high",
+      "mentioned_terms": [],
+      "content_depth": 0.65,
+      "importance": 1,
+      "depth": 0.78,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.22
     },
     "concept/spark/00_what_is_pyspark": {
       "id": "concept/spark/00_what_is_pyspark",
@@ -6393,6 +6591,56 @@
       "type": "references"
     },
     {
+      "from": "concept/data-analytics/13_reading_numbers_critically",
+      "to": "concept/data-analytics/03_metrics_framework",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/14_analytical_questions",
+      "to": "concept/data-analytics/13_reading_numbers_critically",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-analytics/14_analytical_questions",
+      "to": "concept/data-analytics/09_conversion_analysis",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/14_analytical_questions",
+      "to": "concept/data-analytics/03_metrics_framework",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/15_disaggregation_and_simpsons_paradox",
+      "to": "concept/data-analytics/14_analytical_questions",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-analytics/15_disaggregation_and_simpsons_paradox",
+      "to": "concept/data-analytics/05_customer_segmentation",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/15_disaggregation_and_simpsons_paradox",
+      "to": "concept/data-analytics/11_retention_analysis",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/16_difference_and_causation",
+      "to": "concept/data-analytics/15_disaggregation_and_simpsons_paradox",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-analytics/16_difference_and_causation",
+      "to": "concept/data-architect/10_trustworthy_controlled_experiments",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-analytics/16_difference_and_causation",
+      "to": "concept/data-analytics/09_conversion_analysis",
+      "type": "references"
+    },
+    {
       "from": "concept/data-architect/01_how_to_architect_medallion_well",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "extends"
@@ -6558,6 +6806,76 @@
       "type": "references"
     },
     {
+      "from": "concept/data-governance/04_building_governance_on_gcp",
+      "to": "concept/data-governance/00_what_is_data_governance",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-governance/04_building_governance_on_gcp",
+      "to": "concept/data-governance/01_metadata_management",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/04_building_governance_on_gcp",
+      "to": "concept/data-governance/02_data_quality_and_contracts",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/04_building_governance_on_gcp",
+      "to": "concept/data-governance/03_data_lifecycle_and_deletion",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/04_building_governance_on_gcp",
+      "to": "concept/cloud/01_how_to_operate_iam_well",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/05_data_classification_and_access_control",
+      "to": "concept/data-governance/00_what_is_data_governance",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-governance/05_data_classification_and_access_control",
+      "to": "concept/data-governance/01_metadata_management",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/05_data_classification_and_access_control",
+      "to": "concept/data-governance/03_data_lifecycle_and_deletion",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/05_data_classification_and_access_control",
+      "to": "concept/data-governance/04_building_governance_on_gcp",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/05_data_classification_and_access_control",
+      "to": "concept/cloud/01_how_to_operate_iam_well",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/06_ownership_and_operating_model",
+      "to": "concept/data-governance/00_what_is_data_governance",
+      "type": "extends"
+    },
+    {
+      "from": "concept/data-governance/06_ownership_and_operating_model",
+      "to": "concept/data-governance/02_data_quality_and_contracts",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/06_ownership_and_operating_model",
+      "to": "concept/data-governance/04_building_governance_on_gcp",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-governance/06_ownership_and_operating_model",
+      "to": "concept/data-governance/05_data_classification_and_access_control",
+      "type": "references"
+    },
+    {
       "from": "concept/dbt/00_what_is_dbt",
       "to": "concept/data-engineering/00_how_to_use_dataform_well",
       "type": "references"
@@ -6641,6 +6959,16 @@
       "from": "concept/machine-learning/01_linear_models",
       "to": "concept/machine-learning/00_what_is_machine_learning",
       "type": "extends"
+    },
+    {
+      "from": "concept/machine-learning/02_trees_and_ensembles",
+      "to": "concept/machine-learning/01_linear_models",
+      "type": "extends"
+    },
+    {
+      "from": "concept/machine-learning/02_trees_and_ensembles",
+      "to": "concept/machine-learning/00_what_is_machine_learning",
+      "type": "references"
     },
     {
       "from": "concept/spark/00_what_is_pyspark",
@@ -7543,6 +7871,15 @@
       ]
     },
     {
+      "term": "orders",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-governance/02_data_quality_and_contracts",
+        "concept/data-governance/05_data_classification_and_access_control",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
       "term": "dbt run",
       "count": 3,
       "mentioned_by": [
@@ -8376,6 +8713,14 @@
       ]
     },
     {
+      "term": "COUNT(DISTINCT)",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/03_medallion_advanced_patterns",
+        "concept/data-governance/04_building_governance_on_gcp"
+      ]
+    },
+    {
       "term": "FlightDelayHandler",
       "count": 2,
       "mentioned_by": [
@@ -8584,19 +8929,19 @@
       ]
     },
     {
-      "term": "orders",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-governance/02_data_quality_and_contracts",
-        "concept/spark/01_structured_streaming"
-      ]
-    },
-    {
       "term": "users",
       "count": 2,
       "mentioned_by": [
         "concept/data-governance/03_data_lifecycle_and_deletion",
         "concept/knowledge-graph/01_what_is_knowledge_graph"
+      ]
+    },
+    {
+      "term": "CREATE TABLE",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-governance/04_building_governance_on_gcp",
+        "concept/dbt/00_what_is_dbt"
       ]
     },
     {
