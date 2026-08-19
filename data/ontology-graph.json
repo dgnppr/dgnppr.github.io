@@ -3330,10 +3330,10 @@
       "confidence": "high",
       "mentioned_terms": [],
       "content_depth": 0.68,
-      "importance": 22,
+      "importance": 24,
       "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 2.46
+      "learning_pressure": 2.69
     },
     "concept/data-architect/01_how_to_architect_medallion_well": {
       "id": "concept/data-architect/01_how_to_architect_medallion_well",
@@ -4047,10 +4047,10 @@
         "Hudi"
       ],
       "content_depth": 0.85,
-      "importance": 9,
+      "importance": 11,
       "depth": 0.85,
       "unanswered_questions": 0,
-      "learning_pressure": 1.37
+      "learning_pressure": 1.68
     },
     "concept/data-engineering/02_file_and_memory_formats": {
       "id": "concept/data-engineering/02_file_and_memory_formats",
@@ -4104,10 +4104,31 @@
         "WHERE dt = '2026-08-19'"
       ],
       "content_depth": 1,
-      "importance": 1,
-      "depth": 0.93,
+      "importance": 3,
+      "depth": 0.95,
       "unanswered_questions": 0,
-      "learning_pressure": 0.08
+      "learning_pressure": 0.15
+    },
+    "concept/data-engineering/04_what_is_lakehouse": {
+      "id": "concept/data-engineering/04_what_is_lakehouse",
+      "type": "concept",
+      "title": "데이터 레이크하우스 — 레이크 위에 얹는 한 겹",
+      "path": "_concept/data-engineering/04_what_is_lakehouse.md",
+      "status": "complete",
+      "tags": [
+        "lakehouse",
+        "table-format",
+        "data-engineering"
+      ],
+      "date": "2026-08-19",
+      "valid_from": "Wed",
+      "confidence": "medium",
+      "mentioned_terms": [],
+      "content_depth": 1,
+      "importance": 1,
+      "depth": 0.83,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.18
     },
     "concept/data-governance/00_what_is_data_governance": {
       "id": "concept/data-governance/00_what_is_data_governance",
@@ -6824,6 +6845,21 @@
     },
     {
       "from": "concept/data-engineering/03_what_is_data_lake",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/04_what_is_lakehouse",
+      "to": "concept/data-engineering/03_what_is_data_lake",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/04_what_is_lakehouse",
+      "to": "concept/data-engineering/01_lakehouse_table_formats",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/04_what_is_lakehouse",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "references"
     },
