@@ -3330,10 +3330,10 @@
       "confidence": "high",
       "mentioned_terms": [],
       "content_depth": 0.68,
-      "importance": 20,
+      "importance": 22,
       "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 2.24
+      "learning_pressure": 2.46
     },
     "concept/data-architect/01_how_to_architect_medallion_well": {
       "id": "concept/data-architect/01_how_to_architect_medallion_well",
@@ -4047,10 +4047,10 @@
         "Hudi"
       ],
       "content_depth": 0.85,
-      "importance": 7,
-      "depth": 0.82,
+      "importance": 9,
+      "depth": 0.85,
       "unanswered_questions": 0,
-      "learning_pressure": 1.24
+      "learning_pressure": 1.37
     },
     "concept/data-engineering/02_file_and_memory_formats": {
       "id": "concept/data-engineering/02_file_and_memory_formats",
@@ -4079,10 +4079,35 @@
         "toPandas()"
       ],
       "content_depth": 1,
-      "importance": 1,
-      "depth": 0.9,
+      "importance": 3,
+      "depth": 0.93,
       "unanswered_questions": 0,
-      "learning_pressure": 0.1
+      "learning_pressure": 0.23
+    },
+    "concept/data-engineering/03_what_is_data_lake": {
+      "id": "concept/data-engineering/03_what_is_data_lake",
+      "type": "concept",
+      "title": "데이터 레이크 — 폴더에서 질의 가능한 저장소가 되기까지",
+      "path": "_concept/data-engineering/03_what_is_data_lake.md",
+      "status": "complete",
+      "tags": [
+        "data-lake",
+        "catalog",
+        "data-engineering"
+      ],
+      "date": "2026-08-19",
+      "valid_from": "Wed",
+      "confidence": "high",
+      "mentioned_terms": [
+        "dt=2026-08-19",
+        "dt",
+        "WHERE dt = '2026-08-19'"
+      ],
+      "content_depth": 1,
+      "importance": 1,
+      "depth": 0.93,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.08
     },
     "concept/data-governance/00_what_is_data_governance": {
       "id": "concept/data-governance/00_what_is_data_governance",
@@ -6785,6 +6810,21 @@
     {
       "from": "concept/data-engineering/02_file_and_memory_formats",
       "to": "concept/spark/00_what_is_pyspark",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/03_what_is_data_lake",
+      "to": "concept/data-engineering/02_file_and_memory_formats",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/03_what_is_data_lake",
+      "to": "concept/data-engineering/01_lakehouse_table_formats",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/03_what_is_data_lake",
+      "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "references"
     },
     {

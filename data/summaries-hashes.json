@@ -108,5 +108,7 @@
   "data-governance/03_data_lifecycle_and_deletion": "32008ea5c813ec720cb75f33ba9bce1b",
   "data-governance/04_building_governance_on_gcp": "e8a36d02b67efa2693af125fb1d0d2ea",
   "machine-learning/00_what_is_machine_learning": "d2e89fca759f4d0f482ab2070c2acc58",
-  "machine-learning/01_linear_models": "f9e31f050fb921333d2946bc71bfc27b"
+  "machine-learning/01_linear_models": "f9e31f050fb921333d2946bc71bfc27b",
+  "data-analytics/13_reading_numbers_critically": "3d204296658c0c19f021e6f66e2a6901",
+  "data-analytics/14_analytical_questions": "34bc86b851aacbbd0782bb629a57ae68"
 }
