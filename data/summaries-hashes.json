@@ -106,9 +106,17 @@
   "data-governance/01_metadata_management": "3d2f418750259cb9619c315f1bbc9fc1",
   "data-governance/02_data_quality_and_contracts": "6fcd9a4bd15d3bae7cbce943bb28fdf3",
   "data-governance/03_data_lifecycle_and_deletion": "32008ea5c813ec720cb75f33ba9bce1b",
-  "data-governance/04_building_governance_on_gcp": "e8a36d02b67efa2693af125fb1d0d2ea",
+  "data-governance/04_building_governance_on_gcp": "2508230e2a71e279939880e5c281c53f",
   "machine-learning/00_what_is_machine_learning": "d2e89fca759f4d0f482ab2070c2acc58",
   "machine-learning/01_linear_models": "f9e31f050fb921333d2946bc71bfc27b",
   "data-analytics/13_reading_numbers_critically": "3d204296658c0c19f021e6f66e2a6901",
-  "data-analytics/14_analytical_questions": "34bc86b851aacbbd0782bb629a57ae68"
+  "data-analytics/14_analytical_questions": "34bc86b851aacbbd0782bb629a57ae68",
+  "data-analytics/15_disaggregation_and_simpsons_paradox": "b5450dd5b793bc992a2f3f2d94114bf3",
+  "data-analytics/16_difference_and_causation": "e3bb4e600f1b6279c5a3ae995071cbee",
+  "data-engineering/02_file_and_memory_formats": "626fd248325b400b9abde6a763fd752f",
+  "data-engineering/03_what_is_data_lake": "07e3a55ea57af248360020ed4cb6a9f4",
+  "data-governance/05_data_classification_and_access_control": "c299cc726cbce3bfaea99c083f24867a",
+  "data-governance/06_ownership_and_operating_model": "673aa610fa071a922841b2856ca9cca1",
+  "machine-learning/02_trees_and_ensembles": "fb589b160bf74cca9ce713ce1fb73966",
+  "security/2026-06-24-002-gcp-key-management-status": "6cd14ca3d40c0e234d2810c760d4eee3"
 }
