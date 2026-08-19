@@ -4047,10 +4047,42 @@
         "Hudi"
       ],
       "content_depth": 0.85,
-      "importance": 5,
-      "depth": 0.8,
+      "importance": 7,
+      "depth": 0.82,
       "unanswered_questions": 0,
-      "learning_pressure": 1.01
+      "learning_pressure": 1.24
+    },
+    "concept/data-engineering/02_file_and_memory_formats": {
+      "id": "concept/data-engineering/02_file_and_memory_formats",
+      "type": "concept",
+      "title": "파일과 메모리 형식 — CSV·Parquet·Avro·Arrow",
+      "path": "_concept/data-engineering/02_file_and_memory_formats.md",
+      "status": "complete",
+      "tags": [
+        "parquet",
+        "file-format",
+        "data-engineering"
+      ],
+      "date": "2026-08-19",
+      "valid_from": "Wed",
+      "confidence": "high",
+      "mentioned_terms": [
+        "amount",
+        "[KR, KR, JP, KR]",
+        "{0:KR, 1:JP}",
+        "[0,0,1,0]",
+        "WHERE amount > 50000",
+        "country: [KR, KR, JP, KR]",
+        "ts",
+        "base + 8*i",
+        "SUM(amount)",
+        "toPandas()"
+      ],
+      "content_depth": 1,
+      "importance": 1,
+      "depth": 0.9,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.1
     },
     "concept/data-governance/00_what_is_data_governance": {
       "id": "concept/data-governance/00_what_is_data_governance",
@@ -5115,10 +5147,10 @@
         "반복 실행되는 메타데이터 연산"
       ],
       "content_depth": 1,
-      "importance": 7,
-      "depth": 0.65,
+      "importance": 9,
+      "depth": 0.68,
       "unanswered_questions": 0,
-      "learning_pressure": 2.45
+      "learning_pressure": 2.93
     },
     "concept/spark/01_structured_streaming": {
       "id": "concept/spark/01_structured_streaming",
@@ -6742,6 +6774,16 @@
     },
     {
       "from": "concept/data-engineering/01_lakehouse_table_formats",
+      "to": "concept/spark/00_what_is_pyspark",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/02_file_and_memory_formats",
+      "to": "concept/data-engineering/01_lakehouse_table_formats",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/02_file_and_memory_formats",
       "to": "concept/spark/00_what_is_pyspark",
       "type": "references"
     },
@@ -8721,6 +8763,14 @@
       ]
     },
     {
+      "term": "SUM(amount)",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-architect/03_medallion_advanced_patterns",
+        "concept/data-engineering/02_file_and_memory_formats"
+      ]
+    },
+    {
       "term": "FlightDelayHandler",
       "count": 2,
       "mentioned_by": [
@@ -8926,6 +8976,14 @@
       "mentioned_by": [
         "concept/data-engineering/01_lakehouse_table_formats",
         "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
+      "term": "amount",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-engineering/02_file_and_memory_formats",
+        "concept/data-governance/01_metadata_management"
       ]
     },
     {
