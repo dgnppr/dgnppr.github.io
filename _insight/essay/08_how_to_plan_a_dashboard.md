@@ -1,8 +1,8 @@
 ---
 layout      : insight
 title       : 쓰이는 대시보드를 기획한다는 것
-date        : 2026-07-07 00:00:00 +0900
-updated     : 2026-07-07 00:00:00 +0900
+date        : 2026-04-23 00:00:00 +0900
+updated     : 2026-04-23 00:00:00 +0900
 tag         : bi dashboard analytics planning essay
 toc         : true
 comment     : true

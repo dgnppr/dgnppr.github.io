@@ -1,11 +1,13 @@
 ---
 layout     : adr
 title      : GA4 분석 체크리스트
-date       : 2026-07-04 00:00:00 +0900
-updated    : 2026-07-06 00:00:00 +0900
+date       : 2026-04-28 00:00:00 +0900
+updated    : 2026-04-28 00:00:00 +0900
 tag        : ga4 analytics bigquery data-analytics checklist
 status     : accepted
+deciders   : dgnppr
 public     : true
+confidence : high
 valid_from : 2026-07-04
 relations:
   - { type: references, target: concept/data-analytics/06_ga4_data_model }

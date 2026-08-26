@@ -1,8 +1,8 @@
 ---
 layout      : insight
 title       : 비전문가를 논리로 설득한다는 것
-date        : 2026-07-09 00:00:00 +0900
-updated     : 2026-07-09 00:00:00 +0900
+date        : 2026-05-01 00:00:00 +0900
+updated     : 2026-05-01 00:00:00 +0900
 tag         : persuasion communication logic work essay
 toc         : true
 comment     : true

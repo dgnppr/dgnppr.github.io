@@ -56,8 +56,9 @@
         "data-analytics",
         "checklist"
       ],
-      "date": "2026-07-04",
+      "date": "2026-04-28",
       "valid_from": "Sat",
+      "confidence": "high",
       "mentioned_terms": [
         "items",
         "signup",
@@ -75,14 +76,14 @@
       ],
       "content_depth": 0.57,
       "importance": 3,
-      "depth": 0.45,
+      "depth": 0.62,
       "unanswered_questions": 0,
-      "learning_pressure": 1.65
+      "learning_pressure": 1.13
     },
     "adr/data-analytics/2026-002-metric-change-investigation-checklist": {
       "id": "adr/data-analytics/2026-002-metric-change-investigation-checklist",
       "type": "adr",
-      "title": "지표 급변 원인 조사 체크리스트",
+      "title": "메트릭 체크리스트",
       "path": "_adr/data-analytics/2026-002-metric-change-investigation-checklist.md",
       "status": "accepted",
       "tags": [
@@ -94,6 +95,7 @@
       ],
       "date": "2026-07-07",
       "valid_from": "Tue",
+      "confidence": "high",
       "mentioned_terms": [
         "FULL OUTER JOIN",
         "LAG(value, 7)",
@@ -109,9 +111,9 @@
       ],
       "content_depth": 0.85,
       "importance": 1,
-      "depth": 0.52,
+      "depth": 0.7,
       "unanswered_questions": 0,
-      "learning_pressure": 0.48
+      "learning_pressure": 0.3
     },
     "adr/data-engineering/2026-001-data-mart-checklist": {
       "id": "adr/data-engineering/2026-001-data-mart-checklist",
@@ -1798,7 +1800,7 @@
         "work",
         "essay"
       ],
-      "date": "2026-07-04",
+      "date": "2025-07-06",
       "confidence": "medium",
       "mentioned_terms": [
         "내 무지의 크기",
@@ -1827,7 +1829,7 @@
         "ai",
         "essay"
       ],
-      "date": "2026-07-04",
+      "date": "2026-01-04",
       "confidence": "medium",
       "mentioned_terms": [
         "상대가 받은 것의 품질",
@@ -1853,7 +1855,7 @@
         "work",
         "essay"
       ],
-      "date": "2026-07-04",
+      "date": "2026-02-04",
       "confidence": "medium",
       "mentioned_terms": [
         "요구를 언어화하는 오래된 능력",
@@ -1879,7 +1881,7 @@
         "planning",
         "essay"
       ],
-      "date": "2026-07-07",
+      "date": "2026-04-23",
       "confidence": "medium",
       "mentioned_terms": [
         "반복 소비가 확인된 질문",
@@ -1908,7 +1910,7 @@
         "work",
         "essay"
       ],
-      "date": "2026-07-09",
+      "date": "2026-05-01",
       "confidence": "medium",
       "mentioned_terms": [
         "비용, 리스크, 일정, 고객 영향",

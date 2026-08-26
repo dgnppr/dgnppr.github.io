@@ -1,8 +1,8 @@
 ---
 layout  : insight
 title   : 잘 모르는 일의 일정 산정
-date    : 2026-07-04 00:00:00 +0900
-updated : 2026-07-05 00:00:00 +0900
+date    : 2025-07-06 00:00:00 +0900
+updated : 2025-07-06 00:00:00 +0900
 tag     : estimation planning work essay
 toc     : true
 comment : true

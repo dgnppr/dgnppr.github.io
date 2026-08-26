@@ -1,8 +1,8 @@
 ---
 layout  : insight
 title   : 프롬프트 질문을 잘하는 방법
-date    : 2026-07-04 00:00:00 +0900
-updated : 2026-07-05 00:00:00 +0900
+date    : 2026-02-04 00:00:00 +0900
+updated : 2026-02-04 00:00:00 +0900
 tag     : prompt ai llm work essay
 toc     : true
 comment : true

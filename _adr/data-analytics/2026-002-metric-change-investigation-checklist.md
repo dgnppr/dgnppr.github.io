@@ -1,11 +1,13 @@
 ---
 layout     : adr
-title      : 지표 급변 원인 조사 체크리스트
+title      : 메트릭 체크리스트
 date       : 2026-07-07 00:00:00 +0900
 updated    : 2026-07-07 00:00:00 +0900
 tag        : metrics anomaly investigation data-analytics checklist
 status     : accepted
+deciders   : dgnppr
 public     : true
+confidence : high
 valid_from : 2026-07-07
 relations:
   - { type: references, target: concept/data-analytics/03_metrics_framework }

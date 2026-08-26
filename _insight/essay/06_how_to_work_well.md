@@ -1,8 +1,8 @@
 ---
 layout  : insight
 title   : AI시대에서 일을 잘한다는 것
-date    : 2026-07-04 00:00:00 +0900
-updated : 2026-07-05 00:00:00 +0900
+date    : 2026-01-04 00:00:00 +0900
+updated : 2026-01-04 00:00:00 +0900
 tag     : work craftsmanship ai essay
 toc     : true
 comment : true
