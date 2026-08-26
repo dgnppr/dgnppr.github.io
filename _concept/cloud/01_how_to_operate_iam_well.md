@@ -9,7 +9,7 @@ comment : true
 latex   : true
 status  : complete
 show-diagram : true
-public  : true
+public  : false
 parent  : [[/cloud]]
 relations:
   - { type: references, target: concept/cloud/02_authenticate_gcp_without_service_accounts }

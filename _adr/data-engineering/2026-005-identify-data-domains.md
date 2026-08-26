@@ -1,12 +1,12 @@
 ---
 layout     : adr
-title      : 데이터 도메인 식별 — 무엇을 기준으로 경계를 자를 것인가
+title      : 데이터 도메인 식별
 date       : 2026-07-09 00:00:00 +0900
 updated    : 2026-07-09 00:00:00 +0900
 tag        : data-domain domain-driven-design  data-modeling data-engineering
 status     : completed
 confidence : medium
-deciders   : https://www.linkedin.com/in/dgpr
+deciders   : dgnppr
 public     : true
 relations:
   - { type: references, target: adr/data-engineering/2026-004-store-monthly-dimensional-model }

@@ -3,12 +3,12 @@ layout      : concept
 title       : 매출 분석하는 방법
 date        : 2026-07-05 00:00:00 +0900
 updated     : 2026-07-05 00:00:00 +0900
-tag         : revenue aarrr ltv arpu monetization data-analytics
+tag         : revenue aarrr ltv arpu data-analytics
 toc         : true
 comment     : true
 latex       : true
 status      : complete
-public      : true
+public      : false
 parent      : [[/data-analytics]]
 confidence  : high
 relations:

@@ -8,7 +8,7 @@ toc         : true
 comment     : true
 latex       : true
 status      : complete
-public      : true
+public      : false
 parent      : [[/ai]]
 confidence  : high
 relations:

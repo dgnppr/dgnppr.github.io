@@ -3,12 +3,12 @@ layout  : concept
 title   : Google Cloud 로드밸런싱과 하이브리드 연결 설계 결정
 date    : 2026-06-30 00:00:00 +0900
 updated : 2026-07-06 00:00:00 +0900
-tag     : cloud gcp network loadbalancing interconnect pca
+tag     : cloud gcp loadbalancing interconnect pca
 toc     : true
 comment : true
 latex   : false
 status  : complete
-public  : true
+public  : false
 parent  : [[/cloud]]
 confidence     : high
 valid_from     : 2026-06-30

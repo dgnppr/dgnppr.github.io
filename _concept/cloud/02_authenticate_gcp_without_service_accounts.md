@@ -9,7 +9,7 @@ comment : true
 latex   : true
 show-diagram : true
 status  : complete
-public  : true
+public  : false
 parent  : [[/cloud]]
 relations:
   - { type: extends, target: /concept/cloud/01_how_to_operate_iam_well }

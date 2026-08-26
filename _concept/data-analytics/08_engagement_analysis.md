@@ -3,12 +3,12 @@ layout      : concept
 title       : 인게이지먼트 분석하는 방법
 date        : 2026-07-05 00:00:00 +0900
 updated     : 2026-07-05 00:00:00 +0900
-tag         : engagement aarrr activation dau-mau behavioral-analytics data-analytics
+tag         : engagement aarrr activation dau-mau data-analytics
 toc         : true
 comment     : true
 latex       : true
 status      : complete
-public      : true
+public      : false
 parent      : [[/data-analytics]]
 confidence  : high
 relations:

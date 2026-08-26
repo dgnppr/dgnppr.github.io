@@ -3,12 +3,12 @@ layout      : concept
 title       : GCP에서 데이터 거버넌스 구축하기
 date        : 2026-07-17 00:00:00 +0900
 updated     : 2026-07-17 00:00:00 +0900
-tag         : data-governance gcp bigquery dataplex iam terraform vpc-sc cmek hands-on
+tag         : data-governance gcp dataplex iam terraform
 toc         : true
 comment     : true
 latex       : true
 status      : draft
-public      : true
+public      : false
 parent      : [[/data-governance]]
 confidence  : medium
 relations:

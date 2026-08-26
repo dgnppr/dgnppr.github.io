@@ -3,12 +3,12 @@ layout      : concept
 title       : 메타데이터 관리와 데이터 카탈로그
 date        : 2026-07-16 00:00:00 +0900
 updated     : 2026-07-16 00:00:00 +0900
-tag         : data-governance metadata data-catalog glossary lineage active-metadata
+tag         : data-governance metadata data-catalog glossary lineage
 toc         : true
 comment     : true
 latex       : true
 status      : draft
-public      : true
+public      : false
 parent      : [[/data-governance]]
 confidence  : medium
 relations:

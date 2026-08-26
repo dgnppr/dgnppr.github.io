@@ -3,12 +3,12 @@ layout      : concept
 title       : 데이터 분류와 접근 제어
 date        : 2026-07-17 00:00:00 +0900
 updated     : 2026-07-17 00:00:00 +0900
-tag         : data-governance data-classification access-control rbac abac masking pseudonymization least-privilege
+tag         : data-governance data-classification access-control rbac masking
 toc         : true
 comment     : true
 latex       : true
 status      : draft
-public      : true
+public      : false
 parent      : [[/data-governance]]
 confidence  : medium
 relations:

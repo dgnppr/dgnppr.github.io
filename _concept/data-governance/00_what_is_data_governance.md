@@ -3,12 +3,12 @@ layout      : concept
 title       : 데이터 거버넌스란 무엇인가
 date        : 2026-07-15 00:00:00 +0900
 updated     : 2026-07-16 00:00:00 +0900
-tag         : data-governance data-management metadata data-quality access-control lineage
+tag         : data-governance metadata data-quality access-control lineage
 toc         : true
 comment     : true
 latex       : true
 status      : draft
-public      : true
+public      : false
 parent      : [[/data-governance]]
 confidence  : medium
 relations:

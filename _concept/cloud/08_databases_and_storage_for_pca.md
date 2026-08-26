@@ -3,12 +3,12 @@ layout  : concept
 title   : Google Cloud 데이터베이스와 스토리지 선택 결정
 date    : 2026-06-30 00:00:00 +0900
 updated : 2026-07-06 00:00:00 +0900
-tag     : cloud gcp database storage spanner bigtable pca
+tag     : cloud gcp database storage pca
 toc     : true
 comment : true
 latex   : false
 status  : complete
-public  : true
+public  : false
 parent  : [[/cloud]]
 relations:
   - { type: references, target: /concept/cloud/00_pca_study_plan }

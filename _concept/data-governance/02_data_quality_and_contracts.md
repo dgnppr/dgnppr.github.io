@@ -3,12 +3,12 @@ layout      : concept
 title       : 데이터 품질과 데이터 계약
 date        : 2026-07-16 00:00:00 +0900
 updated     : 2026-07-16 00:00:00 +0900
-tag         : data-governance data-quality data-contract testing sla freshness
+tag         : data-governance data-quality data-contract testing sla
 toc         : true
 comment     : true
 latex       : true
 status      : draft
-public      : true
+public      : false
 parent      : [[/data-governance]]
 confidence  : medium
 relations:

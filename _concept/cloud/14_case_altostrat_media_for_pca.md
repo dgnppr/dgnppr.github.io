@@ -8,7 +8,7 @@ toc         : true
 comment     : true
 latex       : true
 status      : complete
-public      : true
+public      : false
 parent      : [[/cloud]]
 confidence  : high
 valid_from  : 2026-07-07

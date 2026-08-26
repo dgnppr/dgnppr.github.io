@@ -3,12 +3,12 @@ layout      : concept
 title       : 데이터 오너십과 거버넌스 운영 모델
 date        : 2026-07-17 00:00:00 +0900
 updated     : 2026-07-17 00:00:00 +0900
-tag         : data-governance ownership operating-model data-steward federated-governance slo standards
+tag         : data-governance ownership operating-model data-steward federated-governance
 toc         : true
 comment     : true
 latex       : true
 status      : draft
-public      : true
+public      : false
 parent      : [[/data-governance]]
 confidence  : medium
 relations:

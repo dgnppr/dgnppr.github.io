@@ -8,7 +8,7 @@ toc     : true
 comment : true
 latex   : true
 status  : complete
-public  : true
+public  : false
 parent  : [[/data-analytics]]
 relations:
   - { type: references, target: /concept/data-architect/00_what_is_medaliion_architecture }

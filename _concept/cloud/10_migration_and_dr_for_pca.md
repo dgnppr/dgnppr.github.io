@@ -8,7 +8,7 @@ toc     : true
 comment : true
 latex   : false
 status  : complete
-public  : true
+public  : false
 parent  : [[/cloud]]
 relations:
   - { type: references, target: /concept/cloud/03_vpc_for_pca }

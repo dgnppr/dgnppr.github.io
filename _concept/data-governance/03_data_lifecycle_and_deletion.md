@@ -3,12 +3,12 @@ layout      : concept
 title       : 데이터 수명주기와 삭제 요청 대응
 date        : 2026-07-16 00:00:00 +0900
 updated     : 2026-07-16 00:00:00 +0900
-tag         : data-governance data-lifecycle retention deletion privacy pii
+tag         : data-governance data-lifecycle retention deletion privacy
 toc         : true
 comment     : true
 latex       : true
 status      : draft
-public      : true
+public      : false
 parent      : [[/data-governance]]
 confidence  : medium
 relations:

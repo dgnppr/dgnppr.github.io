@@ -3,12 +3,12 @@ layout      : concept
 title       : GA4 데이터 모델
 date        : 2026-07-04 00:00:00 +0900
 updated     : 2026-07-04 00:00:00 +0900
-tag         : ga4 analytics event-model bigquery attribution data-analytics
+tag         : ga4 analytics event-model bigquery data-analytics
 toc         : true
 comment     : true
 latex       : true
 status      : complete
-public      : true
+public      : false
 parent      : [[/data-analytics]]
 confidence  : high
 valid_from  : 2026-07-04
