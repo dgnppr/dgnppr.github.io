@@ -1649,46 +1649,6 @@
       "unanswered_questions": 0,
       "learning_pressure": 0
     },
-    "insight/data-architect/00_ontology_core_examples": {
-      "id": "insight/data-architect/00_ontology_core_examples",
-      "type": "insight",
-      "title": "온톨로지 베스트 프랙티스와 안티패턴",
-      "path": "_insight/data-architect/00_ontology_core_examples.md",
-      "status": "complete",
-      "tags": [
-        "data-architecture",
-        "data-engineering",
-        "ontology"
-      ],
-      "date": "2026-06-25",
-      "confidence": "medium",
-      "mentioned_terms": [
-        "links",
-        "preconditions",
-        "blocked",
-        "P31/P279*",
-        "안티패턴 ↔ 베스트 프랙티스",
-        "안티패턴 — 동일성을 한 번 묶고 끝",
-        "베스트 프랙티스 — 동일성을 영구 운영으로",
-        "안티패턴 — 구매를 컬럼으로 박기",
-        "베스트 프랙티스 — 구매를 링크로",
-        "is a",
-        "is a kind of",
-        "\"내 식별자가 조직 밖에서 의미가 있는가?\"",
-        "안티패턴 — 정의를 덮어쓰기",
-        "베스트 프랙티스 — as-of 재현",
-        "안티패턴 — 조건을 if문에 묻기",
-        "베스트 프랙티스 — 동사를 데이터로",
-        "boil the ocean",
-        "불필요한 도입",
-        "온톨로지 정렬(alignment)과 연합"
-      ],
-      "content_depth": 1,
-      "importance": 1,
-      "depth": 0.8,
-      "unanswered_questions": 0,
-      "learning_pressure": 0.2
-    },
     "insight/essay/00_is_lombok_necessary": {
       "id": "insight/essay/00_is_lombok_necessary",
       "type": "insight",
@@ -2365,16 +2325,6 @@
       "from": "concept/springboot/01_how_to_handle_transaction_event_listener_exception",
       "to": "concept/springboot/00_why_rollback_marked_transaction_is_unusable",
       "type": "extends"
-    },
-    {
-      "from": "insight/data-architect/00_ontology_core_examples",
-      "to": "concept/data-architect/06_ontology_core_concepts",
-      "type": "extends"
-    },
-    {
-      "from": "insight/data-architect/00_ontology_core_examples",
-      "to": "concept/data-architect/05_how_to_implement_ontology",
-      "type": "learned_from"
     },
     {
       "from": "insight/essay/00_is_lombok_necessary",

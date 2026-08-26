@@ -8,7 +8,7 @@ toc     : true
 comment : true
 latex   : true
 status  : complete
-public  : true
+public  : false
 confidence: medium
 parent  : [[/data-architect]]
 relations:
