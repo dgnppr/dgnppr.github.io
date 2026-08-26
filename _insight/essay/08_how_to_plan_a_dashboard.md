@@ -1,6 +1,6 @@
 ---
 layout      : insight
-title       : 쓰이는 대시보드를 기획한다는 것 — 분석가·기획자·경영진의 세 시선
+title       : 쓰이는 대시보드를 기획한다는 것
 date        : 2026-07-07 00:00:00 +0900
 updated     : 2026-07-07 00:00:00 +0900
 tag         : bi dashboard analytics planning essay

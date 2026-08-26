@@ -8,7 +8,7 @@ toc         : true
 comment     : true
 latex       : true
 status      : draft
-public      : true
+public      : false
 parent      : [[/essay]]
 confidence  : medium
 relations:
