@@ -1,6 +1,6 @@
 ---
 layout      : concept
-title       : 데이터 레이크 — 폴더에서 질의 가능한 저장소가 되기까지
+title       : 데이터 레이크란 무엇인가
 date        : 2026-08-19 00:00:00 +0900
 updated     : 2026-08-19 00:00:00 +0900
 tag         : data-lake catalog data-engineering

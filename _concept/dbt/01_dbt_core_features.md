@@ -1,9 +1,9 @@
 ---
 layout      : concept
 title       : dbt 소스 테스트 스냅샷 증분 모델 다루기
-date        : 2026-07-01 00:00:00 +0900
-updated     : 2026-07-01 00:00:00 +0900
-tag         : dbt testing snapshot incremental jinja data-engineering
+date        : 2025-06-03 00:00:00 +0900
+updated     : 2025-06-03 00:00:00 +0900
+tag         : dbt testing snapshot incremental data-engineering
 toc         : true
 comment     : true
 latex       : true

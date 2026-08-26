@@ -1,14 +1,14 @@
 ---
 layout      : concept
-title       : dbt 운영 노하우 함정과 성능 비용 회피
-date        : 2026-07-01 00:00:00 +0900
-updated     : 2026-07-01 00:00:00 +0900
+title       : dbt 운영
+date        : 2025-06-07 00:00:00 +0900
+updated     : 2025-06-07 00:00:00 +0900
 tag         : dbt performance cost pitfalls data-engineering
 toc         : true
 comment     : true
 latex       : true
 status      : draft
-public      : true
+public      : false
 parent      : [[/dbt]]
 confidence  : medium
 relations:

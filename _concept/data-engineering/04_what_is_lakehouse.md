@@ -1,6 +1,6 @@
 ---
 layout      : concept
-title       : 데이터 레이크하우스 — 레이크 위에 얹는 한 겹
+title       : 데이터 레이크하우스란 무엇인가
 date        : 2026-08-19 00:00:00 +0900
 updated     : 2026-08-19 00:00:00 +0900
 tag         : lakehouse table-format data-engineering

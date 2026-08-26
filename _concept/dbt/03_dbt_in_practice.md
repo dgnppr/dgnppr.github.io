@@ -1,8 +1,8 @@
 ---
 layout      : concept
 title       : dbt 실전 프로젝트 구조와 배포 파이프라인
-date        : 2026-07-01 00:00:00 +0900
-updated     : 2026-07-01 00:00:00 +0900
+date        : 2025-06-05 00:00:00 +0900
+updated     : 2025-06-05 00:00:00 +0900
 tag         : dbt project-structure ci-cd orchestration data-engineering
 toc         : true
 comment     : true

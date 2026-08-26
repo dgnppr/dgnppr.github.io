@@ -1,9 +1,9 @@
 ---
 layout      : concept
 title       : Spark 성능 튜닝 느린 잡 진단과 최적화
-date        : 2026-07-01 00:00:00 +0900
-updated     : 2026-07-01 00:00:00 +0900
-tag         : spark performance tuning shuffle skew memory data-engineering
+date        : 2026-07-14 00:00:00 +0900
+updated     : 2026-07-14 00:00:00 +0900
+tag         : spark performance tuning data-engineering
 toc         : true
 comment     : true
 latex       : true

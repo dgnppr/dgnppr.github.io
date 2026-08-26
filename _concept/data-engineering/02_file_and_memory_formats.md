@@ -1,6 +1,6 @@
 ---
 layout      : concept
-title       : 파일과 메모리 형식 — CSV·Parquet·Avro·Arrow
+title       : 파일과 메모리 형식 (CSV·Parquet·Avro·Arrow)
 date        : 2026-08-19 00:00:00 +0900
 updated     : 2026-08-19 00:00:00 +0900
 tag         : parquet file-format data-engineering

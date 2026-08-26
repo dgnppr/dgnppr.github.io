@@ -1,9 +1,9 @@
 ---
 layout      : concept
 title       : dbt 증분 전략과 매크로 컨트랙트 심화
-date        : 2026-07-01 00:00:00 +0900
-updated     : 2026-07-01 00:00:00 +0900
-tag         : dbt incremental macro contract state-defer data-engineering
+date        : 2025-06-05 00:00:00 +0900
+updated     : 2025-06-05 00:00:00 +0900
+tag         : dbt incremental macro contract data-engineering
 toc         : true
 comment     : true
 latex       : true

@@ -3330,40 +3330,10 @@
       "confidence": "high",
       "mentioned_terms": [],
       "content_depth": 0.68,
-      "importance": 24,
+      "importance": 22,
       "depth": 0.89,
       "unanswered_questions": 0,
-      "learning_pressure": 2.69
-    },
-    "concept/data-architect/01_how_to_architect_medallion_well": {
-      "id": "concept/data-architect/01_how_to_architect_medallion_well",
-      "type": "concept",
-      "title": "ERP 업그레이드가 새벽 3시에 GMV를 0으로 만들었다",
-      "path": "_concept/data-architect/01_how_to_architect_medallion_well.md",
-      "status": "complete",
-      "tags": [
-        "data-architect",
-        "design-pattern",
-        "data-architecture",
-        "medallion"
-      ],
-      "date": "2026-06-22",
-      "confidence": "medium",
-      "mentioned_terms": [
-        "'CM'",
-        "'C'",
-        "CASE WHEN",
-        "IN ('C', 'CM', 'COMP')",
-        "'PA'",
-        "DQ assertion",
-        "새벽 2시 34분 — Silver 변환 실행",
-        "\"재처리 범위가 어디까지인가?\""
-      ],
-      "content_depth": 0.77,
-      "importance": 5,
-      "depth": 0.74,
-      "unanswered_questions": 0,
-      "learning_pressure": 1.28
+      "learning_pressure": 2.46
     },
     "concept/data-architect/02_how_to_architect_medallion_well": {
       "id": "concept/data-architect/02_how_to_architect_medallion_well",
@@ -3435,476 +3405,10 @@
         "Mart Layer"
       ],
       "content_depth": 0.85,
-      "importance": 5,
-      "depth": 0.8,
-      "unanswered_questions": 0,
-      "learning_pressure": 1.01
-    },
-    "concept/data-architect/04_what_is_ontology": {
-      "id": "concept/data-architect/04_what_is_ontology",
-      "type": "concept",
-      "title": "온톨로지는 데이터가 아니라 합의를 설계한다",
-      "path": "_concept/data-architect/04_what_is_ontology.md",
-      "status": "writing",
-      "tags": [
-        "data-architecture",
-        "data-engineering",
-        "ontology",
-        "palantir"
-      ],
-      "date": "2026-05-27",
-      "confidence": "high",
-      "mentioned_terms": [
-        "Flight",
-        "flightNumber",
-        "flightId = flightNumber + date",
-        "FlightDelayHandler",
-        "delayFlight",
-        "hasCrew",
-        "crewType == PILOT",
-        "hasPilot",
-        "delayMinutes",
-        "status",
-        "합의된 의미",
-        "저장과 질의",
-        "의미",
-        "의미의 드리프트(semantic drift)",
-        "지식 표현(KR)의 시대",
-        "시맨틱 웹",
-        "막대한 선행 형식화 비용",
-        "경제적 강제력의 부재",
-        "경계",
-        "명사",
-        "이름이 있는 관계",
-        "동사",
-        "단어의 뜻에 대한, 버전 관리된 제도적 기억",
-        "의미의 SCD2",
-        "모델링된 범위 안에서는 결정론적 정확성",
-        "온톨로지를 프로젝트로 취급하는 것",
-        "과형식화"
-      ],
-      "content_depth": 0.92,
-      "importance": 13,
-      "depth": 0.87,
-      "unanswered_questions": 0,
-      "learning_pressure": 1.66
-    },
-    "concept/data-architect/05_ontology_objects_summary": {
-      "id": "concept/data-architect/05_ontology_objects_summary",
-      "type": "concept",
-      "title": "팔란티어 온톨로지 Objects · Properties · Links · Actions",
-      "path": "_concept/data-architect/05_ontology_objects_summary.md",
-      "status": "complete",
-      "tags": [
-        "palantir",
-        "foundry",
-        "ontology",
-        "data-architect"
-      ],
-      "date": "2026-06-22",
-      "confidence": "high",
-      "mentioned_terms": [
-        "Flight",
-        "Aircraft",
-        "CrewMember",
-        "Airport",
-        "Passenger",
-        "Employee",
-        "string",
-        "integer",
-        "double",
-        "boolean",
-        "timestamp",
-        "date",
-        "string[]",
-        "integer[]",
-        "delayMinutes",
-        "hasCrew",
-        "assignedTo",
-        "operatedBy",
-        "departsFrom",
-        "Locatable",
-        "Schedulable",
-        "take()",
-        "count()",
-        "FlightDelayHandler",
-        "delayFlight",
-        "updateFlightStatus",
-        "hasPilot",
-        "scheduledStart",
-        "status",
-        "온톨로지(Ontology)",
-        "비즈니스 언어로 모델링",
-        "도메인 예시",
-        "항공사 운영",
-        "핵심 단위",
-        "Primary Key",
-        "Display Name",
-        "Description",
-        "Data Source",
-        "Title Property",
-        "Object Type",
-        "Object (Instance)",
-        "속성(attribute)",
-        "Scalar",
-        "Array",
-        "Struct",
-        "Attachment",
-        "Marking",
-        "관계(relationship)",
-        "ONE_TO_ONE",
-        "ONE_TO_MANY",
-        "MANY_TO_MANY",
-        "양방향",
-        "Link Type",
-        "Relations/edges",
-        "실제 활용:",
-        "수정·생성·삭제하는 비즈니스 연산",
-        "Parameters",
-        "Validation Rules",
-        "Effects",
-        "Notifications",
-        "Logic (Functions)",
-        "공통 프로퍼티 계약",
-        "활용:",
-        "Link를 따라 관련 오브젝트를 탐색",
-        "집합(collection)",
-        "지연 평가의 장점:",
-        "AIP(AI Platform)",
-        "비즈니스 언어로 정의된 인터페이스",
-        "핵심:",
-        "Object Type은 명사",
-        "Action은 비즈니스 이벤트",
-        "Link는 의미를 담는다",
-        "Interface로 공통 추출",
-        "검증은 Action 안에",
-        "비즈니스 언어 우선"
-      ],
-      "content_depth": 0.77,
-      "importance": 6,
-      "depth": 0.84,
-      "unanswered_questions": 0,
-      "learning_pressure": 0.93
-    },
-    "concept/data-architect/06_how_to_implement_ontology": {
-      "id": "concept/data-architect/06_how_to_implement_ontology",
-      "type": "concept",
-      "title": "알람 케이스로 온톨로지 훑어보기",
-      "path": "_concept/data-architect/06_how_to_implement_ontology.md",
-      "status": "complete",
-      "tags": [
-        "data-architecture",
-        "data-engineering",
-        "ontology",
-        "palantir"
-      ],
-      "date": "2026-06-23",
-      "confidence": "high",
-      "mentioned_terms": [
-        "customers",
-        "links",
-        "placed",
-        "Customer → received → Coupon",
-        "status = 'blocked'",
-        "Customer",
-        "Order",
-        "객체(명사)·링크(관계)·액션(동사)",
-        "시간(Dynamic)",
-        "Object Type",
-        "Property",
-        "Derived Property",
-        "Link Type",
-        "Action Type",
-        "Dynamic Layer",
-        "Object Set",
-        "마켓온",
-        "아니다",
-        "시맨틱 레이어",
-        "온톨로지",
-        "팔란티어 온톨로지 언어로:",
-        "적재 3단계:",
-        "Step 1",
-        "Step 2",
-        "Step 3",
-        "— 이것이 팔란티어에서 말하는",
-        "\"인시던트 전날 정의는?\"",
-        "\"정의가 몇 번 바뀌었고 각각 왜?\"",
-        "액션의 Effect가 그래프에 기록되는 방법",
-        "이탈 모델이 피처를 계산한다",
-        "알람 없음",
-        "Validation Rule 차단",
-        "의미 있는 집합",
-        "채널 전환 패턴",
-        "Object Type은 명사",
-        "Link는 의미를 담는다",
-        "Derived Property 분리",
-        "Action은 비즈니스 이벤트",
-        "검증은 Action 안에"
-      ],
-      "content_depth": 1,
-      "importance": 5,
-      "depth": 0.95,
-      "unanswered_questions": 0,
-      "learning_pressure": 0.25
-    },
-    "concept/data-architect/07_ontology_core_concepts": {
-      "id": "concept/data-architect/07_ontology_core_concepts",
-      "type": "concept",
-      "title": "온톨로지 핵심 개념 정리",
-      "path": "_concept/data-architect/07_ontology_core_concepts.md",
-      "status": "complete",
-      "tags": [
-        "data-architecture",
-        "data-engineering",
-        "ontology",
-        "palantir"
-      ],
-      "date": "2026-06-25",
-      "confidence": "high",
-      "mentioned_terms": [
-        "objectRid",
-        "P31/P279*",
-        "customers",
-        "owl:Class",
-        "'customer'",
-        "Customer",
-        "owl:NamedIndividual",
-        "SELECT * FROM customers",
-        "Schedulable",
-        "Flight",
-        "MaintenanceJob",
-        "CrewShift",
-        "Object Type: Flight",
-        "Interface: Schedulable",
-        "wdt:P31/wdt:P279*",
-        "links",
-        "Q42 wdt:P69 wd:Q691283",
-        "NOT EXISTS",
-        "wdt:",
-        "placed",
-        "P31 Q5",
-        "pq:P585",
-        "is-a",
-        "Action Type",
-        "폐쇄 세계(CWA)",
-        "일급 시민",
-        "item",
-        "property",
-        "Q42 P31 Q5",
-        "Object Type",
-        "Interface",
-        "Link Type",
-        "is a",
-        "아니오",
-        "is a kind of",
-        "P31",
-        "P279",
-        "마켓온 SQL:",
-        "Wikidata",
-        "마켓온·팔란티어",
-        "\"아직 입력 안 됨\"",
-        "preferred",
-        "normal",
-        "deprecated",
-        "Kinetic Layer",
-        "Object Set",
-        "Action을 실행할 수 있다",
-        "명사",
-        "관계",
-        "추론",
-        "행위",
-        "표준",
-        "시제",
-        "Entity와 Object의 분리",
-        "`is-a` 관계",
-        "정의의 시제"
-      ],
-      "content_depth": 0.83,
-      "importance": 9,
-      "depth": 0.94,
-      "unanswered_questions": 0,
-      "learning_pressure": 0.54
-    },
-    "concept/data-architect/08_record_linkage_basics": {
-      "id": "concept/data-architect/08_record_linkage_basics",
-      "type": "concept",
-      "title": "레코드 링키지 기초 Fellegi-Sunter와 Blocking과 Survivorship",
-      "path": "_concept/data-architect/08_record_linkage_basics.md",
-      "status": "draft",
-      "tags": [
-        "data-architecture",
-        "entity-resolution",
-        "record-linkage",
-        "mdm"
-      ],
-      "date": "2026-06-30",
-      "confidence": "high",
-      "mentioned_terms": [
-        "홍길동, 1990-01-02, 서울시 강남구",
-        "홍길동, 1990-01-02, 서울 강남",
-        "김민수, 010-1234-5678",
-        "김민서",
-        "이영희, 1985",
-        "이영희, 1986",
-        "서울",
-        "서울시 강남구",
-        "레코드 링키지(record linkage)",
-        "개체 해소(entity resolution)",
-        "Fellegi-Sunter",
-        "Blocking",
-        "Survivorship",
-        "\"같을 확률\"을 추정하는 매칭",
-        "생년월일·전화번호가 일치하면 강한 증거",
-        "성별이 일치하면 약한 증거",
-        "두 개의 임계값",
-        "최소화하는 것이 최적",
-        "라벨된 학습 데이터가 있으면",
-        "없으면 EM 알고리즘",
-        "블로킹 키",
-        "정확도가 아니라 스케일을 위한 설계",
-        "여러 블로킹 키를 OR로 결합",
-        "골든 레코드(golden record)",
-        "속성별로",
-        "매칭",
-        "스케일"
-      ],
-      "content_depth": 0.77,
-      "importance": 7,
-      "depth": 0.69,
-      "unanswered_questions": 0,
-      "learning_pressure": 2.14
-    },
-    "concept/data-architect/09_privacy_preserving_matching": {
-      "id": "concept/data-architect/09_privacy_preserving_matching",
-      "type": "concept",
-      "title": "프라이버시 보존 매칭과 확률적 링키지 심화",
-      "path": "_concept/data-architect/09_privacy_preserving_matching.md",
-      "status": "draft",
-      "tags": [
-        "data-architecture",
-        "entity-resolution",
-        "record-linkage"
-      ],
-      "date": "2026-06-30",
-      "confidence": "high",
-      "mentioned_terms": [
-        "김민수",
-        "김민서",
-        "서울시",
-        "서울",
-        "smith",
-        "EM",
-        "프라이버시 보존 레코드 링키지(PPRL)",
-        "알고리즘이 이 문제를 푼다 — 매치 여부를",
-        "필드 간 조건부 독립",
-        "부분 일치(partial agreement)",
-        "서로 다른 조직이 각자의 고객을 대조",
-        "Bloom filter 인코딩",
-        "Dice 계수",
-        "평문을 교환하지 않으면서 퍼지 유사도를 계산",
-        "정확도-프라이버시-비용의 삼각 트레이드오프",
-        "익명 행동 데이터를 식별된 이벤트에 잇는 문제",
-        "record linkage의 한 사례",
-        "시공간 좌표 + 행동 feature",
-        "유사도 함수",
-        "PPRL",
-        "익명 trajectory 매칭",
-        "임계값"
-      ],
-      "content_depth": 0.65,
       "importance": 3,
-      "depth": 0.58,
+      "depth": 0.77,
       "unanswered_questions": 0,
-      "learning_pressure": 1.27
-    },
-    "concept/data-architect/10_trustworthy_controlled_experiments": {
-      "id": "concept/data-architect/10_trustworthy_controlled_experiments",
-      "type": "concept",
-      "title": "신뢰할 수 있는 온라인 통제 실험 설계",
-      "path": "_concept/data-architect/10_trustworthy_controlled_experiments.md",
-      "status": "draft",
-      "tags": [
-        "data-architecture",
-        "experimentation"
-      ],
-      "date": "2026-06-30",
-      "confidence": "high",
-      "mentioned_terms": [
-        "신뢰할 수 있게",
-        "배정·노출·holdout은 사후에 못 붙인다",
-        "변경이 지표에 미친 인과 효과",
-        "상관이 아니라 인과",
-        "대리 지표(surrogate)",
-        "귀무가설",
-        "더 많은 샘플·더 긴 기간",
-        "\"실험 결과를 어떻게 믿나\"",
-        "배정 또는 로깅에 버그가 있다는 신호",
-        "계측 오류·로깅 중복·이상치",
-        "가드레일(guardrail) 지표",
-        "OCE",
-        "OEC",
-        "피킹",
-        "SRM",
-        "Twyman's law",
-        "가드레일 지표",
-        "SUTVA"
-      ],
-      "content_depth": 0.57,
-      "importance": 4,
-      "depth": 0.55,
-      "unanswered_questions": 0,
-      "learning_pressure": 1.8
-    },
-    "concept/data-architect/11_entity_resolution_in_practice": {
-      "id": "concept/data-architect/11_entity_resolution_in_practice",
-      "type": "concept",
-      "title": "실무 환경의 Entity Resolution 파이프라인과 도구와 운영",
-      "path": "_concept/data-architect/11_entity_resolution_in_practice.md",
-      "status": "draft",
-      "tags": [
-        "data-architecture",
-        "entity-resolution",
-        "record-linkage",
-        "mdm",
-        "data-integration"
-      ],
-      "date": "2026-07-13",
-      "confidence": "high",
-      "mentioned_terms": [
-        "Bob",
-        "Robert",
-        "\"NULL\"",
-        "\"999-9999\"",
-        "표준화",
-        "서빙",
-        "입력 정규화",
-        "멀티패스 blocking이 기본값",
-        "scorer는 해석 가능성 우선",
-        "A와 C는 남남",
-        "Splink",
-        "Zingg",
-        "dedupe",
-        "Spark + GraphFrames",
-        "AWS Entity Resolution",
-        "Senzing",
-        "안정적",
-        "surrogate key",
-        "기존 클러스터에 신규만 매칭",
-        "Merge",
-        "Split",
-        "clerical review 큐",
-        "알려진 매치 심기",
-        "클러스터 크기 분포",
-        "신규 병합·분할 수",
-        "검토 큐 유입률",
-        "거의 모든 데이터 통합의 길목",
-        "상태를 가진 서비스"
-      ],
-      "content_depth": 0.68,
-      "importance": 1,
-      "depth": 0.61,
-      "unanswered_questions": 0,
-      "learning_pressure": 0.39
+      "learning_pressure": 0.68
     },
     "concept/data-engineering/00_how_to_use_dataform_well": {
       "id": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -3973,7 +3477,7 @@
     "concept/data-engineering/01_lakehouse_table_formats": {
       "id": "concept/data-engineering/01_lakehouse_table_formats",
       "type": "concept",
-      "title": "Lakehouse 테이블 포맷 — Iceberg·Delta·Hudi",
+      "title": "Lakehouse 테이블 포맷 (Iceberg·Delta·Hudi)",
       "path": "_concept/data-engineering/01_lakehouse_table_formats.md",
       "status": "complete",
       "tags": [
@@ -4055,7 +3559,7 @@
     "concept/data-engineering/02_file_and_memory_formats": {
       "id": "concept/data-engineering/02_file_and_memory_formats",
       "type": "concept",
-      "title": "파일과 메모리 형식 — CSV·Parquet·Avro·Arrow",
+      "title": "파일과 메모리 형식 (CSV·Parquet·Avro·Arrow)",
       "path": "_concept/data-engineering/02_file_and_memory_formats.md",
       "status": "complete",
       "tags": [
@@ -4087,7 +3591,7 @@
     "concept/data-engineering/03_what_is_data_lake": {
       "id": "concept/data-engineering/03_what_is_data_lake",
       "type": "concept",
-      "title": "데이터 레이크 — 폴더에서 질의 가능한 저장소가 되기까지",
+      "title": "데이터 레이크란 무엇인가",
       "path": "_concept/data-engineering/03_what_is_data_lake.md",
       "status": "complete",
       "tags": [
@@ -4112,7 +3616,7 @@
     "concept/data-engineering/04_what_is_lakehouse": {
       "id": "concept/data-engineering/04_what_is_lakehouse",
       "type": "concept",
-      "title": "데이터 레이크하우스 — 레이크 위에 얹는 한 겹",
+      "title": "데이터 레이크하우스란 무엇인가",
       "path": "_concept/data-engineering/04_what_is_lakehouse.md",
       "status": "complete",
       "tags": [
@@ -4338,7 +3842,7 @@
         "data-transformation",
         "data-engineering"
       ],
-      "date": "2026-07-01",
+      "date": "2025-06-01",
       "confidence": "high",
       "mentioned_terms": [
         "revenue",
@@ -4407,10 +3911,9 @@
         "testing",
         "snapshot",
         "incremental",
-        "jinja",
         "data-engineering"
       ],
-      "date": "2026-07-01",
+      "date": "2025-06-03",
       "confidence": "high",
       "mentioned_terms": [
         "ref()",
@@ -4487,10 +3990,9 @@
         "incremental",
         "macro",
         "contract",
-        "state-defer",
         "data-engineering"
       ],
-      "date": "2026-07-01",
+      "date": "2025-06-05",
       "confidence": "high",
       "mentioned_terms": [
         "ref",
@@ -4547,10 +4049,10 @@
         "커스텀 materialization"
       ],
       "content_depth": 1,
-      "importance": 5,
-      "depth": 0.75,
+      "importance": 3,
+      "depth": 0.73,
       "unanswered_questions": 0,
-      "learning_pressure": 1.25
+      "learning_pressure": 0.83
     },
     "concept/dbt/03_dbt_in_practice": {
       "id": "concept/dbt/03_dbt_in_practice",
@@ -4565,7 +4067,7 @@
         "orchestration",
         "data-engineering"
       ],
-      "date": "2026-07-01",
+      "date": "2025-06-05",
       "confidence": "high",
       "mentioned_terms": [
         "dbt run",
@@ -4620,69 +4122,10 @@
         "구조화된 데이터"
       ],
       "content_depth": 1,
-      "importance": 3,
-      "depth": 0.73,
+      "importance": 1,
+      "depth": 0.7,
       "unanswered_questions": 0,
-      "learning_pressure": 0.83
-    },
-    "concept/dbt/04_dbt_operational_knowhow": {
-      "id": "concept/dbt/04_dbt_operational_knowhow",
-      "type": "concept",
-      "title": "dbt 운영 노하우 함정과 성능 비용 회피",
-      "path": "_concept/dbt/04_dbt_operational_knowhow.md",
-      "status": "draft",
-      "tags": [
-        "dbt",
-        "performance",
-        "cost",
-        "pitfalls",
-        "data-engineering"
-      ],
-      "date": "2026-07-01",
-      "confidence": "medium",
-      "mentioned_terms": [
-        "materialized='incremental'",
-        "append",
-        "merge",
-        "delete+insert",
-        "column X not found",
-        "dbt run",
-        "view",
-        "ephemeral",
-        "table",
-        "incremental",
-        "SELECT *",
-        "ref()",
-        "config",
-        "--full-refresh",
-        "unique",
-        "--select",
-        "state:modified",
-        "error",
-        "warn",
-        "dbt compile",
-        "{% if execute %}",
-        "--defer",
-        "--state",
-        "dbt ls",
-        "함정 카탈로그",
-        "증상 → 원인 → 조치",
-        "원리와 방향",
-        "잘못 고르면 나는 비용 손해",
-        "읽는 쪽이 매번",
-        "매번 재컴파일·재계산",
-        "읽은 컬럼만큼 과금",
-        "디버깅 대상이 SQL이 아니라 컴파일 로직",
-        "컴파일 시점",
-        "구조의 밀도",
-        "재사용성과 grain",
-        "프로덕션 오브젝트를 참조"
-      ],
-      "content_depth": 0.85,
-      "importance": 5,
-      "depth": 0.6,
-      "unanswered_questions": 0,
-      "learning_pressure": 2.01
+      "learning_pressure": 0.3
     },
     "concept/design-pattern/00_how_to_use_strategy_pattern": {
       "id": "concept/design-pattern/00_how_to_use_strategy_pattern",
@@ -5211,7 +4654,7 @@
         "data-engineering",
         "streaming"
       ],
-      "date": "2026-07-01",
+      "date": "2026-07-10",
       "confidence": "medium",
       "mentioned_terms": [
         "tier",
@@ -5280,12 +4723,9 @@
         "spark",
         "performance",
         "tuning",
-        "shuffle",
-        "skew",
-        "memory",
         "data-engineering"
       ],
-      "date": "2026-07-01",
+      "date": "2026-07-14",
       "confidence": "medium",
       "mentioned_terms": [
         "explain()",
@@ -6719,11 +6159,6 @@
       "type": "references"
     },
     {
-      "from": "concept/data-architect/01_how_to_architect_medallion_well",
-      "to": "concept/data-architect/00_what_is_medaliion_architecture",
-      "type": "extends"
-    },
-    {
       "from": "concept/data-architect/02_how_to_architect_medallion_well",
       "to": "concept/data-architect/00_what_is_medaliion_architecture",
       "type": "extends"
@@ -6742,71 +6177,6 @@
       "from": "concept/data-architect/03_medallion_advanced_patterns",
       "to": "concept/data-architect/01_how_to_architect_medallion_well",
       "type": "extends"
-    },
-    {
-      "from": "concept/data-architect/04_what_is_ontology",
-      "to": "concept/data-architect/03_medallion_advanced_patterns",
-      "type": "extends"
-    },
-    {
-      "from": "concept/data-architect/04_what_is_ontology",
-      "to": "concept/data-architect/05_ontology_objects_summary",
-      "type": "references"
-    },
-    {
-      "from": "concept/data-architect/06_how_to_implement_ontology",
-      "to": "concept/data-architect/04_what_is_ontology",
-      "type": "extends"
-    },
-    {
-      "from": "concept/data-architect/06_how_to_implement_ontology",
-      "to": "concept/data-architect/05_ontology_objects_summary",
-      "type": "implements"
-    },
-    {
-      "from": "concept/data-architect/07_ontology_core_concepts",
-      "to": "concept/data-architect/04_what_is_ontology",
-      "type": "extends"
-    },
-    {
-      "from": "concept/data-architect/07_ontology_core_concepts",
-      "to": "concept/data-architect/06_how_to_implement_ontology",
-      "type": "extends"
-    },
-    {
-      "from": "concept/data-architect/07_ontology_core_concepts",
-      "to": "concept/data-architect/05_ontology_objects_summary",
-      "type": "references"
-    },
-    {
-      "from": "concept/data-architect/08_record_linkage_basics",
-      "to": "concept/data-architect/04_what_is_ontology",
-      "type": "references"
-    },
-    {
-      "from": "concept/data-architect/08_record_linkage_basics",
-      "to": "concept/data-architect/07_ontology_core_concepts",
-      "type": "references"
-    },
-    {
-      "from": "concept/data-architect/09_privacy_preserving_matching",
-      "to": "concept/data-architect/08_record_linkage_basics",
-      "type": "extends"
-    },
-    {
-      "from": "concept/data-architect/11_entity_resolution_in_practice",
-      "to": "concept/data-architect/08_record_linkage_basics",
-      "type": "extends"
-    },
-    {
-      "from": "concept/data-architect/11_entity_resolution_in_practice",
-      "to": "concept/data-architect/09_privacy_preserving_matching",
-      "type": "references"
-    },
-    {
-      "from": "concept/data-architect/11_entity_resolution_in_practice",
-      "to": "concept/data-architect/07_ontology_core_concepts",
-      "type": "references"
     },
     {
       "from": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -7021,16 +6391,6 @@
     {
       "from": "concept/dbt/03_dbt_in_practice",
       "to": "concept/dbt/01_dbt_core_features",
-      "type": "references"
-    },
-    {
-      "from": "concept/dbt/04_dbt_operational_knowhow",
-      "to": "concept/dbt/03_dbt_in_practice",
-      "type": "extends"
-    },
-    {
-      "from": "concept/dbt/04_dbt_operational_knowhow",
-      "to": "concept/dbt/02_dbt_advanced",
       "type": "references"
     },
     {
@@ -7328,18 +6688,6 @@
       ]
     },
     {
-      "term": "incremental",
-      "count": 6,
-      "mentioned_by": [
-        "concept/data-engineering/00_how_to_use_dataform_well",
-        "concept/dbt/00_what_is_dbt",
-        "concept/dbt/01_dbt_core_features",
-        "concept/dbt/02_dbt_advanced",
-        "concept/dbt/03_dbt_in_practice",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
       "term": "VPC Service Controls",
       "count": 5,
       "mentioned_by": [
@@ -7373,17 +6721,6 @@
       ]
     },
     {
-      "term": "status",
-      "count": 5,
-      "mentioned_by": [
-        "concept/data-analytics/02_event_tracking_design",
-        "concept/data-architect/02_how_to_architect_medallion_well",
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/data-governance/02_data_quality_and_contracts"
-      ]
-    },
-    {
       "term": "정기적으로:",
       "count": 5,
       "mentioned_by": [
@@ -7414,6 +6751,17 @@
         "concept/data-analytics/09_conversion_analysis",
         "concept/data-analytics/10_revenue_analysis",
         "concept/data-analytics/11_retention_analysis"
+      ]
+    },
+    {
+      "term": "incremental",
+      "count": 5,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice"
       ]
     },
     {
@@ -7577,66 +6925,6 @@
       ]
     },
     {
-      "term": "append",
-      "count": 4,
-      "mentioned_by": [
-        "concept/data-architect/02_how_to_architect_medallion_well",
-        "concept/dbt/02_dbt_advanced",
-        "concept/dbt/04_dbt_operational_knowhow",
-        "concept/spark/01_structured_streaming"
-      ]
-    },
-    {
-      "term": "links",
-      "count": 4,
-      "mentioned_by": [
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/data-architect/07_ontology_core_concepts",
-        "insight/data-architect/00_ontology_core_examples",
-        "insight/data-architect/01_medallion_with_ontology"
-      ]
-    },
-    {
-      "term": "ref()",
-      "count": 4,
-      "mentioned_by": [
-        "concept/data-engineering/00_how_to_use_dataform_well",
-        "concept/dbt/00_what_is_dbt",
-        "concept/dbt/01_dbt_core_features",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
-      "term": "table",
-      "count": 4,
-      "mentioned_by": [
-        "concept/data-engineering/00_how_to_use_dataform_well",
-        "concept/dbt/00_what_is_dbt",
-        "concept/dbt/03_dbt_in_practice",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
-      "term": "view",
-      "count": 4,
-      "mentioned_by": [
-        "concept/data-engineering/00_how_to_use_dataform_well",
-        "concept/dbt/00_what_is_dbt",
-        "concept/dbt/03_dbt_in_practice",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
-      "term": "--full-refresh",
-      "count": 4,
-      "mentioned_by": [
-        "concept/data-engineering/00_how_to_use_dataform_well",
-        "concept/dbt/01_dbt_core_features",
-        "concept/dbt/02_dbt_advanced",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
       "term": "test",
       "count": 4,
       "mentioned_by": [
@@ -7644,15 +6932,6 @@
         "concept/dbt/01_dbt_core_features",
         "concept/dbt/02_dbt_advanced",
         "concept/dbt/03_dbt_in_practice"
-      ]
-    },
-    {
-      "term": "deprecated",
-      "count": 3,
-      "mentioned_by": [
-        "adr/architecture/2026-06-24-001-adr-guide",
-        "concept/data-analytics/02_event_tracking_design",
-        "concept/data-architect/07_ontology_core_concepts"
       ]
     },
     {
@@ -7917,66 +7196,48 @@
       ]
     },
     {
-      "term": "'CM'",
+      "term": "status",
       "count": 3,
       "mentioned_by": [
-        "concept/data-architect/01_how_to_architect_medallion_well",
-        "concept/data-architect/03_medallion_advanced_patterns",
-        "insight/data-architect/01_medallion_with_ontology"
+        "concept/data-analytics/02_event_tracking_design",
+        "concept/data-architect/02_how_to_architect_medallion_well",
+        "concept/data-governance/02_data_quality_and_contracts"
       ]
     },
     {
-      "term": "Flight",
+      "term": "append",
       "count": 3,
       "mentioned_by": [
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/data-architect/07_ontology_core_concepts"
+        "concept/data-architect/02_how_to_architect_medallion_well",
+        "concept/dbt/02_dbt_advanced",
+        "concept/spark/01_structured_streaming"
       ]
     },
     {
-      "term": "Object Type",
+      "term": "ref()",
       "count": 3,
       "mentioned_by": [
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/data-architect/07_ontology_core_concepts"
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/01_dbt_core_features"
       ]
     },
     {
-      "term": "Link Type",
+      "term": "table",
       "count": 3,
       "mentioned_by": [
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/data-architect/07_ontology_core_concepts"
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice"
       ]
     },
     {
-      "term": "customers",
+      "term": "view",
       "count": 3,
       "mentioned_by": [
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/data-architect/07_ontology_core_concepts",
-        "concept/spark/00_what_is_pyspark"
-      ]
-    },
-    {
-      "term": "placed",
-      "count": 3,
-      "mentioned_by": [
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/data-architect/07_ontology_core_concepts",
-        "insight/data-architect/01_medallion_with_ontology"
-      ]
-    },
-    {
-      "term": "온톨로지",
-      "count": 3,
-      "mentioned_by": [
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/knowledge-graph/01_what_is_knowledge_graph",
-        "insight/data-architect/01_medallion_with_ontology"
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice"
       ]
     },
     {
@@ -7989,30 +7250,21 @@
       ]
     },
     {
+      "term": "--full-refresh",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
       "term": "orders",
       "count": 3,
       "mentioned_by": [
         "concept/data-governance/02_data_quality_and_contracts",
         "concept/data-governance/05_data_classification_and_access_control",
         "concept/spark/01_structured_streaming"
-      ]
-    },
-    {
-      "term": "dbt run",
-      "count": 3,
-      "mentioned_by": [
-        "concept/dbt/00_what_is_dbt",
-        "concept/dbt/03_dbt_in_practice",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
-      "term": "ephemeral",
-      "count": 3,
-      "mentioned_by": [
-        "concept/dbt/00_what_is_dbt",
-        "concept/dbt/03_dbt_in_practice",
-        "concept/dbt/04_dbt_operational_knowhow"
       ]
     },
     {
@@ -8034,33 +7286,6 @@
       ]
     },
     {
-      "term": "unique",
-      "count": 3,
-      "mentioned_by": [
-        "concept/dbt/01_dbt_core_features",
-        "concept/dbt/02_dbt_advanced",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
-      "term": "state:modified",
-      "count": 3,
-      "mentioned_by": [
-        "concept/dbt/02_dbt_advanced",
-        "concept/dbt/03_dbt_in_practice",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
-      "term": "--state",
-      "count": 3,
-      "mentioned_by": [
-        "concept/dbt/02_dbt_advanced",
-        "concept/dbt/03_dbt_in_practice",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
       "term": "count",
       "count": 3,
       "mentioned_by": [
@@ -8076,6 +7301,14 @@
         "concept/spark/00_what_is_pyspark",
         "concept/spark/01_structured_streaming",
         "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "deprecated",
+      "count": 2,
+      "mentioned_by": [
+        "adr/architecture/2026-06-24-001-adr-guide",
+        "concept/data-analytics/02_event_tracking_design"
       ]
     },
     {
@@ -8100,14 +7333,6 @@
       "mentioned_by": [
         "adr/data-engineering/2026-001-data-mart-checklist",
         "concept/data-architect/02_how_to_architect_medallion_well"
-      ]
-    },
-    {
-      "term": "CASE WHEN",
-      "count": 2,
-      "mentioned_by": [
-        "adr/data-engineering/2026-001-data-mart-checklist",
-        "concept/data-architect/01_how_to_architect_medallion_well"
       ]
     },
     {
@@ -8567,14 +7792,6 @@
       ]
     },
     {
-      "term": "경계",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/09_security_for_pca",
-        "concept/data-architect/04_what_is_ontology"
-      ]
-    },
-    {
       "term": "gcloud storage",
       "count": 2,
       "mentioned_by": [
@@ -8719,22 +7936,6 @@
       ]
     },
     {
-      "term": "관계",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/12_genai_for_pca",
-        "concept/data-architect/07_ontology_core_concepts"
-      ]
-    },
-    {
-      "term": "행위",
-      "count": 2,
-      "mentioned_by": [
-        "concept/cloud/12_genai_for_pca",
-        "concept/data-architect/07_ontology_core_concepts"
-      ]
-    },
-    {
       "term": "Terraform",
       "count": 2,
       "mentioned_by": [
@@ -8823,14 +8024,6 @@
       ]
     },
     {
-      "term": "'C'",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/01_how_to_architect_medallion_well",
-        "insight/data-architect/01_medallion_with_ontology"
-      ]
-    },
-    {
       "term": "COUNT(DISTINCT)",
       "count": 2,
       "mentioned_by": [
@@ -8847,187 +8040,11 @@
       ]
     },
     {
-      "term": "FlightDelayHandler",
+      "term": "'CM'",
       "count": 2,
       "mentioned_by": [
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/05_ontology_objects_summary"
-      ]
-    },
-    {
-      "term": "delayFlight",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/05_ontology_objects_summary"
-      ]
-    },
-    {
-      "term": "hasCrew",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/05_ontology_objects_summary"
-      ]
-    },
-    {
-      "term": "hasPilot",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/05_ontology_objects_summary"
-      ]
-    },
-    {
-      "term": "delayMinutes",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/05_ontology_objects_summary"
-      ]
-    },
-    {
-      "term": "의미",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/04_what_is_ontology",
-        "concept/spark/01_structured_streaming"
-      ]
-    },
-    {
-      "term": "명사",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/04_what_is_ontology",
-        "concept/data-architect/07_ontology_core_concepts"
-      ]
-    },
-    {
-      "term": "timestamp",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/dbt/01_dbt_core_features"
-      ]
-    },
-    {
-      "term": "Schedulable",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/data-architect/07_ontology_core_concepts"
-      ]
-    },
-    {
-      "term": "count()",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/spark/00_what_is_pyspark"
-      ]
-    },
-    {
-      "term": "Object Type은 명사",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/data-architect/06_how_to_implement_ontology"
-      ]
-    },
-    {
-      "term": "Action은 비즈니스 이벤트",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/data-architect/06_how_to_implement_ontology"
-      ]
-    },
-    {
-      "term": "Link는 의미를 담는다",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/data-architect/06_how_to_implement_ontology"
-      ]
-    },
-    {
-      "term": "검증은 Action 안에",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/05_ontology_objects_summary",
-        "concept/data-architect/06_how_to_implement_ontology"
-      ]
-    },
-    {
-      "term": "Customer",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/data-architect/07_ontology_core_concepts"
-      ]
-    },
-    {
-      "term": "Action Type",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/data-architect/07_ontology_core_concepts"
-      ]
-    },
-    {
-      "term": "Object Set",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/06_how_to_implement_ontology",
-        "concept/data-architect/07_ontology_core_concepts"
-      ]
-    },
-    {
-      "term": "P31/P279*",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/07_ontology_core_concepts",
-        "insight/data-architect/00_ontology_core_examples"
-      ]
-    },
-    {
-      "term": "is a",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/07_ontology_core_concepts",
-        "insight/data-architect/00_ontology_core_examples"
-      ]
-    },
-    {
-      "term": "is a kind of",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/07_ontology_core_concepts",
-        "insight/data-architect/00_ontology_core_examples"
-      ]
-    },
-    {
-      "term": "Wikidata",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/07_ontology_core_concepts",
-        "concept/knowledge-graph/01_what_is_knowledge_graph"
-      ]
-    },
-    {
-      "term": "김민서",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/08_record_linkage_basics",
-        "concept/data-architect/09_privacy_preserving_matching"
-      ]
-    },
-    {
-      "term": "서울",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-architect/08_record_linkage_basics",
-        "concept/data-architect/09_privacy_preserving_matching"
+        "concept/data-architect/03_medallion_advanced_patterns",
+        "insight/data-architect/01_medallion_with_ontology"
       ]
     },
     {
@@ -9087,7 +8104,7 @@
       ]
     },
     {
-      "term": "target",
+      "term": "dbt run",
       "count": 2,
       "mentioned_by": [
         "concept/dbt/00_what_is_dbt",
@@ -9095,11 +8112,19 @@
       ]
     },
     {
-      "term": "dbt compile",
+      "term": "ephemeral",
       "count": 2,
       "mentioned_by": [
         "concept/dbt/00_what_is_dbt",
-        "concept/dbt/04_dbt_operational_knowhow"
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "target",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice"
       ]
     },
     {
@@ -9127,6 +8152,14 @@
       ]
     },
     {
+      "term": "unique",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/01_dbt_core_features",
+        "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
       "term": "check",
       "count": 2,
       "mentioned_by": [
@@ -9143,23 +8176,23 @@
       ]
     },
     {
-      "term": "merge",
-      "count": 2,
-      "mentioned_by": [
-        "concept/dbt/02_dbt_advanced",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
-      "term": "delete+insert",
-      "count": 2,
-      "mentioned_by": [
-        "concept/dbt/02_dbt_advanced",
-        "concept/dbt/04_dbt_operational_knowhow"
-      ]
-    },
-    {
       "term": "dbt docs",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "state:modified",
+      "count": 2,
+      "mentioned_by": [
+        "concept/dbt/02_dbt_advanced",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "--state",
       "count": 2,
       "mentioned_by": [
         "concept/dbt/02_dbt_advanced",
@@ -9172,14 +8205,6 @@
       "mentioned_by": [
         "concept/dbt/02_dbt_advanced",
         "concept/dbt/03_dbt_in_practice"
-      ]
-    },
-    {
-      "term": "--defer",
-      "count": 2,
-      "mentioned_by": [
-        "concept/dbt/02_dbt_advanced",
-        "concept/dbt/04_dbt_operational_knowhow"
       ]
     },
     {
@@ -9220,6 +8245,14 @@
       "mentioned_by": [
         "concept/knowledge-graph/00_what_is_graph_database",
         "concept/knowledge-graph/01_what_is_knowledge_graph"
+      ]
+    },
+    {
+      "term": "온톨로지",
+      "count": 2,
+      "mentioned_by": [
+        "concept/knowledge-graph/01_what_is_knowledge_graph",
+        "insight/data-architect/01_medallion_with_ontology"
       ]
     },
     {
@@ -9300,6 +8333,14 @@
       "mentioned_by": [
         "concept/spark/01_structured_streaming",
         "concept/spark/02_spark_performance_tuning"
+      ]
+    },
+    {
+      "term": "links",
+      "count": 2,
+      "mentioned_by": [
+        "insight/data-architect/00_ontology_core_examples",
+        "insight/data-architect/01_medallion_with_ontology"
       ]
     },
     {

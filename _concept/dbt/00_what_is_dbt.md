@@ -1,8 +1,8 @@
 ---
 layout      : concept
 title       : dbt란 무엇이고 어떻게 동작하는가
-date        : 2026-07-01 00:00:00 +0900
-updated     : 2026-07-01 00:00:00 +0900
+date        : 2025-06-01 00:00:00 +0900
+updated     : 2025-06-01 00:00:00 +0900
 tag         : dbt elt data-transformation data-engineering
 toc         : true
 comment     : true

@@ -6,7 +6,7 @@ updated : 2026-06-24 00:00:00 +0900
 tag     : data-architect design-pattern data-architecture medallion
 toc     : true
 comment : true
-public  : true
+public  : false
 parent  : [[/data-architect]]
 latex   : true
 status  : complete

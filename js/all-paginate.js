@@ -2,7 +2,7 @@
  * 목록은 서버에서 전부 렌더됨. JS로 필터→정렬→한 페이지분만 표시.
  * 페이지는 URL 해시(#page=N)에 저장 → 뒤로가기/공유 지원. */
 (function () {
-    var PER_PAGE = 5;
+    var PER_PAGE = 10;
 
     function init() {
         var list   = document.querySelector('.home-feed');
