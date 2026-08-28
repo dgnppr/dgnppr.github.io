@@ -1,8 +1,8 @@
 ---
 layout      : concept
 title       : 데이터 레이크하우스란 무엇인가
-date        : 2026-08-19 00:00:00 +0900
-updated     : 2026-08-19 00:00:00 +0900
+date        : 2026-08-15 00:00:00 +0900
+updated     : 2026-08-15 00:00:00 +0900
 tag         : lakehouse table-format data-engineering
 toc         : true
 comment     : true

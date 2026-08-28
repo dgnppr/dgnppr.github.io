@@ -1,8 +1,8 @@
 ---
 layout      : concept
 title       : 지식 그래프는 그래프 DB에 의미를 얹은 것이다
-date        : 2026-07-10 00:00:00 +0900
-updated     : 2026-07-10 00:00:00 +0900
+date        : 2026-05-25 00:00:00 +0900
+updated     : 2026-05-25 00:00:00 +0900
 tag         : knowledge-graph graphrag data-engineering
 toc         : true
 comment     : true

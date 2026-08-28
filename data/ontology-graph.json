@@ -455,7 +455,7 @@
         "hudi",
         "data-engineering"
       ],
-      "date": "2026-07-10",
+      "date": "2026-05-10",
       "valid_from": "Fri",
       "confidence": "medium",
       "mentioned_terms": [
@@ -535,7 +535,7 @@
         "file-format",
         "data-engineering"
       ],
-      "date": "2026-08-19",
+      "date": "2026-08-01",
       "valid_from": "Wed",
       "confidence": "high",
       "mentioned_terms": [
@@ -567,7 +567,7 @@
         "catalog",
         "data-engineering"
       ],
-      "date": "2026-08-19",
+      "date": "2026-08-08",
       "valid_from": "Wed",
       "confidence": "high",
       "mentioned_terms": [
@@ -592,7 +592,7 @@
         "table-format",
         "data-engineering"
       ],
-      "date": "2026-08-19",
+      "date": "2026-08-15",
       "valid_from": "Wed",
       "confidence": "medium",
       "mentioned_terms": [],
@@ -1116,7 +1116,7 @@
         "rdf",
         "data-engineering"
       ],
-      "date": "2026-07-10",
+      "date": "2026-05-15",
       "confidence": "medium",
       "mentioned_terms": [
         "follows",
@@ -1170,7 +1170,7 @@
         "graphrag",
         "data-engineering"
       ],
-      "date": "2026-07-10",
+      "date": "2026-05-25",
       "confidence": "medium",
       "mentioned_terms": [
         "(:Node)-[:EDGE]->(:Node)",
@@ -1341,7 +1341,7 @@
         "data-engineering",
         "streaming"
       ],
-      "date": "2026-07-10",
+      "date": "2026-07-11",
       "confidence": "medium",
       "mentioned_terms": [
         "tier",

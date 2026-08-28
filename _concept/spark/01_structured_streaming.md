@@ -1,8 +1,8 @@
 ---
 layout      : concept
 title       : Structured Streaming으로 스트림 처리하기
-date        : 2026-07-10 00:00:00 +0900
-updated     : 2026-07-10 00:00:00 +0900
+date        : 2026-07-11 00:00:00 +0900
+updated     : 2026-07-11 00:00:00 +0900
 tag         : spark structured-streaming kafka data-engineering streaming
 toc         : true
 comment     : true

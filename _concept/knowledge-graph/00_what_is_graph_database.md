@@ -1,8 +1,8 @@
 ---
 layout      : concept
 title       : 그래프 데이터베이스는 조인이 아니라 탐색이다
-date        : 2026-07-10 00:00:00 +0900
-updated     : 2026-07-10 00:00:00 +0900
+date        : 2026-05-15 00:00:00 +0900
+updated     : 2026-05-15 00:00:00 +0900
 tag         : graph-database rdf data-engineering
 toc         : true
 comment     : true

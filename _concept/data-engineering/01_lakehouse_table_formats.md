@@ -1,8 +1,8 @@
 ---
 layout      : concept
 title       : Lakehouse 테이블 포맷 (Iceberg·Delta·Hudi)
-date        : 2026-07-10 00:00:00 +0900
-updated     : 2026-07-10 00:00:00 +0900
+date        : 2026-05-10 00:00:00 +0900
+updated     : 2026-05-10 00:00:00 +0900
 tag         : lakehouse iceberg delta-lake hudi data-engineering
 toc         : true
 comment     : true
