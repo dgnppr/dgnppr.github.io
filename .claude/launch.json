@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "jekyll-dev",
+      "runtimeExecutable": "mise",
+      "runtimeArgs": ["exec", "--", "bundle", "exec", "jekyll", "serve", "--port", "4444"],
+      "port": 4444
+    }
+  ]
+}

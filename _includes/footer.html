@@ -65,6 +65,87 @@
 </div>
 <div>
     <div class="newsletter-subscribe">
+    {% if page.url == "/" %}
+    {% assign heatmap_docs = site.concept | concat: site.insight | concat: site.problem | concat: site.tool | concat: site.event | concat: site.adr %}
+    {% assign heatmap_docs = heatmap_docs | where: "public", true | where_exp: "item", "item.layout != 'category'" %}
+    {% assign heatmap_day_groups = heatmap_docs | group_by_exp: "doc", "doc.date | date: '%Y-%m-%d'" %}
+    {% assign heatmap_now = 'now' | date: '%s' | plus: 0 %}
+    {% assign heatmap_today_wday = 'now' | date: '%w' | plus: 0 %}
+    {% assign heatmap_back_days = heatmap_today_wday | plus: 364 %}
+    {% assign heatmap_back_secs = heatmap_back_days | times: 86400 %}
+    {% assign heatmap_start = heatmap_now | minus: heatmap_back_secs %}
+    {% assign heatmap_prev_month = "" %}
+    <div class="contrib-heatmap">
+      <p class="contrib-heatmap__title">Post Activity</p>
+      <div class="contrib-heatmap__scroll">
+        <div class="contrib-heatmap__months">
+          {% for w in (0..52) %}
+            {% assign heatmap_w_secs = w | times: 604800 %}
+            {% assign heatmap_col_start = heatmap_start | plus: heatmap_w_secs %}
+            {% assign heatmap_col_month = heatmap_col_start | date: '%-m' %}
+            {% if heatmap_col_month != heatmap_prev_month %}
+              <span class="contrib-heatmap__month" style="grid-column:{{ forloop.index }}">{{ heatmap_col_start | date: '%b' }}</span>
+              {% assign heatmap_prev_month = heatmap_col_month %}
+            {% endif %}
+          {% endfor %}
+        </div>
+        <div class="contrib-heatmap__weekdays">
+          <span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span>
+        </div>
+        <div class="contrib-heatmap__grid">
+          {% for w in (0..52) %}
+            {% assign heatmap_w_secs = w | times: 604800 %}
+            {% assign heatmap_col_start = heatmap_start | plus: heatmap_w_secs %}
+            {% for d in (0..6) %}
+              {% assign heatmap_d_secs = d | times: 86400 %}
+              {% assign heatmap_day_ts = heatmap_col_start | plus: heatmap_d_secs %}
+              {% if heatmap_day_ts > heatmap_now %}
+                <span class="contrib-heatmap__cell contrib-heatmap__cell--empty" aria-hidden="true"></span>
+              {% else %}
+                {% assign heatmap_date_str = heatmap_day_ts | date: '%Y-%m-%d' %}
+                {% assign heatmap_day_group = heatmap_day_groups | where: "name", heatmap_date_str | first %}
+                {% assign heatmap_count = 0 %}
+                {% if heatmap_day_group %}{% assign heatmap_count = heatmap_day_group.items | size %}{% endif %}
+                {% assign heatmap_level = 0 %}
+                {% if heatmap_count >= 5 %}
+                  {% assign heatmap_level = 4 %}
+                {% elsif heatmap_count >= 3 %}
+                  {% assign heatmap_level = 3 %}
+                {% elsif heatmap_count >= 2 %}
+                  {% assign heatmap_level = 2 %}
+                {% elsif heatmap_count >= 1 %}
+                  {% assign heatmap_level = 1 %}
+                {% endif %}
+                {% assign heatmap_post_list = "" %}
+                {% if heatmap_day_group %}
+                  {% for heatmap_post in heatmap_day_group.items %}
+                    {% assign heatmap_post_url = heatmap_post.url | relative_url %}
+                    {% assign heatmap_post_entry = heatmap_post.title | append: "|" | append: heatmap_post_url %}
+                    {% if forloop.first %}
+                      {% assign heatmap_post_list = heatmap_post_entry %}
+                    {% else %}
+                      {% assign heatmap_post_list = heatmap_post_list | append: "||" | append: heatmap_post_entry %}
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+                <span class="contrib-heatmap__cell contrib-heatmap__cell--{{ heatmap_level }}" data-date="{{ heatmap_date_str }}" data-count="{{ heatmap_count }}" data-posts="{{ heatmap_post_list | escape }}"></span>
+              {% endif %}
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+      <div class="contrib-heatmap__legend">
+        <span>Less</span>
+        <span class="contrib-heatmap__cell contrib-heatmap__cell--0"></span>
+        <span class="contrib-heatmap__cell contrib-heatmap__cell--1"></span>
+        <span class="contrib-heatmap__cell contrib-heatmap__cell--2"></span>
+        <span class="contrib-heatmap__cell contrib-heatmap__cell--3"></span>
+        <span class="contrib-heatmap__cell contrib-heatmap__cell--4"></span>
+        <span>More</span>
+      </div>
+    </div>
+    <script src="/js/contrib-heatmap.js"></script>
+    {% endif %}
       <hr class="newsletter-subscribe__divider">
       <div class="newsletter-subscribe__card">
         <div class="newsletter-subscribe__header">

@@ -1,8 +1,8 @@
 ---
 layout      : tool
 title       : 클라우드가 처음인 조직에서 GCP IAM 잘 관리하기
-date        : 2026-07-07 00:00:00 +0900
-updated     : 2026-07-07 00:00:00 +0900
+date        : 2026-07-01 00:00:00 +0900
+updated     : 2026-07-01 00:00:00 +0900
 tag         : cloud gcp iam governance least-privilege
 toc         : true
 comment     : true

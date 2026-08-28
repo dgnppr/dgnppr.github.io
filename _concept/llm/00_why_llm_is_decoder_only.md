@@ -1,8 +1,8 @@
 ---
 layout  : concept
 title   : LLM은 왜 Encoder+Decoder 구조가 아닐까?
-date    : 2026-06-25 00:00:00 +0900
-updated : 2026-06-25 00:00:00 +0900
+date    : 2025-09-25 00:00:00 +0900
+updated : 2025-09-25 00:00:00 +0900
 tag     : llm gpt bert transformer
 toc     : true
 comment : true

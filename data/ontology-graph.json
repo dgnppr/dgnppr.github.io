@@ -315,7 +315,7 @@
         "design-pattern",
         "medallion"
       ],
-      "date": "2026-06-25",
+      "date": "2026-06-23",
       "confidence": "medium",
       "mentioned_terms": [
         "append",
@@ -1231,7 +1231,7 @@
         "bert",
         "transformer"
       ],
-      "date": "2026-06-25",
+      "date": "2025-09-25",
       "valid_from": "Thu",
       "confidence": "medium",
       "mentioned_terms": [
@@ -1975,7 +1975,7 @@
         "governance",
         "least-privilege"
       ],
-      "date": "2026-07-07",
+      "date": "2026-07-01",
       "confidence": "high",
       "mentioned_terms": [
         "Owner",
@@ -2019,7 +2019,7 @@
         "iac",
         "gcp"
       ],
-      "date": "2026-06-25",
+      "date": "2026-06-18",
       "confidence": "medium",
       "mentioned_terms": [
         "terraform apply",

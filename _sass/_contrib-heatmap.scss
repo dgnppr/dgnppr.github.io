@@ -1,0 +1,152 @@
+.contrib-heatmap {
+    margin-bottom: 24px;
+
+    &__title {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-text-primary);
+        margin-bottom: 10px;
+    }
+
+    &__scroll {
+        display: grid;
+        grid-template-columns: 24px 1fr;
+        grid-template-rows: auto 110px;
+        gap: 4px 6px;
+        width: 100%;
+    }
+
+    &__months {
+        grid-column: 2;
+        grid-row: 1;
+        display: grid;
+        grid-template-columns: repeat(53, minmax(0, 1fr));
+        gap: 3px;
+    }
+
+    &__month {
+        font-size: 10px;
+        color: var(--color-text-tertiary);
+        white-space: nowrap;
+    }
+
+    &__weekdays {
+        grid-column: 1;
+        grid-row: 2;
+        display: grid;
+        grid-template-rows: repeat(7, minmax(0, 1fr));
+        gap: 3px;
+        font-size: 9px;
+        color: var(--color-text-tertiary);
+    }
+
+    &__weekdays span {
+        display: flex;
+        align-items: center;
+    }
+
+    &__grid {
+        grid-column: 2;
+        grid-row: 2;
+        display: grid;
+        grid-auto-flow: column;
+        grid-template-rows: repeat(7, minmax(0, 1fr));
+        grid-template-columns: repeat(53, minmax(0, 1fr));
+        gap: 3px;
+    }
+
+    &__cell {
+        width: 100%;
+        height: 100%;
+        border-radius: 2px;
+        background: var(--color-surface-muted);
+        border: 1px solid var(--color-border-subtle);
+
+        &[data-date] { cursor: pointer; }
+
+        &--1 { background: color-mix(in srgb, var(--color-accent) 25%, var(--color-surface-muted)); border-color: transparent; }
+        &--2 { background: color-mix(in srgb, var(--color-accent) 50%, var(--color-surface-muted)); border-color: transparent; }
+        &--3 { background: color-mix(in srgb, var(--color-accent) 75%, var(--color-surface-muted)); border-color: transparent; }
+        &--4 { background: var(--color-accent); border-color: transparent; }
+        &--empty { background: transparent; border-color: transparent; visibility: hidden; cursor: default; }
+    }
+
+    &__tooltip {
+        position: fixed;
+        transform: translate(-50%, -100%);
+        background: #1f2328;
+        color: #fff;
+        font-size: 12px;
+        padding: 6px 10px;
+        border-radius: 6px;
+        white-space: nowrap;
+        pointer-events: none;
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.1s ease;
+        z-index: 200;
+
+        &.is-visible { opacity: 1; visibility: visible; }
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            top: 100%;
+            transform: translateX(-50%);
+            border: 5px solid transparent;
+            border-top-color: #1f2328;
+        }
+    }
+
+    &__popover {
+        position: fixed;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: 8px;
+        box-shadow: var(--shadow-card);
+        padding: 10px 12px;
+        min-width: 180px;
+        max-width: 280px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        opacity: 0;
+        visibility: hidden;
+        transform: translate(-50%, -4px);
+        transition: opacity 0.12s ease, transform 0.12s ease;
+        z-index: 200;
+
+        &.is-visible { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+
+        &-date {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--color-text-tertiary);
+            margin: 0 0 2px;
+        }
+
+        a {
+            font-size: 12.5px;
+            color: var(--color-text-primary);
+            text-decoration: none;
+            line-height: 1.4;
+
+            &:hover { color: var(--color-interactive); text-decoration: underline; }
+        }
+    }
+
+    &__legend {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin-top: 8px;
+        font-size: 10px;
+        color: var(--color-text-tertiary);
+
+        .contrib-heatmap__cell {
+            width: 10px;
+            height: 10px;
+        }
+    }
+}
