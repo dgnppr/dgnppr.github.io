@@ -75,6 +75,7 @@
     {% assign heatmap_back_secs = heatmap_back_days | times: 86400 %}
     {% assign heatmap_start = heatmap_now | minus: heatmap_back_secs %}
     {% assign heatmap_prev_month = "" %}
+    {% assign heatmap_last_label_col = -10 %}
     <div class="contrib-heatmap">
       <p class="contrib-heatmap__title">Post Activity</p>
       <div class="contrib-heatmap__scroll">
@@ -84,7 +85,11 @@
             {% assign heatmap_col_start = heatmap_start | plus: heatmap_w_secs %}
             {% assign heatmap_col_month = heatmap_col_start | date: '%-m' %}
             {% if heatmap_col_month != heatmap_prev_month %}
-              <span class="contrib-heatmap__month" style="grid-column:{{ forloop.index }}">{{ heatmap_col_start | date: '%b' }}</span>
+              {% assign heatmap_label_gap = forloop.index | minus: heatmap_last_label_col %}
+              {% if heatmap_label_gap >= 3 %}
+                <span class="contrib-heatmap__month" style="grid-column:{{ forloop.index }}">{{ heatmap_col_start | date: '%b' }}</span>
+                {% assign heatmap_last_label_col = forloop.index %}
+              {% endif %}
               {% assign heatmap_prev_month = heatmap_col_month %}
             {% endif %}
           {% endfor %}
