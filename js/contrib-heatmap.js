@@ -23,6 +23,9 @@
     var grid = document.querySelector('.contrib-heatmap__grid');
     if (!grid) return;
 
+    var scroll = document.querySelector('.contrib-heatmap__scroll');
+    if (scroll) scroll.scrollLeft = scroll.scrollWidth;
+
     var tooltip = document.createElement('div');
     tooltip.className = 'contrib-heatmap__tooltip';
     document.body.appendChild(tooltip);
@@ -71,7 +74,11 @@
       });
 
       var r = cell.getBoundingClientRect();
-      popover.style.left = (r.left + r.width / 2) + 'px';
+      var margin = 8;
+      var half = popover.getBoundingClientRect().width / 2;
+      var desiredLeft = r.left + r.width / 2;
+      var left = Math.max(half + margin, Math.min(desiredLeft, window.innerWidth - half - margin));
+      popover.style.left = left + 'px';
       popover.style.top = (r.bottom + 8) + 'px';
       popover.classList.add('is-visible');
       activeCell = cell;

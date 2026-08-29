@@ -9,6 +9,7 @@ layout: default
         <p class="created-date">
             {{ page.date | date: "%Y.%m.%d" }} {% include weekday.html d=page.date %}
         </p>
+        <p><span class="eta"></span></p>
         {% if page.tag %}<div class="post-tag">{% include post-tags.html %}</div>{% endif %}
         {% if page.status %}<p class="post-status-line">Status: <span class="post-status">{{ page.status }}</span></p>{% endif %}
         {% if page.note %}<p class="post-note-line">Note: <span class="post-note">{{ page.note }}</span></p>{% endif %}
@@ -73,4 +74,6 @@ layout: default
     <script src="/js/concept-tooltip.js"></script>
     <script async src="/js/toc-highlight.js"></script>
     <script src="/js/focus-reading.js"></script>
+    <script src="/js/reading-time.js"></script>
+    <script>$('article').readingTime({ prependTimeString: 'Reading Time: ', minShortForm: ' minutes' });</script>
 </div>
