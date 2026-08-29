@@ -41,28 +41,38 @@
     <div class="giscus"></div>
     <script>
     (function () {
-        var stored = localStorage.getItem('theme');
-        var isDark = stored !== null
-            ? stored === 'dark-mode'
-            : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        var container = document.currentScript.previousElementSibling;
 
-        var s = document.createElement('script');
-        s.src = 'https://giscus.app/client.js';
-        s.setAttribute('data-repo', '{{ site.giscus.repo }}');
-        s.setAttribute('data-repo-id', '{{ site.giscus.repo-id }}');
-        s.setAttribute('data-category', 'Comments');
-        s.setAttribute('data-category-id', '{{ site.giscus.category-id }}');
-        s.setAttribute('data-mapping', 'pathname');
-        s.setAttribute('data-strict', '0');
-        s.setAttribute('data-reactions-enabled', '1');
-        s.setAttribute('data-emit-metadata', '0');
-        s.setAttribute('data-input-position', 'bottom');
-        s.setAttribute('data-theme', isDark ? 'dark' : 'light');
-        s.setAttribute('data-lang', 'en');
-        s.setAttribute('data-loading', 'lazy');
-        s.setAttribute('crossorigin', 'anonymous');
-        s.async = true;
-        document.currentScript.parentNode.replaceChild(s, document.currentScript);
+        function isDark() {
+            return document.documentElement.classList.contains('dark-mode');
+        }
+
+        /* giscus의 자체 data-loading="lazy"는 iframe 생성을 내부적으로
+           지연시켜, 그 사이 테마가 바뀌면 stale한 값으로 로드된다.
+           대신 이 옵저버로 직접 가시 시점을 잡아 "그 순간"의 현재 테마로
+           스크립트를 생성하므로 애초에 stale해질 틈이 없다. */
+        var io = new IntersectionObserver(function (entries) {
+            if (!entries[0].isIntersecting) return;
+            io.disconnect();
+
+            var s = document.createElement('script');
+            s.src = 'https://giscus.app/client.js';
+            s.setAttribute('data-repo', '{{ site.giscus.repo }}');
+            s.setAttribute('data-repo-id', '{{ site.giscus.repo-id }}');
+            s.setAttribute('data-category', 'Comments');
+            s.setAttribute('data-category-id', '{{ site.giscus.category-id }}');
+            s.setAttribute('data-mapping', 'pathname');
+            s.setAttribute('data-strict', '0');
+            s.setAttribute('data-reactions-enabled', '1');
+            s.setAttribute('data-emit-metadata', '0');
+            s.setAttribute('data-input-position', 'bottom');
+            s.setAttribute('data-theme', isDark() ? 'dark' : 'light');
+            s.setAttribute('data-lang', 'en');
+            s.setAttribute('crossorigin', 'anonymous');
+            s.async = true;
+            container.appendChild(s);
+        }, { rootMargin: '200px' });
+        io.observe(container);
     })();
     </script>
     {% endif %}

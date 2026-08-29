@@ -1107,6 +1107,13 @@
                 dark = isDark();
                 var bgStr2 = dark ? '#060a14' : '#f8fafc';
 
+                /* WIRE_HEX는 그래프 생성 시점 테마로 고정되던 값이라, 그 뒤
+                   토글해도 와이어프레임 구 색·투명도가 로드 당시 테마에 박제된
+                   채 안 바뀌는 문제가 있었다. 여기서 다시 계산해 갱신한다. */
+                WIRE_HEX = dark ? 0xcfe0ff : 0x64748b;
+                wireframe.material.color.set(WIRE_HEX);
+                wireframe.material.opacity = dark ? 0.07 : 0.11;
+
                 if (scene.fog) scene.fog.color.set(dark ? 0x060a14 : 0xf8fafc);
                 if (starPoints) {
                     starPoints.material.color.set(0xe0eaff);
