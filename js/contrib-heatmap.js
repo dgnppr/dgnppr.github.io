@@ -20,11 +20,10 @@
   }
 
   function init() {
-    var grid = document.querySelector('.contrib-heatmap__grid');
-    if (!grid) return;
+    var heatmap = document.querySelector('[data-contrib-heatmap]');
+    if (!heatmap) return;
 
-    var scroll = document.querySelector('.contrib-heatmap__scroll');
-    if (scroll) scroll.scrollLeft = scroll.scrollWidth;
+    var yearButtons = heatmap.querySelectorAll('[data-contrib-year-button]');
 
     var tooltip = document.createElement('div');
     tooltip.className = 'contrib-heatmap__tooltip';
@@ -57,6 +56,19 @@
       activeCell = null;
     }
 
+    function showYear(year) {
+      var panels = heatmap.querySelectorAll('[data-contrib-year]');
+      panels.forEach(function (panel) {
+        var isSelected = panel.dataset.contribYear === year;
+        panel.hidden = !isSelected;
+      });
+      yearButtons.forEach(function (button) {
+        button.setAttribute('aria-pressed', String(button.dataset.contribYearButton === year));
+      });
+      hideTooltip();
+      hidePopover();
+    }
+
     function showPopover(cell) {
       var posts = parsePosts(cell.dataset.posts);
       if (!posts.length) { hidePopover(); return; }
@@ -84,15 +96,15 @@
       activeCell = cell;
     }
 
-    grid.addEventListener('mouseover', function (e) {
+    heatmap.addEventListener('mouseover', function (e) {
       var cell = e.target.closest('.contrib-heatmap__cell[data-date]');
       if (cell) showTooltip(cell);
     });
-    grid.addEventListener('mouseout', function (e) {
+    heatmap.addEventListener('mouseout', function (e) {
       var cell = e.target.closest('.contrib-heatmap__cell[data-date]');
       if (cell) hideTooltip();
     });
-    grid.addEventListener('click', function (e) {
+    heatmap.addEventListener('click', function (e) {
       var cell = e.target.closest('.contrib-heatmap__cell[data-date]');
       if (!cell) return;
       hideTooltip();
@@ -103,10 +115,16 @@
       }
     });
     document.addEventListener('click', function (e) {
-      if (activeCell && !popover.contains(e.target) && !grid.contains(e.target)) hidePopover();
+      if (activeCell && !popover.contains(e.target) && !heatmap.contains(e.target)) hidePopover();
     });
     document.addEventListener('keydown', function (e) {
       if (e.key === 'Escape') hidePopover();
+    });
+
+    yearButtons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        showYear(button.dataset.contribYearButton);
+      });
     });
   }
 
