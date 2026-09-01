@@ -1,0 +1,36 @@
+---
+layout: work
+---
+
+<main class="work-case" id="main-content">
+    <div class="work-case__identity">
+        <a href="{{ '/work/' | prepend: site.baseurl }}">← Selected work</a>
+        <a href="{{ '/resume/' | prepend: site.baseurl }}">Resume ↗</a>
+    </div>
+
+    <div class="work-case__grid">
+        <header class="work-case__header">
+            {% if page.category_label %}<p class="work-case__eyebrow">{{ page.category_label }}</p>{% endif %}
+            <h1 class="work-case__title">{{ page.title }}</h1>
+            {% if page.summary %}<p class="work-case__summary">{{ page.summary }}</p>{% endif %}
+            <ul class="work-case__meta" aria-label="프로젝트 정보">
+                {% if page.role %}<li><span>Role</span>{{ page.role }}</li>{% endif %}
+                {% if page.period %}<li><span>Period</span>{{ page.period }}</li>{% endif %}
+                {% if page.company %}<li><span>Organization</span>{{ page.company }}</li>{% endif %}
+            </ul>
+        </header>
+
+        <div class="work-case__body">
+            {% if page.outcomes %}
+            <section class="work-case__facts" aria-label="공개 가능한 결과">
+                <p class="work-case__facts-label">Public outcomes</p>
+                {% for outcome in page.outcomes %}<p class="work-case__fact">{{ outcome }}</p>{% endfor %}
+            </section>
+            {% endif %}
+
+            <article class="post-content work-case__content">
+                {{ content }}
+            </article>
+        </div>
+    </div>
+</main>

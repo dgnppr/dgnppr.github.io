@@ -10,7 +10,10 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "google-auth-library": "^10.7.0"
+    "google-auth-library": "^10.7.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "vite": "^8.2.2"
   },
   "scripts": {
     "test": "echo no test found",
@@ -23,7 +26,10 @@
     "embeddings:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-embeddings.js --force && GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-local-embeddings.js --force",
     "local-embeddings": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-local-embeddings.js",
     "local-embeddings:force": "GOOGLE_APPLICATION_CREDENTIALS=resource/credentials/credentials.json GOOGLE_PROJECT_ID=himart-cdp GOOGLE_LOCATION=us-central1 node scripts/generate-local-embeddings.js --force",
-    "ontology": "node scripts/generate-ontology.js"
+    "ontology": "node scripts/generate-ontology.js",
+    "portfolio:data": "node scripts/generate-portfolio.js",
+    "portfolio:build": "vite build --config vite.work.config.mjs",
+    "portfolio": "npm run portfolio:data && npm run portfolio:build"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,76 @@
+[
+  {
+    "slug": "cdp-data-platform",
+    "url": "/work/cdp-data-platform/",
+    "title": "CDP 데이터 플랫폼 구축·운영",
+    "summary": "고객 데이터와 CRM 활용을 연결하는 데이터 계층을 설계하고, 운영 가능한 표준과 품질 검증 체계를 구축했습니다.",
+    "company": "롯데하이마트",
+    "period": "2025.04 — 현재",
+    "role": "Data Engineer",
+    "category": "data",
+    "categoryLabel": "Data Platform",
+    "order": 1,
+    "public": true,
+    "result": "6개 도메인 · 100+ 모델 운영",
+    "stack": [
+      "BigQuery",
+      "Dataform",
+      "Airflow",
+      "Pub/Sub",
+      "Braze"
+    ],
+    "outcomes": [
+      "BigQuery·Dataform 기반 메달리온 아키텍처로 6개 도메인, 100개 이상의 모델을 운영합니다.",
+      "표준 계층과 소비 마트를 분리해 데이터 정의와 활용 경로를 명확히 했습니다."
+    ]
+  },
+  {
+    "slug": "ad-performance-platform",
+    "url": "/work/ad-performance-platform/",
+    "title": "통합 광고 성과 분석 플랫폼",
+    "summary": "계열사별로 흩어진 광고 성과 데이터를 표준화하고, 분석·GTM·임원이 함께 활용하는 플랫폼을 0→1로 구축했습니다.",
+    "company": "롯데쇼핑",
+    "period": "2025.04 — 2025.12",
+    "role": "Data Engineer",
+    "category": "analytics",
+    "categoryLabel": "Analytics Platform",
+    "order": 2,
+    "public": true,
+    "result": "8개월 내 20여 명 상시 활용",
+    "stack": [
+      "BigQuery",
+      "dbt",
+      "Airflow",
+      "BI"
+    ],
+    "outcomes": [
+      "분석 인프라가 없던 상태에서 거버넌스 체계와 BI 대시보드를 구축했습니다.",
+      "분석가·GTM·임원 등 20여 명이 상시 활용하는 운영 기반을 만들었습니다."
+    ]
+  },
+  {
+    "slug": "realtime-commerce-sync",
+    "url": "/work/realtime-commerce-sync/",
+    "title": "준실시간 커머스 변경 동기화",
+    "summary": "상품·주문·클레임 변경을 외부 파트너와 순서·정합성을 지키며 동기화하는 이벤트 기반 파이프라인을 운영했습니다.",
+    "company": "교보문고",
+    "period": "2024.03 — 2025.04",
+    "role": "Software Engineer",
+    "category": "realtime",
+    "categoryLabel": "Real-time Systems",
+    "order": 3,
+    "public": true,
+    "result": "일 50만 이벤트 · SLA 5분",
+    "stack": [
+      "Java",
+      "Kafka",
+      "Spring Boot",
+      "PostgreSQL",
+      "Redis"
+    ],
+    "outcomes": [
+      "상품 상태 100만 건 이상과 일 50만 건의 비즈니스 이벤트를 처리했습니다.",
+      "5분 SLA 안에서 FIFO와 Exactly-once 보장을 고려한 변경 동기화를 운영했습니다."
+    ]
+  }
+]

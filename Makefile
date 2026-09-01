@@ -80,6 +80,10 @@ install:
 data:
 	node scripts/generateData.js
 
+.PHONY: portfolio
+portfolio:
+	npm run portfolio
+
 # ----------------------------------------
 # 상태 필드 추가
 # ----------------------------------------

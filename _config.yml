@@ -57,6 +57,9 @@ collections:
     event:
         output: true
         permalink: /:collection/:path/
+    portfolio:
+        output: true
+        permalink: /work/:path/
 
 # Comment Service
 disqus:
@@ -80,4 +83,3 @@ edit: "https://github.com/dgnppr/dgnppr.github.io/edit/master/_concept"
 issue: "https://github.com/dgnppr/dgnppr.github.io/issues/new"
 
 timezone: "Asia/Seoul"
-

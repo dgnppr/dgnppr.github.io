@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="{{ page.summary | default: site.summary | xml_escape }}">
+    <meta name="theme-color" content="#f6f7f8">
+    <title>{% if page.title %}{{ page.title }} — {% endif %}Yonghyun Yoon</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+    <link rel="stylesheet" href="{{ '/css/work.css' | prepend: site.baseurl }}">
+</head>
+<body class="folio">
+    <a class="folio-skip" href="#main-content">본문으로 건너뛰기</a>
+    <div class="folio-shell">
+        {{ content }}
+    </div>
+    {% if page.url == '/work/' %}<script defer src="{{ '/js/work-app.js' | prepend: site.baseurl }}"></script>{% endif %}
+</body>
+</html>
