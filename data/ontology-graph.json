@@ -559,6 +559,100 @@
       "unanswered_questions": 0,
       "learning_pressure": 0.18
     },
+    "concept/databricks/01_databricks_intro": {
+      "id": "concept/databricks/01_databricks_intro",
+      "type": "concept",
+      "title": "Databricks Lakehouse와 핵심 용어",
+      "path": "_concept/databricks/01_databricks_intro.md",
+      "status": "draft",
+      "tags": [
+        "databricks",
+        "spark",
+        "lakehouse",
+        "certification"
+      ],
+      "date": "2026-09-05",
+      "valid_from": "Thu",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "df",
+        "%sql",
+        "를 실행한 뒤",
+        "셀에서",
+        "%python",
+        "createOrReplaceTempView",
+        "dev",
+        "prod",
+        "staging",
+        "targets"
+      ],
+      "content_depth": 0.83,
+      "importance": 4,
+      "depth": 0.54,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.84
+    },
+    "concept/databricks/02_delta_lake_transaction_log": {
+      "id": "concept/databricks/02_delta_lake_transaction_log",
+      "type": "concept",
+      "title": "Delta Lake 트랜잭션 로그 동작 원리",
+      "path": "_concept/databricks/02_delta_lake_transaction_log.md",
+      "status": "draft",
+      "tags": [
+        "databricks",
+        "delta-lake",
+        "spark"
+      ],
+      "date": "2026-09-06",
+      "valid_from": "Thu",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "retentionDurationCheck",
+        "VERSION AS OF 1",
+        "MERGE INTO",
+        "keys",
+        "Deletion Vector"
+      ],
+      "content_depth": 0.85,
+      "importance": 3,
+      "depth": 0.55,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.36
+    },
+    "concept/databricks/03_spark_cluster_types": {
+      "id": "concept/databricks/03_spark_cluster_types",
+      "type": "concept",
+      "title": "Spark 클러스터 종류",
+      "path": "_concept/databricks/03_spark_cluster_types.md",
+      "status": "draft",
+      "tags": [
+        "databricks",
+        "spark",
+        "cluster"
+      ],
+      "date": "2026-09-10",
+      "valid_from": "Thu",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "trigger(availableNow=True)",
+        "COPY INTO",
+        "coalescePartitions",
+        "skewJoin",
+        "outputMode",
+        "append",
+        "update",
+        "complete",
+        "checkpointLocation",
+        "로 설정하고",
+        "outputMode(\"complete\")",
+        "스큐(skew)"
+      ],
+      "content_depth": 0.6,
+      "importance": 1,
+      "depth": 0.46,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.54
+    },
     "concept/dbt/00_what_is_dbt": {
       "id": "concept/dbt/00_what_is_dbt",
       "type": "concept",
@@ -2186,6 +2280,21 @@
       "type": "references"
     },
     {
+      "from": "concept/databricks/02_delta_lake_transaction_log",
+      "to": "concept/databricks/01_databricks_intro",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/03_spark_cluster_types",
+      "to": "concept/databricks/01_databricks_intro",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/03_spark_cluster_types",
+      "to": "concept/databricks/02_delta_lake_transaction_log",
+      "type": "references"
+    },
+    {
       "from": "concept/dbt/00_what_is_dbt",
       "to": "concept/data-engineering/00_how_to_use_dataform_well",
       "type": "references"
@@ -2394,6 +2503,16 @@
       ]
     },
     {
+      "term": "append",
+      "count": 4,
+      "mentioned_by": [
+        "concept/data-architect/02_how_to_architect_medallion_well",
+        "concept/databricks/03_spark_cluster_types",
+        "concept/dbt/02_dbt_advanced",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
       "term": "test",
       "count": 4,
       "mentioned_by": [
@@ -2401,15 +2520,6 @@
         "concept/dbt/01_dbt_core_features",
         "concept/dbt/02_dbt_advanced",
         "concept/dbt/03_dbt_in_practice"
-      ]
-    },
-    {
-      "term": "append",
-      "count": 3,
-      "mentioned_by": [
-        "concept/data-architect/02_how_to_architect_medallion_well",
-        "concept/dbt/02_dbt_advanced",
-        "concept/spark/01_structured_streaming"
       ]
     },
     {
@@ -2436,6 +2546,15 @@
       "mentioned_by": [
         "concept/data-engineering/00_how_to_use_dataform_well",
         "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice"
+      ]
+    },
+    {
+      "term": "staging",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-engineering/00_how_to_use_dataform_well",
+        "concept/databricks/01_databricks_intro",
         "concept/dbt/03_dbt_in_practice"
       ]
     },
@@ -2527,14 +2646,6 @@
       ]
     },
     {
-      "term": "staging",
-      "count": 2,
-      "mentioned_by": [
-        "concept/data-engineering/00_how_to_use_dataform_well",
-        "concept/dbt/03_dbt_in_practice"
-      ]
-    },
-    {
       "term": "intermediate",
       "count": 2,
       "mentioned_by": [
@@ -2547,6 +2658,46 @@
       "count": 2,
       "mentioned_by": [
         "concept/data-engineering/01_lakehouse_table_formats",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
+      "term": "dev",
+      "count": 2,
+      "mentioned_by": [
+        "concept/databricks/01_databricks_intro",
+        "tool/cloud/03_how_to_use_terraform"
+      ]
+    },
+    {
+      "term": "prod",
+      "count": 2,
+      "mentioned_by": [
+        "concept/databricks/01_databricks_intro",
+        "tool/cloud/01_gcp_iam_for_new_to_cloud_org"
+      ]
+    },
+    {
+      "term": "update",
+      "count": 2,
+      "mentioned_by": [
+        "concept/databricks/03_spark_cluster_types",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
+      "term": "complete",
+      "count": 2,
+      "mentioned_by": [
+        "concept/databricks/03_spark_cluster_types",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
+      "term": "checkpointLocation",
+      "count": 2,
+      "mentioned_by": [
+        "concept/databricks/03_spark_cluster_types",
         "concept/spark/01_structured_streaming"
       ]
     },
