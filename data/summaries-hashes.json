@@ -122,7 +122,7 @@
   "data-engineering/04_what_is_lakehouse": "b219dcd6df3a97f9656594cfeff29328",
   "databricks/01_databricks_intro": "ec4bbce76a8b59f072e99799b9b4b731",
   "databricks/02_delta_lake_transaction_log": "5817a69142bf4912a0a18cbf99be5aa1",
-  "databricks/03_spark_cluster_types": "9d80bd3fb205d5b8ccf1e40d60c3b75c",
+  "databricks/03_spark_cluster_types": "4f4eacdc22dc5373233b25b82aa32775",
   "databricks/04_unity_catalog_governance": "c2a5b052ca00f337d520b899ef50549a",
   "databricks/05_workflows_orchestration_monitoring": "47a4a40488b7b91a891dada447b3c6b5",
   "databricks/06_secrets_service_principals": "e28d9f67287964f42221d87ec39de717"
