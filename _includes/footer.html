@@ -88,12 +88,19 @@
         {% assign heatmap_year_start_wday = heatmap_year_start | date: '%w' | plus: 0 %}
         {% assign heatmap_year_start_offset = heatmap_year_start_wday | times: 86400 %}
         {% assign heatmap_start = heatmap_year_start | minus: heatmap_year_start_offset %}
+        {% if heatmap_year == heatmap_current_year %}
+          {% assign heatmap_elapsed_secs = heatmap_now | minus: heatmap_start %}
+          {% assign heatmap_max_week = heatmap_elapsed_secs | divided_by: 604800 %}
+          {% if heatmap_max_week > 52 %}{% assign heatmap_max_week = 52 %}{% endif %}
+        {% else %}
+          {% assign heatmap_max_week = 52 %}
+        {% endif %}
         <div class="contrib-heatmap__panel" data-contrib-year="{{ heatmap_year }}"{% unless forloop.first %} hidden{% endunless %}>
           {% assign heatmap_prev_month = "" %}
           {% assign heatmap_last_label_col = -10 %}
           <div class="contrib-heatmap__scroll">
-            <div class="contrib-heatmap__months">
-              {% for w in (0..52) %}
+            <div class="contrib-heatmap__months" style="grid-template-columns: repeat({{ heatmap_max_week | plus: 1 }}, 10px)">
+              {% for w in (0..heatmap_max_week) %}
                 {% assign heatmap_w_secs = w | times: 604800 %}
                 {% assign heatmap_col_start = heatmap_start | plus: heatmap_w_secs %}
                 {% assign heatmap_col_year = heatmap_col_start | date: '%Y' | plus: 0 %}
@@ -111,8 +118,8 @@
             <div class="contrib-heatmap__weekdays">
               <span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span>
             </div>
-            <div class="contrib-heatmap__grid">
-              {% for w in (0..52) %}
+            <div class="contrib-heatmap__grid" style="grid-template-columns: repeat({{ heatmap_max_week | plus: 1 }}, 10px)">
+              {% for w in (0..heatmap_max_week) %}
                 {% assign heatmap_w_secs = w | times: 604800 %}
                 {% assign heatmap_col_start = heatmap_start | plus: heatmap_w_secs %}
                 {% for d in (0..6) %}
