@@ -1,8 +1,8 @@
 ---
 layout  : concept
 title   : Databricks Lakehouse와 핵심 용어
-date    : 2026-09-05 00:00:00 +0900
-updated : 2026-09-05 00:00:00 +0900
+date    : 2026-08-26 00:00:00 +0900
+updated : 2026-08-26 00:00:00 +0900
 tag     : databricks spark lakehouse certification
 toc     : true
 comment : true
@@ -45,9 +45,11 @@ Job은 노트북/스크립트를 스케줄대로 돌리는 단위. Airflow의 ta
 
 Unity Catalog는 테이블·컬럼 단위 권한을 관리하는 거버넌스 레이어.
 
-## 4. 시험 범위 대충 훑기
+## 4. 실무에서 마주치는 축들
 
-Spark로 배치/스트리밍 파이프라인 짜는 것, Delta Lake 최적화(OPTIMIZE/ZORDER/VACUUM), Workflows로 오케스트레이션, medallion architecture로 데이터 모델링, Unity Catalog 보안·거버넌스, 테스트/CI-CD까지 묶어서 묻는다.
+Databricks를 운영하면서 실제로 부딪히는 건 이 정도로 나뉜다. Spark로 배치/스트리밍 파이프라인을 짜는 것, Delta Lake를 OPTIMIZE/ZORDER/VACUUM으로 유지보수하는 것, Workflows로 여러 노트북·Job을 의존성 있게 오케스트레이션하는 것, medallion architecture로 데이터를 단계별로 정제하는 것, Unity Catalog로 테이블·컬럼 단위 권한을 통제하는 것, 그리고 이 전체를 테스트하고 CI/CD로 배포하는 것.
+
+이 중 아무거나 하나만 잘해서는 안 되고, 결국 파이프라인 하나에 이 축들이 전부 얽힌다. Bronze 적재는 스트리밍/Auto Loader로, Silver 변환은 Delta MERGE로, Gold 집계는 스케줄된 Job으로, 전체 배포는 Asset Bundles로 묶이는 식이다.
 
 ## 5. Medallion Architecture
 
@@ -120,20 +122,24 @@ gold_df = (spark.table("silver.orders")
     .saveAsTable("gold.customer_summary"))
 ```
 
-## 10. 시험 유형 맛보기
+## 10. 임시 뷰의 스코프
 
-> 노트북의 Python 셀에서 만든 DataFrame `df`를 바로 아래 `%sql` 셀에서 조회하려고 한다. 다음 중 필요한 작업은?
->
-> A. `df.toSQL()`을 호출한다
-> B. `df.createOrReplaceTempView("orders_view")`를 실행한 뒤 `%sql` 셀에서 `SELECT * FROM orders_view`
-> C. `spark.sql(df)`로 감싼다
-> D. `%python`과 `%sql`은 같은 세션을 공유하므로 아무 작업도 필요 없다
->
-> 정답 B. 노트북 셀은 언어가 달라도 같은 SparkSession을 공유하지만, Python 변수 자체는 언어 간에 안 넘어간다. `createOrReplaceTempView`로 임시 뷰를 등록해야 다른 언어 셀에서 SQL로 접근할 수 있다.
+노트북 셀은 언어가 달라도 같은 SparkSession을 공유한다. 하지만 Python 변수 자체가 언어 간에 넘어가는 건 아니라서, Python 셀에서 만든 DataFrame을 `%sql` 셀에서 바로 참조할 수는 없다. `createOrReplaceTempView`로 임시 뷰를 등록해야 SQL 쪽에서 이름으로 찾을 수 있다.
+
+```python
+df.createOrReplaceTempView("orders_view")
+```
+
+```sql
+%sql
+SELECT * FROM orders_view;
+```
+
+이 임시 뷰는 `createOrReplaceTempView`로 만들면 세션 로컬이라 노트북(정확히는 그 노트북이 붙은 SparkSession)이 죽으면 같이 사라진다. 여러 노트북이나 여러 사용자가 같은 뷰를 봐야 하면 `createOrReplaceGlobalTempView`를 쓰는데, 이건 `global_temp` 데이터베이스 아래 등록돼서 조회할 때 `global_temp.orders_view`처럼 접두사를 붙여야 한다. 실무에서는 세션 로컬 뷰로 충분한 경우가 대부분이다. 노트북 간 데이터 공유가 진짜 필요하면 임시 뷰보다는 아예 Delta 테이블로 물리화하는 쪽이 재현성과 디버깅 측면에서 낫다. 임시 뷰는 죽으면 흔적도 없이 사라지지만 테이블은 남는다.
 
 ## 11. Databricks Asset Bundles로 배포 자동화
 
-노트북을 워크스페이스에서 손으로 클릭클릭 배포하는 건 개인 실습 수준이고, 실제 운영에서는 **Databricks Asset Bundles(DAB)** 로 Job/클러스터/노트북 경로를 코드(YAML)로 정의하고 CI/CD 파이프라인에서 배포한다.
+노트북을 워크스페이스에서 손으로 클릭클릭 배포하는 건 개인 실습 수준이고, 실제 운영에서는 Databricks Asset Bundles(DAB)로 Job/클러스터/노트북 경로를 코드(YAML)로 정의하고 CI/CD 파이프라인에서 배포한다.
 
 ```yaml
 # databricks.yml
@@ -168,11 +174,11 @@ databricks bundle deploy --target prod
 databricks bundle run orders_etl --target prod
 ```
 
-`dev`/`prod` 타겟별로 워크스페이스와 클러스터 스펙을 다르게 가져가면서 같은 정의를 재사용하는 게 핵심이다. Professional 시험은 "노트북을 어떻게 운영 환경까지 안전하게 승격시키는가"를 이 DAB 개념으로 묻는다.
+`dev`/`prod` 타겟별로 워크스페이스와 클러스터 스펙을 다르게 가져가면서 같은 정의를 재사용하는 게 핵심이다. `dev`는 보통 개인 워크스페이스에 작은 클러스터로 붙고, `prod`는 `mode: production`을 줘서 소유권을 서비스 프린시펄로 강제하고 리소스 이름 충돌을 막는다. GitHub Actions 같은 CI에서 `databricks bundle deploy --target prod`를 머지 시점에 자동 실행하도록 묶으면 사람이 워크스페이스 UI에서 손으로 배포 버튼을 누르는 경로 자체를 없앨 수 있다. 노트북 개발과 프로덕션 파이프라인 운영 사이의 실질적인 경계선은 결국 이 지점이다.
 
 ## 12. PySpark 유닛 테스트
 
-파이프라인 로직을 노트북 안에 다 몰아넣지 않고, 변환 함수를 따로 빼서 테스트 가능하게 만드는 게 Professional 시험에서 요구하는 태도다.
+파이프라인 로직을 노트북 안에 다 몰아넣으면 테스트할 방법이 없다. 변환 함수를 노트북 밖 순수 함수로 빼야 로컬에서, 클러스터 없이, CI에서 돌릴 수 있다.
 
 ```python
 # transforms.py
@@ -200,15 +206,6 @@ def test_clean_orders_removes_duplicates_and_negative_amount(spark):
     assert result.count() == 1
 ```
 
-로컬 `SparkSession.builder.master("local[2]")`로 클러스터 없이 CI 러너에서 돈다. Job Cluster를 매번 띄워서 테스트하는 건 느리고 비싸다 — 그래서 순수 변환 로직은 로컬 테스트로, 통합 테스트만 실제 클러스터에서 돌리는 식으로 나눈다.
+로컬 `SparkSession.builder.master("local[2]")`로 클러스터 없이 CI 러너에서 돈다. Job Cluster를 매번 띄워서 테스트하는 건 몇 분씩 걸리고 DBU가 든다. 그래서 순수 변환 로직은 로컬 테스트로, `dbutils`나 Unity Catalog 접근처럼 클러스터 환경에 의존하는 코드만 별도의 통합 테스트로 실제 워크스페이스에서 돌리는 식으로 나눈다.
 
-## 13. 시험 유형 맛보기
-
-> 팀에서 `dev`, `staging`, `prod` 세 워크스페이스에 같은 파이프라인을 배포하되 클러스터 크기와 스케줄만 다르게 가져가고 싶다. 코드 중복 없이 이걸 구성하는 가장 적절한 방법은?
->
-> A. 워크스페이스마다 노트북을 복사해서 각각 수정한다
-> B. Databricks Asset Bundles에서 `targets`별로 오버라이드하고 하나의 정의를 공유한다
-> C. 워크스페이스마다 별도 Git 저장소를 만든다
-> D. All-Purpose Cluster 하나를 세 워크스페이스가 공유하도록 설정한다
->
-> 정답 B. DAB의 `targets`는 같은 리소스 정의를 환경별로 오버라이드하는 표준 메커니즘이다. 노트북 복사(A)는 유지보수 지옥, 클러스터 공유(D)는 워크스페이스 간 격리 원칙에 애초에 안 맞는다.
+`dbutils`는 노트북 밖 순수 Python 환경에는 존재하지 않으므로, 함수가 `dbutils.widgets`나 `dbutils.fs`를 직접 참조하면 그 함수는 로컬 테스트가 불가능해진다. 그래서 `dbutils`가 필요한 부분은 함수 인자로 주입받게 설계하고, 테스트에서는 mock 객체를 넘긴다. DataFrame 두 개가 같은지 비교하는 건 `assertEqual`로는 안 되고(row 순서가 보장 안 됨), `chispa`나 `quinn` 같은 라이브러리의 `assert_df_equality`를 쓰거나, 정렬 후 `collect()`해서 비교하는 헬퍼를 직접 만든다.

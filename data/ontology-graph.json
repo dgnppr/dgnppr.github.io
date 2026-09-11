@@ -571,26 +571,27 @@
         "lakehouse",
         "certification"
       ],
-      "date": "2026-09-05",
+      "date": "2026-08-26",
       "valid_from": "Thu",
       "confidence": "medium",
       "mentioned_terms": [
-        "df",
         "%sql",
-        "를 실행한 뒤",
-        "셀에서",
-        "%python",
         "createOrReplaceTempView",
+        "createOrReplaceGlobalTempView",
         "dev",
         "prod",
-        "staging",
-        "targets"
+        "mode: production",
+        "dbutils",
+        "assertEqual",
+        "chispa",
+        "quinn",
+        "collect()"
       ],
       "content_depth": 0.83,
-      "importance": 4,
-      "depth": 0.54,
+      "importance": 10,
+      "depth": 0.62,
       "unanswered_questions": 0,
-      "learning_pressure": 1.84
+      "learning_pressure": 3.85
     },
     "concept/databricks/02_delta_lake_transaction_log": {
       "id": "concept/databricks/02_delta_lake_transaction_log",
@@ -603,21 +604,19 @@
         "delta-lake",
         "spark"
       ],
-      "date": "2026-09-06",
+      "date": "2026-08-28",
       "valid_from": "Thu",
       "confidence": "medium",
       "mentioned_terms": [
         "retentionDurationCheck",
-        "VERSION AS OF 1",
-        "MERGE INTO",
-        "keys",
-        "Deletion Vector"
+        "ConcurrentAppendException",
+        "ConcurrentDeleteReadException"
       ],
       "content_depth": 0.85,
-      "importance": 3,
-      "depth": 0.55,
+      "importance": 7,
+      "depth": 0.6,
       "unanswered_questions": 0,
-      "learning_pressure": 1.36
+      "learning_pressure": 2.82
     },
     "concept/databricks/03_spark_cluster_types": {
       "id": "concept/databricks/03_spark_cluster_types",
@@ -630,28 +629,114 @@
         "spark",
         "cluster"
       ],
-      "date": "2026-09-10",
+      "date": "2026-09-01",
       "valid_from": "Thu",
       "confidence": "medium",
       "mentioned_terms": [
         "trigger(availableNow=True)",
-        "COPY INTO",
+        "checkpointLocation",
         "coalescePartitions",
         "skewJoin",
+        "explode",
         "outputMode",
         "append",
         "update",
-        "complete",
-        "checkpointLocation",
-        "로 설정하고",
-        "outputMode(\"complete\")",
-        "스큐(skew)"
+        "complete"
       ],
-      "content_depth": 0.6,
-      "importance": 1,
-      "depth": 0.46,
+      "content_depth": 0.77,
+      "importance": 5,
+      "depth": 0.57,
       "unanswered_questions": 0,
-      "learning_pressure": 0.54
+      "learning_pressure": 2.15
+    },
+    "concept/databricks/04_unity_catalog_governance": {
+      "id": "concept/databricks/04_unity_catalog_governance",
+      "type": "concept",
+      "title": "Unity Catalog로 데이터 거버넌스 잡기",
+      "path": "_concept/databricks/04_unity_catalog_governance.md",
+      "status": "draft",
+      "tags": [
+        "databricks",
+        "unity-catalog",
+        "governance",
+        "spark"
+      ],
+      "date": "2026-09-03",
+      "valid_from": "Fri",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "dev",
+        "staging",
+        "prod",
+        "를 실행해도",
+        "orders",
+        "AccessDenied",
+        "COPY INTO",
+        "getTable",
+        "deleteTable",
+        "updatePermissions"
+      ],
+      "content_depth": 0.68,
+      "importance": 3,
+      "depth": 0.54,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.39
+    },
+    "concept/databricks/05_workflows_orchestration_monitoring": {
+      "id": "concept/databricks/05_workflows_orchestration_monitoring",
+      "type": "concept",
+      "title": "Databricks Workflows로 여러 태스크 오케스트레이션하고 모니터링하기",
+      "path": "_concept/databricks/05_workflows_orchestration_monitoring.md",
+      "status": "draft",
+      "tags": [
+        "databricks",
+        "workflows",
+        "jobs",
+        "monitoring"
+      ],
+      "date": "2026-09-05",
+      "valid_from": "Fri",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "dbt run",
+        "taskValues",
+        "taskKey",
+        "MERGE INTO",
+        "system",
+        "USE CATALOG",
+        "USE SCHEMA"
+      ],
+      "content_depth": 0.85,
+      "importance": 3,
+      "depth": 0.6,
+      "unanswered_questions": 0,
+      "learning_pressure": 1.21
+    },
+    "concept/databricks/06_secrets_service_principals": {
+      "id": "concept/databricks/06_secrets_service_principals",
+      "type": "concept",
+      "title": "Secret과 Service Principal로 자격 증명 관리하기",
+      "path": "_concept/databricks/06_secrets_service_principals.md",
+      "status": "draft",
+      "tags": [
+        "databricks",
+        "security",
+        "secrets",
+        "service-principal"
+      ],
+      "date": "2026-09-09",
+      "valid_from": "Fri",
+      "confidence": "medium",
+      "mentioned_terms": [
+        "print",
+        "[REDACTED]",
+        "databricks bundle deploy"
+      ],
+      "content_depth": 0.92,
+      "importance": 1,
+      "depth": 0.6,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.4
     },
     "concept/dbt/00_what_is_dbt": {
       "id": "concept/dbt/00_what_is_dbt",
@@ -2295,6 +2380,51 @@
       "type": "references"
     },
     {
+      "from": "concept/databricks/04_unity_catalog_governance",
+      "to": "concept/databricks/01_databricks_intro",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/04_unity_catalog_governance",
+      "to": "concept/databricks/02_delta_lake_transaction_log",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/04_unity_catalog_governance",
+      "to": "concept/databricks/03_spark_cluster_types",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/05_workflows_orchestration_monitoring",
+      "to": "concept/databricks/01_databricks_intro",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/05_workflows_orchestration_monitoring",
+      "to": "concept/databricks/02_delta_lake_transaction_log",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/05_workflows_orchestration_monitoring",
+      "to": "concept/databricks/03_spark_cluster_types",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/06_secrets_service_principals",
+      "to": "concept/databricks/01_databricks_intro",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/06_secrets_service_principals",
+      "to": "concept/databricks/04_unity_catalog_governance",
+      "type": "references"
+    },
+    {
+      "from": "concept/databricks/06_secrets_service_principals",
+      "to": "concept/databricks/05_workflows_orchestration_monitoring",
+      "type": "references"
+    },
+    {
       "from": "concept/dbt/00_what_is_dbt",
       "to": "concept/data-engineering/00_how_to_use_dataform_well",
       "type": "references"
@@ -2554,7 +2684,7 @@
       "count": 3,
       "mentioned_by": [
         "concept/data-engineering/00_how_to_use_dataform_well",
-        "concept/databricks/01_databricks_intro",
+        "concept/databricks/04_unity_catalog_governance",
         "concept/dbt/03_dbt_in_practice"
       ]
     },
@@ -2574,6 +2704,33 @@
         "concept/data-engineering/00_how_to_use_dataform_well",
         "concept/dbt/01_dbt_core_features",
         "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
+      "term": "dev",
+      "count": 3,
+      "mentioned_by": [
+        "concept/databricks/01_databricks_intro",
+        "concept/databricks/04_unity_catalog_governance",
+        "tool/cloud/03_how_to_use_terraform"
+      ]
+    },
+    {
+      "term": "prod",
+      "count": 3,
+      "mentioned_by": [
+        "concept/databricks/01_databricks_intro",
+        "concept/databricks/04_unity_catalog_governance",
+        "tool/cloud/01_gcp_iam_for_new_to_cloud_org"
+      ]
+    },
+    {
+      "term": "dbt run",
+      "count": 3,
+      "mentioned_by": [
+        "concept/databricks/05_workflows_orchestration_monitoring",
+        "concept/dbt/00_what_is_dbt",
+        "concept/dbt/03_dbt_in_practice"
       ]
     },
     {
@@ -2662,19 +2819,11 @@
       ]
     },
     {
-      "term": "dev",
+      "term": "checkpointLocation",
       "count": 2,
       "mentioned_by": [
-        "concept/databricks/01_databricks_intro",
-        "tool/cloud/03_how_to_use_terraform"
-      ]
-    },
-    {
-      "term": "prod",
-      "count": 2,
-      "mentioned_by": [
-        "concept/databricks/01_databricks_intro",
-        "tool/cloud/01_gcp_iam_for_new_to_cloud_org"
+        "concept/databricks/03_spark_cluster_types",
+        "concept/spark/01_structured_streaming"
       ]
     },
     {
@@ -2694,23 +2843,15 @@
       ]
     },
     {
-      "term": "checkpointLocation",
+      "term": "orders",
       "count": 2,
       "mentioned_by": [
-        "concept/databricks/03_spark_cluster_types",
+        "concept/databricks/04_unity_catalog_governance",
         "concept/spark/01_structured_streaming"
       ]
     },
     {
       "term": "models/",
-      "count": 2,
-      "mentioned_by": [
-        "concept/dbt/00_what_is_dbt",
-        "concept/dbt/03_dbt_in_practice"
-      ]
-    },
-    {
-      "term": "dbt run",
       "count": 2,
       "mentioned_by": [
         "concept/dbt/00_what_is_dbt",

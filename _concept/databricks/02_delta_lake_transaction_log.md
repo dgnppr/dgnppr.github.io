@@ -1,8 +1,8 @@
 ---
 layout  : concept
 title   : Delta Lake 트랜잭션 로그 동작 원리
-date    : 2026-09-06 00:00:00 +0900
-updated : 2026-09-06 00:00:00 +0900
+date    : 2026-08-28 00:00:00 +0900
+updated : 2026-08-28 00:00:00 +0900
 tag     : databricks delta-lake spark
 toc     : true
 comment : true
@@ -72,7 +72,7 @@ OPTIMIZE는 작은 파일들을 큰 파일로 합친다(compaction). 작은 파�
 
 ZORDER BY (col)는 특정 컬럼 기준으로 데이터를 물리적으로 정렬해서 WHERE 필터 성능을 올린다.
 
-VACUUM은 remove로 표시되고 더 이상 어떤 버전에서도 안 쓰이는 오래된 파일을 실제로 지운다. 기본 보관 기간은 7일이고, 이 기간보다 짧게 돌리면 아직 Time Travel로 참조 중인 파일이 날아갈 수 있다. 실기 문제에서 자주 나오는 함정이다.
+VACUUM은 remove로 표시되고 더 이상 어떤 버전에서도 안 쓰이는 오래된 파일을 실제로 지운다. 기본 보관 기간은 7일이고, 이 기간보다 짧게 돌리면 아직 Time Travel이나 동시 실행 중인 다른 트랜잭션이 참조하고 있는 파일이 날아갈 수 있다. 스트리밍 Job이 오래된 체크포인트에서 재시작하려는 시점에 VACUUM이 그 사이 파일을 이미 지워버렸다면, 그 Job은 파일을 못 찾아 실패한다. 운영 중 VACUUM 스케줄을 짤 때 실제로 부딪히는 문제다.
 
 ## 7. 스키마 강제랑 스키마 진화
 
@@ -160,7 +160,7 @@ RESTORE TABLE mytable TO VERSION AS OF 12;
 RESTORE TABLE mytable TO TIMESTAMP AS OF '2026-09-01 09:00:00';
 ```
 
-RESTORE는 물리적으로 데이터를 지우고 되돌리는 게 아니라, 되돌아갈 시점의 파일 목록으로 새 커밋을 하나 추가하는 것이다. 그래서 RESTORE를 실행해도 버전 번호는 계속 앞으로 증가한다 — 과거로 돌아간 게 아니라 "과거 상태와 같은 새 버전"이 하나 생기는 것.
+RESTORE는 물리적으로 데이터를 지우고 되돌리는 게 아니라, 되돌아갈 시점의 파일 목록으로 새 커밋을 하나 추가하는 것이다. 그래서 RESTORE를 실행해도 버전 번호는 계속 앞으로 증가한다. 과거로 돌아간 게 아니라 "과거 상태와 같은 새 버전"이 하나 생기는 것이다.
 
 ## 13. VACUUM 보관 기간 강제로 줄이기
 
@@ -176,27 +176,31 @@ SET spark.databricks.delta.retentionDurationCheck.enabled = false;
 VACUUM mytable RETAIN 24 HOURS;
 ```
 
-실기 문제에서 "왜 VACUUM이 에러 나는가", "어떻게 하면 실행되는가"를 묻는 유형이 실제로 나온다. `retentionDurationCheck`를 끄면 동작은 하지만, 아직 참조 중인 파일이 지워질 위험을 감수하는 것이라는 점도 같이 기억해야 한다.
+`retentionDurationCheck`를 끄면 동작은 하지만, 아직 참조 중인 파일이 지워질 위험을 감수하는 것이다. 개발 환경에서 디스크를 빨리 비우고 싶어서 이 설정을 끄는 경우가 종종 있는데, 그 설정이 세션 레벨이 아니라 실수로 클러스터 기본 설정에 박혀서 프로덕션까지 따라가는 사고가 난다. 필요한 순간에만 세션 단위로 켜고 바로 끄는 게 안전하다.
 
-## 14. 시험 유형 맛보기
+## 14. 동시 쓰기가 충돌하면 생기는 일
 
-> 다음을 순서대로 실행했을 때 `VERSION AS OF 1`로 조회한 행 수는?
->
-> ```sql
-> CREATE TABLE t (id INT, val STRING) USING DELTA;      -- v0
-> INSERT INTO t VALUES (1, 'a'), (2, 'b');               -- v1
-> DELETE FROM t WHERE id = 1;                            -- v2
-> INSERT INTO t VALUES (3, 'c');                         -- v3
-> SELECT COUNT(*) FROM t VERSION AS OF 1;
-> ```
->
-> A. 0  B. 1  C. 2  D. 3
->
-> 정답 C. `VERSION AS OF 1`은 v1 커밋 직후 상태를 그대로 보여준다. 이후에 일어난 DELETE(v2)나 INSERT(v3)는 그 시점 조회 결과에 영향을 주지 않는다.
+3장에서 말한 optimistic concurrency control은 "충돌하면 재시도"라고 뭉뚱그렸는데, 실제로는 충돌 종류에 따라 재시도가 되는 경우와 무조건 실패하는 경우가 갈린다.
+
+두 트랜잭션이 서로 겹치지 않는 파티션/파일에 쓰기만 했다면 Delta는 둘 다 성공시킨다(파일 목록만 병합하면 되니까). 하지만 트랜잭션 A가 읽은 파일을 트랜잭션 B가 이미 지웠다면(예: 둘 다 같은 행을 동시에 UPDATE), A는 `ConcurrentAppendException`이나 `ConcurrentDeleteReadException` 같은 예외로 실패한다. 이건 자동 재시도가 안 되고, 클라이언트가 처음부터 다시 시도해야 한다.
+
+```python
+from delta.exceptions import ConcurrentAppendException
+
+for attempt in range(3):
+    try:
+        spark.sql("MERGE INTO t USING src ON t.id = src.id WHEN MATCHED THEN UPDATE SET *")
+        break
+    except ConcurrentAppendException:
+        if attempt == 2:
+            raise
+```
+
+같은 테이블에 여러 Job이 동시에 MERGE를 거는 구조라면 이 예외를 안 잡고 방치하면 그 배치는 조용히 실패한 채로 다음 스케줄까지 아무도 모른다. 파티션을 나눠서 MERGE 대상을 겹치지 않게 설계하거나, 재시도 로직을 명시적으로 넣는 게 실제로 필요하다.
 
 ## 15. Lakeflow Declarative Pipelines(구 DLT)로 선언형 파이프라인
 
-지금까지 본 Bronze/Silver/Gold 코드는 "어떻게(how) 처리할지"를 다 직접 쓴 명령형 코드다. **Lakeflow Declarative Pipelines**(옛 이름 Delta Live Tables)는 "무엇을(what) 만들지"만 선언하면 의존성 그래프, 재시도, 증분 처리를 플랫폼이 알아서 관리해준다.
+지금까지 본 Bronze/Silver/Gold 코드는 "어떻게(how) 처리할지"를 다 직접 쓴 명령형 코드다. Lakeflow Declarative Pipelines(옛 이름 Delta Live Tables)는 "무엇을(what) 만들지"만 선언하면 의존성 그래프, 재시도, 증분 처리를 플랫폼이 알아서 관리해준다.
 
 ```python
 import dlt
@@ -220,9 +224,9 @@ def gold_customer_summary():
         .agg({"amount": "sum"}))
 ```
 
-`@dlt.expect_or_drop`, `@dlt.expect_or_fail`, `@dlt.expect`(경고만) 세 가지로 데이터 품질 게이트 강도를 조절한다. 테이블 간 의존성(`bronze_orders` → `silver_orders` → `gold_customer_summary`)은 함수 안에서 `dlt.read`/`dlt.read_stream`으로 다른 테이블을 참조하는 순간 자동으로 DAG가 그려진다 — Airflow처럼 태스크 순서를 손으로 안 정해도 된다.
+`@dlt.expect_or_drop`, `@dlt.expect_or_fail`, `@dlt.expect`(경고만) 세 가지로 데이터 품질 게이트 강도를 조절한다. 테이블 간 의존성(`bronze_orders` → `silver_orders` → `gold_customer_summary`)은 함수 안에서 `dlt.read`/`dlt.read_stream`으로 다른 테이블을 참조하는 순간 자동으로 DAG가 그려진다. Airflow처럼 태스크 순서를 손으로 안 정해도 된다.
 
-## 16. APPLY CHANGES INTO — SCD Type 1/2 자동화
+## 16. APPLY CHANGES INTO로 SCD Type 1/2 자동화하기
 
 CDC 소스(예: 소스 DB의 변경 로그)를 Silver 테이블에 반영할 때, Slowly Changing Dimension을 직접 MERGE 문으로 짜는 건 번거롭고 실수하기 쉽다. Lakeflow Declarative Pipelines는 이걸 선언 하나로 처리한다.
 
@@ -240,13 +244,13 @@ dlt.apply_changes(
 )
 ```
 
-`stored_as_scd_type=2`를 주면 `__START_AT`/`__END_AT` 컬럼이 자동으로 생겨서 "고객 주소가 언제부터 언제까지 어떤 값이었는지" 이력이 통째로 관리된다. 이걸 손으로 짜려면 MERGE + 윈도우 함수로 수십 줄이 필요한데, Professional 시험에서는 이 자동화 기능 자체를 알고 있는지를 묻는다.
+`stored_as_scd_type=2`를 주면 `__START_AT`/`__END_AT` 컬럼이 자동으로 생겨서 "고객 주소가 언제부터 언제까지 어떤 값이었는지" 이력이 통째로 관리된다. 이걸 손으로 짜려면 이전 유효 레코드를 만료시키는 UPDATE와 새 레코드를 삽입하는 INSERT를 한 트랜잭션 안에서 순서대로 맞춰야 하고, `sequence_by` 없이 순서가 뒤바뀐 CDC 이벤트가 들어오면 이력이 꼬인다. `apply_changes`는 이 순서 보장과 late-arriving 이벤트 처리까지 내부적으로 맡아준다.
 
-## 17. Deletion Vectors — MERGE/DELETE가 빨라지는 원리
+## 17. Deletion Vectors로 MERGE/DELETE 빠르게 만들기
 
 Delta의 기본 동작은 "행 하나만 지워도 그 행이 속한 파일 전체를 다시 쓰는" 것이다. 파일이 크면 행 하나 지우려고 수백 MB를 다시 쓰는 셈이라 비효율적이다.
 
-**Deletion Vector**를 켜면 삭제/업데이트된 행을 파일 재작성 없이 "이 파일의 이런 행들은 무효" 라고 표시하는 별도의 작은 마스크 파일로 처리한다.
+Deletion Vector를 켜면 삭제/업데이트된 행을 파일 재작성 없이 "이 파일의 이런 행들은 무효"라고 표시하는 별도의 작은 마스크 파일로 처리한다.
 
 ```sql
 ALTER TABLE mytable SET TBLPROPERTIES ('delta.enableDeletionVectors' = 'true');
@@ -257,13 +261,16 @@ DELETE FROM mytable WHERE order_id = 12345;
 
 읽을 때는 Parquet 파일 + 해당 deletion vector를 같이 적용해서 무효 처리된 행을 걸러낸다. 대신 이 상태가 계속 쌓이면 읽기 성능이 조금씩 떨어지므로, 주기적으로 `REORG TABLE ... APPLY (PURGE)`로 실제 파일에 반영(compaction)해줘야 한다. MERGE/UPDATE/DELETE가 잦은 대용량 테이블에서 쓰기 비용을 확 줄이는 최신 기능.
 
-## 18. 시험 유형 맛보기
+## 18. 새 기능을 켜면 옛날 리더가 못 읽는다
 
-> 매일 수백만 건의 CDC 이벤트를 받아 고객 정보 Silver 테이블에 반영하면서, 과거 어느 시점에 주소가 어떻게 바뀌었는지 이력도 남겨야 한다. 유지보수 코드량을 최소화하면서 이 요구를 만족하는 방법은?
->
-> A. `MERGE INTO`를 직접 작성하고 `valid_from`/`valid_to` 컬럼을 수동으로 관리한다
-> B. Lakeflow Declarative Pipelines의 `apply_changes`에 `stored_as_scd_type=2`를 지정한다
-> C. 매번 전체 테이블을 `OVERWRITE`한다
-> D. Change Data Feed만 켜고 이력 관리는 BI 툴에 위임한다
->
-> 정답 B. SCD Type 2 이력 관리는 `apply_changes`가 `keys`/`sequence_by`만 지정하면 `__START_AT`/`__END_AT`까지 자동 생성한다. A는 동작은 하지만 유지보수 코드량이 크고 실수 여지가 많아 "최소화" 조건에 안 맞는다.
+Deletion Vector, Liquid Clustering, Change Data Feed 같은 최신 기능은 전부 Delta 테이블의 프로토콜 버전을 올린다. 문제는 이게 하위 호환이 아니라는 점이다.
+
+Deletion Vector를 켠 테이블은 reader protocol이 올라가서, 이 버전을 모르는 오래된 Delta 클라이언트(예: 구버전 OSS Delta Lake, 오래된 Spark 런타임, Delta 커넥터가 최신이 아닌 외부 도구)가 그 테이블을 읽으면 삭제된 것으로 표시된 행까지 그대로 보이거나 아예 읽기가 거부된다. Databricks Runtime 안에서만 쓰는 테이블이면 문제가 없지만, 같은 Delta 파일을 다른 엔진(예: 별도로 띄운 OSS Spark, Trino, 오래된 버전의 다른 플랫폼)이 직접 읽는 구조라면 얘기가 달라진다.
+
+```sql
+-- 테이블이 요구하는 프로토콜 버전 확인
+DESCRIBE DETAIL mytable;
+-- minReaderVersion / minWriterVersion 컬럼을 본다
+```
+
+새 기능을 켜기 전에 이 테이블을 읽는 다른 시스템이 있는지, 그 시스템이 새 프로토콜을 지원하는 버전인지부터 확인해야 한다. 사내에서만 도는 파이프라인이면 큰 문제가 아니지만, 외부 파트너나 레거시 BI 도구가 같은 Delta 파일을 직접 읽는 구조라면 기능을 켜는 순간 그쪽이 조용히 깨질 수 있다.

@@ -1,8 +1,8 @@
 ---
 layout  : concept
 title   : Spark 클러스터 종류
-date    : 2026-09-10 00:00:00 +0900
-updated : 2026-09-10 00:00:00 +0900
+date    : 2026-09-01 00:00:00 +0900
+updated : 2026-09-01 00:00:00 +0900
 tag     : databricks spark cluster
 toc     : true
 comment : true
@@ -33,7 +33,7 @@ Spark 클러스터는 VM 묶음이다. 드라이버 노드가 코드를 해석�
 | 공유 | 여러 사람이 같이 붙어 쓸 수 있음 | 그 실행 하나 전용 |
 | 비용 | idle 시간도 과금될 수 있어 비쌈 | DBU 단가 자체가 낮고 안 쓰면 존재하지 않으니 저렴 |
 
-운영 파이프라인은 거의 항상 Job Cluster가 정답이다. All-Purpose를 프로덕션 스케줄에 쓰는 건 비용 낭비로 감점 포인트.
+운영 파이프라인은 거의 항상 Job Cluster를 쓴다. All-Purpose Cluster를 프로덕션 스케줄에 그대로 물려두면 그 클러스터가 켜져 있는 내내 idle 시간까지 과금되고, 여러 Job이 한 클러스터를 공유하면 한 Job이 메모리를 다 먹어서 다른 Job이 실패하는 noisy neighbor 문제도 생긴다.
 
 ## 3. 클러스터 접근 모드
 
@@ -85,7 +85,7 @@ Structured Streaming Job은 보통 Job Cluster를 계속 켜둔 채로 돌린다
 
 Trigger.AvailableNow로 배치처럼 한 번에 몰아 처리하고 끄면, 스트리밍 코드를 배치 비용 구조로 돌리는 것도 가능하다.
 
-## 13. Job 클러스터 실제 정의 — Jobs API JSON
+## 13. Job 클러스터를 Jobs API JSON으로 정의하기
 
 Databricks Workflows에서 Job Cluster는 태스크 안에 `new_cluster`로 인라인 정의한다.
 
@@ -132,18 +132,15 @@ Databricks Workflows에서 Job Cluster는 태스크 안에 `new_cluster`로 인�
     .table("bronze.orders"))
 ```
 
-`trigger(availableNow=True)`가 12장에서 말한 "스트리밍을 배치처럼 돌리는" 실제 문법이다. Job Cluster가 이 코드를 실행하면 밀린 새 파일을 다 처리하고 나서 스스로 종료한다 — 그래서 상시 클러스터가 필요 없는 Job Cluster랑 궁합이 좋다.
+`trigger(availableNow=True)`가 12장에서 말한 "스트리밍을 배치처럼 돌리는" 실제 문법이다. Job Cluster가 이 코드를 실행하면 밀린 새 파일을 다 처리하고 나서 스스로 종료한다. 그래서 상시 클러스터가 필요 없는 Job Cluster랑 궁합이 좋다.
 
-## 15. 시험 유형 맛보기
+## 15. Auto Loader가 재시작에도 안전한 이유
 
-> Auto Loader로 파일을 인제스천하는데, 실시간 처리는 필요 없고 30분마다 한 번씩만 새 파일을 처리하고 싶다. 가장 비용 효율적인 구성은?
->
-> A. All-Purpose Cluster에서 `trigger(processingTime="30 minutes")`로 상시 실행
-> B. Job Cluster + `trigger(availableNow=True)`를 30분 주기 Workflow로 스케줄
-> C. Serverless SQL Warehouse에서 `COPY INTO`를 30분마다 실행
-> D. B와 C 둘 다 맞다
->
-> 정답 D. 둘 다 유효한 저비용 배치 패턴이다. B는 Auto Loader 스트림을 배치처럼 돌리는 것이고, C는 아예 스트리밍이 아니라 `COPY INTO` 배치 적재다. 클러스터를 상시 켜두는 A가 이 요구사항엔 가장 비효율적이다.
+`trigger(availableNow=True)`로 Job Cluster를 30분마다 띄웠다 내리는 구성에서 걱정되는 건 "중간에 죽으면 파일을 두 번 처리하거나 빼먹지 않을까"다.
+
+Auto Loader는 `cloudFiles.schemaLocation`과 `checkpointLocation` 두 곳에 상태를 쓴다. 어떤 파일을 이미 처리했는지는 체크포인트의 RocksDB 기반 파일 목록(또는 클라우드 알림 기반이면 큐 오프셋)에 기록되고, 이 기록은 각 파일이 Delta 테이블에 커밋된 것과 같은 트랜잭션 경계 안에서 갱신된다. 그래서 Job이 파일을 읽다가 중간에 죽어도, 재시작하면 마지막으로 성공적으로 커밋된 지점부터 이어서 처리한다. 같은 파일을 두 번 Delta에 쓰는 일은 없다.
+
+체크포인트 디렉터리를 실수로 지우거나 다른 파이프라인과 공유하면 이 보장이 깨진다. 파일 하나에 스트림 하나, 체크포인트 경로도 하나로 1:1을 지키는 게 원칙이다.
 
 ## 16. AQE와 셔플 튜닝
 
@@ -154,7 +151,7 @@ spark.conf.get("spark.sql.adaptive.enabled")               # True (기본값)
 spark.conf.get("spark.sql.adaptive.coalescePartitions.enabled")  # True
 ```
 
-`coalescePartitions`는 셔플 후 파티션이 너무 잘게 쪼개졌을 때 자동으로 합쳐서 작은 파일/작은 태스크가 남발되는 걸 막는다. 예전처럼 `spark.sql.shuffle.partitions`를 200으로 고정해놓고 데이터 크기에 안 맞아 고생하던 문제를 AQE가 상당 부분 해결해준다 — 그래도 데이터가 극단적으로 크거나 작으면 이 값을 수동으로 조정해야 할 때가 있다.
+`coalescePartitions`는 셔플 후 파티션이 너무 잘게 쪼개졌을 때 자동으로 합쳐서 작은 파일/작은 태스크가 남발되는 걸 막는다. 예전처럼 `spark.sql.shuffle.partitions`를 200으로 고정해놓고 데이터 크기에 안 맞아 고생하던 문제를 AQE가 상당 부분 해결해준다. 그래도 데이터가 극단적으로 크거나 작으면 이 값을 수동으로 조정해야 할 때가 있다.
 
 ## 17. 브로드캐스트 조인과 스큐 조인 처리
 
@@ -170,13 +167,27 @@ result = big_df.join(broadcast(small_df), "customer_id")
 spark.conf.get("spark.sql.autoBroadcastJoinThreshold")   # 기본 10MB, -1이면 비활성화
 ```
 
-기본 임계값(10MB)보다 작은 테이블은 힌트 없이도 자동으로 브로드캐스트된다. 문제는 큰 테이블끼리 조인인데 특정 키 값에 데이터가 몰려있는 **스큐(skew)** 상황 — 이때는 AQE의 `skewJoin` 최적화가 스큐가 심한 파티션만 자동으로 잘게 쪼개서 처리한다.
+기본 임계값(10MB)보다 작은 테이블은 힌트 없이도 자동으로 브로드캐스트된다. 문제는 큰 테이블끼리 조인인데 특정 키 값에 데이터가 몰려있는 스큐(skew) 상황이다. 이때는 AQE의 `skewJoin` 최적화가 스큐가 심한 파티션만 자동으로 잘게 쪼개서 처리한다.
 
 ```python
 spark.conf.get("spark.sql.adaptive.skewJoin.enabled")   # True (기본값)
 ```
 
-시험에서 "특정 워커만 오래 걸리고 나머지는 금방 끝난다"는 증상이 나오면 스큐를 의심하고, 해결책으로 AQE skew join이나 salting 기법을 떠올려야 한다.
+Spark UI에서 특정 태스크 하나만 나머지보다 몇 배 오래 걸리고 있다면 스큐부터 의심한다. AQE의 `skewJoin`은 자동으로 큰 파티션을 잘라주지만 항상 되는 건 아니고, 조인 키 자체가 심하게 편중된 경우(예: `customer_id`가 NULL이거나 특정 값 하나에 전체의 절반이 몰림)에는 salting을 직접 걸어야 한다. 조인 키에 랜덤 접미사를 붙여 인위적으로 파티션을 쪼개는 방식이다.
+
+```python
+from pyspark.sql.functions import concat, lit, floor, rand
+
+salted_big = big_df.withColumn(
+    "salted_key", concat(col("customer_id"), lit("_"), (rand() * 10).cast("int"))
+)
+salted_small = small_df.withColumn(
+    "salted_key", concat(col("customer_id"), lit("_"), explode(array(*[lit(i) for i in range(10)])))
+)
+result = salted_big.join(salted_small, "salted_key")
+```
+
+작은 쪽 테이블을 salt 값 개수만큼 복제(`explode`)해서 큰 쪽의 salted key와 맞춘 뒤 조인하는 방식이다. 코드가 지저분해지는 대신 편중된 키 하나가 파티션 하나를 독점하는 상황을 물리적으로 깬다.
 
 ## 18. Structured Streaming 워터마크·상태 집계
 
@@ -196,19 +207,25 @@ from pyspark.sql.functions import window, col
     .table("gold.user_5min_counts"))
 ```
 
-`withWatermark("event_time", "10 minutes")`는 "이벤트 시간 기준으로 최대 10분 늦게 도착하는 데이터까지는 기다려준다"는 뜻이다. 10분이 지나면 그 윈도우는 확정되고 상태(state)에서 정리된다 — 그래야 상태 저장소가 무한정 커지지 않는다.
+`withWatermark("event_time", "10 minutes")`는 "이벤트 시간 기준으로 최대 10분 늦게 도착하는 데이터까지는 기다려준다"는 뜻이다. 10분이 지나면 그 윈도우는 확정되고 상태(state)에서 정리된다. 그래야 상태 저장소가 무한정 커지지 않는다.
 
 `outputMode`는 세 가지다. `append`는 확정된 결과만 내보내고(워터마크 필수), `update`는 바뀐 집계만, `complete`는 전체 결과를 매번 다시 내보낸다(작은 집계에만 현실적).
 
-체크포인트(`checkpointLocation`)는 상태 저장소와 처리한 오프셋을 함께 관리해서, Job이 죽었다 재시작해도 중복/누락 없이 이어서 처리하게 해준다 — 이게 Structured Streaming이 exactly-once를 보장하는 핵심 메커니즘이다.
+체크포인트(`checkpointLocation`)는 상태 저장소와 처리한 오프셋을 함께 관리해서, Job이 죽었다 재시작해도 중복/누락 없이 이어서 처리하게 해준다. Structured Streaming이 exactly-once를 보장하는 메커니즘이 바로 이거다.
 
-## 19. 시험 유형 맛보기
+## 19. 워터마크보다 늦은 데이터는 그냥 버려진다
 
-> 사용자 세션 데이터를 5분 윈도우로 집계하는 스트리밍 Job을 운영 중인데, 네트워크 지연으로 최대 15분 늦게 도착하는 이벤트가 있다. 늦은 이벤트도 최대한 반영하면서 상태 저장소가 무한정 커지지 않게 하려면?
->
-> A. 워터마크를 아예 설정하지 않는다
-> B. `withWatermark("event_time", "15 minutes")`로 설정하고 `outputMode("append")`를 쓴다
-> C. `outputMode("complete")`로 바꿔서 항상 전체 재계산한다
-> D. 배치 Job으로 전환해서 워터마크 개념 자체를 없앤다
->
-> 정답 B. 워터마크를 늦은 도착 허용 범위(15분)에 맞춰 설정해야 그 안에 들어오는 이벤트는 반영하면서, 그 이후엔 상태를 정리해 메모리를 회수한다. A는 상태가 무한정 쌓이고, C는 집계 규모가 커지면 비현실적이다.
+워터마크는 "이 시점까지는 기다려준다"는 약속이지, 그 이후 도착한 데이터를 어딘가에 따로 보관해주는 기능이 아니다. `withWatermark("event_time", "10 minutes")`로 설정한 상태에서 워터마크가 이미 지나간 윈도우에 속하는 이벤트가 뒤늦게 들어오면, 그 이벤트는 집계에 반영되지 않고 조용히 드롭된다. 에러도 안 나고 로그에도 잘 안 남아서, "왜 이 사용자 세션 카운트가 실제보다 적게 나오지"를 며칠 뒤에나 알아채는 경우가 흔하다.
+
+이걸 확인하려면 드롭된 행 수를 직접 세야 한다.
+
+```python
+from pyspark.sql.functions import current_timestamp
+
+late_events = (spark.readStream.table("bronze.events")
+    .withWatermark("event_time", "10 minutes")
+    .filter(col("event_time") < current_timestamp() - expr("INTERVAL 10 MINUTES")))
+# 이 스트림을 별도 Delta 테이블(dead-letter 성격)로 따로 적재해서 얼마나 늦게 오는지 모니터링한다
+```
+
+상태 저장소 자체도 무한정 커지지 않는 이유는 워터마크가 지난 윈도우의 상태를 Spark가 명시적으로 정리(state cleanup)하기 때문이다. 이 상태는 기본적으로 executor 로컬 디스크에 RocksDB로 저장되는데(`spark.sql.streaming.stateStore.providerClass`), 윈도우 크기와 워터마크 유예 기간을 늘릴수록 정리 전까지 쌓이는 상태 크기도 커진다. 세션 윈도우가 많고 워터마크를 길게 잡는 파이프라인일수록 executor 디스크 용량을 넉넉히 잡아야 하는 이유다.
