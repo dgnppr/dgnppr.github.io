@@ -125,5 +125,6 @@
   "databricks/03_spark_cluster_types": "Spark 운영 환경에서 비용과 성능을 최적화하기 위한 클러스터 유형 및 구성 선택의 트레이드오프를 다룬다. 생산용은 저렴한 DBU 단가의 Job Cluster와 Spot 워커(driver 제외) 조합이 표준이며, 벡터 연산 가속을 위해 C++ 기반 Photon 엔진 활용이나 인프라 결정 부담을 줄이는 Serverless 방식을 채택할 수 있다. 비용 최적화 시 클러스터 타입을 먼저 검토하고 워크로드 특성에 맞는 인스턴스를 매칭하며 Auto Loader를 통한 배치형 스트리밍으로 불필요",
   "databricks/04_unity_catalog_governance": "Unity Catalog는 워크스페이스 간 메타데이터 파편화와 세밀하지 못한 권한 관리 및 불투명한 계보 추적 문제를 3단계 네임스페이스와 securable object 체계로 해결한다. SELECT 시 USE CATALOG/USE SCHEMA를 통한 경로 권한과 SQL 기반의 Row Filter, Column Mask을 통해 애플리케이션 코드 변경 없이 정교한 보안 정책을 적용할 수 있다. 실무에서는 누락된 경로 권한 자동화로 \"조회 불가\" 문의를 방지하고 마스킹 로직은 단순하게 유지하며 Spark 쓰기 경로를 통해서만 lineage가",
   "databricks/05_workflows_orchestration_monitoring": "\"복잡한 파이프라인에서 단일 노트북은 의존성 관리와 부분 재시도가",
-  "databricks/06_secrets_service_principals": "코드로 자격 증명을 직접 노출하면 Git 히스토리에 영구 남고 개인 계정 기반 Job은 퇴사 시 실행 권한이 소실되는 운영 문제가 발생한다 (64 chars) 자격 증명과 권한의 대상에서 개인 계정을 제거할 때 비로소 보안 강화와 생산 환경 운영 안정성을 동시에 확보할 수 있다. (54 chars)"
+  "databricks/06_secrets_service_principals": "코드로 자격 증명을 직접 노출하면 Git 히스토리에 영구 남고 개인 계정 기반 Job은 퇴사 시 실행 권한이 소실되는 운영 문제가 발생한다 (64 chars) 자격 증명과 권한의 대상에서 개인 계정을 제거할 때 비로소 보안 강화와 생산 환경 운영 안정성을 동시에 확보할 수 있다. (54 chars)",
+  "data-engineering/05_data_ingestion_patterns_chapter_02": "데이터 수집 시 부분 도착이나 재실행 상황에서 데이터 일관성과 복구 가능성을"
 }

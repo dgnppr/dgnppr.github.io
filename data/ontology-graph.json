@@ -330,10 +330,10 @@
         "Mart Layer"
       ],
       "content_depth": 0.85,
-      "importance": 1,
-      "depth": 0.75,
+      "importance": 3,
+      "depth": 0.77,
       "unanswered_questions": 0,
-      "learning_pressure": 0.25
+      "learning_pressure": 0.68
     },
     "concept/data-engineering/00_how_to_use_dataform_well": {
       "id": "concept/data-engineering/00_how_to_use_dataform_well",
@@ -476,10 +476,10 @@
         "Hudi"
       ],
       "content_depth": 0.85,
-      "importance": 7,
-      "depth": 0.82,
+      "importance": 9,
+      "depth": 0.85,
       "unanswered_questions": 0,
-      "learning_pressure": 1.24
+      "learning_pressure": 1.37
     },
     "concept/data-engineering/02_file_and_memory_formats": {
       "id": "concept/data-engineering/02_file_and_memory_formats",
@@ -558,6 +558,73 @@
       "depth": 0.83,
       "unanswered_questions": 0,
       "learning_pressure": 0.18
+    },
+    "concept/data-engineering/05_data_ingestion_patterns_chapter_02": {
+      "id": "concept/data-engineering/05_data_ingestion_patterns_chapter_02",
+      "type": "concept",
+      "title": "데이터 수집 파이프라인 설계 — Chapter 02 코드로 배우는 6가지 패턴",
+      "path": "_concept/data-engineering/05_data_ingestion_patterns_chapter_02.md",
+      "status": "complete",
+      "tags": [
+        "data-engineering",
+        "design-pattern",
+        "spark",
+        "delta-lake",
+        "airflow"
+      ],
+      "date": "2026-09-14",
+      "confidence": "high",
+      "mentioned_terms": [
+        "chapter-02",
+        "limit(1)",
+        "overwrite",
+        "devices",
+        "write",
+        "SparkKubernetesSensor",
+        "reschedule",
+        "visits",
+        "REPLICA IDENTITY FULL",
+        "op = \"c\"",
+        "update",
+        "events",
+        "maxFilesPerTrigger=4",
+        "startingVersion=0",
+        "에서",
+        "는 저장 옵션으로 전달되며,",
+        "key",
+        "value",
+        "partition",
+        "headers",
+        "offset",
+        "sortWithinPartitions",
+        "foreachBatch",
+        "startingOffsets",
+        "latest",
+        "(topic, partition, offset)",
+        "mode",
+        "device1",
+        "append",
+        "validated",
+        "Records[0]",
+        "payload",
+        "{'conf': payload}",
+        "DemoConfiguration",
+        "before",
+        "history()",
+        "reader",
+        "executeCompaction()",
+        "입력이 있으면 최대 1건을 남기는 코드",
+        "코드에서 얻는 인사이트:",
+        "실행할 때 전달하는 경로",
+        "완료 메타데이터 확장 예시",
+        "원본에 없는 설명용 모델",
+        "학습용으로 추가한 조회 코드"
+      ],
+      "content_depth": 1,
+      "importance": 1,
+      "depth": 0.93,
+      "unanswered_questions": 0,
+      "learning_pressure": 0.08
     },
     "concept/databricks/01_databricks_intro": {
       "id": "concept/databricks/01_databricks_intro",
@@ -1531,10 +1598,10 @@
         "상태를 유한하게 유지하는 것"
       ],
       "content_depth": 1,
-      "importance": 3,
-      "depth": 0.63,
+      "importance": 5,
+      "depth": 0.65,
       "unanswered_questions": 0,
-      "learning_pressure": 1.13
+      "learning_pressure": 1.75
     },
     "concept/spark/02_spark_performance_tuning": {
       "id": "concept/spark/02_spark_performance_tuning",
@@ -2365,6 +2432,21 @@
       "type": "references"
     },
     {
+      "from": "concept/data-engineering/05_data_ingestion_patterns_chapter_02",
+      "to": "concept/data-engineering/01_lakehouse_table_formats",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/05_data_ingestion_patterns_chapter_02",
+      "to": "concept/spark/01_structured_streaming",
+      "type": "references"
+    },
+    {
+      "from": "concept/data-engineering/05_data_ingestion_patterns_chapter_02",
+      "to": "concept/data-architect/03_medallion_advanced_patterns",
+      "type": "extends"
+    },
+    {
       "from": "concept/databricks/02_delta_lake_transaction_log",
       "to": "concept/databricks/01_databricks_intro",
       "type": "references"
@@ -2622,6 +2704,17 @@
   ],
   "content_mentioned_concepts": [
     {
+      "term": "append",
+      "count": 5,
+      "mentioned_by": [
+        "concept/data-architect/02_how_to_architect_medallion_well",
+        "concept/data-engineering/05_data_ingestion_patterns_chapter_02",
+        "concept/databricks/03_spark_cluster_types",
+        "concept/dbt/02_dbt_advanced",
+        "concept/spark/01_structured_streaming"
+      ]
+    },
+    {
       "term": "incremental",
       "count": 5,
       "mentioned_by": [
@@ -2630,16 +2723,6 @@
         "concept/dbt/01_dbt_core_features",
         "concept/dbt/02_dbt_advanced",
         "concept/dbt/03_dbt_in_practice"
-      ]
-    },
-    {
-      "term": "append",
-      "count": 4,
-      "mentioned_by": [
-        "concept/data-architect/02_how_to_architect_medallion_well",
-        "concept/databricks/03_spark_cluster_types",
-        "concept/dbt/02_dbt_advanced",
-        "concept/spark/01_structured_streaming"
       ]
     },
     {
@@ -2704,6 +2787,15 @@
         "concept/data-engineering/00_how_to_use_dataform_well",
         "concept/dbt/01_dbt_core_features",
         "concept/dbt/02_dbt_advanced"
+      ]
+    },
+    {
+      "term": "update",
+      "count": 3,
+      "mentioned_by": [
+        "concept/data-engineering/05_data_ingestion_patterns_chapter_02",
+        "concept/databricks/03_spark_cluster_types",
+        "concept/spark/01_structured_streaming"
       ]
     },
     {
@@ -2819,15 +2911,23 @@
       ]
     },
     {
-      "term": "checkpointLocation",
+      "term": "write",
       "count": 2,
       "mentioned_by": [
-        "concept/databricks/03_spark_cluster_types",
+        "concept/data-engineering/05_data_ingestion_patterns_chapter_02",
+        "concept/spark/00_what_is_pyspark"
+      ]
+    },
+    {
+      "term": "value",
+      "count": 2,
+      "mentioned_by": [
+        "concept/data-engineering/05_data_ingestion_patterns_chapter_02",
         "concept/spark/01_structured_streaming"
       ]
     },
     {
-      "term": "update",
+      "term": "checkpointLocation",
       "count": 2,
       "mentioned_by": [
         "concept/databricks/03_spark_cluster_types",

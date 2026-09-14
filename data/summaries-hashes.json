@@ -125,5 +125,6 @@
   "databricks/03_spark_cluster_types": "4f4eacdc22dc5373233b25b82aa32775",
   "databricks/04_unity_catalog_governance": "c2a5b052ca00f337d520b899ef50549a",
   "databricks/05_workflows_orchestration_monitoring": "47a4a40488b7b91a891dada447b3c6b5",
-  "databricks/06_secrets_service_principals": "e28d9f67287964f42221d87ec39de717"
+  "databricks/06_secrets_service_principals": "e28d9f67287964f42221d87ec39de717",
+  "data-engineering/05_data_ingestion_patterns_chapter_02": "c6538a169ce0bc8acb2e6b7a62ca4c26"
 }
